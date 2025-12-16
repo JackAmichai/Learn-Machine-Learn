@@ -5,13 +5,13 @@ export function WeightHeatmap({ model, modelVersion }) {
     const containerRef = useRef(null);
 
     useEffect(() => {
-        if (!model) return;
+        if (!model || !model.model) return;
 
         // Find first dense layer that comes after input
         // The model might have a 'flatten' layer if used with Conv2D later, but for now it's Dense directly on input.
         // However, input layer is implicit in TFJS Sequential usually? No, first layer is layer[0].
 
-        const layer = model.layers[0];
+        const layer = model.model.layers[0];
         if (!layer) return;
 
         try {

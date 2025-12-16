@@ -127,7 +127,7 @@ export function Controls(props) {
                                     {isHidden && (
                                         <button onClick={() => updateNodeCount(idx, -1)}>-</button>
                                     )}
-                                    <span className="node-count">{nodes} <Tooltip word="Nodes" overrideText="Neurons" /></span>
+                                    <span className="node-count">{nodes} <Tooltip word="Neurons" /></span>
                                     {isHidden && (
                                         <button onClick={() => updateNodeCount(idx, 1)}>+</button>
                                     )}

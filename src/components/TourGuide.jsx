@@ -1,48 +1,60 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const STEPS = [
     {
         target: null, // Center
-        title: "Welcome to Learn MACHINE Learn",
-        content: "This is a playground to understand how Neural Networks actually work. Let's take a quick tour!"
+        title: "🎓 Welcome to Learn MACHINE Learn",
+        content: "This interactive playground helps you understand how Neural Networks actually work - by building and training them yourself! Let's take a quick tour."
     },
     {
         target: '.controls-panel',
-        title: "Control Panel",
-        content: "Here you can design your network (add layers/nodes), choose Datasets, and tweak Hyperparameters like Learning Rate."
+        title: "🎛️ Control Panel",
+        content: "This is your command center! Design your network by adding layers and neurons, pick different datasets to classify, and fine-tune hyperparameters like Learning Rate. Hover over any underlined term to learn what it means.",
+        position: 'right'
     },
     {
         target: '.viz-net',
-        title: "The Brain",
-        content: "This visualizes your Neural Network. You can see the nodes and connections (weights). The connections change color as the model learns!"
+        title: "🧠 Neural Network Visualization",
+        content: "Watch your network come alive! Each circle is a neuron, and the lines are weighted connections. Blue lines = positive weights, Red lines = negative weights. As training progresses, watch how these connections strengthen or weaken!",
+        position: 'bottom'
     },
     {
         target: '.viz-out',
-        title: "The Output",
-        content: "This shows the 'Decision Boundary'. The background color represents what the model predicts for that area. Watch it evolve as you train!",
-        condition: (mode) => mode === 'simple'
+        title: "📊 Decision Boundary",
+        content: "This is the 'output landscape' - it shows what your network would predict for ANY point in the 2D space. The colored regions show class predictions. Watch it evolve from random noise to clear boundaries as training progresses!",
+        condition: (mode) => mode === 'simple',
+        position: 'bottom'
     },
     {
         target: '.viz-input',
-        title: "Vision Input",
-        content: "In Vision Mode, you draw here. The model takes these 100 pixels as input.",
-        condition: (mode) => mode === 'vision'
+        title: "✏️ Drawing Canvas",
+        content: "In Vision Mode, YOU create the training data! Draw shapes (like X's or squares), label them as Class A or B, then train the network to recognize them. The 10×10 grid becomes 100 input neurons.",
+        condition: (mode) => mode === 'vision',
+        position: 'bottom'
     },
     {
         target: '.btn-primary',
-        title: "Start Learning",
-        content: "Click 'Train' to watch the magic happen. Don't be afraid to break things!"
+        title: "🚀 Ready to Train!",
+        content: "Hit 'Train' and watch the magic unfold! The Loss will decrease as the network learns. Try changing the architecture mid-training and see what happens. Experiment freely - you can't break anything!",
+        position: 'top'
     }
 ];
 
 export function TourGuide({ mode, onSkip }) {
     const [step, setStep] = useState(0);
     const [style, setStyle] = useState({});
+    const highlightedRef = useRef(null);
 
     // Filter steps based on mode
     const activeSteps = STEPS.filter(s => !s.condition || s.condition(mode));
 
     useEffect(() => {
+        // Cleanup previous highlight
+        if (highlightedRef.current) {
+            highlightedRef.current.classList.remove('tour-highlight');
+            highlightedRef.current = null;
+        }
+
         const current = activeSteps[step];
         if (!current) return;
 
@@ -50,18 +62,46 @@ export function TourGuide({ mode, onSkip }) {
             const el = document.querySelector(current.target);
             if (el) {
                 const rect = el.getBoundingClientRect();
-                setStyle({
-                    top: rect.bottom + 10 + window.scrollY,
-                    left: rect.left + (rect.width / 2) - 150, // center simplified
-                    position: 'absolute'
-                });
+                const cardWidth = 320;
+                const cardHeight = 200; // approximate
+                const padding = 15;
+                
+                let newStyle = { position: 'fixed' };
+                
+                // Position based on preference or auto-detect best position
+                const pos = current.position || 'bottom';
+                
+                switch(pos) {
+                    case 'right':
+                        newStyle.top = Math.max(padding, rect.top);
+                        newStyle.left = rect.right + padding;
+                        break;
+                    case 'left':
+                        newStyle.top = Math.max(padding, rect.top);
+                        newStyle.left = rect.left - cardWidth - padding;
+                        break;
+                    case 'top':
+                        newStyle.top = rect.top - cardHeight - padding;
+                        newStyle.left = Math.max(padding, rect.left + (rect.width / 2) - (cardWidth / 2));
+                        break;
+                    case 'bottom':
+                    default:
+                        newStyle.top = rect.bottom + padding;
+                        newStyle.left = Math.max(padding, Math.min(
+                            window.innerWidth - cardWidth - padding,
+                            rect.left + (rect.width / 2) - (cardWidth / 2)
+                        ));
+                        break;
+                }
+                
+                setStyle(newStyle);
 
-                // Highlight effect?
+                // Add highlight
                 el.classList.add('tour-highlight');
-                return () => el.classList.remove('tour-highlight');
+                highlightedRef.current = el;
             }
         } else {
-            // Center
+            // Center for welcome screen
             setStyle({
                 top: '50%',
                 left: '50%',
@@ -69,6 +109,12 @@ export function TourGuide({ mode, onSkip }) {
                 position: 'fixed'
             });
         }
+        
+        return () => {
+            if (highlightedRef.current) {
+                highlightedRef.current.classList.remove('tour-highlight');
+            }
+        };
     }, [step, mode, activeSteps]);
 
     const handleNext = () => {
@@ -112,13 +158,18 @@ export function TourGuide({ mode, onSkip }) {
             .tour-card {
                 background: var(--bg-panel);
                 border: 2px solid var(--accent-primary);
-                padding: 20px;
-                border-radius: 12px;
-                width: 300px;
+                padding: 24px;
+                border-radius: 16px;
+                width: 320px;
                 z-index: 10000;
-                box-shadow: 0 0 20px rgba(0,0,0,0.5);
-                backdrop-filter: blur(10px);
+                box-shadow: 0 0 30px rgba(0, 242, 255, 0.2), 0 0 60px rgba(0,0,0,0.5);
+                backdrop-filter: blur(15px);
                 transition: all 0.3s ease;
+                animation: tourSlideIn 0.3s ease-out;
+            }
+            @keyframes tourSlideIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
             }
             .tour-card h3 {
                 margin: 0 0 10px 0;
