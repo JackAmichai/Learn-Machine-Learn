@@ -13,15 +13,17 @@ export class NeuralNetwork {
       loss: 'meanSquaredError',
       activation: 'relu',
       outputActivation: 'sigmoid',
+      gradientClip: 0,
       ...config
     };
   }
 
   updateConfig(newConfig) {
-    const needsRebuild = newConfig.activation !== this.config.activation;
+    const needsRebuild = newConfig.activation !== undefined && newConfig.activation !== this.config.activation;
     const needsRecompile = newConfig.learningRate !== this.config.learningRate ||
       newConfig.optimizer !== this.config.optimizer ||
-      newConfig.loss !== this.config.loss;
+      newConfig.loss !== this.config.loss ||
+      newConfig.gradientClip !== this.config.gradientClip;
 
     this.config = { ...this.config, ...newConfig };
 
@@ -114,11 +116,17 @@ export class NeuralNetwork {
       loss = 'meanSquaredError';
     }
 
-    model.compile({
+    const compileConfig = {
       optimizer: optimizer,
       loss: loss,
       metrics: ['accuracy']
-    });
+    };
+
+    if (this.config.gradientClip && this.config.gradientClip > 0) {
+      compileConfig.clipnorm = this.config.gradientClip;
+    }
+
+    model.compile(compileConfig);
   }
 
   async train(xs, ys, epochs = 1) {

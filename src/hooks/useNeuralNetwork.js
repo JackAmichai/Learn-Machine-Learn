@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import * as tf from '@tensorflow/tfjs';
 import { NeuralNetwork } from '../engine/NeuralNetwork';
 import { generateData, DataType } from '../engine/data';
@@ -29,6 +29,14 @@ const buildLayerFeatureMap = (structure, previous = {}) => {
     }
     return map;
 };
+
+const createStepState = (status = 'Ready for forward pass') => ({
+    phase: 'forward',
+    lastForwardLoss: null,
+    lastBackwardLoss: null,
+    status,
+    busy: false
+});
 
 const structuresEqual = (a, b) => (
     a.length === b.length && a.every((val, idx) => val === b[idx])
@@ -67,8 +75,12 @@ export function useNeuralNetwork() {
     const [hyperparams, setHyperparams] = useState({
         learningRate: 0.1,
         activation: 'relu',
-        optimizer: 'adam'
+        optimizer: 'adam',
+        gradientClip: 0
     });
+    const [trainingMode, setTrainingModeState] = useState('continuous'); // 'continuous' | 'slow' | 'step'
+    const [slowDelay, setSlowDelay] = useState(600);
+    const [stepState, setStepState] = useState(() => createStepState());
     const [layerFeatures, setLayerFeatures] = useState(() => buildLayerFeatureMap(DEFAULT_STRUCTURE));
     const layerFeatureRef = useRef(layerFeatures);
 
@@ -87,6 +99,47 @@ export function useNeuralNetwork() {
         DEFAULT_DATASET_PARAMS.size,
         DEFAULT_DATASET_PARAMS.noise
     ));
+    const resetStepState = (status = 'Ready for forward pass') => {
+        setStepState(createStepState(status));
+    };
+
+    const buildVisionBatch = useCallback(() => {
+        if (customData.length === 0) return null;
+        const xArr = customData.map(d => Array.from(d.input));
+        const yArr = customData.map(d => (d.label === 0 ? [1, 0] : [0, 1]));
+        const xs = tf.tensor2d(xArr);
+        const ys = tf.tensor2d(yArr);
+        return { xs, ys, dispose: true };
+    }, [customData]);
+
+    const getTrainingBatch = useCallback(() => {
+        if (mode === 'vision') {
+            return buildVisionBatch();
+        }
+        if (!dataset) return null;
+        return { xs: dataset.xs, ys: dataset.ys, dispose: false };
+    }, [mode, dataset, buildVisionBatch]);
+
+    const evaluateBatchLoss = async (xs, ys) => {
+        if (!network.model) return null;
+        const evalResult = await network.model.evaluate(xs, ys, { batchSize: 32 });
+        const tensors = Array.isArray(evalResult) ? evalResult : [evalResult];
+        const lossTensor = tensors[0];
+        const data = await lossTensor.data();
+        tensors.forEach(t => t.dispose());
+        return data[0];
+    };
+
+    const applyTrainingHistory = (history) => {
+        if (!history || !history.history) return;
+        const lossHistory = history.history.loss;
+        const lossVal = Array.isArray(lossHistory) ? lossHistory[0] : lossHistory;
+        if (typeof lossVal === 'number' && !Number.isNaN(lossVal)) {
+            setLoss(lossVal);
+        }
+        setEpoch(e => e + 1);
+        setModelVersion(v => v + 1);
+    };
 
     // We expose a "version" number to trigger strict re-renders of visualizations
     const [modelVersion, setModelVersion] = useState(0);
@@ -98,6 +151,22 @@ export function useNeuralNetwork() {
     useEffect(() => () => {
         disposeDataset(datasetRef.current);
     }, []);
+
+    useEffect(() => {
+        if (trainingMode === 'step' && isPlaying) {
+            setIsPlaying(false);
+        }
+    }, [trainingMode, isPlaying]);
+
+    useEffect(() => {
+        resetStepState('Configuration changed - run forward pass.');
+    }, [datasetParams.type, datasetParams.size, datasetParams.noise, mode, structure]);
+
+    useEffect(() => {
+        if (mode === 'vision') {
+            resetStepState('Custom samples updated - run forward pass.');
+        }
+    }, [customData.length, mode]);
 
     const resetTrainingStats = () => {
         setEpoch(0);
@@ -133,6 +202,7 @@ export function useNeuralNetwork() {
             return next;
         });
         resetTrainingStats();
+        resetStepState('Dataset regenerated - run forward pass.');
     };
 
     const clearDataset = () => {
@@ -141,69 +211,69 @@ export function useNeuralNetwork() {
             return null;
         });
         resetTrainingStats();
+        resetStepState('Dataset cleared - add samples to continue.');
     };
 
     // Training Loop
     useEffect(() => {
-        let animId;
+        if (!isPlaying || trainingMode === 'step') return;
 
-        const loop = async () => {
-            if (!isPlaying) return;
+        let cancelled = false;
+        let frameId = null;
+        let timerId = null;
 
-            let xs, ys;
-            let disposeTensors = false; // Flag to indicate if we need to dispose xs, ys after training
-
-            if (mode === 'vision') {
-                if (customData.length === 0) {
-                    setIsPlaying(false);
-                    return;
-                }
-                // Convert customData to tensors
-                // We do this every frame which is inefficient but OK for small datasets
-
-                // Non-tidy simple conversion
-                const xArr = customData.map(d => Array.from(d.input));
-                const yArr = customData.map(d => {
-                    // One-hot encode for 2 classes
-                    const label = d.label;
-                    return label === 0 ? [1, 0] : [0, 1];
-                });
-                xs = tf.tensor2d(xArr);
-                ys = tf.tensor2d(yArr);
-                disposeTensors = true; // We created new tensors, so we must dispose them
-
+        const scheduleNext = () => {
+            if (cancelled || !isPlaying) return;
+            if (trainingMode === 'slow') {
+                timerId = setTimeout(runIteration, slowDelay);
             } else {
-                if (!dataset) return;
-                xs = dataset.xs;
-                ys = dataset.ys;
+                frameId = requestAnimationFrame(runIteration);
             }
-
-            const history = await network.train(xs, ys, 1);
-
-            if (disposeTensors) {
-                xs.dispose();
-                ys.dispose();
-            }
-
-            if (history) {
-                const lossVal = history.history.loss[0];
-                setLoss(lossVal);
-                setEpoch(e => e + 1);
-                // Trigger visual update
-                setModelVersion(v => v + 1);
-            }
-
-            animId = requestAnimationFrame(loop);
         };
 
-        if (isPlaying) {
-            loop();
-        } else {
-            cancelAnimationFrame(animId);
-        }
+        const runIteration = async () => {
+            if (cancelled || !isPlaying) return;
 
-        return () => cancelAnimationFrame(animId);
-    }, [isPlaying, mode, customData, dataset, network]);
+            const batch = getTrainingBatch();
+            if (!batch) {
+                setIsPlaying(false);
+                setStepState(prev => ({ ...prev, status: 'Provide training data to continue.', phase: 'forward', busy: false }));
+                return;
+            }
+
+            const { xs, ys, dispose } = batch;
+            let history = null;
+            try {
+                history = await network.train(xs, ys, 1);
+            } catch (error) {
+                console.error('Training error:', error);
+                setIsPlaying(false);
+            } finally {
+                if (dispose) {
+                    xs.dispose();
+                    ys.dispose();
+                }
+            }
+
+            if (!history || cancelled) {
+                return;
+            }
+
+            applyTrainingHistory(history);
+
+            if (!cancelled && isPlaying) {
+                scheduleNext();
+            }
+        };
+
+        scheduleNext();
+
+        return () => {
+            cancelled = true;
+            if (frameId) cancelAnimationFrame(frameId);
+            if (timerId) clearTimeout(timerId);
+        };
+    }, [isPlaying, trainingMode, slowDelay, network, getTrainingBatch]);
 
     const addLayer = () => {
         applyStructure(prev => {
@@ -246,6 +316,7 @@ export function useNeuralNetwork() {
 
     const addSample = (inputGrid, label) => {
         setCustomData(prev => [...prev, { input: inputGrid, label }]);
+        resetStepState('Custom samples updated - run forward pass.');
     };
 
     const updateDatasetParams = (update) => {
@@ -257,6 +328,19 @@ export function useNeuralNetwork() {
             }
             return next;
         });
+    };
+
+    const updateTrainingMode = (nextMode) => {
+        setTrainingModeState(nextMode);
+        if (nextMode === 'step') {
+            setIsPlaying(false);
+            resetStepState('Step mode active - run forward pass.');
+        }
+    };
+
+    const updateSlowDelayValue = (value) => {
+        const numeric = typeof value === 'number' ? value : slowDelay;
+        setSlowDelay(clamp(numeric, 150, 2000));
     };
 
     const changeMode = (nextMode) => {
@@ -289,6 +373,78 @@ export function useNeuralNetwork() {
             return network.predict(input).dataSync();
         });
         return res; // Float32Array
+    };
+
+    const runForwardPass = async () => {
+        const batch = getTrainingBatch();
+        if (!batch) {
+            setStepState(prev => ({ ...prev, status: 'Need training data before running forward pass.', busy: false }));
+            return null;
+        }
+        setStepState(prev => ({ ...prev, busy: true, status: 'Running forward pass...' }));
+        try {
+            const lossVal = await evaluateBatchLoss(batch.xs, batch.ys);
+            setStepState(prev => ({
+                ...prev,
+                busy: false,
+                phase: 'backward',
+                lastForwardLoss: lossVal,
+                status: 'Forward pass complete. Execute backward pass to update weights.'
+            }));
+            return lossVal;
+        } catch (error) {
+            console.error('Forward pass failed:', error);
+            setStepState(prev => ({ ...prev, busy: false, status: 'Forward pass failed. Check console for details.' }));
+            throw error;
+        } finally {
+            if (batch.dispose) {
+                batch.xs.dispose();
+                batch.ys.dispose();
+            }
+        }
+    };
+
+    const runBackwardPass = async () => {
+        if (stepState.phase !== 'backward') {
+            setStepState(prev => ({ ...prev, status: 'Run a forward pass before applying backward updates.' }));
+            return null;
+        }
+        const batch = getTrainingBatch();
+        if (!batch) {
+            setStepState(prev => ({ ...prev, status: 'Need training data before running backward pass.', busy: false }));
+            return null;
+        }
+        setStepState(prev => ({ ...prev, busy: true, status: 'Running backward pass...' }));
+        let history = null;
+        try {
+            history = await network.train(batch.xs, batch.ys, 1);
+        } catch (error) {
+            console.error('Backward pass failed:', error);
+            setStepState(prev => ({ ...prev, busy: false, status: 'Backward pass failed. Check console for details.' }));
+            throw error;
+        } finally {
+            if (batch.dispose) {
+                batch.xs.dispose();
+                batch.ys.dispose();
+            }
+        }
+
+        if (history) {
+            applyTrainingHistory(history);
+            const lossHistory = history.history?.loss;
+            const lossVal = Array.isArray(lossHistory) ? lossHistory[0] : lossHistory;
+            setStepState(prev => ({
+                ...prev,
+                busy: false,
+                phase: 'forward',
+                lastBackwardLoss: typeof lossVal === 'number' ? lossVal : prev.lastBackwardLoss,
+                status: 'Backward step applied. Run forward pass to inspect new loss.'
+            }));
+            return lossVal ?? null;
+        }
+
+        setStepState(prev => ({ ...prev, busy: false, status: 'Backward pass produced no history results.' }));
+        return null;
     };
 
     const buildModelSnapshot = () => ({
@@ -394,6 +550,13 @@ export function useNeuralNetwork() {
         customData,
         hyperparams,
         updateHyperparams,
+        trainingMode,
+        setTrainingMode: updateTrainingMode,
+        slowDelay,
+        setSlowDelay: updateSlowDelayValue,
+        stepState,
+        runForwardPass,
+        runBackwardPass,
         saveModelToLocal,
         loadModelFromLocal,
         exportModelJSON,

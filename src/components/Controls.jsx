@@ -28,6 +28,13 @@ export function Controls(props) {
         setMode,
         hyperparams,
         updateHyperparams,
+        trainingMode,
+        setTrainingMode,
+        slowDelay,
+        setSlowDelay,
+        stepState,
+        runForwardPass,
+        runBackwardPass,
         saveModelToLocal,
         loadModelFromLocal,
         exportModelJSON,
@@ -106,6 +113,8 @@ export function Controls(props) {
         setDatasetParams(prev => ({ ...prev, noise: value }));
     };
 
+    const formatLoss = (value) => (typeof value === 'number' ? value.toFixed(4) : '--');
+
     return (
         <div className="controls-panel">
             {/* Task Mode Selector */}
@@ -134,9 +143,77 @@ export function Controls(props) {
                     onClick={() => setIsPlaying(!isPlaying)}
                     aria-label={isPlaying ? 'Pause training' : 'Start training'}
                     aria-pressed={isPlaying}
+                    disabled={trainingMode === 'step'}
                 >
                     {isPlaying ? 'Pause' : 'Train'}
                 </button>
+                <div className="train-mode-toggle" role="group" aria-label="Training playback mode">
+                    {[
+                        { key: 'continuous', label: 'Continuous' },
+                        { key: 'slow', label: 'Slow-Mo' },
+                        { key: 'step', label: 'Step' }
+                    ].map(option => (
+                        <button
+                            key={option.key}
+                            className={trainingMode === option.key ? 'active' : ''}
+                            onClick={() => setTrainingMode(option.key)}
+                            aria-pressed={trainingMode === option.key}
+                        >
+                            {option.label}
+                        </button>
+                    ))}
+                </div>
+                {trainingMode === 'slow' && (
+                    <div className="slow-slider">
+                        <label htmlFor="slow-delay">Frame Delay</label>
+                        <input
+                            id="slow-delay"
+                            type="range"
+                            min="150"
+                            max="2000"
+                            step="50"
+                            value={slowDelay}
+                            onChange={(e) => setSlowDelay(parseInt(e.target.value, 10))}
+                        />
+                        <span>{slowDelay}ms</span>
+                    </div>
+                )}
+                {trainingMode === 'step' && (
+                    <div className="step-panel">
+                        <div className="step-buttons">
+                            <button
+                                onClick={runForwardPass}
+                                disabled={stepState.busy || stepState.phase !== 'forward'}
+                            >
+                                Forward Pass
+                            </button>
+                            <button
+                                onClick={runBackwardPass}
+                                disabled={stepState.busy || stepState.phase !== 'backward'}
+                            >
+                                Backward Pass
+                            </button>
+                        </div>
+                        <div className="step-summary">
+                            <div>Forward Loss: {formatLoss(stepState.lastForwardLoss)}</div>
+                            <div>Backward Loss: {formatLoss(stepState.lastBackwardLoss)}</div>
+                        </div>
+                        <p className="step-status">{stepState.status}</p>
+                    </div>
+                )}
+                <div className="clip-control">
+                    <label htmlFor="clip-range">Gradient Clip</label>
+                    <input
+                        id="clip-range"
+                        type="range"
+                        min="0"
+                        max="5"
+                        step="0.1"
+                        value={hyperparams.gradientClip}
+                        onChange={(e) => updateHyperparams({ gradientClip: parseFloat(e.target.value) })}
+                    />
+                    <span>{hyperparams.gradientClip > 0 ? `${hyperparams.gradientClip.toFixed(1)}×` : 'Off'}</span>
+                </div>
             </div>
 
             <div className="section">
@@ -407,6 +484,72 @@ export function Controls(props) {
             }
             .btn-primary.stop {
                 background: var(--accent-danger);
+            }
+            .train-mode-toggle {
+                display: flex;
+                gap: 6px;
+                margin-top: 12px;
+            }
+            .train-mode-toggle button {
+                flex: 1;
+                background: var(--bg-secondary);
+                color: var(--text-secondary);
+                border-radius: 999px;
+                font-size: 11px;
+                border: 1px solid var(--glass-border);
+            }
+            .train-mode-toggle button.active {
+                background: var(--accent-primary);
+                color: #000;
+                font-weight: 600;
+            }
+            .slow-slider,
+            .clip-control {
+                display: grid;
+                grid-template-columns: auto 1fr auto;
+                gap: 8px;
+                align-items: center;
+                font-size: 12px;
+                color: var(--text-secondary);
+                margin-top: 12px;
+            }
+            .slow-slider span,
+            .clip-control span {
+                font-family: monospace;
+                color: var(--accent-primary);
+            }
+            .step-panel {
+                margin-top: 12px;
+                padding: 12px;
+                border: 1px dashed var(--glass-border);
+                border-radius: var(--radius-md);
+                background: rgba(0,0,0,0.15);
+            }
+            .step-buttons {
+                display: flex;
+                gap: 8px;
+                margin-bottom: 10px;
+            }
+            .step-buttons button {
+                flex: 1;
+                border: 1px solid var(--glass-border);
+                border-radius: 8px;
+                background: var(--bg-secondary);
+                color: var(--text-secondary);
+                font-size: 12px;
+                min-height: 36px;
+            }
+            .step-summary {
+                display: flex;
+                justify-content: space-between;
+                font-size: 12px;
+                color: var(--text-secondary);
+                margin-bottom: 6px;
+            }
+            .step-status {
+                margin: 0;
+                font-size: 11px;
+                color: var(--text-secondary);
             }
             .mode-select {
                 display: flex;
