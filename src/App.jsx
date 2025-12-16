@@ -9,6 +9,8 @@ import { TourGuide } from './components/TourGuide';
 
 import { ThemeProvider } from './contexts/ThemeContext';
 import { ThemeToggle } from './components/ThemeToggle';
+import { MathProvider } from './contexts/MathContext';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 function AppContent() {
   const nn = useNeuralNetwork();
@@ -235,10 +237,7 @@ function AppContent() {
 }
 
 
-import { ThemeProvider } from './contexts/ThemeContext';
-import { ThemeToggle } from './components/ThemeToggle';
-import { MathProvider } from './contexts/MathContext';
-import { ErrorBoundary } from './components/ErrorBoundary';
+
 
 function App() {
   return (
@@ -251,3 +250,5 @@ function App() {
     </ThemeProvider>
   );
 }
+
+export default App;
