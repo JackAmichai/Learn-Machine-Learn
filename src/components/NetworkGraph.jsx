@@ -15,9 +15,8 @@ export function NetworkGraph({ model, structure, modelVersion }) {
                 const weights = layer.getWeights();
                 if (!weights.length) return null;
                 const kernel = weights[0];
-                const data = kernel ? kernel.dataSync() : null;
-                weights.forEach(w => w.dispose());
-                return data;
+                // dataSync returns a copy - do NOT dispose the original tensors
+                return kernel ? kernel.dataSync() : null;
             });
         } catch {
             return [];

@@ -40,6 +40,7 @@ export function WeightHeatmap({ model, modelVersion, structure }) {
             if (!weights.length) return null;
             const wTensor = weights[0];
             const snapshot = [];
+            // dataSync returns a copy - do NOT dispose the original tensors
             const wData = wTensor.dataSync();
             for (let u = 0; u < units; u++) {
                 const arr = new Float32Array(inputDim);
@@ -48,7 +49,6 @@ export function WeightHeatmap({ model, modelVersion, structure }) {
                 }
                 snapshot.push(arr);
             }
-            weights.forEach(w => w.dispose());
             return snapshot;
         } catch (error) {
             console.error('Heatmap error', error);

@@ -173,9 +173,9 @@ export class NeuralNetwork {
       const weights = this.connectionLayers[layerIndex].getWeights();
       if (!weights.length) return null;
       const kernel = weights[0];
-      const data = kernel.dataSync();
-      weights.forEach(w => w.dispose());
-      return data;
+      // dataSync returns a copy - do NOT dispose the original tensors
+      // as they are the layer's internal state
+      return kernel.dataSync();
     } catch (e) {
       console.error('Error fetching connection weights:', e);
       return null;
