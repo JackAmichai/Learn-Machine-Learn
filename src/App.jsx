@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useNeuralNetwork } from './hooks/useNeuralNetwork';
 import { Controls } from './components/Controls';
 import { NetworkGraph } from './components/NetworkGraph';
@@ -9,6 +9,7 @@ import { StatsPanel } from './components/StatsPanel';
 import { TourGuide } from './components/TourGuide';
 
 import { ThemeProvider } from './contexts/ThemeContext';
+import { useTheme } from './hooks/useTheme';
 import { ThemeToggle } from './components/ThemeToggle';
 import { MathProvider } from './contexts/MathContext';
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -16,14 +17,33 @@ import { ToastProvider } from './contexts/ToastContext';
 import { ToastStack } from './components/ToastStack';
 import { useToast } from './hooks/useToast';
 
+/**
+ * Global keyboard shortcuts:
+ * - Space: Toggle training
+ * - Escape: Pause training / close tour
+ * - T: Toggle theme
+ * - F: Toggle fullscreen
+ * - ?: Show keyboard shortcuts help
+ */
+const KEYBOARD_SHORTCUTS = {
+  ' ': 'Toggle training (Space)',
+  'Escape': 'Pause training / close dialogs',
+  't': 'Toggle dark/light theme',
+  'f': 'Toggle fullscreen',
+  '?': 'Show this help',
+};
+
 function AppContent() {
   const nn = useNeuralNetwork();
   const [showTour, setShowTour] = useState(false);
+  const [showShortcuts, setShowShortcuts] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const containerRef = useRef(null);
+  const mainContentRef = useRef(null);
   const prevPlayingRef = useRef(nn.isPlaying);
   const prevMilestoneRef = useRef(0);
   const { pushToast } = useToast();
+  const { toggleTheme } = useTheme();
 
   useEffect(() => {
     if (prevPlayingRef.current === nn.isPlaying) return;
@@ -54,27 +74,109 @@ function AppContent() {
     };
   }, []);
 
-  const toggleFullscreen = () => {
+  const toggleFullscreen = useCallback(() => {
     if (typeof document === 'undefined' || !containerRef.current) return;
     if (!document.fullscreenElement) {
       containerRef.current.requestFullscreen?.();
     } else {
       document.exitFullscreen?.();
     }
+  }, []);
+
+  // Global keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Ignore if user is typing in an input/textarea
+      const tag = e.target.tagName.toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+      
+      switch (e.key) {
+        case ' ':
+          e.preventDefault();
+          if (nn.trainingMode !== 'step') {
+            nn.setIsPlaying(prev => !prev);
+          }
+          break;
+        case 'Escape':
+          if (showTour) setShowTour(false);
+          else if (showShortcuts) setShowShortcuts(false);
+          else if (nn.isPlaying) nn.setIsPlaying(false);
+          break;
+        case 't':
+        case 'T':
+          if (!e.ctrlKey && !e.metaKey) {
+            toggleTheme();
+          }
+          break;
+        case 'f':
+        case 'F':
+          if (!e.ctrlKey && !e.metaKey) {
+            toggleFullscreen();
+          }
+          break;
+        case '?':
+          setShowShortcuts(prev => !prev);
+          break;
+        default:
+          break;
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [nn, showTour, showShortcuts, toggleTheme, toggleFullscreen]);
+
+  // Skip to main content handler
+  const handleSkipToMain = () => {
+    mainContentRef.current?.focus();
   };
 
   return (
     <div className="app-container" ref={containerRef}>
+      {/* Skip link for keyboard users */}
+      <a href="#main-content" className="skip-link" onClick={handleSkipToMain}>
+        Skip to main content
+      </a>
+      
+      {/* ARIA live region for status updates */}
+      <div aria-live="polite" aria-atomic="true" className="sr-only" id="status-announcer">
+        {nn.isPlaying ? `Training - Epoch ${nn.epoch}` : 'Training paused'}
+      </div>
+      
       {showTour && <TourGuide mode={nn.mode} onSkip={() => setShowTour(false)} />}
+      
+      {/* Keyboard shortcuts modal */}
+      {showShortcuts && (
+        <div className="shortcuts-modal" role="dialog" aria-labelledby="shortcuts-title" aria-modal="true">
+          <div className="shortcuts-content">
+            <h2 id="shortcuts-title">Keyboard Shortcuts</h2>
+            <ul className="shortcuts-list">
+              {Object.entries(KEYBOARD_SHORTCUTS).map(([key, desc]) => (
+                <li key={key}>
+                  <kbd>{key === ' ' ? 'Space' : key}</kbd>
+                  <span>{desc}</span>
+                </li>
+              ))}
+            </ul>
+            <button onClick={() => setShowShortcuts(false)} className="btn-close-shortcuts">
+              Close (Esc)
+            </button>
+          </div>
+        </div>
+      )}
+      
       <Controls {...nn} />
 
-      <main className="main-content">
+      <main className="main-content" id="main-content" ref={mainContentRef} tabIndex={-1}>
         <header className="main-header">
           <div>
             <h1>Learn <span>MACHINE</span> Learn</h1>
             <p>Interactive Neural Network Playground</p>
           </div>
           <div className="header-actions">
+            <button className="btn-shortcuts" onClick={() => setShowShortcuts(true)} aria-label="Show keyboard shortcuts">
+              ⌨️
+            </button>
             <button className="btn-tour" onClick={() => setShowTour(true)}>Start Tour</button>
             <button className="btn-fullscreen" onClick={toggleFullscreen} aria-pressed={isFullscreen} aria-label="Toggle fullscreen mode">
               {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}

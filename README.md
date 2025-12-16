@@ -61,21 +61,27 @@ This project follows WCAG AA guidelines:
 - **Arrow Key Navigation**: Navigate tour steps with Arrow keys
 - **ARIA Labels**: Semantic markup for screen readers
 - **Touch Targets**: Minimum 44×44px for mobile accessibility
+- **Reduced Motion**: Respects `prefers-reduced-motion` system setting
+- **High Contrast**: Supports forced-colors mode
 
 ### Keyboard Shortcuts
 
 | Key | Action |
 |-----|--------|
 | `Tab` / `Shift+Tab` | Navigate between elements |
-| `Enter` / `Space` | Activate buttons |
-| `Escape` | Close modals, tooltips, tour |
+| `Enter` / `Space` | Activate buttons / Toggle training |
+| `Escape` | Close modals, tooltips, tour / Pause training |
 | `←` / `→` | Navigate tour steps |
+| `T` | Toggle dark/light theme |
+| `F` | Toggle fullscreen |
+| `?` | Show keyboard shortcuts help |
 
 ## Tech Stack
 
 - **React 19** - UI framework
 - **Vite 5** - Build tool with HMR
 - **TensorFlow.js** - In-browser machine learning
+- **Vitest** - Unit testing framework
 - **ESLint 9** - Code linting
 
 ## Project Structure
@@ -85,24 +91,57 @@ src/
 ├── components/
 │   ├── Controls.jsx      # Training controls & hyperparameters
 │   ├── MathModal.jsx     # Interactive math formula explorer
-│   ├── NetworkCanvas.jsx # Neural network visualization
+│   ├── NetworkGraph.jsx  # Neural network visualization
+│   ├── OutputPlot.jsx    # Decision boundary visualization
+│   ├── StatsPanel.jsx    # Metrics: confusion matrix, F1, accuracy
 │   ├── Tooltip.jsx       # Accessible hover/focus tooltips
 │   ├── TourGuide.jsx     # Onboarding walkthrough
-│   └── VisionCanvas.jsx  # Drawing canvas for vision mode
-├── data/
-│   ├── mathContent.js    # Math formulas & explanations
-│   └── tooltipDict.js    # Term definitions
+│   ├── VisionCanvas.jsx  # Drawing canvas for vision mode
+│   └── WeightHeatmap.jsx # Weight visualization heatmap
+├── contexts/
+│   ├── ThemeContext.jsx  # Dark/light theme provider
+│   ├── ToastContext.jsx  # Toast notifications provider
+│   └── MathContext.jsx   # Math modal provider
+├── engine/
+│   ├── NeuralNetwork.js  # TensorFlow.js wrapper class
+│   ├── data.js           # Dataset generation (XOR, Spiral, etc.)
+│   └── mathContent.js    # Math formulas & explanations
+├── hooks/
+│   ├── useNeuralNetwork.js # Main training state management
+│   ├── useTheme.js       # Theme context hook
+│   └── useToast.js       # Toast notifications hook
+├── test/
+│   └── setup.js          # Vitest setup
 ├── App.jsx               # Main application
 └── index.css             # Global styles
+```
+
+## Testing
+
+```bash
+# Run tests in watch mode
+npm test
+
+# Run tests once
+npm run test:run
+
+# Run with coverage
+npm run test:coverage
 ```
 
 ## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'feat: add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+3. Run tests and linting: `npm run lint && npm run test:run`
+4. Commit changes (`git commit -m 'feat: add amazing feature'`)
+5. Push to branch (`git push origin feature/amazing-feature`)
+6. Open a Pull Request
+
+### Development Notes
+
+- Dev dependencies have known moderate vulnerabilities (esbuild/vite) that only affect the dev server, not production builds
+- TensorFlow.js warnings about WebGL are expected in Node.js test environment
 
 ## License
 
