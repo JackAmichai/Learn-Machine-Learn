@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 
 const STEPS = [
     {
@@ -46,7 +46,10 @@ export function TourGuide({ mode, onSkip }) {
     const highlightedRef = useRef(null);
 
     // Filter steps based on mode
-    const activeSteps = STEPS.filter(s => !s.condition || s.condition(mode));
+    const activeSteps = useMemo(
+        () => STEPS.filter(s => !s.condition || s.condition(mode)),
+        [mode]
+    );
 
     useEffect(() => {
         // Cleanup previous highlight
@@ -58,6 +61,17 @@ export function TourGuide({ mode, onSkip }) {
         const current = activeSteps[step];
         if (!current) return;
 
+        const updateStyle = (nextStyle) => {
+            setStyle(prev => {
+                const prevKeys = Object.keys(prev);
+                const nextKeys = Object.keys(nextStyle);
+                if (prevKeys.length === nextKeys.length && prevKeys.every(key => prev[key] === nextStyle[key])) {
+                    return prev;
+                }
+                return nextStyle;
+            });
+        };
+
         if (current.target) {
             const el = document.querySelector(current.target);
             if (el) {
@@ -66,7 +80,7 @@ export function TourGuide({ mode, onSkip }) {
                 const cardHeight = 200; // approximate
                 const padding = 15;
                 
-                let newStyle = { position: 'fixed' };
+                const newStyle = { position: 'fixed' };
                 
                 // Position based on preference or auto-detect best position
                 const pos = current.position || 'bottom';
@@ -94,7 +108,7 @@ export function TourGuide({ mode, onSkip }) {
                         break;
                 }
                 
-                setStyle(newStyle);
+                updateStyle(newStyle);
 
                 // Add highlight
                 el.classList.add('tour-highlight');
@@ -102,7 +116,7 @@ export function TourGuide({ mode, onSkip }) {
             }
         } else {
             // Center for welcome screen
-            setStyle({
+            updateStyle({
                 top: '50%',
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
@@ -115,7 +129,7 @@ export function TourGuide({ mode, onSkip }) {
                 highlightedRef.current.classList.remove('tour-highlight');
             }
         };
-    }, [step, mode, activeSteps]);
+    }, [step, activeSteps]);
 
     const handleNext = () => {
         if (step >= activeSteps.length - 1) {

@@ -1,48 +1,39 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect } from 'react';
 
 export function WeightHeatmap({ model, modelVersion }) {
-    const [weightsData, setWeightsData] = useState(null); // Array of Float32Arrays
     const containerRef = useRef(null);
 
-    useEffect(() => {
-        if (!model || !model.model) return;
-
-        // Find first dense layer that comes after input
-        // The model might have a 'flatten' layer if used with Conv2D later, but for now it's Dense directly on input.
-        // However, input layer is implicit in TFJS Sequential usually? No, first layer is layer[0].
-
+    const weightsData = (() => {
+        if (modelVersion === null || modelVersion === undefined) {
+            return null;
+        }
+        if (!model || !model.model) return null;
         const layer = model.model.layers[0];
-        if (!layer) return;
+        if (!layer) return null;
 
         try {
-            const wTensor = layer.getWeights()[0]; // Shape [100, units]
-            const wData = wTensor.dataSync();
-            const units = layer.units;
+            const [wTensor] = layer.getWeights();
+            if (!wTensor) return null;
+
             const inputDim = wTensor.shape[0];
+            const units = layer.units;
+            if (inputDim !== 100 || !units) return null; // Only visualize 10x10 vision grids
 
-            if (inputDim !== 100) return; // Only for Vision 10x10
-
-            // Split into arrays per unit
-            // Weights are stored [input0_unit0, input0_unit1, ... ] row-major?
-            // Actually usually [input, output] -> [100, 16]
-            // So wData[i * units + j] is weight from input i to unit j.
-            // We want for each Unit, the 100 input weights.
-
-            const unitsWeights = [];
+            const snapshot = [];
+            const wData = wTensor.dataSync();
             for (let u = 0; u < units; u++) {
                 const arr = new Float32Array(100);
                 for (let i = 0; i < 100; i++) {
                     arr[i] = wData[i * units + u];
                 }
-                unitsWeights.push(arr);
+                snapshot.push(arr);
             }
-
-            setWeightsData(unitsWeights);
-        } catch (e) {
-            console.error("Heatmap error", e);
+            return snapshot;
+        } catch (error) {
+            console.error("Heatmap error", error);
+            return null;
         }
-
-    }, [model, modelVersion]);
+    })();
 
     return (
         <div className="heatmap-container" ref={containerRef}>
@@ -113,7 +104,6 @@ function UnitHeatmap({ weights, index }) {
             const c = i % 10;
 
             // Color map: Blue (-1) -> Black (0) -> Red (1)
-            let color = 'black';
             const intensity = Math.min(255, Math.abs(val) * 255);
 
             if (val > 0) {

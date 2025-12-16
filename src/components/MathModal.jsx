@@ -172,7 +172,7 @@ function FormulaPlayground({ formula, sliderValues, onSliderChange, activeFormul
     const calculateResult = () => {
         try {
             return formula.calculate(sliderValues, getSliderValue);
-        } catch (e) {
+        } catch {
             return 'N/A';
         }
     };

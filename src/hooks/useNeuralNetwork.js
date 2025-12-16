@@ -1,15 +1,28 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import * as tf from '@tensorflow/tfjs';
 import { NeuralNetwork } from '../engine/NeuralNetwork';
 import { generateData, DataType } from '../engine/data';
+
+const DEFAULT_STRUCTURE = [2, 5, 4, 1];
+const VISION_STRUCTURE = [100, 16, 2];
+
+const structuresEqual = (a, b) => (
+    a.length === b.length && a.every((val, idx) => val === b[idx])
+);
+
+const disposeDataset = (ds) => {
+    if (!ds) return;
+    ds.xs.dispose();
+    ds.ys.dispose();
+};
 
 export function useNeuralNetwork() {
     const [isPlaying, setIsPlaying] = useState(false);
     const [epoch, setEpoch] = useState(0);
     const [loss, setLoss] = useState(0);
-    const [structure, setStructure] = useState([2, 5, 4, 1]); // default simple network
-    const [datasetParams, setDatasetParams] = useState({ type: DataType.SPIRAL, size: 300 });
-    const [mode, setMode] = useState('simple'); // 'simple' | 'vision'
+    const [structure, setStructureState] = useState(DEFAULT_STRUCTURE);
+    const [datasetParams, setDatasetParamsState] = useState({ type: DataType.SPIRAL, size: 300 });
+    const [mode, setModeState] = useState('simple'); // 'simple' | 'vision'
     const [customData, setCustomData] = useState([]); // Array of {input: [], label: 0}
     const [hyperparams, setHyperparams] = useState({
         learningRate: 0.1,
@@ -17,54 +30,63 @@ export function useNeuralNetwork() {
         optimizer: 'adam'
     });
 
-    // Refs to hold mutable non-react state
-    const nn = useRef(new NeuralNetwork(hyperparams));
-    const data = useRef(null);
+    const [network] = useState(() => {
+        const nn = new NeuralNetwork(hyperparams);
+        nn.createModel(DEFAULT_STRUCTURE);
+        return nn;
+    });
+    const datasetRef = useRef(null);
+    const [dataset, setDatasetState] = useState(() => generateData(DataType.SPIRAL, 300));
 
     // We expose a "version" number to trigger strict re-renders of visualizations
     const [modelVersion, setModelVersion] = useState(0);
 
-    // Initialize Data
     useEffect(() => {
-        // If Mode is Vision, we don't generate random data automatically.
-        // We rely on user adding samples.
-        if (mode === 'vision') {
-            if (data.current) {
-                data.current.xs.dispose();
-                data.current.ys.dispose();
-                data.current = null;
-            }
-            return;
-        }
+        datasetRef.current = dataset;
+    }, [dataset]);
 
-        if (data.current) {
-            data.current.xs.dispose();
-            data.current.ys.dispose();
-        }
-        data.current = generateData(datasetParams.type, datasetParams.size);
+    useEffect(() => () => {
+        disposeDataset(datasetRef.current);
+    }, []);
+
+    const resetTrainingStats = () => {
         setEpoch(0);
         setLoss(0);
-    }, [datasetParams, mode]);
+    };
 
-    // Handle Mode Switching impact on Structure
-    useEffect(() => {
-        // If switching to Vision, set appropriate structure
-        if (mode === 'vision') {
-            setStructure([100, 16, 2]); // 10x10=100 input, 2 classes (A/B)
-        } else {
-            setStructure([2, 5, 4, 1]);
-        }
-        setCustomData([]); // Clear custom data on mode switch
-        setIsPlaying(false);
-    }, [mode]);
-
-    // Initialize/Update Model Structure
-    useEffect(() => {
-        nn.current.createModel(structure);
+    const rebuildModel = (nextStructure) => {
+        network.createModel(nextStructure);
         setModelVersion(v => v + 1);
-        setEpoch(0);
-        setLoss(0);
-    }, [structure]);
+        resetTrainingStats();
+    };
+
+    const applyStructure = (nextStructure) => {
+        setStructureState(prev => {
+            const target = typeof nextStructure === 'function' ? nextStructure(prev) : nextStructure;
+            if (structuresEqual(prev, target)) {
+                return prev;
+            }
+            rebuildModel(target);
+            return target;
+        });
+    };
+
+    const replaceDataset = (type, size) => {
+        const next = generateData(type, size);
+        setDatasetState(prev => {
+            disposeDataset(prev);
+            return next;
+        });
+        resetTrainingStats();
+    };
+
+    const clearDataset = () => {
+        setDatasetState(prev => {
+            disposeDataset(prev);
+            return null;
+        });
+        resetTrainingStats();
+    };
 
     // Training Loop
     useEffect(() => {
@@ -96,12 +118,12 @@ export function useNeuralNetwork() {
                 disposeTensors = true; // We created new tensors, so we must dispose them
 
             } else {
-                if (!data.current) return;
-                xs = data.current.xs;
-                ys = data.current.ys;
+                if (!dataset) return;
+                xs = dataset.xs;
+                ys = dataset.ys;
             }
 
-            const history = await nn.current.train(xs, ys, 1);
+            const history = await network.train(xs, ys, 1);
 
             if (disposeTensors) {
                 xs.dispose();
@@ -126,13 +148,14 @@ export function useNeuralNetwork() {
         }
 
         return () => cancelAnimationFrame(animId);
-    }, [isPlaying, mode, customData]); // Added mode and customData to dependencies
+    }, [isPlaying, mode, customData, dataset, network]);
 
     const addLayer = () => {
-        // Add a layer before the output
-        const newStruct = [...structure];
-        newStruct.splice(newStruct.length - 1, 0, 4); // add hidden layer of 4
-        setStructure(newStruct);
+        applyStructure(prev => {
+            const next = [...prev];
+            next.splice(next.length - 1, 0, 4);
+            return next;
+        });
     };
 
     const removeLayer = (index) => {
@@ -140,39 +163,61 @@ export function useNeuralNetwork() {
         if (structure.length <= 2) return;
         if (index <= 0 || index >= structure.length - 1) return;
 
-        const newStruct = structure.filter((_, i) => i !== index);
-        setStructure(newStruct);
+        applyStructure(prev => prev.filter((_, i) => i !== index));
     };
 
     const updateNodeCount = (layerIndex, delta) => {
         if (layerIndex === 0 || layerIndex === structure.length - 1) return; // Don't change input/output for now
 
-        const newStruct = [...structure];
-        newStruct[layerIndex] = Math.max(1, newStruct[layerIndex] + delta);
-        setStructure(newStruct);
+        applyStructure(prev => {
+            const next = [...prev];
+            next[layerIndex] = Math.max(1, next[layerIndex] + delta);
+            return next;
+        });
     };
 
     const addSample = (inputGrid, label) => {
         setCustomData(prev => [...prev, { input: inputGrid, label }]);
     };
 
+    const updateDatasetParams = (update) => {
+        setDatasetParamsState(prev => {
+            const next = typeof update === 'function' ? update(prev) : { ...prev, ...update };
+            if (mode === 'simple') {
+                replaceDataset(next.type, next.size);
+            }
+            return next;
+        });
+    };
+
+    const changeMode = (nextMode) => {
+        if (nextMode === mode) return;
+        setModeState(nextMode);
+        setIsPlaying(false);
+        setCustomData([]);
+        if (nextMode === 'vision') {
+            applyStructure(VISION_STRUCTURE);
+            clearDataset();
+        } else {
+            applyStructure(DEFAULT_STRUCTURE);
+            replaceDataset(datasetParams.type, datasetParams.size);
+        }
+    };
+
     const updateHyperparams = (newParams) => {
         setHyperparams(prev => ({ ...prev, ...newParams }));
-        const res = nn.current.updateConfig(newParams);
+        const res = network.updateConfig(newParams);
         if (res.rebuild) {
-            nn.current.createModel(structure);
-            setModelVersion(v => v + 1);
-            setEpoch(0);
-            setLoss(0);
+            rebuildModel(structure);
         }
     };
 
     const predictSample = (inputGrid) => {
-        if (!nn.current.model) return null;
+        if (!network.model) return null;
         // return class probs
         const res = tf.tidy(() => {
             const input = tf.tensor2d([Array.from(inputGrid)]);
-            return nn.current.predict(input).dataSync();
+            return network.predict(input).dataSync();
         });
         return res; // Float32Array
     };
@@ -183,22 +228,20 @@ export function useNeuralNetwork() {
         epoch,
         loss,
         structure,
-        setStructure,
         datasetParams,
-        setDatasetParams,
+        setDatasetParams: updateDatasetParams,
         addLayer,
         removeLayer,
         updateNodeCount,
-        model: nn.current,
-        data: data.current,
+        model: network,
+        data: dataset,
         modelVersion,
         mode,
-        setMode,
+        setMode: changeMode,
         addSample,
         predictSample,
         customData,
         hyperparams,
-        updateHyperparams,
-        tf // expose if needed
+        updateHyperparams
     };
 }

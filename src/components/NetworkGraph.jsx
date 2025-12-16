@@ -1,22 +1,20 @@
-import { useMemo } from 'react';
-import * as tf from '@tensorflow/tfjs';
-
 export function NetworkGraph({ model, structure, modelVersion }) {
-
-    // Extract weights for visualization
-    const weights = useMemo(() => {
-        if (!model) return [];
-        try {
-            return model.model.layers.map(l => {
-                // Dense layer weights are [kernel, bias]
-                // We only care about kernel for lines
-                const w = l.getWeights()[0];
-                return w ? w.dataSync() : null;
-            });
-        } catch (e) {
+    // Extract weights for visualization (recomputed when modelVersion increments)
+    const weights = (() => {
+        const version = modelVersion;
+        if (version === null || version === undefined) {
             return [];
         }
-    }, [model, modelVersion, structure]);
+        if (!model || !model.model) return [];
+        try {
+            return model.model.layers.map(layer => {
+                const [kernel] = layer.getWeights();
+                return kernel ? kernel.dataSync() : null;
+            });
+        } catch {
+            return [];
+        }
+    })();
 
     // Calculate generic coords
     const svgWidth = 600;

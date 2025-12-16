@@ -37,36 +37,9 @@ export function OutputPlot({ model, data, modelVersion }) {
 
             for (let i = 0; i < gridSize; i++) {
                 for (let j = 0; j < gridSize; j++) {
-                    const idx = i * gridSize + j;
-                    // Grid traversal logic: i is usually Y or X depending on loop.
-                    // inputs pushed: x varies in inner loop `j`.
-                    // So idx corresponds to x=j, y=i if using that order.
-                    // Wait, I pushed x=(i/gridSize). So x is constant for inner loop? No.
-
-                    // Let's recheck loops:
-                    // i = 0..gridSize (X axis approx)
-                    // j = 0..gridSize (Y axis approx)
-                    // x = map(i), y = map(j)
-                    // inputs.push([x,y])
-                    // So inputs are ordered by i then j.
-
                     const val = preds[i * gridSize + j];
 
-                    // Color map: Blue (0) -> White/Black -> Orange (1)
-                    // A nice gradient:
-                    // 0.0 -> #3b42c4 (Dark Blue)
-                    // 0.5 -> #20202a (Dark Grey)
-                    // 1.0 -> #c47c3b (Orange/Cyan)
-
-                    // Let's use simple lerp
-                    const r = val * 255;
-                    const b = (1 - val) * 255;
-                    const g = 50;
-
-                    // Premium look: Cyan vs Purple
-                    // 0 = Purple (112, 0, 255)
-                    // 1 = Cyan (0, 242, 255)
-
+                    // Premium look: Purple (0) → Cyan (1)
                     const c1 = [112, 0, 255];
                     const c2 = [0, 242, 255];
 

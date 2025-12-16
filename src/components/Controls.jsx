@@ -87,6 +87,37 @@ export function Controls(props) {
                 </div>
             </div>
 
+            <div className="section">
+                <h3>Math Explorer</h3>
+                <p className="math-intro">Hover the badges to preview formulas, then jump into the interactive modal for full derivations.</p>
+                <div className="math-grid">
+                    <div className="math-card">
+                        <span className="math-label">Optimization Flow</span>
+                        <div className="math-tags">
+                            <Tooltip word="Gradient" />
+                            <Tooltip word="Backpropagation" />
+                            <Tooltip word="Optimizer" />
+                        </div>
+                    </div>
+                    <div className="math-card">
+                        <span className="math-label">Output Logic</span>
+                        <div className="math-tags">
+                            <Tooltip word="Softmax" />
+                            <Tooltip word="Activation" />
+                            <Tooltip word="Loss" />
+                        </div>
+                    </div>
+                    <div className="math-card">
+                        <span className="math-label">Generalization</span>
+                        <div className="math-tags">
+                            <Tooltip word="Regularization" />
+                            <Tooltip word="Signal Processing" />
+                            <Tooltip word="Convolution" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {mode === 'simple' && (
                 <div className="section">
                     <h3>Data</h3>
@@ -340,6 +371,36 @@ export function Controls(props) {
                 width: 35px;
                 text-align: right;
                 font-family: monospace;
+            }
+            .math-intro {
+                font-size: 11px;
+                color: var(--text-secondary);
+                margin: 0 0 10px 0;
+            }
+            .math-grid {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+            .math-card {
+                background: rgba(0,0,0,0.25);
+                padding: 12px;
+                border-radius: 8px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+            .math-label {
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                color: var(--text-secondary);
+            }
+            .math-tags {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                font-size: 12px;
             }
         `}</style>
         </div >

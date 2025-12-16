@@ -1,44 +1,56 @@
 import { useState } from 'react';
-import { useMath } from '../contexts/MathContext';
+import { useMath } from '../hooks/useMath';
 import { MATH_TOPICS } from '../engine/mathContent';
 
 const DICTIONARY = {
-    // Core Training Concepts
-    "Loss": "The 'error score' that tells the network how wrong it is. Lower = better! The network's goal is to minimize this number through learning.",
-    "Epoch": "One complete pass through ALL training data. Like reading a textbook once. Usually needs many epochs (re-reads) to learn well.",
-    
-    // Architecture Terms
-    "Hidden Layer": "The 'thinking' layers between input and output. They learn to detect patterns and features that help make predictions.",
-    "Nodes": "Individual neurons - the basic computing units. Each node takes inputs, multiplies by weights, sums them up, and outputs a number.",
-    "Neurons": "The brain cells of a neural network! Each neuron receives inputs, processes them (multiply, sum, activate), and passes output forward.",
-    "Layer": "A group of neurons working in parallel. Data flows through layers: Input → Hidden(s) → Output. More layers = deeper network.",
-    
-    // Network Types
-    "Dense": "Also called 'Fully Connected'. Every neuron connects to EVERY neuron in the next layer. Simple but powerful for tabular data.",
-    "CNN": "Convolutional Neural Network - the king of image recognition! Uses sliding filters to detect edges, textures, then complex shapes.",
-    "RNN": "Recurrent Neural Network - has memory! Processes sequences (text, audio, time series) by remembering what came before.",
-    "MLP": "Multi-Layer Perceptron - the classic neural network with fully connected layers. Great starting point for learning!",
-    
-    // Hyperparameters
-    "Learning Rate": "Step size when updating weights. Too high = overshoots optimal values. Too low = learns too slowly. Sweet spot: 0.001-0.1",
-    "Activation": "The 'decision function' after each neuron. Adds non-linearity so networks can learn curves, not just straight lines.",
-    "Optimizer": "The learning strategy. SGD = simple steps downhill. Adam = smart adaptive steps that speed up learning.",
-    
-    // Training Stats
-    "Accuracy": "Percentage of correct predictions. 90% accuracy = got 9 out of 10 right.",
-    "Batch Size": "How many samples to process before updating weights. Larger = stable but slow. Smaller = noisy but fast.",
-    "Weights": "The learnable parameters - numbers that multiply inputs. Training = finding the best weight values.",
-    "Bias": "A learnable offset added to each neuron. Lets the neuron activate even when inputs are zero.",
-    
-    // Activation Functions
-    "ReLU": "Rectified Linear Unit: outputs input if positive, else 0. Simple, fast, and works great! Most popular activation.",
-    "Sigmoid": "Squashes any number to 0-1 range. Good for probabilities. Can cause 'vanishing gradients' in deep networks.",
-    "Tanh": "Like sigmoid but outputs -1 to 1. Zero-centered which helps learning. Used in RNNs.",
-    
-    // Data
-    "Dataset": "The collection of examples used to train the network. More diverse data = better generalization.",
-    "Features": "The input variables/columns. In images: pixels. In tabular data: columns like age, price, etc.",
-    "Labels": "The 'answers' we want the network to predict. Used during training to calculate loss."
+    // Core Optimization Concepts
+    "Loss": "Scalar objective measuring prediction error. Classification often uses cross-entropy; regression prefers squared error.",
+    "Epoch": "One full sweep through the dataset. Each epoch triggers many gradient steps equal to data size divided by batch size.",
+    "Batch Size": "Mini-batch cardinality. Large batches give smooth gradients; tiny batches add noise that can help escape local minima.",
+    "Learning Rate": "Step size applied to gradients. Treat it like a control gain: high values oscillate, low values take forever.",
+
+    // Architecture Elements
+    "Hidden Layer": "Feature extraction stage that applies an affine transform followed by an activation. Stack them to capture hierarchies.",
+    "Layer": "Group of neurons sharing the same input-output interface. Parameter count grows with fan-in * fan-out.",
+    "Nodes": "Individual computational units performing weighted sums plus bias followed by activation—analogous to summing amplifiers.",
+    "Neurons": "Same as nodes, emphasizing their biological inspiration. Their activations fire when learned detectors recognize patterns.",
+
+    // Network Families
+    "Dense": "Fully connected layer where every input reaches every neuron. Great for tabular data and smaller embedded workloads.",
+    "MLP": "Multi-layer perceptron: stack of dense layers with non-linearities. Universal approximator for continuous functions.",
+    "CNN": "Convolutional neural network using shared kernels and local receptive fields. Excels at spatial signals and image pipelines.",
+    "RNN": "Recurrent neural network that reuses hidden state across time. Useful for sequences, control loops, and language models.",
+
+    // Optimizers and Gradients
+    "Optimizer": "Algorithm that turns gradients into parameter updates. SGD, Momentum, and Adam trade off speed, stability, and memory.",
+    "Gradient": "Vector of partial derivatives indicating how sensitive loss is to each weight. Negative gradient points toward improvement.",
+    "Backpropagation": "Reverse-mode automatic differentiation applying the chain rule layer by layer to compute gradients efficiently.",
+
+    // Activations
+    "Activation": "Non-linear transfer function (ReLU, sigmoid, tanh, etc.) that lets networks model complex decision boundaries.",
+    "ReLU": "Rectified Linear Unit with output max(0, x). Keeps gradients alive for positive inputs and is cheap to compute.",
+    "Sigmoid": "Smooth squashing function mapping R→(0,1). Ideal for probabilities but saturates for large magnitudes.",
+    "Tanh": "Hyperbolic tangent mapping R→(-1,1). Zero-centered which eases optimization in recurrent architectures.",
+
+    // Outputs and Probabilities
+    "Softmax": "Exponentiate-and-normalize operation that converts logits into a probability simplex. Sensitive to relative logit gaps.",
+    "Accuracy": "Share of correct predictions. Combine with confusion matrices to understand class-wise behavior.",
+
+    // Regularization and Generalization
+    "Regularization": "Penalty term added to loss (L1, L2, dropout) to constrain weights and prevent overfitting on limited data.",
+
+    // Signal and Spatial Reasoning
+    "Convolution": "Sliding dot product between a kernel and local input window. Mirrors FIR filters implemented as MAC pipelines.",
+    "Signal Processing": "Applying energy, SNR, and frequency-domain reasoning to features. Bridges classical EE with modern ML.",
+
+    // Learned Parameters
+    "Weights": "Trainable coefficients multiplying inputs. Training tunes them to align internal features with the target task.",
+    "Bias": "Offset term added before activation. Shifts decision thresholds and prevents all-zero outputs.",
+
+    // Data Fundamentals
+    "Dataset": "Collection of labeled examples. Quality, balance, and coverage dominate achievable performance.",
+    "Features": "Input descriptors fed into the network—pixels, sensor voltages, embeddings—often normalized before training.",
+    "Labels": "Ground-truth targets used to compute loss during supervised learning."
 };
 
 export function Tooltip({ word, overrideText }) {
