@@ -78,6 +78,19 @@ button {
   cursor: pointer;
   border: none;
   background: none;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 8px 12px;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 input,
@@ -89,9 +102,16 @@ select {
   padding: 8px 12px;
   border-radius: var(--radius-md);
   outline: none;
+  min-height: 44px;
 }
 
 input:focus,
 select:focus {
   border-color: var(--accent-primary);
+}
+
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
 }

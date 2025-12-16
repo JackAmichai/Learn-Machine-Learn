@@ -119,7 +119,7 @@ export function VisionCanvas({ onAddSample, onPredict, disabled }) {
     };
 
     return (
-        <div className="vision-stage">
+        <div className="vision-stage" role="group" aria-label="Image drawing canvas for training neural network">
             <canvas
                 ref={canvasRef}
                 width={200}
@@ -129,30 +129,36 @@ export function VisionCanvas({ onAddSample, onPredict, disabled }) {
                 onMouseMove={draw}
                 onMouseUp={() => setIsDrawing(false)}
                 onMouseLeave={() => setIsDrawing(false)}
+                tabIndex={disabled ? -1 : 0}
+                role="img"
+                aria-label="10 by 10 pixel drawing canvas. Click and drag to draw patterns for training."
+                aria-disabled={disabled}
             />
 
             <div className="vision-controls">
-                <div className="label-selector">
+                <div className="label-selector" role="group" aria-label="Select training label">
                     <button
                         className={selectedLabel === 0 ? 'active' : ''}
                         onClick={() => setSelectedLabel(0)}
+                        aria-pressed={selectedLabel === 0}
                     >Train as 'A'</button>
                     <button
                         className={selectedLabel === 1 ? 'active' : ''}
                         onClick={() => setSelectedLabel(1)}
+                        aria-pressed={selectedLabel === 1}
                     >Train as 'B'</button>
                 </div>
 
-                <div className="actions">
-                    <button onClick={clear}>Clear</button>
-                    <button onClick={handleAdd}>Add Sample</button>
-                    <button className="btn-predict" onClick={handlePredict}>Predict</button>
+                <div className="actions" role="group" aria-label="Canvas actions">
+                    <button onClick={clear} aria-label="Clear canvas">Clear</button>
+                    <button onClick={handleAdd} aria-label="Add current drawing as training sample">Add Sample</button>
+                    <button className="btn-predict" onClick={handlePredict} aria-label="Predict label for current drawing">Predict</button>
                 </div>
 
-                <div className="presets">
-                    <span className="label">Presets:</span>
-                    <button onClick={() => loadPreset('cross', 0)}>+ Cross (A)</button>
-                    <button onClick={() => loadPreset('square', 1)}>+ Square (B)</button>
+                <div className="presets" role="group" aria-label="Quick presets">
+                    <span className="label" id="presets-label">Presets:</span>
+                    <button onClick={() => loadPreset('cross', 0)} aria-label="Add cross pattern as sample A">+ Cross (A)</button>
+                    <button onClick={() => loadPreset('square', 1)} aria-label="Add square pattern as sample B">+ Square (B)</button>
                 </div>
             </div>
 

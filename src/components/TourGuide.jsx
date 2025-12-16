@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 
 const STEPS = [
     {
@@ -131,31 +131,75 @@ export function TourGuide({ mode, onSkip }) {
         };
     }, [step, activeSteps]);
 
-    const handleNext = () => {
+    const handleNext = useCallback(() => {
         if (step >= activeSteps.length - 1) {
             onSkip();
         } else {
             setStep(s => s + 1);
         }
-    };
+    }, [step, activeSteps.length, onSkip]);
+
+    const handlePrev = useCallback(() => {
+        if (step > 0) {
+            setStep(s => s - 1);
+        }
+    }, [step]);
+
+    const handleKeyDown = useCallback((e) => {
+        if (e.key === 'Escape') {
+            onSkip();
+        } else if (e.key === 'ArrowRight' || e.key === 'Enter') {
+            handleNext();
+        } else if (e.key === 'ArrowLeft') {
+            handlePrev();
+        }
+    }, [onSkip, handleNext, handlePrev]);
+
+    useEffect(() => {
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [handleKeyDown]);
 
     const currentStep = activeSteps[step];
     if (!currentStep) return null;
 
     return (
         <>
-            <div className="tour-overlay" onClick={onSkip} />
-            <div className="tour-card" style={style}>
-                <h3>{currentStep.title}</h3>
+            <div 
+                className="tour-overlay" 
+                onClick={onSkip} 
+                role="presentation"
+                aria-hidden="true"
+            />
+            <div 
+                className="tour-card" 
+                style={style}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="tour-title"
+            >
+                <h3 id="tour-title">{currentStep.title}</h3>
                 <p>{currentStep.content}</p>
                 <div className="tour-actions">
-                    <button className="btn-skip" onClick={onSkip}>Skip</button>
-                    <div className="dots">
+                    <button 
+                        className="btn-skip" 
+                        onClick={onSkip}
+                        aria-label="Skip tour"
+                    >Skip</button>
+                    <div className="dots" role="group" aria-label={`Step ${step + 1} of ${activeSteps.length}`}>
                         {activeSteps.map((_, i) => (
-                            <span key={i} className={i === step ? 'active' : ''} />
+                            <span 
+                                key={i} 
+                                className={i === step ? 'active' : ''}
+                                aria-current={i === step ? 'step' : undefined}
+                            />
                         ))}
                     </div>
-                    <button className="btn-next" onClick={handleNext}>
+                    <button 
+                        className="btn-next" 
+                        onClick={handleNext}
+                        aria-label={step === activeSteps.length - 1 ? 'Finish tour' : 'Next step'}
+                    >
                         {step === activeSteps.length - 1 ? 'Finish' : 'Next'}
                     </button>
                 </div>

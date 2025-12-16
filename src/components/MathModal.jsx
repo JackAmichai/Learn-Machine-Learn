@@ -16,15 +16,32 @@ export function MathModal({ topic, onClose }) {
         setSliderValues(prev => ({ ...prev, [key]: parseFloat(value) }));
     };
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Escape') {
+            onClose();
+        }
+    };
+
     // Get interactive formulas if available
     const interactiveFormulas = data.interactiveFormulas || [];
 
     return (
-        <div className="math-modal-overlay" onClick={onClose}>
+        <div 
+            className="math-modal-overlay" 
+            onClick={onClose}
+            onKeyDown={handleKeyDown}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="math-modal-title"
+        >
             <div className="math-modal-content" onClick={e => e.stopPropagation()}>
                 <div className="math-header">
-                    <h2>{data.title}</h2>
-                    <button className="close-btn" onClick={onClose}>×</button>
+                    <h2 id="math-modal-title">{data.title}</h2>
+                    <button 
+                        className="close-btn" 
+                        onClick={onClose}
+                        aria-label="Close modal"
+                    >×</button>
                 </div>
 
                 <div className="math-body" dangerouslySetInnerHTML={{ __html: data.content }} />

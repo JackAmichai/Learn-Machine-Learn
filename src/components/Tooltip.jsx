@@ -78,21 +78,39 @@ export function Tooltip({ word, overrideText }) {
         setShowMathPrompt(false);
     };
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Escape') {
+            setIsVisible(false);
+            setShowMathPrompt(false);
+        }
+    };
+
     return (
         <span
             className="tooltip-container"
+            tabIndex={0}
+            role="button"
+            aria-describedby={isVisible ? `tooltip-${word}` : undefined}
             onMouseEnter={() => setIsVisible(true)}
             onMouseLeave={() => { setIsVisible(false); setShowMathPrompt(false); }}
+            onFocus={() => setIsVisible(true)}
+            onBlur={() => { setIsVisible(false); setShowMathPrompt(false); }}
+            onKeyDown={handleKeyDown}
         >
             <span className={`tooltip-word ${hasMath ? 'has-math' : ''}`}>{word}</span>
 
             {isVisible && !showMathPrompt && (
-                <div className="tooltip-popup">
+                <div 
+                    id={`tooltip-${word}`}
+                    className="tooltip-popup"
+                    role="tooltip"
+                >
                     <p>{text}</p>
                     {hasMath && (
                         <button
                             className="btn-math"
                             onClick={handleMathClick}
+                            aria-label={`See math behind ${word}`}
                         >
                             📐 See Math Behind It
                         </button>
@@ -217,8 +235,17 @@ export function Tooltip({ word, overrideText }) {
             transform: scale(1.02);
             box-shadow: 0 0 10px var(--accent-primary);
         }
-        .tooltip-container:hover .tooltip-word {
+        .tooltip-container:hover .tooltip-word,
+        .tooltip-container:focus .tooltip-word {
             color: var(--accent-primary);
+        }
+        .tooltip-container:focus {
+            outline: none;
+        }
+        .tooltip-container:focus-visible .tooltip-word {
+            outline: 2px solid var(--accent-primary);
+            outline-offset: 2px;
+            border-radius: 2px;
         }
         /* Triangle indicator */
         .tooltip-popup::after {

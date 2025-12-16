@@ -46,6 +46,8 @@ export function Controls(props) {
                 <button
                     className={`btn-primary ${isPlaying ? 'stop' : ''}`}
                     onClick={() => setIsPlaying(!isPlaying)}
+                    aria-label={isPlaying ? 'Pause training' : 'Start training'}
+                    aria-pressed={isPlaying}
                 >
                     {isPlaying ? 'Pause' : 'Train'}
                 </button>
@@ -138,7 +140,7 @@ export function Controls(props) {
             <div className="section">
                 <div className="p-header">
                     <h3>Architecture</h3>
-                    <button className="btn-sm" onClick={addLayer}>+ <Tooltip word="Layer" /></button>
+                    <button className="btn-sm" onClick={addLayer} aria-label="Add a hidden layer">+ <Tooltip word="Layer" /></button>
                 </div>
 
                 <div className="layers-list">
