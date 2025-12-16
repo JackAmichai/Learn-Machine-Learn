@@ -43,6 +43,12 @@ const DICTIONARY = {
     "Convolution": "Sliding dot product between a kernel and local input window. Mirrors FIR filters implemented as MAC pipelines.",
     "Signal Processing": "Applying energy, SNR, and frequency-domain reasoning to features. Bridges classical EE with modern ML.",
 
+    // Linear Algebra & Vision Foundations
+    "Vectors & Matrices": "Vectors store strokes from the vision canvas; matrices arrange them into 2D grids so filters and dense layers can work on them.",
+    "Dot Product": "Sum of element-wise products measuring how aligned two patterns are. Positive = similar strokes, negative = opposing.",
+    "Matrix Multiplication": "Core operation behind dense layers. Each output neuron is a row·column dot product between weights and inputs.",
+    "Tensors": "Multi-dimensional arrays (Batch×Channel×Height×Width) that hold the entire mini-batch. Keep shapes consistent when reshaping.",
+
     // Learned Parameters
     "Weights": "Trainable coefficients multiplying inputs. Training tunes them to align internal features with the target task.",
     "Bias": "Offset term added before activation. Shifts decision thresholds and prevents all-zero outputs.",

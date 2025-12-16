@@ -1,15 +1,23 @@
 export function NetworkGraph({ model, structure, modelVersion }) {
     // Extract weights for visualization (recomputed when modelVersion increments)
-    const weights = (() => {
+    const connectionWeights = (() => {
         const version = modelVersion;
         if (version === null || version === undefined) {
             return [];
         }
-        if (!model || !model.model) return [];
+        if (!model || !Array.isArray(structure)) return [];
         try {
+            if (typeof model.getConnectionWeights === 'function') {
+                return structure.slice(0, -1).map((_, idx) => model.getConnectionWeights(idx));
+            }
+            if (!model.model) return [];
             return model.model.layers.map(layer => {
-                const [kernel] = layer.getWeights();
-                return kernel ? kernel.dataSync() : null;
+                const weights = layer.getWeights();
+                if (!weights.length) return null;
+                const kernel = weights[0];
+                const data = kernel ? kernel.dataSync() : null;
+                weights.forEach(w => w.dispose());
+                return data;
             });
         } catch {
             return [];
@@ -40,7 +48,7 @@ export function NetworkGraph({ model, structure, modelVersion }) {
                 if (lIdx === structure.length - 1) return null; // No connections from output forward
 
                 const nextLayerSize = structure[lIdx + 1];
-                const currentWeights = weights[lIdx]; // Flattened array: [from1to1, from1to2, ..., from2to1...]
+                const currentWeights = connectionWeights[lIdx]; // Flattened array: [from1to1, from1to2, ..., from2to1...]
 
                 // Weights logic: shape is [input, output]
                 // dataSync returns generic array.

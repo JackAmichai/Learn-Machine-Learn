@@ -1,36 +1,57 @@
 import { useRef, useEffect } from 'react';
 
-export function WeightHeatmap({ model, modelVersion }) {
+export function WeightHeatmap({ model, modelVersion, structure }) {
     const containerRef = useRef(null);
 
     const weightsData = (() => {
         if (modelVersion === null || modelVersion === undefined) {
             return null;
         }
-        if (!model || !model.model) return null;
+        if (!model || !Array.isArray(structure) || structure.length < 2) return null;
+        const inputDim = structure[0];
+        const units = structure[1];
+        if (inputDim !== 100 || !units) return null; // Only visualize 10x10 vision grids
+
+        if (typeof model.getConnectionWeights === 'function') {
+            try {
+                const kernel = model.getConnectionWeights(0);
+                if (!kernel) return null;
+                const snapshot = [];
+                for (let u = 0; u < units; u++) {
+                    const arr = new Float32Array(inputDim);
+                    for (let i = 0; i < inputDim; i++) {
+                        arr[i] = kernel[i * units + u];
+                    }
+                    snapshot.push(arr);
+                }
+                return snapshot;
+            } catch (error) {
+                console.error('Heatmap error', error);
+                return null;
+            }
+        }
+
+        // Fallback to legacy direct layer access if helper is unavailable
+        if (!model.model || !model.model.layers?.length) return null;
         const layer = model.model.layers[0];
         if (!layer) return null;
-
         try {
-            const [wTensor] = layer.getWeights();
-            if (!wTensor) return null;
-
-            const inputDim = wTensor.shape[0];
-            const units = layer.units;
-            if (inputDim !== 100 || !units) return null; // Only visualize 10x10 vision grids
-
+            const weights = layer.getWeights();
+            if (!weights.length) return null;
+            const wTensor = weights[0];
             const snapshot = [];
             const wData = wTensor.dataSync();
             for (let u = 0; u < units; u++) {
-                const arr = new Float32Array(100);
-                for (let i = 0; i < 100; i++) {
+                const arr = new Float32Array(inputDim);
+                for (let i = 0; i < inputDim; i++) {
                     arr[i] = wData[i * units + u];
                 }
                 snapshot.push(arr);
             }
+            weights.forEach(w => w.dispose());
             return snapshot;
         } catch (error) {
-            console.error("Heatmap error", error);
+            console.error('Heatmap error', error);
             return null;
         }
     })();

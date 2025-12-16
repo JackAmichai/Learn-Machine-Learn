@@ -783,5 +783,247 @@ export const MATH_TOPICS = {
                 ]
             }
         ]
+    },
+    "Vectors & Matrices": {
+        title: "Vectors & Matrices: Lego Bricks of Vision Models",
+        content: `
+            <p><strong>Vectors</strong> line up numbers in a single column. In vision mode the 10×10 canvas becomes a 100×1 vector before entering the dense layers.</p>
+            <p><strong>Matrices</strong> arrange those vectors into 2D grids so filters can slide over rows and columns. Understanding their norms and determinants explains why scaling or rotating images affects activations.</p>
+        `,
+        interactiveFormulas: [
+            {
+                name: "Vector Magnitude (3D)",
+                parts: [
+                    { symbol: "|v|", key: "mag", name: "Magnitude", description: "Length of the vector" },
+                    { symbol: " = ", key: null },
+                    { symbol: "sqrt(x^2 + y^2 + z^2)", key: "formula", name: "Euclidean Norm", description: "Distance from origin" }
+                ],
+                variables: [
+                    { key: "vx", symbol: "x", name: "x", min: -5, max: 5, step: 0.1, default: 1.2, decimals: 1 },
+                    { key: "vy", symbol: "y", name: "y", min: -5, max: 5, step: 0.1, default: -0.4, decimals: 1 },
+                    { key: "vz", symbol: "z", name: "z", min: -5, max: 5, step: 0.1, default: 2.3, decimals: 1 }
+                ],
+                calculate: (vals, get) => {
+                    const x = get("vx", 1.2);
+                    const y = get("vy", -0.4);
+                    const z = get("vz", 2.3);
+                    return Math.sqrt(x * x + y * y + z * z);
+                },
+                insights: [
+                    "Magnitude shows how strong a pixel gradient or feature vector is.",
+                    "Normalizing vectors (dividing by |v|) stabilizes training.",
+                    "Longer vectors mean brighter strokes on the vision canvas." 
+                ]
+            },
+            {
+                name: "2x2 Determinant",
+                parts: [
+                    { symbol: "det(A)", key: "det", name: "Determinant", description: "Area scale factor" },
+                    { symbol: " = ", key: null },
+                    { symbol: "a11*a22 - a12*a21", key: "formula", name: "Formula", description: "Signed area" }
+                ],
+                variables: [
+                    { key: "a11", symbol: "a11", name: "a11", min: -3, max: 3, step: 0.1, default: 1, decimals: 1 },
+                    { key: "a12", symbol: "a12", name: "a12", min: -3, max: 3, step: 0.1, default: 0.5, decimals: 1 },
+                    { key: "a21", symbol: "a21", name: "a21", min: -3, max: 3, step: 0.1, default: -0.3, decimals: 1 },
+                    { key: "a22", symbol: "a22", name: "a22", min: -3, max: 3, step: 0.1, default: 2, decimals: 1 }
+                ],
+                calculate: (vals, get) => {
+                    const a11 = get("a11", 1);
+                    const a12 = get("a12", 0.5);
+                    const a21 = get("a21", -0.3);
+                    const a22 = get("a22", 2);
+                    return a11 * a22 - a12 * a21;
+                },
+                insights: [
+                    "det(A)=0 means the matrix squashes space—information is lost.",
+                    "Positive determinant preserves orientation; negative flips it.",
+                    "Useful for reasoning about data augmentation transforms." 
+                ]
+            }
+        ]
+    },
+    "Dot Product": {
+        title: "Dot Product: Similarity Meter",
+        content: `
+            <p>The dot product measures how aligned two vectors are. In the vision model it compares your drawn strokes with learned weight vectors.</p>
+            <p>Geometry version: a · b = |a||b|cosθ. Component version: sum of element-wise products. Both explain why brighter pixels boost certain neurons.</p>
+        `,
+        interactiveFormulas: [
+            {
+                name: "Component Form",
+                parts: [
+                    { symbol: "a · b", key: "dot", name: "Dot Product", description: "Similarity score" },
+                    { symbol: " = ", key: null },
+                    { symbol: "ax*bx + ay*by + az*bz", key: "formula", name: "Sum of products", description: "Multiply, then add" }
+                ],
+                variables: [
+                    { key: "ax", symbol: "ax", name: "a_x", min: -3, max: 3, step: 0.1, default: 0.8, decimals: 1 },
+                    { key: "ay", symbol: "ay", name: "a_y", min: -3, max: 3, step: 0.1, default: 0.4, decimals: 1 },
+                    { key: "az", symbol: "az", name: "a_z", min: -3, max: 3, step: 0.1, default: 0, decimals: 1 },
+                    { key: "bx", symbol: "bx", name: "b_x", min: -3, max: 3, step: 0.1, default: 1.1, decimals: 1 },
+                    { key: "by", symbol: "by", name: "b_y", min: -3, max: 3, step: 0.1, default: -0.6, decimals: 1 },
+                    { key: "bz", symbol: "bz", name: "b_z", min: -3, max: 3, step: 0.1, default: 0.2, decimals: 1 }
+                ],
+                calculate: (vals, get) => {
+                    const ax = get("ax", 0.8);
+                    const ay = get("ay", 0.4);
+                    const az = get("az", 0);
+                    const bx = get("bx", 1.1);
+                    const by = get("by", -0.6);
+                    const bz = get("bz", 0.2);
+                    return ax * bx + ay * by + az * bz;
+                },
+                insights: [
+                    "Positive values mean vectors look in the same direction.",
+                    "Zero indicates orthogonal features (independent information).",
+                    "Used everywhere: attention layers, cosine similarity, projections." 
+                ]
+            },
+            {
+                name: "Angle Form",
+                parts: [
+                    { symbol: "a · b", key: "dot", name: "Dot Product", description: "Projection of a onto b" },
+                    { symbol: " = |a||b|cos(θ)", key: "angle", name: "Angle", description: "Controls sign and magnitude" }
+                ],
+                variables: [
+                    { key: "magA", symbol: "|a|", name: "|a|", min: 0, max: 5, step: 0.1, default: 2, decimals: 1 },
+                    { key: "magB", symbol: "|b|", name: "|b|", min: 0, max: 5, step: 0.1, default: 1.5, decimals: 1 },
+                    { key: "theta", symbol: "θ", name: "Angle (deg)", min: 0, max: 180, step: 1, default: 35, decimals: 0 }
+                ],
+                calculate: (vals, get) => {
+                    const a = get("magA", 2);
+                    const b = get("magB", 1.5);
+                    const theta = get("theta", 35) * Math.PI / 180;
+                    return a * b * Math.cos(theta);
+                },
+                insights: [
+                    "θ=0° ⇒ cosθ=1 ⇒ maximum reinforcement between vectors.",
+                    "θ=90° ⇒ dot product = 0 ⇒ no influence.",
+                    "θ>90° ⇒ negative dot ⇒ inhibitory effect (important for filters)." 
+                ]
+            }
+        ]
+    },
+    "Matrix Multiplication": {
+        title: "Matrix Multiplication: Layer Engine",
+        content: `
+            <p>Dense layers are nothing but matrix multiplications. A weight matrix multiplies the input vector to produce activations for the next layer.</p>
+            <p>Vision models flatten 2D patches into vectors, multiply by weights, then reshape again. Tracking dimensions keeps tensor shapes valid.</p>
+        `,
+        interactiveFormulas: [
+            {
+                name: "2x2 × 2x2",
+                parts: [
+                    { symbol: "C = A·B", key: "product", name: "Product", description: "Resulting matrix" }
+                ],
+                variables: [
+                    { key: "a11", symbol: "a11", name: "A11", min: -3, max: 3, step: 0.1, default: 1, decimals: 1 },
+                    { key: "a12", symbol: "a12", name: "A12", min: -3, max: 3, step: 0.1, default: 0.5, decimals: 1 },
+                    { key: "a21", symbol: "a21", name: "A21", min: -3, max: 3, step: 0.1, default: -0.8, decimals: 1 },
+                    { key: "a22", symbol: "a22", name: "A22", min: -3, max: 3, step: 0.1, default: 2.2, decimals: 1 },
+                    { key: "b11", symbol: "b11", name: "B11", min: -3, max: 3, step: 0.1, default: 0.7, decimals: 1 },
+                    { key: "b12", symbol: "b12", name: "B12", min: -3, max: 3, step: 0.1, default: -1, decimals: 1 },
+                    { key: "b21", symbol: "b21", name: "B21", min: -3, max: 3, step: 0.1, default: 0.3, decimals: 1 },
+                    { key: "b22", symbol: "b22", name: "B22", min: -3, max: 3, step: 0.1, default: 1.4, decimals: 1 }
+                ],
+                calculate: (vals, get) => {
+                    const a11 = get("a11", 1); const a12 = get("a12", 0.5);
+                    const a21 = get("a21", -0.8); const a22 = get("a22", 2.2);
+                    const b11 = get("b11", 0.7); const b12 = get("b12", -1);
+                    const b21 = get("b21", 0.3); const b22 = get("b22", 1.4);
+                    const c11 = a11 * b11 + a12 * b21;
+                    const c12 = a11 * b12 + a12 * b22;
+                    const c21 = a21 * b11 + a22 * b21;
+                    const c22 = a21 * b12 + a22 * b22;
+                    return `[[${c11.toFixed(2)}, ${c12.toFixed(2)}], [${c21.toFixed(2)}, ${c22.toFixed(2)}]]`;
+                },
+                insights: [
+                    "Row of A interacts with column of B—match inner dimensions.",
+                    "Each output element is a dot product (MAC operation).",
+                    "Visualize dense layer weights as filters applied to full vectors." 
+                ]
+            },
+            {
+                name: "MAC Counter",
+                parts: [
+                    { symbol: "MACs", key: "macs", name: "Multiply-Accumulates", description: "Work required" },
+                    { symbol: " = rows * cols * shared", key: "formula", name: "Cost", description: "Operation count" }
+                ],
+                variables: [
+                    { key: "rows", symbol: "rows", name: "Rows", min: 1, max: 512, step: 1, default: 64, decimals: 0 },
+                    { key: "cols", symbol: "cols", name: "Cols", min: 1, max: 512, step: 1, default: 32, decimals: 0 },
+                    { key: "shared", symbol: "shared", name: "Shared Dim", min: 1, max: 1024, step: 1, default: 100, decimals: 0 }
+                ],
+                calculate: (vals, get) => {
+                    const rows = get("rows", 64);
+                    const cols = get("cols", 32);
+                    const shared = get("shared", 100);
+                    return rows * cols * shared;
+                },
+                insights: [
+                    "MACs correlate with latency and power on embedded hardware.",
+                    "Reducing shared dimension (inputs) cuts cost dramatically.",
+                    "Depthwise separable convolutions lower MACs by splitting dims." 
+                ]
+            }
+        ]
+    },
+    "Tensors": {
+        title: "Tensors: Multi-Dimensional Arrays",
+        content: `
+            <p>Tensors generalize scalars (rank 0), vectors (rank 1), and matrices (rank 2). Vision models juggle rank-3 (H×W×C) and rank-4 (Batch×Channel×H×W) tensors constantly.</p>
+            <p>Keeping track of tensor volume prevents shape mismatches when reshaping, flattening, or feeding data between convolutional and dense layers.</p>
+        `,
+        interactiveFormulas: [
+            {
+                name: "Tensor Volume",
+                parts: [
+                    { symbol: "elements", key: "elements", name: "Element Count", description: "Total scalars" },
+                    { symbol: " = d1 * d2 * d3", key: "product", name: "Dimensions", description: "Multiply each axis" }
+                ],
+                variables: [
+                    { key: "d1", symbol: "d1", name: "Dim 1", min: 1, max: 64, step: 1, default: 10, decimals: 0 },
+                    { key: "d2", symbol: "d2", name: "Dim 2", min: 1, max: 64, step: 1, default: 10, decimals: 0 },
+                    { key: "d3", symbol: "d3", name: "Dim 3", min: 1, max: 32, step: 1, default: 1, decimals: 0 }
+                ],
+                calculate: (vals, get) => {
+                    const d1 = get("d1", 10);
+                    const d2 = get("d2", 10);
+                    const d3 = get("d3", 1);
+                    return d1 * d2 * d3;
+                },
+                insights: [
+                    "A 10×10×1 tensor matches the vision canvas grid.",
+                    "Batching multiplies the count further (Batch×H×W×C).",
+                    "Reshape only works when new dims keep the same volume." 
+                ]
+            },
+            {
+                name: "Tensor Memory Budget",
+                parts: [
+                    { symbol: "bytes", key: "bytes", name: "Memory", description: "RAM requirement" },
+                    { symbol: " = height * width * channels * bytes/value", key: "formula", name: "Footprint", description: "Size on device" }
+                ],
+                variables: [
+                    { key: "height", symbol: "H", name: "Height", min: 1, max: 224, step: 1, default: 10, decimals: 0 },
+                    { key: "width", symbol: "W", name: "Width", min: 1, max: 224, step: 1, default: 10, decimals: 0 },
+                    { key: "channels", symbol: "C", name: "Channels", min: 1, max: 64, step: 1, default: 1, decimals: 0 },
+                    { key: "bytesPer", symbol: "bytes", name: "Bytes/Value", min: 1, max: 8, step: 1, default: 4, decimals: 0 }
+                ],
+                calculate: (vals, get) => {
+                    const h = get("height", 10);
+                    const w = get("width", 10);
+                    const c = get("channels", 1);
+                    const bytesPer = get("bytesPer", 4);
+                    return h * w * c * bytesPer;
+                },
+                insights: [
+                    "Great for planning deployments on microcontrollers.",
+                    "Lower precision (2 bytes) halves the memory instantly.",
+                    "Extra channels (RGB) triple the footprint—keep an eye on it." 
+                ]
+            }
+        ]
     }
 };

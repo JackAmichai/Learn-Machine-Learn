@@ -7,9 +7,11 @@ export const DataType = {
     LINEAR: 'linear'
 };
 
-export function generateData(type, samples = 200) {
+export function generateData(type, samples = 200, noise = 0.15) {
     const points = [];
     const labels = [];
+    const noiseLevel = Math.max(0, noise);
+    const jitter = () => (Math.random() * 2 - 1) * noiseLevel;
 
     for (let i = 0; i < samples; i++) {
         let x, y, label;
@@ -18,22 +20,26 @@ export function generateData(type, samples = 200) {
             x = Math.random() * 2 - 1; // -1 to 1
             y = Math.random() * 2 - 1;
             label = (x > 0 && y > 0) || (x < 0 && y < 0) ? 0 : 1;
+            x += jitter();
+            y += jitter();
         } else if (type === DataType.CIRCLE) {
-            const r = Math.random() * 2 * Math.PI;
-            const d = Math.random() < 0.5 ? Math.random() * 0.5 : Math.random() * 0.5 + 0.6;
-            x = Math.cos(r) * d;
-            y = Math.sin(r) * d;
-            label = d < 0.6 ? 0 : 1;
+            const angle = Math.random() * 2 * Math.PI;
+            const isInner = Math.random() < 0.5;
+            const baseRadius = isInner ? 0.35 : 0.75;
+            const radius = baseRadius + ((Math.random() - 0.5) * 0.15) + jitter();
+            x = Math.cos(angle) * radius + jitter();
+            y = Math.sin(angle) * radius + jitter();
+            label = radius < 0.55 ? 0 : 1;
         } else if (type === DataType.SPIRAL) {
             // Logic for spiral... simplified
             const n = samples / 2;
             const isA = i < n;
             const t = (i % n) / n * 4 * Math.PI;
             const offset = isA ? 0 : Math.PI;
-            const noise = (Math.random() - 0.5) * 0.2;
+            const spiralNoise = jitter();
             const speed = 0.5;
-            x = (t * speed) * Math.cos(t + offset) + noise;
-            y = (t * speed) * Math.sin(t + offset) + noise;
+            x = (t * speed) * Math.cos(t + offset) + spiralNoise;
+            y = (t * speed) * Math.sin(t + offset) + jitter();
             label = isA ? 0 : 1;
             // Normalize loosely
             x = x / 6;
@@ -42,7 +48,9 @@ export function generateData(type, samples = 200) {
             // LINEAR
             x = Math.random() * 2 - 1;
             y = Math.random() * 2 - 1;
-            label = x + y > 0 ? 1 : 0;
+            label = x + y + jitter() > 0 ? 1 : 0;
+            x += jitter();
+            y += jitter();
         }
 
         points.push([x, y]);

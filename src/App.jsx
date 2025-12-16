@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNeuralNetwork } from './hooks/useNeuralNetwork';
 import { Controls } from './components/Controls';
 import { NetworkGraph } from './components/NetworkGraph';
@@ -11,13 +11,59 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import { ThemeToggle } from './components/ThemeToggle';
 import { MathProvider } from './contexts/MathContext';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { ToastProvider } from './contexts/ToastContext';
+import { ToastStack } from './components/ToastStack';
+import { useToast } from './hooks/useToast';
 
 function AppContent() {
   const nn = useNeuralNetwork();
   const [showTour, setShowTour] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const containerRef = useRef(null);
+  const prevPlayingRef = useRef(nn.isPlaying);
+  const prevMilestoneRef = useRef(0);
+  const { pushToast } = useToast();
+
+  useEffect(() => {
+    if (prevPlayingRef.current === nn.isPlaying) return;
+    prevPlayingRef.current = nn.isPlaying;
+    if (nn.isPlaying) {
+      pushToast({ type: 'success', title: 'Training started', message: 'Weights are updating in real time.' });
+    } else {
+      pushToast({ type: 'info', title: 'Training paused', message: 'Adjust parameters or resume when ready.' });
+    }
+  }, [nn.isPlaying, pushToast]);
+
+  useEffect(() => {
+    if (!nn.epoch) return;
+    if (nn.epoch % 50 === 0 && nn.epoch !== prevMilestoneRef.current) {
+      prevMilestoneRef.current = nn.epoch;
+      pushToast({ type: 'success', title: `Epoch ${nn.epoch}`, message: 'Keep monitoring the loss curve for convergence.' });
+    }
+  }, [nn.epoch, pushToast]);
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return () => { };
+    const handleFullscreenChange = () => {
+      setIsFullscreen(Boolean(document.fullscreenElement));
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    };
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (typeof document === 'undefined' || !containerRef.current) return;
+    if (!document.fullscreenElement) {
+      containerRef.current.requestFullscreen?.();
+    } else {
+      document.exitFullscreen?.();
+    }
+  };
 
   return (
-    <div className="app-container">
+    <div className="app-container" ref={containerRef}>
       {showTour && <TourGuide mode={nn.mode} onSkip={() => setShowTour(false)} />}
       <Controls {...nn} />
 
@@ -29,6 +75,9 @@ function AppContent() {
           </div>
           <div className="header-actions">
             <button className="btn-tour" onClick={() => setShowTour(true)}>Start Tour</button>
+            <button className="btn-fullscreen" onClick={toggleFullscreen} aria-pressed={isFullscreen} aria-label="Toggle fullscreen mode">
+              {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
+            </button>
             <ThemeToggle />
           </div>
         </header>
@@ -70,6 +119,7 @@ function AppContent() {
                       <WeightHeatmap
                         model={nn.model}
                         modelVersion={nn.modelVersion}
+                        structure={nn.structure}
                       />
                     </div>
                   </div>
@@ -147,6 +197,20 @@ function AppContent() {
         .btn-tour:hover {
             background: var(--accent-primary);
             color: black;
+        }
+        .btn-fullscreen {
+          background: var(--bg-secondary);
+          border: 1px solid transparent;
+          color: var(--text-secondary);
+          padding: 6px 12px;
+          border-radius: 20px;
+          font-size: 12px;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        .btn-fullscreen:hover, .btn-fullscreen[aria-pressed='true'] {
+          border-color: var(--accent-primary);
+          color: var(--accent-primary);
         }
         .vision-stats {
             text-align: center;
@@ -242,11 +306,14 @@ function AppContent() {
 function App() {
   return (
     <ThemeProvider>
-      <ErrorBoundary>
-        <MathProvider>
-          <AppContent />
-        </MathProvider>
-      </ErrorBoundary>
+      <ToastProvider>
+        <ErrorBoundary>
+          <MathProvider>
+            <AppContent />
+            <ToastStack />
+          </MathProvider>
+        </ErrorBoundary>
+      </ToastProvider>
     </ThemeProvider>
   );
 }

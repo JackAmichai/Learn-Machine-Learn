@@ -10,6 +10,7 @@ export function ThemeProvider({ children }) {
 
     useEffect(() => {
         if (typeof document !== 'undefined') {
+            document.documentElement.setAttribute('data-theme', theme);
             document.body.setAttribute('data-theme', theme);
         }
         if (typeof window !== 'undefined') {

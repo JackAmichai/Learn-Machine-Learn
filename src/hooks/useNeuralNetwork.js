@@ -5,10 +5,50 @@ import { generateData, DataType } from '../engine/data';
 
 const DEFAULT_STRUCTURE = [2, 5, 4, 1];
 const VISION_STRUCTURE = [100, 16, 2];
+const STORAGE_KEY = 'learn-ml-model-state-v1';
+const DEFAULT_DATASET_PARAMS = { type: DataType.SPIRAL, size: 300, noise: 0.15 };
+const DEFAULT_LAYER_FEATURE = { batchNorm: false, dropout: false, dropoutRate: 0.2 };
+
+const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+
+const sanitizeLayerFeature = (feature = {}) => ({
+    batchNorm: Boolean(feature.batchNorm),
+    dropout: Boolean(feature.dropout),
+    dropoutRate: clamp(
+        typeof feature.dropoutRate === 'number' ? feature.dropoutRate : DEFAULT_LAYER_FEATURE.dropoutRate,
+        0,
+        0.9
+    )
+});
+
+const buildLayerFeatureMap = (structure, previous = {}) => {
+    if (!Array.isArray(structure) || structure.length <= 2) return {};
+    const map = {};
+    for (let i = 1; i < structure.length - 1; i++) {
+        map[i] = sanitizeLayerFeature(previous[i]);
+    }
+    return map;
+};
 
 const structuresEqual = (a, b) => (
     a.length === b.length && a.every((val, idx) => val === b[idx])
 );
+
+const serializeCustomSamples = (samples = []) => samples.map(sample => ({
+    label: sample.label,
+    input: Array.from(sample.input || [])
+}));
+
+const deserializeCustomSamples = (samples = []) => samples.map(sample => ({
+    label: sample.label,
+    input: new Float32Array(sample.input || [])
+}));
+
+const sanitizeDatasetParams = (params = {}) => ({
+    ...DEFAULT_DATASET_PARAMS,
+    ...params,
+    noise: typeof params.noise === 'number' ? params.noise : DEFAULT_DATASET_PARAMS.noise
+});
 
 const disposeDataset = (ds) => {
     if (!ds) return;
@@ -21,7 +61,7 @@ export function useNeuralNetwork() {
     const [epoch, setEpoch] = useState(0);
     const [loss, setLoss] = useState(0);
     const [structure, setStructureState] = useState(DEFAULT_STRUCTURE);
-    const [datasetParams, setDatasetParamsState] = useState({ type: DataType.SPIRAL, size: 300 });
+    const [datasetParams, setDatasetParamsState] = useState(DEFAULT_DATASET_PARAMS);
     const [mode, setModeState] = useState('simple'); // 'simple' | 'vision'
     const [customData, setCustomData] = useState([]); // Array of {input: [], label: 0}
     const [hyperparams, setHyperparams] = useState({
@@ -29,14 +69,24 @@ export function useNeuralNetwork() {
         activation: 'relu',
         optimizer: 'adam'
     });
+    const [layerFeatures, setLayerFeatures] = useState(() => buildLayerFeatureMap(DEFAULT_STRUCTURE));
+    const layerFeatureRef = useRef(layerFeatures);
+
+    useEffect(() => {
+        layerFeatureRef.current = layerFeatures;
+    }, [layerFeatures]);
 
     const [network] = useState(() => {
         const nn = new NeuralNetwork(hyperparams);
-        nn.createModel(DEFAULT_STRUCTURE);
+        nn.createModel(DEFAULT_STRUCTURE, layerFeatures);
         return nn;
     });
     const datasetRef = useRef(null);
-    const [dataset, setDatasetState] = useState(() => generateData(DataType.SPIRAL, 300));
+    const [dataset, setDatasetState] = useState(() => generateData(
+        DEFAULT_DATASET_PARAMS.type,
+        DEFAULT_DATASET_PARAMS.size,
+        DEFAULT_DATASET_PARAMS.noise
+    ));
 
     // We expose a "version" number to trigger strict re-renders of visualizations
     const [modelVersion, setModelVersion] = useState(0);
@@ -54,25 +104,30 @@ export function useNeuralNetwork() {
         setLoss(0);
     };
 
-    const rebuildModel = (nextStructure) => {
-        network.createModel(nextStructure);
+    const rebuildModel = (nextStructure, featureOverride) => {
+        const appliedFeatures = featureOverride || layerFeatureRef.current;
+        network.createModel(nextStructure, appliedFeatures);
         setModelVersion(v => v + 1);
         resetTrainingStats();
     };
 
-    const applyStructure = (nextStructure) => {
+    const applyStructure = (nextStructure, featureOverride = null) => {
         setStructureState(prev => {
             const target = typeof nextStructure === 'function' ? nextStructure(prev) : nextStructure;
-            if (structuresEqual(prev, target)) {
+            const sameStructure = structuresEqual(prev, target);
+            if (sameStructure && !featureOverride) {
                 return prev;
             }
-            rebuildModel(target);
-            return target;
+            const nextFeatures = featureOverride || buildLayerFeatureMap(target, layerFeatureRef.current);
+            layerFeatureRef.current = nextFeatures;
+            setLayerFeatures(nextFeatures);
+            rebuildModel(target, nextFeatures);
+            return sameStructure ? prev : target;
         });
     };
 
-    const replaceDataset = (type, size) => {
-        const next = generateData(type, size);
+    const replaceDataset = (type, size, noise) => {
+        const next = generateData(type, size, typeof noise === 'number' ? noise : DEFAULT_DATASET_PARAMS.noise);
         setDatasetState(prev => {
             disposeDataset(prev);
             return next;
@@ -176,15 +231,29 @@ export function useNeuralNetwork() {
         });
     };
 
+    const updateLayerFeatures = (layerIndex, update) => {
+        if (layerIndex <= 0 || layerIndex >= structure.length - 1) return;
+        setLayerFeatures(prev => {
+            const current = prev[layerIndex] || DEFAULT_LAYER_FEATURE;
+            const patch = typeof update === 'function' ? update(current) : update;
+            const nextFeature = sanitizeLayerFeature({ ...current, ...patch });
+            const next = { ...prev, [layerIndex]: nextFeature };
+            layerFeatureRef.current = next;
+            rebuildModel(structure, next);
+            return next;
+        });
+    };
+
     const addSample = (inputGrid, label) => {
         setCustomData(prev => [...prev, { input: inputGrid, label }]);
     };
 
     const updateDatasetParams = (update) => {
         setDatasetParamsState(prev => {
-            const next = typeof update === 'function' ? update(prev) : { ...prev, ...update };
+            const proposed = typeof update === 'function' ? update(prev) : { ...prev, ...update };
+            const next = sanitizeDatasetParams(proposed);
             if (mode === 'simple') {
-                replaceDataset(next.type, next.size);
+                replaceDataset(next.type, next.size, next.noise);
             }
             return next;
         });
@@ -200,7 +269,7 @@ export function useNeuralNetwork() {
             clearDataset();
         } else {
             applyStructure(DEFAULT_STRUCTURE);
-            replaceDataset(datasetParams.type, datasetParams.size);
+            replaceDataset(datasetParams.type, datasetParams.size, datasetParams.noise);
         }
     };
 
@@ -222,6 +291,86 @@ export function useNeuralNetwork() {
         return res; // Float32Array
     };
 
+    const buildModelSnapshot = () => ({
+        version: 1,
+        timestamp: new Date().toISOString(),
+        structure: [...structure],
+        mode,
+        datasetParams: { ...datasetParams },
+        hyperparams: { ...hyperparams },
+        layerFeatures: { ...layerFeatures },
+        customData: serializeCustomSamples(customData),
+        weights: network.getWeights()
+    });
+
+    const applySnapshot = (snapshot) => {
+        if (!snapshot || !Array.isArray(snapshot.structure) || snapshot.structure.length < 2) {
+            throw new Error('Invalid model snapshot.');
+        }
+
+        setIsPlaying(false);
+
+        const targetStructure = snapshot.structure;
+        const nextMode = snapshot.mode || 'simple';
+        const nextHyperparams = snapshot.hyperparams
+            ? { ...hyperparams, ...snapshot.hyperparams }
+            : { ...hyperparams };
+        const persistedDatasetParams = sanitizeDatasetParams(snapshot.datasetParams || datasetParams);
+        const persistedLayerFeatures = buildLayerFeatureMap(targetStructure, snapshot.layerFeatures || {});
+
+        setHyperparams(nextHyperparams);
+        network.updateConfig(nextHyperparams);
+        setModeState(nextMode);
+        setDatasetParamsState(persistedDatasetParams);
+
+        applyStructure(targetStructure, persistedLayerFeatures);
+
+        if (nextMode === 'vision') {
+            clearDataset();
+            setCustomData(deserializeCustomSamples(snapshot.customData || []));
+        } else {
+            const type = persistedDatasetParams.type;
+            const size = persistedDatasetParams.size;
+            setCustomData([]);
+            replaceDataset(type, size, persistedDatasetParams.noise);
+        }
+
+        if (Array.isArray(snapshot.weights) && snapshot.weights.length) {
+            network.setWeights(snapshot.weights);
+        }
+
+        resetTrainingStats();
+        setModelVersion(v => v + 1);
+    };
+
+    const saveModelToLocal = () => {
+        if (typeof window === 'undefined' || !window.localStorage) {
+            throw new Error('Local storage is unavailable in this environment.');
+        }
+        const snapshot = buildModelSnapshot();
+        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+        return snapshot;
+    };
+
+    const loadModelFromLocal = () => {
+        if (typeof window === 'undefined' || !window.localStorage) {
+            throw new Error('Local storage is unavailable in this environment.');
+        }
+        const raw = window.localStorage.getItem(STORAGE_KEY);
+        if (!raw) return null;
+        const snapshot = JSON.parse(raw);
+        applySnapshot(snapshot);
+        return snapshot;
+    };
+
+    const exportModelJSON = () => JSON.stringify(buildModelSnapshot(), null, 2);
+
+    const importModelJSON = (payload) => {
+        const snapshot = typeof payload === 'string' ? JSON.parse(payload) : payload;
+        applySnapshot(snapshot);
+        return snapshot;
+    };
+
     return {
         isPlaying,
         setIsPlaying,
@@ -233,6 +382,8 @@ export function useNeuralNetwork() {
         addLayer,
         removeLayer,
         updateNodeCount,
+        layerFeatures,
+        updateLayerFeatures,
         model: network,
         data: dataset,
         modelVersion,
@@ -242,6 +393,10 @@ export function useNeuralNetwork() {
         predictSample,
         customData,
         hyperparams,
-        updateHyperparams
+        updateHyperparams,
+        saveModelToLocal,
+        loadModelFromLocal,
+        exportModelJSON,
+        importModelJSON
     };
 }
