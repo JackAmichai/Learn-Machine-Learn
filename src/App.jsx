@@ -5,6 +5,7 @@ import { NetworkGraph } from './components/NetworkGraph';
 import { OutputPlot } from './components/OutputPlot';
 import { VisionCanvas } from './components/VisionCanvas';
 import { WeightHeatmap } from './components/WeightHeatmap';
+import { StatsPanel } from './components/StatsPanel';
 import { TourGuide } from './components/TourGuide';
 
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -150,6 +151,16 @@ function AppContent() {
                   />
                 </div>
               </div>
+
+              <div className="card viz-stats">
+                <StatsPanel
+                  model={nn.model}
+                  data={nn.data}
+                  modelVersion={nn.modelVersion}
+                  epoch={nn.epoch}
+                  loss={nn.loss}
+                />
+              </div>
             </>
           )}
         </div>
@@ -258,9 +269,14 @@ function AppContent() {
         .viz-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr auto;
             gap: 20px;
             flex: 1;
             min-height: 0; /* allows child scrolling if needed */
+        }
+        
+        .viz-stats {
+            grid-column: 1 / -1;
         }
         
         .card {
