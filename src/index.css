@@ -1,30 +1,51 @@
 :root {
+  /* Dark Mode (Default) */
   --bg-primary: #0a0a0f;
   --bg-secondary: #13131f;
   --bg-panel: rgba(20, 20, 30, 0.7);
   --text-primary: #ffffff;
   --text-secondary: #a0a0b0;
-  --accent-primary: #00f2ff; /* Cyan Neon */
-  --accent-secondary: #7000ff; /* Purple Neon */
+  --accent-primary: #00f2ff;
+  /* Cyan Neon */
+  --accent-secondary: #7000ff;
+  /* Purple Neon */
   --accent-danger: #ff0055;
   --accent-success: #00ff9d;
-  
-  --font-main: 'Inter', system-ui, sans-serif;
-  --radius-md: 12px;
-  --radius-lg: 20px;
-  
+
   --glass-border: 1px solid rgba(255, 255, 255, 0.1);
   --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   --glass-bg: rgba(255, 255, 255, 0.05);
+
+  --font-main: 'Inter', system-ui, sans-serif;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+}
+
+[data-theme='light'] {
+  --bg-primary: #f0f2f5;
+  --bg-secondary: #ffffff;
+  --bg-panel: rgba(255, 255, 255, 0.85);
+  --text-primary: #1a1a2e;
+  --text-secondary: #666666;
+  --accent-primary: #00bcd4;
+  /* Darker Cyan */
+  --accent-secondary: #6200ea;
+  /* Darker Purple */
+  --accent-danger: #d32f2f;
+  --accent-success: #388e3c;
+
+  --glass-border: 1px solid rgba(0, 0, 0, 0.1);
+  --glass-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.1);
+  --glass-bg: rgba(255, 255, 255, 0.4);
 }
 
 body {
   margin: 0;
+  font-family: var(--font-main);
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  font-family: var(--font-main);
-  -webkit-font-smoothing: antialiased;
-  overflow: hidden; /* App-like feel */
+  overflow: hidden;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 #root {
@@ -38,13 +59,16 @@ body {
 ::-webkit-scrollbar {
   width: 8px;
 }
+
 ::-webkit-scrollbar-track {
-  background: var(--bg-primary);
+  background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--bg-secondary);
   border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent-secondary);
 }
@@ -56,7 +80,8 @@ button {
   background: none;
 }
 
-input, select {
+input,
+select {
   font-family: inherit;
   background: var(--bg-secondary);
   color: var(--text-primary);
@@ -66,6 +91,7 @@ input, select {
   outline: none;
 }
 
-input:focus, select:focus {
+input:focus,
+select:focus {
   border-color: var(--accent-primary);
 }

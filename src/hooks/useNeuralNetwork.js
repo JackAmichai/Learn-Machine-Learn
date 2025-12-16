@@ -9,9 +9,16 @@ export function useNeuralNetwork() {
     const [loss, setLoss] = useState(0);
     const [structure, setStructure] = useState([2, 5, 4, 1]); // default simple network
     const [datasetParams, setDatasetParams] = useState({ type: DataType.SPIRAL, size: 300 });
+    const [mode, setMode] = useState('simple'); // 'simple' | 'vision'
+    const [customData, setCustomData] = useState([]); // Array of {input: [], label: 0}
+    const [hyperparams, setHyperparams] = useState({
+        learningRate: 0.1,
+        activation: 'relu',
+        optimizer: 'adam'
+    });
 
     // Refs to hold mutable non-react state
-    const nn = useRef(new NeuralNetwork({ learningRate: 0.1 }));
+    const nn = useRef(new NeuralNetwork(hyperparams));
     const data = useRef(null);
 
     // We expose a "version" number to trigger strict re-renders of visualizations
@@ -19,15 +26,37 @@ export function useNeuralNetwork() {
 
     // Initialize Data
     useEffect(() => {
+        // If Mode is Vision, we don't generate random data automatically.
+        // We rely on user adding samples.
+        if (mode === 'vision') {
+            if (data.current) {
+                data.current.xs.dispose();
+                data.current.ys.dispose();
+                data.current = null;
+            }
+            return;
+        }
+
         if (data.current) {
             data.current.xs.dispose();
             data.current.ys.dispose();
         }
         data.current = generateData(datasetParams.type, datasetParams.size);
-        // Reset model when data changes? Optional.
         setEpoch(0);
         setLoss(0);
-    }, [datasetParams]);
+    }, [datasetParams, mode]);
+
+    // Handle Mode Switching impact on Structure
+    useEffect(() => {
+        // If switching to Vision, set appropriate structure
+        if (mode === 'vision') {
+            setStructure([100, 16, 2]); // 10x10=100 input, 2 classes (A/B)
+        } else {
+            setStructure([2, 5, 4, 1]);
+        }
+        setCustomData([]); // Clear custom data on mode switch
+        setIsPlaying(false);
+    }, [mode]);
 
     // Initialize/Update Model Structure
     useEffect(() => {
@@ -43,9 +72,41 @@ export function useNeuralNetwork() {
 
         const loop = async () => {
             if (!isPlaying) return;
-            if (!data.current) return;
 
-            const history = await nn.current.train(data.current.xs, data.current.ys, 1);
+            let xs, ys;
+            let disposeTensors = false; // Flag to indicate if we need to dispose xs, ys after training
+
+            if (mode === 'vision') {
+                if (customData.length === 0) {
+                    setIsPlaying(false);
+                    return;
+                }
+                // Convert customData to tensors
+                // We do this every frame which is inefficient but OK for small datasets
+
+                // Non-tidy simple conversion
+                const xArr = customData.map(d => Array.from(d.input));
+                const yArr = customData.map(d => {
+                    // One-hot encode for 2 classes
+                    const label = d.label;
+                    return label === 0 ? [1, 0] : [0, 1];
+                });
+                xs = tf.tensor2d(xArr);
+                ys = tf.tensor2d(yArr);
+                disposeTensors = true; // We created new tensors, so we must dispose them
+
+            } else {
+                if (!data.current) return;
+                xs = data.current.xs;
+                ys = data.current.ys;
+            }
+
+            const history = await nn.current.train(xs, ys, 1);
+
+            if (disposeTensors) {
+                xs.dispose();
+                ys.dispose();
+            }
 
             if (history) {
                 const lossVal = history.history.loss[0];
@@ -65,7 +126,7 @@ export function useNeuralNetwork() {
         }
 
         return () => cancelAnimationFrame(animId);
-    }, [isPlaying]);
+    }, [isPlaying, mode, customData]); // Added mode and customData to dependencies
 
     const addLayer = () => {
         // Add a layer before the output
@@ -91,6 +152,31 @@ export function useNeuralNetwork() {
         setStructure(newStruct);
     };
 
+    const addSample = (inputGrid, label) => {
+        setCustomData(prev => [...prev, { input: inputGrid, label }]);
+    };
+
+    const updateHyperparams = (newParams) => {
+        setHyperparams(prev => ({ ...prev, ...newParams }));
+        const res = nn.current.updateConfig(newParams);
+        if (res.rebuild) {
+            nn.current.createModel(structure);
+            setModelVersion(v => v + 1);
+            setEpoch(0);
+            setLoss(0);
+        }
+    };
+
+    const predictSample = (inputGrid) => {
+        if (!nn.current.model) return null;
+        // return class probs
+        const res = tf.tidy(() => {
+            const input = tf.tensor2d([Array.from(inputGrid)]);
+            return nn.current.predict(input).dataSync();
+        });
+        return res; // Float32Array
+    };
+
     return {
         isPlaying,
         setIsPlaying,
@@ -106,6 +192,13 @@ export function useNeuralNetwork() {
         model: nn.current,
         data: data.current,
         modelVersion,
+        mode,
+        setMode,
+        addSample,
+        predictSample,
+        customData,
+        hyperparams,
+        updateHyperparams,
         tf // expose if needed
     };
 }
