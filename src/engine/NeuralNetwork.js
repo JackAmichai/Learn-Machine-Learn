@@ -1,8 +1,36 @@
 import * as tf from '@tensorflow/tfjs';
 
+/**
+ * Clamps a value between min and max bounds.
+ * @param {number} value - The value to clamp
+ * @param {number} min - Minimum bound
+ * @param {number} max - Maximum bound
+ * @returns {number} The clamped value
+ */
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
+/**
+ * Neural network wrapper class for TensorFlow.js.
+ * Provides a simplified interface for creating, training, and managing
+ * neural network models with support for various architectures and features.
+ * 
+ * @example
+ * const nn = new NeuralNetwork({ learningRate: 0.01 });
+ * nn.createModel([2, 8, 4, 1]); // 2 inputs, 2 hidden layers, 1 output
+ * await nn.train(xs, ys, 100); // Train for 100 epochs
+ * const prediction = nn.predict(inputTensor);
+ */
 export class NeuralNetwork {
+  /**
+   * Creates a new NeuralNetwork instance.
+   * @param {Object} [config={}] - Configuration options
+   * @param {number} [config.learningRate=0.1] - Learning rate for optimizer
+   * @param {string} [config.optimizer='adam'] - Optimizer type ('adam' or 'sgd')
+   * @param {string} [config.loss='meanSquaredError'] - Loss function
+   * @param {string} [config.activation='relu'] - Hidden layer activation function
+   * @param {string} [config.outputActivation='sigmoid'] - Output layer activation
+   * @param {number} [config.gradientClip=0] - Gradient clipping threshold (0 = disabled)
+   */
   constructor(config) {
     this.model = null;
     this.connectionLayers = [];
@@ -18,6 +46,11 @@ export class NeuralNetwork {
     };
   }
 
+  /**
+   * Updates the network configuration.
+   * @param {Object} newConfig - New configuration values to merge
+   * @returns {{rebuild: boolean}} Object indicating if model needs rebuilding
+   */
   updateConfig(newConfig) {
     const needsRebuild = newConfig.activation !== undefined && newConfig.activation !== this.config.activation;
     const needsRecompile = newConfig.learningRate !== this.config.learningRate ||
@@ -43,6 +76,15 @@ export class NeuralNetwork {
     return { rebuild: false };
   }
 
+  /**
+   * Creates a new sequential neural network model.
+   * @param {number[]} structure - Array of node counts per layer, e.g., [2, 8, 4, 1]
+   * @param {Object} [layerFeatures={}] - Per-layer feature configuration
+   * @param {boolean} [layerFeatures[].batchNorm] - Enable batch normalization
+   * @param {boolean} [layerFeatures[].dropout] - Enable dropout
+   * @param {number} [layerFeatures[].dropoutRate=0.2] - Dropout rate (0.01-0.9)
+   * @returns {tf.Sequential} The created TensorFlow.js model
+   */
   createModel(structure, layerFeatures = {}) {
     // structure: array of node counts, e.g. [2, 4, 1] OR [100, 16, 2]
     if (this.model) {
@@ -102,6 +144,12 @@ export class NeuralNetwork {
     return model;
   }
 
+  /**
+   * Compiles the model with optimizer and loss function.
+   * @param {tf.Sequential} model - The model to compile
+   * @param {number} outputShape - Number of output units
+   * @private
+   */
   compile(model, outputShape) {
     let optimizer;
     if (this.config.optimizer === 'sgd') optimizer = tf.train.sgd(this.config.learningRate);
@@ -129,6 +177,13 @@ export class NeuralNetwork {
     model.compile(compileConfig);
   }
 
+  /**
+   * Trains the model on provided data.
+   * @param {tf.Tensor2D} xs - Input tensor of shape [samples, features]
+   * @param {tf.Tensor2D} ys - Target tensor of shape [samples, outputs]
+   * @param {number} [epochs=1] - Number of training epochs
+   * @returns {Promise<tf.History|null>} Training history or null on error
+   */
   async train(xs, ys, epochs = 1) {
     if (!this.model) return null;
 
@@ -149,6 +204,11 @@ export class NeuralNetwork {
     }
   }
 
+  /**
+   * Makes predictions on input data.
+   * @param {tf.Tensor2D} xs - Input tensor
+   * @returns {tf.Tensor|null} Prediction tensor or null if no model
+   */
   predict(xs) {
     if (!this.model) return null;
     return tf.tidy(() => {
@@ -156,6 +216,11 @@ export class NeuralNetwork {
     });
   }
 
+  /**
+   * Gets the weight tensor for a specific layer.
+   * @param {number} layerIndex - Index of the connection layer
+   * @returns {tf.Tensor|null} Weight tensor or null if invalid index
+   */
   getLayerWeights(layerIndex) {
     if (!this.connectionLayers[layerIndex]) return null;
     try {
@@ -167,6 +232,11 @@ export class NeuralNetwork {
     }
   }
 
+  /**
+   * Gets connection weights as a flat Float32Array.
+   * @param {number} layerIndex - Index of the connection layer
+   * @returns {Float32Array|null} Weight values or null if invalid
+   */
   getConnectionWeights(layerIndex) {
     if (!this.connectionLayers[layerIndex]) return null;
     try {
@@ -182,6 +252,11 @@ export class NeuralNetwork {
     }
   }
 
+  /**
+   * Serializes all model weights to nested arrays.
+   * Useful for saving/restoring model state.
+   * @returns {Array} Serialized weights per layer
+   */
   getWeights() {
     if (!this.model) return [];
     return this.model.layers.map(l => {
@@ -189,6 +264,11 @@ export class NeuralNetwork {
     });
   }
 
+  /**
+   * Restores model weights from serialized arrays.
+   * @param {Array} [serializedWeights=[]] - Weights from getWeights()
+   * @returns {boolean} True if successful, false on error
+   */
   setWeights(serializedWeights = []) {
     if (!this.model || !Array.isArray(serializedWeights)) return false;
     try {
@@ -206,6 +286,10 @@ export class NeuralNetwork {
     }
   }
 
+  /**
+   * Disposes the model and releases GPU/memory resources.
+   * Should be called when the network is no longer needed.
+   */
   dispose() {
     if (this.model) this.model.dispose();
   }

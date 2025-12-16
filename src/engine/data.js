@@ -1,12 +1,37 @@
 import * as tf from '@tensorflow/tfjs';
 
+/**
+ * Enum of available dataset types for neural network training.
+ * @readonly
+ * @enum {string}
+ */
 export const DataType = {
+    /** XOR pattern - requires non-linear decision boundary */
     XOR: 'xor',
+    /** Concentric circles - inner vs outer classification */
     CIRCLE: 'circle',
+    /** Interleaved spirals - complex non-linear boundary */
     SPIRAL: 'spiral',
+    /** Linear separable - simple diagonal boundary */
     LINEAR: 'linear'
 };
 
+/**
+ * Generates synthetic 2D classification data for neural network training.
+ * 
+ * @param {string} type - Dataset type from DataType enum
+ * @param {number} [samples=200] - Number of data points to generate
+ * @param {number} [noise=0.15] - Noise level (0 = no noise, higher = more scatter)
+ * @returns {{xs: tf.Tensor2D, ys: tf.Tensor2D, points: number[][], labels: number[]}}
+ *   Object containing TensorFlow tensors and raw arrays for visualization
+ * 
+ * @example
+ * const { xs, ys, points, labels } = generateData(DataType.XOR, 500, 0.1);
+ * // xs: [500, 2] tensor of input coordinates
+ * // ys: [500, 1] tensor of class labels (0 or 1)
+ * // points: [[x1,y1], [x2,y2], ...] for plotting
+ * // labels: [0, 1, 0, ...] flat array of classes
+ */
 export function generateData(type, samples = 200, noise = 0.15) {
     const points = [];
     const labels = [];
