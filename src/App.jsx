@@ -16,6 +16,7 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { ToastProvider } from './contexts/ToastContext';
 import { ToastStack } from './components/ToastStack';
 import { useToast } from './hooks/useToast';
+import { BuyMeCoffee } from './components/BuyMeCoffee';
 
 /**
  * Global keyboard shortcuts:
@@ -267,6 +268,8 @@ function AppContent() {
           )}
         </div>
       </main>
+
+      <BuyMeCoffee />
 
       <style>{`
         .vision-container {
