@@ -217,6 +217,7 @@ function AppContent() {
                         model={nn.model}
                         structure={nn.structure}
                         modelVersion={nn.modelVersion}
+                        deadNeurons={nn.deadNeurons}
                       />
                     </div>
                     <div style={{ flex: 1 }}>
@@ -240,6 +241,7 @@ function AppContent() {
                     model={nn.model}
                     structure={nn.structure}
                     modelVersion={nn.modelVersion}
+                    deadNeurons={nn.deadNeurons}
                   />
                 </div>
               </div>

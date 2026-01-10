@@ -247,4 +247,81 @@ describe('NeuralNetwork', () => {
             expect(() => emptyNN.dispose()).not.toThrow();
         });
     });
+
+    describe('Dead Neuron Detection', () => {
+        beforeEach(() => {
+            nn = new NeuralNetwork({
+                learningRate: 0.1,
+                activation: 'relu', // Important for dead neuron detection
+                outputActivation: 'sigmoid'
+            });
+        });
+
+        it('should detect dead neurons', () => {
+            // Create a model: Input 2 -> Hidden 4 -> Output 1
+            nn.createModel([2, 4, 1]);
+
+            // Manually set weights of the first hidden layer.
+            // We want some neurons to be always negative (dead for ReLU).
+            // Hidden layer 1 has 4 units. Input has 2 units.
+            // Weights shape: [2, 4], Bias shape: [4]
+
+            const layer1 = nn.model.layers[0];
+
+            // Weights: All negative large numbers
+            const weights = tf.tensor2d([
+                [-10, -10, 10, 10], // Input 1 weights
+                [-10, -10, 10, 10]  // Input 2 weights
+            ]);
+
+            // Biases: First two are negative, last two are positive
+            const biases = tf.tensor1d([-100, -100, 100, 100]);
+
+            layer1.setWeights([weights, biases]);
+
+            // Create input data that is positive (0 to 1)
+            const xs = tf.tensor2d([
+                [0.1, 0.1],
+                [0.5, 0.5],
+                [0.9, 0.9]
+            ]);
+
+            // Run scan
+            const deadMap = nn.scanForDeadNeurons(xs);
+
+            // Expected: Layer index 1 (first hidden) should have neurons 0 and 1 dead.
+            // Neurons 2 and 3 should be active (positive weights/biases).
+
+            // Clean up tensors
+            weights.dispose();
+            biases.dispose();
+            xs.dispose();
+
+            expect(deadMap).toBeDefined();
+            expect(deadMap[1]).toBeDefined();
+            expect(deadMap[1]).toContain(0);
+            expect(deadMap[1]).toContain(1);
+            expect(deadMap[1]).not.toContain(2);
+            expect(deadMap[1]).not.toContain(3);
+        });
+
+        it('should return empty object for no dead neurons', () => {
+            nn.createModel([2, 2, 1]);
+
+            const layer1 = nn.model.layers[0];
+            const weights = tf.tensor2d([[1, 1], [1, 1]]);
+            const biases = tf.tensor1d([1, 1]);
+            layer1.setWeights([weights, biases]);
+
+            const xs = tf.tensor2d([[1, 1]]);
+
+            const deadMap = nn.scanForDeadNeurons(xs);
+
+            weights.dispose();
+            biases.dispose();
+            xs.dispose();
+
+            expect(Object.keys(deadMap).length).toBe(0);
+        });
+    });
 });

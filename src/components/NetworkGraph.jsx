@@ -1,4 +1,4 @@
-export function NetworkGraph({ model, structure, modelVersion }) {
+export function NetworkGraph({ model, structure, modelVersion, deadNeurons }) {
     // Extract weights for visualization (recomputed when modelVersion increments)
     const connectionWeights = (() => {
         const version = modelVersion;
@@ -87,26 +87,40 @@ export function NetworkGraph({ model, structure, modelVersion }) {
 
             {/* Nodes */}
             {structure.map((layerSize, lIdx) => {
+                const layerDeadIndices = deadNeurons && deadNeurons[lIdx] ? deadNeurons[lIdx] : [];
                 return Array.from({ length: layerSize }).map((_, nIdx) => {
                     const { x, y } = getCoords(lIdx, nIdx, layerSize);
                     const isInput = lIdx === 0;
                     const isOutput = lIdx === structure.length - 1;
+                    const isDead = layerDeadIndices.includes(nIdx);
 
                     let fill = '#13131f';
                     let stroke = '#555';
 
-                    if (isInput) { stroke = '#fff'; }
-                    else if (isOutput) { stroke = '#fff'; }
+                    if (isDead) {
+                        fill = '#4a0000'; // Dark red fill
+                        stroke = '#ff4444'; // Bright red stroke
+                    } else if (isInput) {
+                        stroke = '#fff';
+                    } else if (isOutput) {
+                        stroke = '#fff';
+                    }
 
                     return (
-                        <circle
-                            key={`node-${lIdx}-${nIdx}`}
-                            cx={x} cy={y}
-                            r={isInput || isOutput ? 10 : 8}
-                            fill={fill}
-                            stroke={stroke}
-                            strokeWidth="2"
-                        />
+                        <g key={`node-${lIdx}-${nIdx}`}>
+                            <circle
+                                cx={x} cy={y}
+                                r={isInput || isOutput ? 10 : 8}
+                                fill={fill}
+                                stroke={stroke}
+                                strokeWidth={isDead ? 3 : 2}
+                            />
+                            {isDead && (
+                                <text x={x} y={y} dy=".3em" textAnchor="middle" fill="#ff4444" fontSize="10" pointerEvents="none">
+                                    ×
+                                </text>
+                            )}
+                        </g>
                     );
                 });
             })}

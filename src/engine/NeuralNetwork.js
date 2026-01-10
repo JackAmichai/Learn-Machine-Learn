@@ -287,6 +287,51 @@ export class NeuralNetwork {
   }
 
   /**
+   * Scans the network for dead neurons (always zero activation).
+   * @param {tf.Tensor2D} xs - Input batch
+   * @returns {Object} Map of layerIndex -> Array of dead neuron indices
+   */
+  scanForDeadNeurons(xs) {
+    if (!this.model) return {};
+
+    // We need to traverse the model layers manually.
+    // structure index 0 is input.
+    // structure index 1 is first hidden layer (first Dense).
+
+    return tf.tidy(() => {
+      const deadMap = {};
+      let current = xs;
+      let denseLayerIndex = 1;
+
+      for (const layer of this.model.layers) {
+        // Apply layer to current tensor
+        current = layer.apply(current);
+
+        // Check if it's a Dense layer (which has the activation)
+        if (layer.getClassName() === 'Dense') {
+          // If activation is ReLU (or similar), dead means always <= 0 (or close to 0)
+          // We check max activation across the batch.
+          const maxActivations = current.max(0); // Shape [units]
+          const isDead = maxActivations.lessEqual(1e-5);
+          const deadIndices = [];
+          const deadData = isDead.dataSync(); // safe for small layer sizes
+
+          for (let j = 0; j < deadData.length; j++) {
+            if (deadData[j]) deadIndices.push(j);
+          }
+
+          if (deadIndices.length > 0) {
+            deadMap[denseLayerIndex] = deadIndices;
+          }
+
+          denseLayerIndex++;
+        }
+      }
+      return deadMap;
+    });
+  }
+
+  /**
    * Disposes the model and releases GPU/memory resources.
    * Should be called when the network is no longer needed.
    */
