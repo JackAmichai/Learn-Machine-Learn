@@ -82,7 +82,9 @@ export function useNeuralNetwork() {
     const [slowDelay, setSlowDelay] = useState(600);
     const [stepState, setStepState] = useState(() => createStepState());
     const [layerFeatures, setLayerFeatures] = useState(() => buildLayerFeatureMap(DEFAULT_STRUCTURE));
+    const [deadNeurons, setDeadNeurons] = useState({});
     const layerFeatureRef = useRef(layerFeatures);
+    const scanCounterRef = useRef(0);
 
     useEffect(() => {
         layerFeatureRef.current = layerFeatures;
@@ -245,6 +247,16 @@ export function useNeuralNetwork() {
             let history = null;
             try {
                 history = await network.train(xs, ys, 1);
+
+                // Check for dead neurons periodically within the same scope
+                // before tensors are potentially disposed
+                scanCounterRef.current++;
+                if (scanCounterRef.current >= 20 && !cancelled && history) {
+                    scanCounterRef.current = 0;
+                    const deadMap = network.scanForDeadNeurons(xs);
+                    setDeadNeurons(deadMap);
+                }
+
             } catch (error) {
                 console.error('Training error:', error);
                 setIsPlaying(false);
@@ -555,6 +567,7 @@ export function useNeuralNetwork() {
         slowDelay,
         setSlowDelay: updateSlowDelayValue,
         stepState,
+        deadNeurons,
         runForwardPass,
         runBackwardPass,
         saveModelToLocal,
