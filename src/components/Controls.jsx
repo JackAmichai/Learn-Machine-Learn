@@ -39,8 +39,11 @@ export function Controls(props) {
         loadModelFromLocal,
         exportModelJSON,
         importModelJSON,
+        exportHistoryCSV,
         layerFeatures,
-        updateLayerFeatures
+        updateLayerFeatures,
+        batchSize,
+        setBatchSize
     } = props;
 
     const fileInputRef = useRef(null);
@@ -56,6 +59,22 @@ export function Controls(props) {
             const snapshot = saveModelToLocal();
             const stamp = snapshot?.timestamp ? new Date(snapshot.timestamp).toLocaleTimeString() : '';
             setStatus('success', `Saved to browser storage ${stamp ? `@ ${stamp}` : ''}`.trim());
+        } catch (err) {
+            setStatus('error', err.message);
+        }
+    };
+
+    const handleExportCSV = () => {
+        try {
+            const csv = exportHistoryCSV();
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `training-logs-${Date.now()}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            setStatus('success', 'Training logs exported.');
         } catch (err) {
             setStatus('error', err.message);
         }
@@ -213,6 +232,19 @@ export function Controls(props) {
                         onChange={(e) => updateHyperparams({ gradientClip: parseFloat(e.target.value) })}
                     />
                     <span>{hyperparams.gradientClip > 0 ? `${hyperparams.gradientClip.toFixed(1)}×` : 'Off'}</span>
+                </div>
+                <div className="clip-control">
+                    <label htmlFor="batch-range">Batch Size</label>
+                    <input
+                        id="batch-range"
+                        type="range"
+                        min="1"
+                        max="128"
+                        step="1"
+                        value={batchSize}
+                        onChange={(e) => setBatchSize(parseInt(e.target.value, 10))}
+                    />
+                    <span>{batchSize}</span>
                 </div>
             </div>
 
@@ -411,6 +443,7 @@ export function Controls(props) {
                     <button onClick={handleLoadLocal}>Load from Browser</button>
                     <button onClick={handleExportJSON}>Export JSON</button>
                     <button onClick={() => fileInputRef.current?.click()}>Import JSON</button>
+                    <button className="full-width" onClick={handleExportCSV}>Export Logs (CSV)</button>
                 </div>
                 <input
                     ref={fileInputRef}
@@ -792,6 +825,9 @@ export function Controls(props) {
                 border-radius: 6px;
                 font-size: 12px;
                 border: 1px solid var(--glass-border);
+            }
+            .persist-grid button.full-width {
+                grid-column: 1 / -1;
             }
             .persist-grid button:hover {
                 background: rgba(255,255,255,0.08);

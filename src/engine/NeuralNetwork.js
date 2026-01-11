@@ -182,9 +182,10 @@ export class NeuralNetwork {
    * @param {tf.Tensor2D} xs - Input tensor of shape [samples, features]
    * @param {tf.Tensor2D} ys - Target tensor of shape [samples, outputs]
    * @param {number} [epochs=1] - Number of training epochs
+   * @param {number} [batchSize=32] - Size of training batches
    * @returns {Promise<tf.History|null>} Training history or null on error
    */
-  async train(xs, ys, epochs = 1) {
+  async train(xs, ys, epochs = 1, batchSize = 32) {
     if (!this.model) return null;
 
     // Check shapes
@@ -195,7 +196,7 @@ export class NeuralNetwork {
       const h = await this.model.fit(xs, ys, {
         epochs: epochs,
         shuffle: true,
-        batchSize: 32,
+        batchSize: batchSize,
       });
       return h;
     } catch (e) {
