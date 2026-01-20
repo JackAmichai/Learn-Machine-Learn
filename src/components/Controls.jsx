@@ -249,6 +249,17 @@ export function Controls(props) {
                         <option value="adam">Adam</option>
                         <option value="sgd">SGD</option>
                     </select>
+
+                    <label><Tooltip word="Batch Size" /></label>
+                    <div className="lr-control">
+                        <input
+                            type="range"
+                            min="1" max="128" step="1"
+                            value={hyperparams.batchSize || 32}
+                            onChange={(e) => updateHyperparams({ batchSize: parseInt(e.target.value, 10) })}
+                        />
+                        <span>{hyperparams.batchSize || 32}</span>
+                    </div>
                 </div>
             </div>
 
