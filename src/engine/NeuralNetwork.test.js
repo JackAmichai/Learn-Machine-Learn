@@ -23,6 +23,7 @@ describe('NeuralNetwork', () => {
             expect(nn.config.optimizer).toBe('adam');
             expect(nn.config.activation).toBe('relu');
             expect(nn.config.outputActivation).toBe('sigmoid');
+            expect(nn.config.batchSize).toBe(32);
         });
 
         it('should accept custom config', () => {
@@ -95,6 +96,11 @@ describe('NeuralNetwork', () => {
         it('should update config values', () => {
             nn.updateConfig({ learningRate: 0.05 });
             expect(nn.config.learningRate).toBe(0.05);
+        });
+
+        it('should update batch size', () => {
+            nn.updateConfig({ batchSize: 64 });
+            expect(nn.config.batchSize).toBe(64);
         });
 
         it('should flag rebuild needed when activation changes', () => {

@@ -76,7 +76,8 @@ export function useNeuralNetwork() {
         learningRate: 0.1,
         activation: 'relu',
         optimizer: 'adam',
-        gradientClip: 0
+        gradientClip: 0,
+        batchSize: 32
     });
     const [trainingMode, setTrainingModeState] = useState('continuous'); // 'continuous' | 'slow' | 'step'
     const [slowDelay, setSlowDelay] = useState(600);

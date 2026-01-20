@@ -42,6 +42,7 @@ export class NeuralNetwork {
       activation: 'relu',
       outputActivation: 'sigmoid',
       gradientClip: 0,
+      batchSize: 32,
       ...config
     };
   }
@@ -195,7 +196,7 @@ export class NeuralNetwork {
       const h = await this.model.fit(xs, ys, {
         epochs: epochs,
         shuffle: true,
-        batchSize: 32,
+        batchSize: this.config.batchSize || 32,
       });
       return h;
     } catch (e) {
