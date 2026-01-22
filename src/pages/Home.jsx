@@ -12,6 +12,7 @@ import { useTheme } from '../hooks/useTheme';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { useToast } from '../hooks/useToast';
 import { BuyMeCoffee } from '../components/BuyMeCoffee';
+import { Footer } from '../components/Footer';
 
 /**
  * Global keyboard shortcuts:
@@ -267,6 +268,7 @@ export function Home() {
             </>
           )}
         </div>
+        <Footer />
       </main>
 
       <BuyMeCoffee />

@@ -68,5 +68,40 @@ export const quizzes = [
     options: ["AND", "OR", "XOR", "NOT"],
     correctAnswer: "XOR",
     explanation: "The XOR problem is not linearly separable, so a single layer perceptron cannot solve it (as shown by Minsky and Papert)."
+  },
+  {
+    id: 11,
+    question: "What does 'GPT' stand for in models like GPT-4?",
+    options: ["General Purpose Transformer", "Generative Pre-trained Transformer", "Graph Processing Tensor", "Global Pattern Training"],
+    correctAnswer: "Generative Pre-trained Transformer",
+    explanation: "GPT stands for Generative Pre-trained Transformer, indicating it's a transformer-based model pre-trained to generate text."
+  },
+  {
+    id: 12,
+    question: "Which mechanism allows Transformers to process input sequences in parallel?",
+    options: ["Recurrence", "Convolution", "Self-Attention", "Backpropagation"],
+    correctAnswer: "Self-Attention",
+    explanation: "Self-Attention allows the model to weigh the importance of different words in a sentence relative to each other, regardless of their distance."
+  },
+  {
+    id: 13,
+    question: "What is the process of breaking text into smaller units for an LLM called?",
+    options: ["Normalization", "Vectorization", "Tokenization", "Embedding"],
+    correctAnswer: "Tokenization",
+    explanation: "Tokenization converts raw text into smaller units (tokens) that can be processed by the model."
+  },
+  {
+    id: 14,
+    question: "What parameter controls the randomness of an LLM's output?",
+    options: ["Learning Rate", "Temperature", "Epochs", "Batch Size"],
+    correctAnswer: "Temperature",
+    explanation: "Temperature scales the logits before softmax; higher values increase randomness, while lower values make the output more deterministic."
+  },
+  {
+    id: 15,
+    question: "What technique is often used to align LLMs with human values?",
+    options: ["RLHF", "Gradient Descent", "Dropout", "MaxPooling"],
+    correctAnswer: "RLHF",
+    explanation: "RLHF (Reinforcement Learning from Human Feedback) uses human feedback to train a reward model and fine-tune the LLM."
   }
 ];
