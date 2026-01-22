@@ -4,6 +4,7 @@ import { quizzes } from '../data/quizData';
 import { QuizCard } from '../components/QuizCard';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { BuyMeCoffee } from '../components/BuyMeCoffee';
+import { Footer } from '../components/Footer';
 
 export function QuizPage() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -97,6 +98,7 @@ export function QuizPage() {
         )}
       </main>
 
+      <Footer />
       <BuyMeCoffee />
 
       <style>{`
