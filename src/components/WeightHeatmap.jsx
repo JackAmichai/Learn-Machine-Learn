@@ -1,9 +1,10 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useMemo } from 'react';
 
 export function WeightHeatmap({ model, modelVersion, structure }) {
     const containerRef = useRef(null);
 
-    const weightsData = (() => {
+    // Memoize weight extraction to avoid expensive synchronous TF.js calls on every render
+    const weightsData = useMemo(() => {
         if (modelVersion === null || modelVersion === undefined) {
             return null;
         }
@@ -54,7 +55,7 @@ export function WeightHeatmap({ model, modelVersion, structure }) {
             console.error('Heatmap error', error);
             return null;
         }
-    })();
+    }, [modelVersion, model, structure]);
 
     return (
         <div className="heatmap-container" ref={containerRef}>

@@ -1,6 +1,9 @@
+import { useMemo } from 'react';
+
 export function NetworkGraph({ model, structure, modelVersion, deadNeurons }) {
     // Extract weights for visualization (recomputed when modelVersion increments)
-    const connectionWeights = (() => {
+    // Memoized to avoid expensive synchronous TF.js dataSync calls on every render
+    const connectionWeights = useMemo(() => {
         const version = modelVersion;
         if (version === null || version === undefined) {
             return [];
@@ -21,7 +24,7 @@ export function NetworkGraph({ model, structure, modelVersion, deadNeurons }) {
         } catch {
             return [];
         }
-    })();
+    }, [modelVersion, model, structure]);
 
     // Calculate generic coords
     const svgWidth = 600;
