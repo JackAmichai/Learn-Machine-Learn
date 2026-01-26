@@ -1025,5 +1025,78 @@ export const MATH_TOPICS = {
                 ]
             }
         ]
+    },
+    "Classification Metrics": {
+        title: "Classification Metrics: Measuring Success",
+        content: `
+            <p><strong>Accuracy</strong> is just the start. To truly understand a classifier's performance, especially on imbalanced data, we need <strong>Precision</strong>, <strong>Recall</strong>, and the <strong>F1 Score</strong>.</p>
+            <div class="equation">
+                Accuracy = (TP + TN) / Total
+            </div>
+            <div class="equation">
+                Precision = TP / (TP + FP)
+            </div>
+            <div class="equation">
+                Recall = TP / (TP + FN)
+            </div>
+        `,
+        interactiveFormulas: [
+            {
+                name: "Accuracy Calculator",
+                parts: [
+                    { symbol: "Acc", key: "acc", name: "Accuracy", description: "Overall correct predictions" },
+                    { symbol: " = ", key: null },
+                    { symbol: "(TP + TN) / Total", key: "formula", name: "Formula", description: "Ratio of correct guesses" }
+                ],
+                variables: [
+                    { key: "TP", symbol: "TP", name: "True Positives", min: 0, max: 100, step: 1, default: 45, decimals: 0 },
+                    { key: "TN", symbol: "TN", name: "True Negatives", min: 0, max: 100, step: 1, default: 40, decimals: 0 },
+                    { key: "FP", symbol: "FP", name: "False Positives", min: 0, max: 100, step: 1, default: 10, decimals: 0 },
+                    { key: "FN", symbol: "FN", name: "False Negatives", min: 0, max: 100, step: 1, default: 5, decimals: 0 }
+                ],
+                calculate: (vals, get) => {
+                    const TP = get("TP", 45);
+                    const TN = get("TN", 40);
+                    const FP = get("FP", 10);
+                    const FN = get("FN", 5);
+                    const total = TP + TN + FP + FN;
+                    return total > 0 ? (TP + TN) / total : 0;
+                },
+                insights: [
+                    "High accuracy can be misleading if classes are imbalanced.",
+                    "Example: 99% accuracy is easy if 99% of samples are negative.",
+                    "Always look at confusion matrix for the full picture."
+                ]
+            },
+            {
+                name: "F1 Score",
+                parts: [
+                    { symbol: "F1", key: "f1", name: "F1 Score", description: "Harmonic mean of Precision and Recall" },
+                    { symbol: " = ", key: null },
+                    { symbol: "2 * (P * R) / (P + R)", key: "formula", name: "Formula", description: "Balances false positives and false negatives" }
+                ],
+                variables: [
+                    { key: "TP", symbol: "TP", name: "True Positives", min: 0, max: 100, step: 1, default: 30, decimals: 0 },
+                    { key: "FP", symbol: "FP", name: "False Positives", min: 0, max: 100, step: 1, default: 10, decimals: 0 },
+                    { key: "FN", symbol: "FN", name: "False Negatives", min: 0, max: 100, step: 1, default: 20, decimals: 0 }
+                ],
+                calculate: (vals, get) => {
+                    const TP = get("TP", 30);
+                    const FP = get("FP", 10);
+                    const FN = get("FN", 20);
+
+                    const precision = TP + FP > 0 ? TP / (TP + FP) : 0;
+                    const recall = TP + FN > 0 ? TP / (TP + FN) : 0;
+
+                    if (precision + recall === 0) return 0;
+                    return 2 * (precision * recall) / (precision + recall);
+                },
+                insights: [
+                    "F1 is lower than accuracy if P or R is low.",
+                    "Perfect F1 (1.0) requires perfect Precision AND Recall.",
+                    "Crucial metric for medical diagnosis or fraud detection."
+                ]
+            }
+        ]
     }
 };
