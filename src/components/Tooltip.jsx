@@ -56,7 +56,21 @@ const DICTIONARY = {
     // Data Fundamentals
     "Dataset": "Collection of labeled examples. Quality, balance, and coverage dominate achievable performance.",
     "Features": "Input descriptors fed into the network—pixels, sensor voltages, embeddings—often normalized before training.",
-    "Labels": "Ground-truth targets used to compute loss during supervised learning."
+    "Labels": "Ground-truth targets used to compute loss during supervised learning.",
+
+    // Metrics & Evaluation
+    "Precision": "Ratio of true positives to total predicted positives. High precision means few false alarms.",
+    "Recall": "Ratio of true positives to total actual positives. High recall means few missed cases.",
+    "F1 Score": "Harmonic mean of Precision and Recall. Use this when you need a balance between finding all cases and being correct.",
+    "Confusion Matrix": "A table layout that visualizes the performance of an algorithm, showing TP, TN, FP, and FN counts.",
+
+    // Data & Preprocessing
+    "Data Split": "Dividing the dataset into Training, Validation, and Test sets to ensure the model generalizes well.",
+    "Normalization": "Scaling input data to a standard range (e.g., 0-1 or z-score) to help the optimizer converge faster.",
+
+    // Advanced Concepts
+    "Dropout": "Regularization technique where randomly selected neurons are ignored during training to prevent overfitting.",
+    "Bias-Variance Tradeoff": "The balance between a model that is too simple (high bias, underfits) and too complex (high variance, overfits)."
 };
 
 export function Tooltip({ word, overrideText }) {

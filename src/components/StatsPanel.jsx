@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import * as tf from '@tensorflow/tfjs';
+import { Tooltip } from './Tooltip';
 
 /**
  * Computes classification metrics from model predictions
@@ -112,13 +113,13 @@ export function StatsPanel({ model, data, modelVersion, epoch, loss }) {
                             <span className="stat-value">{loss.toFixed(4)}</span>
                         </div>
                         <div className="stat-item">
-                            <span className="stat-label">Accuracy</span>
+                            <span className="stat-label"><Tooltip word="Accuracy" /></span>
                             <span className="stat-value highlight">
                                 {metrics ? formatPct(metrics.accuracy) : '--'}
                             </span>
                         </div>
                         <div className="stat-item">
-                            <span className="stat-label">F1 Score</span>
+                            <span className="stat-label"><Tooltip word="F1 Score" /></span>
                             <span className="stat-value highlight">
                                 {metrics ? formatPct(metrics.f1) : '--'}
                             </span>
@@ -127,7 +128,7 @@ export function StatsPanel({ model, data, modelVersion, epoch, loss }) {
 
                     {cm && (
                         <>
-                            <div className="section-label">Confusion Matrix</div>
+                            <div className="section-label"><Tooltip word="Confusion Matrix" /></div>
                             <div className="confusion-matrix" role="table" aria-label="Confusion Matrix">
                                 <div className="cm-header">
                                     <div className="cm-corner"></div>
@@ -173,11 +174,11 @@ export function StatsPanel({ model, data, modelVersion, epoch, loss }) {
                             <div className="section-label">Precision / Recall</div>
                             <div className="pr-stats">
                                 <div className="pr-item">
-                                    <span>Precision</span>
+                                    <span><Tooltip word="Precision" /></span>
                                     <span>{formatPct(metrics.precision)}</span>
                                 </div>
                                 <div className="pr-item">
-                                    <span>Recall</span>
+                                    <span><Tooltip word="Recall" /></span>
                                     <span>{formatPct(metrics.recall)}</span>
                                 </div>
                             </div>

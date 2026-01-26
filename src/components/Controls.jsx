@@ -287,6 +287,8 @@ export function Controls(props) {
                         <span className="math-label">Generalization</span>
                         <div className="math-tags">
                             <Tooltip word="Regularization" />
+                            <Tooltip word="Dropout" />
+                            <Tooltip word="Bias-Variance Tradeoff" />
                             <Tooltip word="Signal Processing" />
                             <Tooltip word="Convolution" />
                         </div>
@@ -298,6 +300,22 @@ export function Controls(props) {
                             <Tooltip word="Dot Product" />
                             <Tooltip word="Matrix Multiplication" />
                             <Tooltip word="Tensors" />
+                        </div>
+                    </div>
+                    <div className="math-card">
+                        <span className="math-label">Data Prep</span>
+                        <div className="math-tags">
+                            <Tooltip word="Data Split" />
+                            <Tooltip word="Normalization" />
+                        </div>
+                    </div>
+                    <div className="math-card">
+                        <span className="math-label">Metrics</span>
+                        <div className="math-tags">
+                            <Tooltip word="Confusion Matrix" />
+                            <Tooltip word="Precision" />
+                            <Tooltip word="Recall" />
+                            <Tooltip word="F1 Score" />
                         </div>
                     </div>
                 </div>
