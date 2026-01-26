@@ -91,6 +91,14 @@ export function Tooltip({ word, overrideText }) {
         }
     };
 
+    const handleBlur = (e) => {
+        if (e.relatedTarget && e.currentTarget.contains(e.relatedTarget)) {
+            return;
+        }
+        setIsVisible(false);
+        setShowMathPrompt(false);
+    };
+
     return (
         <span
             className="tooltip-container"
@@ -100,7 +108,7 @@ export function Tooltip({ word, overrideText }) {
             onMouseEnter={() => setIsVisible(true)}
             onMouseLeave={() => { setIsVisible(false); setShowMathPrompt(false); }}
             onFocus={() => setIsVisible(true)}
-            onBlur={() => { setIsVisible(false); setShowMathPrompt(false); }}
+            onBlur={handleBlur}
             onKeyDown={handleKeyDown}
         >
             <span className={`tooltip-word ${hasMath ? 'has-math' : ''}`}>{word}</span>

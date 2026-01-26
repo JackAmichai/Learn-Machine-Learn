@@ -361,16 +361,16 @@ export function Controls(props) {
 
                                 <div className="node-control">
                                     {isHidden && (
-                                        <button onClick={() => updateNodeCount(idx, -1)}>-</button>
+                                        <button onClick={() => updateNodeCount(idx, -1)} aria-label="Decrease neurons">-</button>
                                     )}
                                     <span className="node-count">{nodes} <Tooltip word="Neurons" /></span>
                                     {isHidden && (
-                                        <button onClick={() => updateNodeCount(idx, 1)}>+</button>
+                                        <button onClick={() => updateNodeCount(idx, 1)} aria-label="Increase neurons">+</button>
                                     )}
                                 </div>
 
                                 {isHidden && (
-                                    <button className="btn-del" onClick={() => removeLayer(idx)}>×</button>
+                                    <button className="btn-del" onClick={() => removeLayer(idx)} aria-label="Remove layer">×</button>
                                 )}
 
                                 {isHidden && (
