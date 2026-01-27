@@ -1,5 +1,8 @@
 import * as tf from '@tensorflow/tfjs';
 
+export const ALLOWED_ACTIVATIONS = ['relu', 'sigmoid', 'tanh', 'linear', 'softmax', 'elu', 'selu', 'softplus', 'softsign', 'hardSigmoid'];
+export const ALLOWED_OPTIMIZERS = ['adam', 'sgd', 'rmsprop', 'adagrad', 'adadelta', 'adamax', 'nadam'];
+
 /**
  * Clamps a value between min and max bounds.
  * @param {number} value - The value to clamp

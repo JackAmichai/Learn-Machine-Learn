@@ -1,9 +1,13 @@
 import { useState } from 'react';
 import { Tooltip } from './Tooltip';
+import { ALLOWED_ACTIVATIONS, ALLOWED_OPTIMIZERS } from '../engine/NeuralNetwork';
 
 export function CodeExport({ structure, hyperparams }) {
     const [isOpen, setIsOpen] = useState(false);
     const [lang, setLang] = useState('python'); // 'python' or 'js'
+
+    const safeActivation = ALLOWED_ACTIVATIONS.includes(hyperparams.activation) ? hyperparams.activation : 'relu';
+    const safeOptimizer = ALLOWED_OPTIMIZERS.includes(hyperparams.optimizer) ? hyperparams.optimizer : 'adam';
 
     if (!isOpen) {
         return (
@@ -22,7 +26,7 @@ export function CodeExport({ structure, hyperparams }) {
 
         // Hidden Layers
         for (let i = 1; i < structure.length - 1; i++) {
-            code += `model.add(layers.Dense(${structure[i]}, activation='${hyperparams.activation}'${i === 1 ? `, input_shape=(${inputShape},)` : ''}))\n`;
+            code += `model.add(layers.Dense(${structure[i]}, activation='${safeActivation}'${i === 1 ? `, input_shape=(${inputShape},)` : ''}))\n`;
         }
 
         // Output Layer
@@ -35,7 +39,7 @@ export function CodeExport({ structure, hyperparams }) {
         let loss = 'mean_squared_error';
         if (outputShape > 1) loss = 'categorical_crossentropy';
 
-        code += `model.compile(optimizer='${hyperparams.optimizer}',\n              loss='${loss}',\n              metrics=['accuracy'])`;
+        code += `model.compile(optimizer='${safeOptimizer}',\n              loss='${loss}',\n              metrics=['accuracy'])`;
 
         return code;
     };
@@ -46,7 +50,7 @@ export function CodeExport({ structure, hyperparams }) {
         const inputShape = structure[0];
 
         for (let i = 1; i < structure.length - 1; i++) {
-            code += `model.add(tf.layers.dense({\n  units: ${structure[i]},\n  activation: '${hyperparams.activation}'${i === 1 ? `,\n  inputShape: [${inputShape}]` : ''}\n}));\n`;
+            code += `model.add(tf.layers.dense({\n  units: ${structure[i]},\n  activation: '${safeActivation}'${i === 1 ? `,\n  inputShape: [${inputShape}]` : ''}\n}));\n`;
         }
 
         const outputShape = structure[structure.length - 1];
@@ -58,7 +62,7 @@ export function CodeExport({ structure, hyperparams }) {
         let loss = 'meanSquaredError';
         if (outputShape > 1) loss = 'categoricalCrossentropy';
 
-        code += `model.compile({\n  optimizer: '${hyperparams.optimizer}',\n  loss: '${loss}',\n  metrics: ['accuracy']\n});`;
+        code += `model.compile({\n  optimizer: '${safeOptimizer}',\n  loss: '${loss}',\n  metrics: ['accuracy']\n});`;
 
         return code;
     };
