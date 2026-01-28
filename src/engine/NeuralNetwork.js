@@ -1,5 +1,8 @@
 import * as tf from '@tensorflow/tfjs';
 
+export const ALLOWED_ACTIVATIONS = ['relu', 'sigmoid', 'tanh', 'linear', 'softmax'];
+export const ALLOWED_OPTIMIZERS = ['adam', 'sgd'];
+
 /**
  * Clamps a value between min and max bounds.
  * @param {number} value - The value to clamp
@@ -35,7 +38,9 @@ export class NeuralNetwork {
     this.model = null;
     this.connectionLayers = [];
     this.layerFeatures = {};
-    this.config = {
+
+    // Apply defaults and merge provided config
+    const merged = {
       learningRate: 0.1,
       optimizer: 'adam',
       loss: 'meanSquaredError',
@@ -45,6 +50,22 @@ export class NeuralNetwork {
       batchSize: 32,
       ...config
     };
+
+    // Security validation
+    if (!ALLOWED_OPTIMIZERS.includes(merged.optimizer)) {
+      console.warn(`Invalid optimizer '${merged.optimizer}', falling back to 'adam'`);
+      merged.optimizer = 'adam';
+    }
+    if (!ALLOWED_ACTIVATIONS.includes(merged.activation)) {
+      console.warn(`Invalid activation '${merged.activation}', falling back to 'relu'`);
+      merged.activation = 'relu';
+    }
+    if (!ALLOWED_ACTIVATIONS.includes(merged.outputActivation)) {
+      console.warn(`Invalid output activation '${merged.outputActivation}', falling back to 'sigmoid'`);
+      merged.outputActivation = 'sigmoid';
+    }
+
+    this.config = merged;
   }
 
   /**
@@ -53,13 +74,29 @@ export class NeuralNetwork {
    * @returns {{rebuild: boolean}} Object indicating if model needs rebuilding
    */
   updateConfig(newConfig) {
-    const needsRebuild = newConfig.activation !== undefined && newConfig.activation !== this.config.activation;
-    const needsRecompile = newConfig.learningRate !== this.config.learningRate ||
-      newConfig.optimizer !== this.config.optimizer ||
-      newConfig.loss !== this.config.loss ||
-      newConfig.gradientClip !== this.config.gradientClip;
+    const validConfig = { ...newConfig };
 
-    this.config = { ...this.config, ...newConfig };
+    // Validate new config values before merging
+    if (validConfig.optimizer && !ALLOWED_OPTIMIZERS.includes(validConfig.optimizer)) {
+      console.warn(`Invalid optimizer '${validConfig.optimizer}', ignoring update.`);
+      delete validConfig.optimizer;
+    }
+    if (validConfig.activation && !ALLOWED_ACTIVATIONS.includes(validConfig.activation)) {
+      console.warn(`Invalid activation '${validConfig.activation}', ignoring update.`);
+      delete validConfig.activation;
+    }
+    if (validConfig.outputActivation && !ALLOWED_ACTIVATIONS.includes(validConfig.outputActivation)) {
+      console.warn(`Invalid output activation '${validConfig.outputActivation}', ignoring update.`);
+      delete validConfig.outputActivation;
+    }
+
+    const needsRebuild = validConfig.activation !== undefined && validConfig.activation !== this.config.activation;
+    const needsRecompile = validConfig.learningRate !== this.config.learningRate ||
+      validConfig.optimizer !== this.config.optimizer ||
+      validConfig.loss !== this.config.loss ||
+      validConfig.gradientClip !== this.config.gradientClip;
+
+    this.config = { ...this.config, ...validConfig };
 
     if (this.model) {
       if (needsRebuild) {
