@@ -330,4 +330,60 @@ describe('NeuralNetwork', () => {
             expect(Object.keys(deadMap).length).toBe(0);
         });
     });
+
+    describe('Security Validation', () => {
+        it('should fallback to default activation if invalid', () => {
+            const secureNN = new NeuralNetwork({ activation: 'malicious-func' });
+            expect(secureNN.config.activation).toBe('relu');
+            secureNN.dispose();
+        });
+
+        it('should fallback to default optimizer if invalid', () => {
+            const secureNN = new NeuralNetwork({ optimizer: 'exploit-opt' });
+            expect(secureNN.config.optimizer).toBe('adam');
+            secureNN.dispose();
+        });
+
+        it('should clamp extremely small learning rate', () => {
+            const secureNN = new NeuralNetwork({ learningRate: -0.1 });
+            expect(secureNN.config.learningRate).toBe(0.000001);
+            secureNN.dispose();
+        });
+
+        it('should clamp extremely large learning rate', () => {
+            const secureNN = new NeuralNetwork({ learningRate: 100 });
+            expect(secureNN.config.learningRate).toBe(1.0);
+            secureNN.dispose();
+        });
+
+        it('should clamp large batch size', () => {
+             const secureNN = new NeuralNetwork({ batchSize: 5000 });
+             expect(secureNN.config.batchSize).toBe(1024);
+             secureNN.dispose();
+        });
+
+        it('should validate structure on createModel', () => {
+             const secureNN = new NeuralNetwork();
+             const result = secureNN.createModel("invalid-structure");
+             expect(result).toBeNull();
+             secureNN.dispose();
+        });
+
+        it('should reject too short structure', () => {
+             const secureNN = new NeuralNetwork();
+             const result = secureNN.createModel([10]);
+             expect(result).toBeNull();
+             secureNN.dispose();
+        });
+
+        it('should truncate too deep structure', () => {
+             const secureNN = new NeuralNetwork();
+             const deepStructure = new Array(100).fill(10);
+             // MAX_LAYERS is 32.
+             secureNN.createModel(deepStructure);
+             // Structure length 32 means 31 layers
+             expect(secureNN.model.layers.length).toBeLessThanOrEqual(32);
+             secureNN.dispose();
+        });
+    });
 });
