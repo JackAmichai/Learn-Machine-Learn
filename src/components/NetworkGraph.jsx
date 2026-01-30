@@ -1,27 +1,58 @@
-export function NetworkGraph({ model, structure, modelVersion, deadNeurons }) {
+import { memo, useState, useEffect } from 'react';
+
+export const NetworkGraph = memo(function NetworkGraph({ model, structure, modelVersion, deadNeurons }) {
     // Extract weights for visualization (recomputed when modelVersion increments)
-    const connectionWeights = (() => {
-        const version = modelVersion;
-        if (version === null || version === undefined) {
-            return [];
-        }
-        if (!model || !Array.isArray(structure)) return [];
-        try {
-            if (typeof model.getConnectionWeights === 'function') {
-                return structure.slice(0, -1).map((_, idx) => model.getConnectionWeights(idx));
+    const [connectionWeights, setConnectionWeights] = useState([]);
+
+    useEffect(() => {
+        let isMounted = true;
+
+        async function fetchWeights() {
+            if (modelVersion === null || modelVersion === undefined || !model || !Array.isArray(structure)) {
+                if (isMounted) setConnectionWeights([]);
+                return;
             }
-            if (!model.model) return [];
-            return model.model.layers.map(layer => {
-                const weights = layer.getWeights();
-                if (!weights.length) return null;
-                const kernel = weights[0];
-                // dataSync returns a copy - do NOT dispose the original tensors
-                return kernel ? kernel.dataSync() : null;
-            });
-        } catch {
-            return [];
+
+            try {
+                const layersToFetch = structure.length - 1;
+                // Optimization: Use async data extraction to avoid blocking UI thread
+                if (typeof model.getConnectionWeightsAsync === 'function') {
+                    const promises = [];
+                    for (let i = 0; i < layersToFetch; i++) {
+                        promises.push(model.getConnectionWeightsAsync(i));
+                    }
+                    const results = await Promise.all(promises);
+                    if (isMounted) setConnectionWeights(results);
+                }
+                // Fallback for sync
+                else if (typeof model.getConnectionWeights === 'function') {
+                    const results = structure.slice(0, -1).map((_, idx) => model.getConnectionWeights(idx));
+                    if (isMounted) setConnectionWeights(results);
+                }
+                // Legacy fallback
+                else if (model.model && model.model.layers) {
+                    const results = model.model.layers.map(layer => {
+                        const weights = layer.getWeights();
+                        if (!weights.length) return null;
+                        const kernel = weights[0];
+                        return kernel ? kernel.dataSync() : null;
+                    });
+                    if (isMounted) setConnectionWeights(results);
+                } else {
+                    if (isMounted) setConnectionWeights([]);
+                }
+            } catch (error) {
+                console.error('Error fetching weights:', error);
+                if (isMounted) setConnectionWeights([]);
+            }
         }
-    })();
+
+        fetchWeights();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [model, structure, modelVersion]);
 
     // Calculate generic coords
     const svgWidth = 600;
@@ -126,4 +157,4 @@ export function NetworkGraph({ model, structure, modelVersion, deadNeurons }) {
             })}
         </svg>
     );
-}
+});
