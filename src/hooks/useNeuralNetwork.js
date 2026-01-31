@@ -81,10 +81,12 @@ export function useNeuralNetwork() {
     });
     const [trainingMode, setTrainingModeState] = useState('continuous'); // 'continuous' | 'slow' | 'step'
     const [slowDelay, setSlowDelay] = useState(600);
+    const [batchSize, setBatchSize] = useState(32);
     const [stepState, setStepState] = useState(() => createStepState());
     const [layerFeatures, setLayerFeatures] = useState(() => buildLayerFeatureMap(DEFAULT_STRUCTURE));
     const [deadNeurons, setDeadNeurons] = useState({});
     const layerFeatureRef = useRef(layerFeatures);
+    const historyRef = useRef([]);
     const scanCounterRef = useRef(0);
 
     useEffect(() => {
@@ -174,6 +176,7 @@ export function useNeuralNetwork() {
     const resetTrainingStats = () => {
         setEpoch(0);
         setLoss(0);
+        historyRef.current = [];
     };
 
     const rebuildModel = (nextStructure, featureOverride) => {
@@ -247,7 +250,7 @@ export function useNeuralNetwork() {
             const { xs, ys, dispose } = batch;
             let history = null;
             try {
-                history = await network.train(xs, ys, 1);
+                history = await network.train(xs, ys, 1, batchSize);
 
                 // Check for dead neurons periodically within the same scope
                 // before tensors are potentially disposed
@@ -446,6 +449,16 @@ export function useNeuralNetwork() {
             applyTrainingHistory(history);
             const lossHistory = history.history?.loss;
             const lossVal = Array.isArray(lossHistory) ? lossHistory[0] : lossHistory;
+
+            // Record logs for step mode too
+            if (typeof lossVal === 'number') {
+                historyRef.current.push({
+                    epoch: epoch + 1,
+                    loss: lossVal,
+                    timestamp: new Date().toISOString()
+                });
+            }
+
             setStepState(prev => ({
                 ...prev,
                 busy: false,
@@ -458,6 +471,14 @@ export function useNeuralNetwork() {
 
         setStepState(prev => ({ ...prev, busy: false, status: 'Backward pass produced no history results.' }));
         return null;
+    };
+
+    const exportHistoryCSV = () => {
+        const rows = [['Epoch', 'Loss', 'Timestamp']];
+        historyRef.current.forEach(h => {
+            rows.push([h.epoch, h.loss.toFixed(6), h.timestamp]);
+        });
+        return rows.map(r => r.join(',')).join('\n');
     };
 
     const buildModelSnapshot = () => ({
@@ -567,6 +588,8 @@ export function useNeuralNetwork() {
         setTrainingMode: updateTrainingMode,
         slowDelay,
         setSlowDelay: updateSlowDelayValue,
+        batchSize,
+        setBatchSize: (val) => setBatchSize(clamp(val, 1, 500)),
         stepState,
         deadNeurons,
         runForwardPass,
@@ -574,6 +597,7 @@ export function useNeuralNetwork() {
         saveModelToLocal,
         loadModelFromLocal,
         exportModelJSON,
-        importModelJSON
+        importModelJSON,
+        exportHistoryCSV
     };
 }

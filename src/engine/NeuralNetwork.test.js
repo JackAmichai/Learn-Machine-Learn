@@ -167,7 +167,7 @@ describe('NeuralNetwork', () => {
             ]);
             const ys = tf.tensor2d([[0], [1], [1], [0]]);
             
-            const history = await nn.train(xs, ys, 1);
+            const history = await nn.train(xs, ys, 1, 4); // Test with batch size
             
             expect(history).not.toBeNull();
             expect(history.history).toBeDefined();

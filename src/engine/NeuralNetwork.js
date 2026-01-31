@@ -42,7 +42,6 @@ export class NeuralNetwork {
       activation: 'relu',
       outputActivation: 'sigmoid',
       gradientClip: 0,
-      batchSize: 32,
       ...config
     };
   }
@@ -183,9 +182,10 @@ export class NeuralNetwork {
    * @param {tf.Tensor2D} xs - Input tensor of shape [samples, features]
    * @param {tf.Tensor2D} ys - Target tensor of shape [samples, outputs]
    * @param {number} [epochs=1] - Number of training epochs
+   * @param {number} [batchSize=32] - Size of training batches
    * @returns {Promise<tf.History|null>} Training history or null on error
    */
-  async train(xs, ys, epochs = 1) {
+  async train(xs, ys, epochs = 1, batchSize = 32) {
     if (!this.model) return null;
 
     // Check shapes
@@ -196,7 +196,7 @@ export class NeuralNetwork {
       const h = await this.model.fit(xs, ys, {
         epochs: epochs,
         shuffle: true,
-        batchSize: this.config.batchSize || 32,
+        batchSize: batchSize,
       });
       return h;
     } catch (e) {
@@ -249,26 +249,6 @@ export class NeuralNetwork {
       return kernel.dataSync();
     } catch (e) {
       console.error('Error fetching connection weights:', e);
-      return null;
-    }
-  }
-
-  /**
-   * Asynchronously gets connection weights as a flat Float32Array.
-   * Prevents blocking the main thread during heavy training loops.
-   * @param {number} layerIndex - Index of the connection layer
-   * @returns {Promise<Float32Array|null>} Promise resolving to weight values
-   */
-  async getConnectionWeightsAsync(layerIndex) {
-    if (!this.connectionLayers[layerIndex]) return null;
-    try {
-      const weights = this.connectionLayers[layerIndex].getWeights();
-      if (!weights.length) return null;
-      const kernel = weights[0];
-      // data() returns a promise that resolves to the data
-      return await kernel.data();
-    } catch (e) {
-      console.error('Error fetching connection weights async:', e);
       return null;
     }
   }
