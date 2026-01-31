@@ -1,8 +1,5 @@
 import * as tf from '@tensorflow/tfjs';
 
-export const ALLOWED_ACTIVATIONS = ['relu', 'sigmoid', 'tanh', 'linear', 'softmax', 'elu', 'selu', 'softplus', 'softsign', 'hardSigmoid'];
-export const ALLOWED_OPTIMIZERS = ['adam', 'sgd', 'rmsprop', 'adagrad', 'adadelta', 'adamax', 'nadam'];
-
 /**
  * Clamps a value between min and max bounds.
  * @param {number} value - The value to clamp
@@ -11,6 +8,35 @@ export const ALLOWED_OPTIMIZERS = ['adam', 'sgd', 'rmsprop', 'adagrad', 'adadelt
  * @returns {number} The clamped value
  */
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+
+const ALLOWED_ACTIVATIONS = ['relu', 'sigmoid', 'tanh', 'linear', 'softmax'];
+const ALLOWED_OPTIMIZERS = ['adam', 'sgd'];
+
+/**
+ * Validates and sanitizes configuration object.
+ * @param {Object} config - The configuration object to sanitize
+ * @returns {Object} A new sanitized configuration object
+ */
+const sanitizeConfig = (config) => {
+  const safeConfig = { ...config };
+
+  if (safeConfig.activation !== undefined && !ALLOWED_ACTIVATIONS.includes(safeConfig.activation)) {
+    console.warn(`Invalid activation '${safeConfig.activation}'. Falling back to 'relu'.`);
+    safeConfig.activation = 'relu';
+  }
+
+  if (safeConfig.outputActivation !== undefined && !ALLOWED_ACTIVATIONS.includes(safeConfig.outputActivation)) {
+    console.warn(`Invalid outputActivation '${safeConfig.outputActivation}'. Falling back to 'sigmoid'.`);
+    safeConfig.outputActivation = 'sigmoid';
+  }
+
+  if (safeConfig.optimizer !== undefined && !ALLOWED_OPTIMIZERS.includes(safeConfig.optimizer)) {
+    console.warn(`Invalid optimizer '${safeConfig.optimizer}'. Falling back to 'adam'.`);
+    safeConfig.optimizer = 'adam';
+  }
+
+  return safeConfig;
+};
 
 /**
  * Neural network wrapper class for TensorFlow.js.
@@ -38,15 +64,22 @@ export class NeuralNetwork {
     this.model = null;
     this.connectionLayers = [];
     this.layerFeatures = {};
-    this.config = {
+
+    const defaults = {
       learningRate: 0.1,
       optimizer: 'adam',
       loss: 'meanSquaredError',
       activation: 'relu',
       outputActivation: 'sigmoid',
       gradientClip: 0,
-      ...config
+      batchSize: 32
     };
+
+    // Merge provided config with defaults first
+    const mergedConfig = { ...defaults, ...config };
+
+    // Then sanitize the result
+    this.config = sanitizeConfig(mergedConfig);
   }
 
   /**
@@ -55,13 +88,16 @@ export class NeuralNetwork {
    * @returns {{rebuild: boolean}} Object indicating if model needs rebuilding
    */
   updateConfig(newConfig) {
-    const needsRebuild = newConfig.activation !== undefined && newConfig.activation !== this.config.activation;
-    const needsRecompile = newConfig.learningRate !== this.config.learningRate ||
-      newConfig.optimizer !== this.config.optimizer ||
-      newConfig.loss !== this.config.loss ||
-      newConfig.gradientClip !== this.config.gradientClip;
+    // Sanitize the input configuration
+    const sanitizedNew = sanitizeConfig(newConfig);
 
-    this.config = { ...this.config, ...newConfig };
+    const needsRebuild = sanitizedNew.activation !== undefined && sanitizedNew.activation !== this.config.activation;
+    const needsRecompile = sanitizedNew.learningRate !== this.config.learningRate ||
+      sanitizedNew.optimizer !== this.config.optimizer ||
+      sanitizedNew.loss !== this.config.loss ||
+      sanitizedNew.gradientClip !== this.config.gradientClip;
+
+    this.config = { ...this.config, ...sanitizedNew };
 
     if (this.model) {
       if (needsRebuild) {
@@ -185,10 +221,9 @@ export class NeuralNetwork {
    * @param {tf.Tensor2D} xs - Input tensor of shape [samples, features]
    * @param {tf.Tensor2D} ys - Target tensor of shape [samples, outputs]
    * @param {number} [epochs=1] - Number of training epochs
-   * @param {number} [batchSize=32] - Size of training batches
    * @returns {Promise<tf.History|null>} Training history or null on error
    */
-  async train(xs, ys, epochs = 1, batchSize = 32) {
+  async train(xs, ys, epochs = 1) {
     if (!this.model) return null;
 
     // Check shapes
@@ -199,7 +234,7 @@ export class NeuralNetwork {
       const h = await this.model.fit(xs, ys, {
         epochs: epochs,
         shuffle: true,
-        batchSize: batchSize,
+        batchSize: this.config.batchSize || 32,
       });
       return h;
     } catch (e) {
