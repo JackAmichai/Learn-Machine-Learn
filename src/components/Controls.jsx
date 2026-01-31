@@ -222,6 +222,7 @@ export function Controls(props) {
                     <label><Tooltip word="Learning Rate" /></label>
                     <div className="lr-control">
                         <input
+                            aria-label="Learning Rate"
                             type="range"
                             min="0.001" max="0.3" step="0.001"
                             value={hyperparams.learningRate}
@@ -232,6 +233,7 @@ export function Controls(props) {
 
                     <label><Tooltip word="Activation" /></label>
                     <select
+                        aria-label="Activation Function"
                         value={hyperparams.activation}
                         onChange={(e) => updateHyperparams({ activation: e.target.value })}
                     >
@@ -243,6 +245,7 @@ export function Controls(props) {
 
                     <label><Tooltip word="Optimizer" /></label>
                     <select
+                        aria-label="Optimizer"
                         value={hyperparams.optimizer}
                         onChange={(e) => updateHyperparams({ optimizer: e.target.value })}
                     >
@@ -253,6 +256,7 @@ export function Controls(props) {
                     <label><Tooltip word="Batch Size" /></label>
                     <div className="lr-control">
                         <input
+                            aria-label="Batch Size"
                             type="range"
                             min="1" max="128" step="1"
                             value={hyperparams.batchSize || 32}
@@ -361,16 +365,26 @@ export function Controls(props) {
 
                                 <div className="node-control">
                                     {isHidden && (
-                                        <button onClick={() => updateNodeCount(idx, -1)}>-</button>
+                                        <button
+                                            onClick={() => updateNodeCount(idx, -1)}
+                                            aria-label={`Decrease neurons in layer ${idx}`}
+                                        >-</button>
                                     )}
                                     <span className="node-count">{nodes} <Tooltip word="Neurons" /></span>
                                     {isHidden && (
-                                        <button onClick={() => updateNodeCount(idx, 1)}>+</button>
+                                        <button
+                                            onClick={() => updateNodeCount(idx, 1)}
+                                            aria-label={`Increase neurons in layer ${idx}`}
+                                        >+</button>
                                     )}
                                 </div>
 
                                 {isHidden && (
-                                    <button className="btn-del" onClick={() => removeLayer(idx)}>×</button>
+                                    <button
+                                        className="btn-del"
+                                        onClick={() => removeLayer(idx)}
+                                        aria-label={`Remove layer ${idx}`}
+                                    >×</button>
                                 )}
 
                                 {isHidden && (
