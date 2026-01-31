@@ -342,7 +342,7 @@ export function Controls(props) {
             <div className="section">
                 <div className="p-header">
                     <h3>Architecture</h3>
-                    <button className="btn-sm" onClick={addLayer} aria-label="Add a hidden layer">+ <Tooltip word="Layer" /></button>
+                    <button className="btn-sm" onClick={addLayer} aria-label="Add a hidden layer">+ Add Layer</button>
                 </div>
 
                 <div className="layers-list">
@@ -361,16 +361,29 @@ export function Controls(props) {
 
                                 <div className="node-control">
                                     {isHidden && (
-                                        <button onClick={() => updateNodeCount(idx, -1)} aria-label="Decrease neurons">-</button>
+                                        <button
+                                            onClick={() => updateNodeCount(idx, -1)}
+                                            aria-label={`Decrease neurons in layer ${idx}`}
+                                            title="Decrease neuron count"
+                                        >-</button>
                                     )}
                                     <span className="node-count">{nodes} <Tooltip word="Neurons" /></span>
                                     {isHidden && (
-                                        <button onClick={() => updateNodeCount(idx, 1)} aria-label="Increase neurons">+</button>
+                                        <button
+                                            onClick={() => updateNodeCount(idx, 1)}
+                                            aria-label={`Increase neurons in layer ${idx}`}
+                                            title="Increase neuron count"
+                                        >+</button>
                                     )}
                                 </div>
 
                                 {isHidden && (
-                                    <button className="btn-del" onClick={() => removeLayer(idx)} aria-label="Remove layer">×</button>
+                                    <button
+                                        className="btn-del"
+                                        onClick={() => removeLayer(idx)}
+                                        aria-label={`Remove layer ${idx}`}
+                                        title="Remove layer"
+                                    >×</button>
                                 )}
 
                                 {isHidden && (

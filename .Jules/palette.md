@@ -1,3 +1,3 @@
-## 2025-02-19 - Tooltip Focus Trap
-**Learning:** Tooltips that close on `blur` can trap keyboard users if the tooltip contains interactive elements. The `blur` event fires on the trigger before the focus moves to the tooltip content.
-**Action:** Use `e.relatedTarget` in the `onBlur` handler to check if the new focus target is inside the component container before closing the tooltip.
+## 2025-02-18 - Nested Interactive Controls
+**Learning:** Placing interactive Tooltips (which use `tabIndex` and `role="button"`) inside Buttons creates invalid HTML (nested interactive controls). This disrupts the tab order and confuses screen readers, making the interface unpredictable for assistive technology users.
+**Action:** Refactor UI patterns to ensure buttons contain only non-interactive content (text/icons). Place complex educational tooltips adjacent to the action button or rely on the button's own text/label to convey meaning, moving detailed definitions to a contextually appropriate location nearby.
