@@ -1026,287 +1026,75 @@ export const MATH_TOPICS = {
             }
         ]
     },
-    "Dropout": {
-        title: "Dropout: Learning to be Robust",
+    "Classification Metrics": {
+        title: "Classification Metrics: Measuring Success",
         content: `
-            <p><strong>Dropout</strong> prevents overfitting by randomly disabling neurons during training. This forces the network not to rely on any single feature.</p>
-            <p>During training, we zero out activations with probability <em>p</em> and scale the remaining ones by <em>1/(1-p)</em> to maintain the same average magnitude. During testing, we use all neurons without scaling.</p>
-        `,
-        interactiveFormulas: [
-            {
-                name: "Training Scaling",
-                parts: [
-                    { symbol: "Output", key: "out", name: "Scaled Output", description: "Value passed to next layer" },
-                    { symbol: " = ", key: null },
-                    { symbol: "(Input * Mask)", key: "masked", name: "Masked Input", description: "Input or Zero" },
-                    { symbol: " / (1 - p)", key: "scale", name: "Scaling Factor", description: "Boosts remaining signals" }
-                ],
-                variables: [
-                    { key: "input", symbol: "x", name: "Input", min: 0, max: 5, step: 0.1, default: 2.0, decimals: 2 },
-                    { key: "prob", symbol: "p", name: "Drop Rate", min: 0.1, max: 0.9, step: 0.1, default: 0.5, decimals: 1 },
-                    { key: "kept", symbol: "Mask", name: "Kept?", min: 0, max: 1, step: 1, default: 1, decimals: 0 }
-                ],
-                calculate: (vals, get) => {
-                    const x = get("input", 2.0);
-                    const p = get("prob", 0.5);
-                    const kept = get("kept", 1);
-                    if (kept === 0) return 0;
-                    return x / (1 - p);
-                },
-                insights: [
-                    "If p=0.5, we double the active values to keep the sum constant.",
-                    "Forces 'redundancy'—multiple neurons must learn the same feature.",
-                    "At test time, we don't drop anything, so no scaling is needed."
-                ]
-            }
-        ]
-    },
-    "Precision": {
-        title: "Precision: Quality of Positives",
-        content: `
-            <p><strong>Precision</strong> answers: "Of all the samples we claimed were positive, how many were actually positive?"</p>
+            <p><strong>Accuracy</strong> is just the start. To truly understand a classifier's performance, especially on imbalanced data, we need <strong>Precision</strong>, <strong>Recall</strong>, and the <strong>F1 Score</strong>.</p>
+            <div class="equation">
+                Accuracy = (TP + TN) / Total
+            </div>
             <div class="equation">
                 Precision = TP / (TP + FP)
             </div>
-            <p>High precision means low False Positives. Crucial for spam filters (don't delete good emails!).</p>
-        `,
-        interactiveFormulas: [
-            {
-                name: "Precision Calculator",
-                parts: [
-                    { symbol: "P", key: "prec", name: "Precision", description: "Ratio of true positives to predicted positives" },
-                    { symbol: " = TP / (TP + FP)", key: "formula", name: "Formula", description: "TP over Predicted Positives" }
-                ],
-                variables: [
-                    { key: "tp", symbol: "TP", name: "True Positives", min: 0, max: 100, step: 1, default: 40, decimals: 0 },
-                    { key: "fp", symbol: "FP", name: "False Positives", min: 0, max: 100, step: 1, default: 10, decimals: 0 }
-                ],
-                calculate: (vals, get) => {
-                    const tp = get("tp", 40);
-                    const fp = get("fp", 10);
-                    if (tp + fp === 0) return 0;
-                    return tp / (tp + fp);
-                },
-                insights: [
-                    "If FP is zero, Precision is 1.0 (perfect trustworthiness).",
-                    "Improving precision often hurts recall (the tradeoff).",
-                    "Use when false alarms are expensive."
-                ]
-            }
-        ]
-    },
-    "Recall": {
-        title: "Recall: Finding All Positives",
-        content: `
-            <p><strong>Recall</strong> answers: "Of all the samples that were actually positive, how many did we find?"</p>
             <div class="equation">
                 Recall = TP / (TP + FN)
             </div>
-            <p>High recall means low False Negatives. Crucial for medical screening (don't miss a disease!).</p>
         `,
         interactiveFormulas: [
             {
-                name: "Recall Calculator",
+                name: "Accuracy Calculator",
                 parts: [
-                    { symbol: "R", key: "rec", name: "Recall", description: "Ratio of true positives to actual positives" },
-                    { symbol: " = TP / (TP + FN)", key: "formula", name: "Formula", description: "TP over Actual Positives" }
+                    { symbol: "Acc", key: "acc", name: "Accuracy", description: "Overall correct predictions" },
+                    { symbol: " = ", key: null },
+                    { symbol: "(TP + TN) / Total", key: "formula", name: "Formula", description: "Ratio of correct guesses" }
                 ],
                 variables: [
-                    { key: "tp", symbol: "TP", name: "True Positives", min: 0, max: 100, step: 1, default: 40, decimals: 0 },
-                    { key: "fn", symbol: "FN", name: "False Negatives", min: 0, max: 100, step: 1, default: 10, decimals: 0 }
+                    { key: "TP", symbol: "TP", name: "True Positives", min: 0, max: 100, step: 1, default: 45, decimals: 0 },
+                    { key: "TN", symbol: "TN", name: "True Negatives", min: 0, max: 100, step: 1, default: 40, decimals: 0 },
+                    { key: "FP", symbol: "FP", name: "False Positives", min: 0, max: 100, step: 1, default: 10, decimals: 0 },
+                    { key: "FN", symbol: "FN", name: "False Negatives", min: 0, max: 100, step: 1, default: 5, decimals: 0 }
                 ],
                 calculate: (vals, get) => {
-                    const tp = get("tp", 40);
-                    const fn = get("fn", 10);
-                    if (tp + fn === 0) return 0;
-                    return tp / (tp + fn);
+                    const TP = get("TP", 45);
+                    const TN = get("TN", 40);
+                    const FP = get("FP", 10);
+                    const FN = get("FN", 5);
+                    const total = TP + TN + FP + FN;
+                    return total > 0 ? (TP + TN) / total : 0;
                 },
                 insights: [
-                    "If FN is zero, Recall is 1.0 (we found everything).",
-                    "A model that predicts 'Positive' for everything has 100% recall but bad precision.",
-                    "Use when missing a case is dangerous."
+                    "High accuracy can be misleading if classes are imbalanced.",
+                    "Example: 99% accuracy is easy if 99% of samples are negative.",
+                    "Always look at confusion matrix for the full picture."
                 ]
-            }
-        ]
-    },
-    "F1 Score": {
-        title: "F1 Score: The Harmonic Balance",
-        content: `
-            <p>The <strong>F1 Score</strong> is the harmonic mean of Precision and Recall. It penalizes extreme values more than the arithmetic mean.</p>
-            <div class="equation">
-                F1 = 2 * (P * R) / (P + R)
-            </div>
-            <p>It is the go-to metric for uneven datasets where accuracy is misleading.</p>
-        `,
-        interactiveFormulas: [
+            },
             {
-                name: "F1 Calculator",
+                name: "F1 Score",
                 parts: [
-                    { symbol: "F1", key: "f1", name: "F1 Score", description: "Harmonic mean" },
-                    { symbol: " = 2PR / (P+R)", key: "formula", name: "Formula", description: "Balances P and R" }
+                    { symbol: "F1", key: "f1", name: "F1 Score", description: "Harmonic mean of Precision and Recall" },
+                    { symbol: " = ", key: null },
+                    { symbol: "2 * (P * R) / (P + R)", key: "formula", name: "Formula", description: "Balances false positives and false negatives" }
                 ],
                 variables: [
-                    { key: "p", symbol: "P", name: "Precision", min: 0.01, max: 1, step: 0.01, default: 0.8, decimals: 2 },
-                    { key: "r", symbol: "R", name: "Recall", min: 0.01, max: 1, step: 0.01, default: 0.5, decimals: 2 }
+                    { key: "TP", symbol: "TP", name: "True Positives", min: 0, max: 100, step: 1, default: 30, decimals: 0 },
+                    { key: "FP", symbol: "FP", name: "False Positives", min: 0, max: 100, step: 1, default: 10, decimals: 0 },
+                    { key: "FN", symbol: "FN", name: "False Negatives", min: 0, max: 100, step: 1, default: 20, decimals: 0 }
                 ],
                 calculate: (vals, get) => {
-                    const p = get("p", 0.8);
-                    const r = get("r", 0.5);
-                    return 2 * (p * r) / (p + r);
-                },
-                insights: [
-                    "If either P or R is low, F1 gets dragged down heavily.",
-                    "Arithmetic mean of 0.8 and 0.2 is 0.5. F1 is 0.32!",
-                    "Forces the model to be good at BOTH precision and recall."
-                ]
-            }
-        ]
-    },
-    "Confusion Matrix": {
-        title: "Confusion Matrix: The Truth Grid",
-        content: `
-            <p>A <strong>Confusion Matrix</strong> breaks down predictions into four bins:</p>
-            <ul>
-                <li><strong>TP (True Positive):</strong> Correctly predicted yes.</li>
-                <li><strong>TN (True Negative):</strong> Correctly predicted no.</li>
-                <li><strong>FP (False Positive):</strong> Wrongly predicted yes (Type I error).</li>
-                <li><strong>FN (False Negative):</strong> Wrongly predicted no (Type II error).</li>
-            </ul>
-        `,
-        interactiveFormulas: [
-            {
-                name: "Accuracy from Matrix",
-                parts: [
-                    { symbol: "Acc", key: "acc", name: "Accuracy", description: "Overall correctness" },
-                    { symbol: " = (TP + TN) / Total", key: "formula", name: "Formula", description: "Correct predictions / All samples" }
-                ],
-                variables: [
-                    { key: "tp", symbol: "TP", name: "TP", min: 0, max: 50, step: 1, default: 20, decimals: 0 },
-                    { key: "tn", symbol: "TN", name: "TN", min: 0, max: 50, step: 1, default: 20, decimals: 0 },
-                    { key: "fp", symbol: "FP", name: "FP", min: 0, max: 50, step: 1, default: 5, decimals: 0 },
-                    { key: "fn", symbol: "FN", name: "FN", min: 0, max: 50, step: 1, default: 5, decimals: 0 }
-                ],
-                calculate: (vals, get) => {
-                    const tp = get("tp", 20);
-                    const tn = get("tn", 20);
-                    const fp = get("fp", 5);
-                    const fn = get("fn", 5);
-                    const total = tp + tn + fp + fn;
-                    if (total === 0) return 0;
-                    return (tp + tn) / total;
-                },
-                insights: [
-                    "On imbalanced data (e.g., 99 TNs, 1 TP), accuracy can be 99% even if the model misses every positive case!",
-                    "Always look at the matrix, not just the accuracy number."
-                ]
-            }
-        ]
-    },
-    "Data Split": {
-        title: "Data Split: The Exam Analogy",
-        content: `
-            <p>We split data into three sets to ensure honest evaluation:</p>
-            <ul>
-                <li><strong>Training Set:</strong> Homework. The model learns from these answers.</li>
-                <li><strong>Validation Set:</strong> Practice Exam. Used to tune hyperparameters (learning rate, layers) without cheating.</li>
-                <li><strong>Test Set:</strong> Final Exam. Kept locked away until the very end to measure real-world performance.</li>
-            </ul>
-        `,
-        interactiveFormulas: [
-            {
-                name: "Split Sizes",
-                parts: [
-                    { symbol: "Train", key: "train", name: "Training", description: "Samples for learning" },
-                    { symbol: " + ", key: null },
-                    { symbol: "Val", key: "val", name: "Validation", description: "Samples for tuning" },
-                    { symbol: " + ", key: null },
-                    { symbol: "Test", key: "test", name: "Test", description: "Samples for final check" }
-                ],
-                variables: [
-                    { key: "total", symbol: "N", name: "Total Samples", min: 100, max: 10000, step: 100, default: 1000, decimals: 0 },
-                    { key: "trainPct", symbol: "%Train", name: "Train %", min: 0.1, max: 0.9, step: 0.05, default: 0.7, decimals: 2 },
-                    { key: "valPct", symbol: "%Val", name: "Val %", min: 0.05, max: 0.5, step: 0.05, default: 0.15, decimals: 2 }
-                ],
-                calculate: (vals, get) => {
-                    const total = get("total", 1000);
-                    const train = get("trainPct", 0.7);
-                    const val = get("valPct", 0.15);
+                    const TP = get("TP", 30);
+                    const FP = get("FP", 10);
+                    const FN = get("FN", 20);
 
-                    const nTrain = Math.floor(total * train);
-                    const nVal = Math.floor(total * val);
-                    const nTest = total - nTrain - nVal;
+                    const precision = TP + FP > 0 ? TP / (TP + FP) : 0;
+                    const recall = TP + FN > 0 ? TP / (TP + FN) : 0;
 
-                    return `${nTrain} + ${nVal} + ${nTest}`;
+                    if (precision + recall === 0) return 0;
+                    return 2 * (precision * recall) / (precision + recall);
                 },
                 insights: [
-                    "Common splits: 70/15/15 or 80/10/10.",
-                    "Validation leakage happens if you tune your model on the test set.",
-                    "If you optimize heavily on Val, you might overfit the Validation set!"
-                ]
-            }
-        ]
-    },
-    "Normalization": {
-        title: "Normalization: Playing Fair",
-        content: `
-            <p>Neural networks struggle if one input ranges from 0-1 and another from 0-1000. The large weights will dominate gradients.</p>
-            <p><strong>Normalization</strong> (or Standardization) scales all inputs to a similar range, usually centered around 0 with variance 1.</p>
-        `,
-        interactiveFormulas: [
-            {
-                name: "Z-Score Standardization",
-                parts: [
-                    { symbol: "z", key: "z", name: "Z-Score", description: "Normalized value" },
-                    { symbol: " = (x - μ) / σ", key: "formula", name: "Formula", description: "Distance from mean in sigmas" }
-                ],
-                variables: [
-                    { key: "x", symbol: "x", name: "Input", min: 0, max: 100, step: 1, default: 75, decimals: 0 },
-                    { key: "mu", symbol: "μ", name: "Mean", min: 0, max: 100, step: 1, default: 50, decimals: 0 },
-                    { key: "sigma", symbol: "σ", name: "Std Dev", min: 1, max: 20, step: 1, default: 10, decimals: 0 }
-                ],
-                calculate: (vals, get) => {
-                    const x = get("x", 75);
-                    const mu = get("mu", 50);
-                    const sigma = get("sigma", 10);
-                    return (x - mu) / sigma;
-                },
-                insights: [
-                    "Transforms inputs to be roughly -3 to +3.",
-                    "Ensures gradients for all weights update at similar speeds.",
-                    "Critical for distance-based algorithms and gradient descent."
-                ]
-            }
-        ]
-    },
-    "Bias-Variance Tradeoff": {
-        title: "Bias vs Variance: The Goldilocks Zone",
-        content: `
-            <p><strong>Bias</strong> is the error from overly simple assumptions (Underfitting). The model can't capture the pattern.</p>
-            <p><strong>Variance</strong> is the error from sensitivity to small fluctuations (Overfitting). The model memorizes noise.</p>
-            <p>We want a model that is complex enough to learn, but simple enough to generalize.</p>
-        `,
-        interactiveFormulas: [
-            {
-                name: "Total Error",
-                parts: [
-                    { symbol: "Error", key: "err", name: "Total Error", description: "Combined loss" },
-                    { symbol: " = Bias² + Variance + Noise", key: "formula", name: "Decomposition", description: "Classic ML equation" }
-                ],
-                variables: [
-                    { key: "bias", symbol: "Bias", name: "Bias", min: 0, max: 2, step: 0.1, default: 0.5, decimals: 2 },
-                    { key: "var", symbol: "Var", name: "Variance", min: 0, max: 2, step: 0.1, default: 0.5, decimals: 2 },
-                    { key: "noise", symbol: "Noise", name: "Noise", min: 0, max: 1, step: 0.1, default: 0.2, decimals: 2 }
-                ],
-                calculate: (vals, get) => {
-                    const b = get("bias", 0.5);
-                    const v = get("var", 0.5);
-                    const n = get("noise", 0.2);
-                    return b * b + v + n;
-                },
-                insights: [
-                    "As complexity grows, Bias drops but Variance rises.",
-                    "Underfitting = High Bias, Low Variance.",
-                    "Overfitting = Low Bias, High Variance."
+                    "F1 is lower than accuracy if P or R is low.",
+                    "Perfect F1 (1.0) requires perfect Precision AND Recall.",
+                    "Crucial metric for medical diagnosis or fraud detection."
                 ]
             }
         ]
