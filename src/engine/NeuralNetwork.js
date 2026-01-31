@@ -2,6 +2,8 @@ import * as tf from '@tensorflow/tfjs';
 
 export const ALLOWED_ACTIVATIONS = ['relu', 'sigmoid', 'tanh', 'linear', 'softmax'];
 export const ALLOWED_OPTIMIZERS = ['adam', 'sgd'];
+export const MAX_NEURONS = 4096;
+export const MAX_LAYERS = 32;
 
 /**
  * Clamps a value between min and max bounds.
@@ -39,8 +41,10 @@ export class NeuralNetwork {
     this.connectionLayers = [];
     this.layerFeatures = {};
 
-    // Apply defaults and merge provided config
-    const merged = {
+    // Initial validation
+    const safeConfig = this._validateConfig(config || {});
+
+    this.config = {
       learningRate: 0.1,
       optimizer: 'adam',
       loss: 'meanSquaredError',
@@ -48,24 +52,51 @@ export class NeuralNetwork {
       outputActivation: 'sigmoid',
       gradientClip: 0,
       batchSize: 32,
-      ...config
+      ...safeConfig
     };
+  }
 
-    // Security validation
-    if (!ALLOWED_OPTIMIZERS.includes(merged.optimizer)) {
-      console.warn(`Invalid optimizer '${merged.optimizer}', falling back to 'adam'`);
-      merged.optimizer = 'adam';
-    }
-    if (!ALLOWED_ACTIVATIONS.includes(merged.activation)) {
-      console.warn(`Invalid activation '${merged.activation}', falling back to 'relu'`);
-      merged.activation = 'relu';
-    }
-    if (!ALLOWED_ACTIVATIONS.includes(merged.outputActivation)) {
-      console.warn(`Invalid output activation '${merged.outputActivation}', falling back to 'sigmoid'`);
-      merged.outputActivation = 'sigmoid';
+  /**
+   * Validates and sanitizes configuration.
+   * @param {Object} config - Raw configuration object
+   * @returns {Object} Sanitized configuration
+   * @private
+   */
+  _validateConfig(config) {
+    const safeConfig = { ...config };
+
+    // Validate activation
+    if (safeConfig.activation && !ALLOWED_ACTIVATIONS.includes(safeConfig.activation)) {
+      console.warn(`Invalid activation '${safeConfig.activation}'. Defaulting to 'relu'.`);
+      safeConfig.activation = 'relu';
     }
 
-    this.config = merged;
+    // Validate output activation
+    if (safeConfig.outputActivation && !ALLOWED_ACTIVATIONS.includes(safeConfig.outputActivation)) {
+      console.warn(`Invalid output activation '${safeConfig.outputActivation}'. Defaulting to 'sigmoid'.`);
+      safeConfig.outputActivation = 'sigmoid';
+    }
+
+    // Validate optimizer
+    if (safeConfig.optimizer && !ALLOWED_OPTIMIZERS.includes(safeConfig.optimizer)) {
+      console.warn(`Invalid optimizer '${safeConfig.optimizer}'. Defaulting to 'adam'.`);
+      safeConfig.optimizer = 'adam';
+    }
+
+    // Clamp numeric values
+    if (typeof safeConfig.learningRate === 'number') {
+        safeConfig.learningRate = clamp(safeConfig.learningRate, 0.000001, 1.0);
+    }
+
+    if (typeof safeConfig.batchSize === 'number') {
+        safeConfig.batchSize = Math.floor(clamp(safeConfig.batchSize, 1, 1024));
+    }
+
+    if (typeof safeConfig.gradientClip === 'number') {
+        safeConfig.gradientClip = clamp(safeConfig.gradientClip, 0, 10);
+    }
+
+    return safeConfig;
   }
 
   /**
@@ -74,29 +105,15 @@ export class NeuralNetwork {
    * @returns {{rebuild: boolean}} Object indicating if model needs rebuilding
    */
   updateConfig(newConfig) {
-    const validConfig = { ...newConfig };
+    const safeConfig = this._validateConfig(newConfig);
 
-    // Validate new config values before merging
-    if (validConfig.optimizer && !ALLOWED_OPTIMIZERS.includes(validConfig.optimizer)) {
-      console.warn(`Invalid optimizer '${validConfig.optimizer}', ignoring update.`);
-      delete validConfig.optimizer;
-    }
-    if (validConfig.activation && !ALLOWED_ACTIVATIONS.includes(validConfig.activation)) {
-      console.warn(`Invalid activation '${validConfig.activation}', ignoring update.`);
-      delete validConfig.activation;
-    }
-    if (validConfig.outputActivation && !ALLOWED_ACTIVATIONS.includes(validConfig.outputActivation)) {
-      console.warn(`Invalid output activation '${validConfig.outputActivation}', ignoring update.`);
-      delete validConfig.outputActivation;
-    }
+    const needsRebuild = safeConfig.activation !== undefined && safeConfig.activation !== this.config.activation;
+    const needsRecompile = safeConfig.learningRate !== this.config.learningRate ||
+      safeConfig.optimizer !== this.config.optimizer ||
+      safeConfig.loss !== this.config.loss ||
+      safeConfig.gradientClip !== this.config.gradientClip;
 
-    const needsRebuild = validConfig.activation !== undefined && validConfig.activation !== this.config.activation;
-    const needsRecompile = validConfig.learningRate !== this.config.learningRate ||
-      validConfig.optimizer !== this.config.optimizer ||
-      validConfig.loss !== this.config.loss ||
-      validConfig.gradientClip !== this.config.gradientClip;
-
-    this.config = { ...this.config, ...validConfig };
+    this.config = { ...this.config, ...safeConfig };
 
     if (this.model) {
       if (needsRebuild) {
@@ -125,6 +142,31 @@ export class NeuralNetwork {
    */
   createModel(structure, layerFeatures = {}) {
     // structure: array of node counts, e.g. [2, 4, 1] OR [100, 16, 2]
+    if (!Array.isArray(structure)) {
+        console.error("Invalid structure: must be an array.");
+        return null;
+    }
+
+    let safeStructure = structure;
+
+    if (structure.length < 2) {
+         console.warn(`Structure too short (${structure.length}).`);
+         return null;
+    }
+
+    if (structure.length > MAX_LAYERS) {
+        console.warn(`Structure too deep (${structure.length}). Truncating to ${MAX_LAYERS}.`);
+        safeStructure = structure.slice(0, MAX_LAYERS);
+    }
+
+    // Validate neuron counts
+    safeStructure = safeStructure.map(s => {
+        const n = Math.floor(s);
+        if (n < 1) return 1;
+        if (n > MAX_NEURONS) return MAX_NEURONS;
+        return n;
+    });
+
     if (this.model) {
       this.model.dispose();
     }
@@ -133,13 +175,13 @@ export class NeuralNetwork {
     this.connectionLayers = [];
 
     const model = tf.sequential();
-    const inputShape = structure[0];
-    const outputShape = structure[structure.length - 1];
+    const inputShape = safeStructure[0];
+    const outputShape = safeStructure[safeStructure.length - 1];
 
     // Hidden layers
-    for (let i = 1; i < structure.length - 1; i++) {
+    for (let i = 1; i < safeStructure.length - 1; i++) {
       const denseLayer = tf.layers.dense({
-        units: structure[i],
+        units: safeStructure[i],
         activation: this.config.activation,
         inputShape: i === 1 ? [inputShape] : undefined
       });

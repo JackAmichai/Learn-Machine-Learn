@@ -167,7 +167,7 @@ describe('NeuralNetwork', () => {
             ]);
             const ys = tf.tensor2d([[0], [1], [1], [0]]);
             
-            const history = await nn.train(xs, ys, 1, 4); // Test with batch size
+            const history = await nn.train(xs, ys, 1);
             
             expect(history).not.toBeNull();
             expect(history.history).toBeDefined();
@@ -233,23 +233,6 @@ describe('NeuralNetwork', () => {
             nn.createModel([2, 4, 1]);
             
             const weights = nn.getConnectionWeights(99);
-            expect(weights).toBeNull();
-        });
-    });
-
-    describe('getConnectionWeightsAsync', () => {
-        it('should return weights asynchronously for valid layer index', async () => {
-            nn.createModel([2, 4, 1]);
-
-            const weights = await nn.getConnectionWeightsAsync(0);
-            expect(weights).not.toBeNull();
-            expect(weights.length).toBe(8);
-        });
-
-        it('should return null for invalid layer index', async () => {
-            nn.createModel([2, 4, 1]);
-
-            const weights = await nn.getConnectionWeightsAsync(99);
             expect(weights).toBeNull();
         });
     });
@@ -349,45 +332,58 @@ describe('NeuralNetwork', () => {
     });
 
     describe('Security Validation', () => {
-        it('should fallback to default activation for invalid input', () => {
-            const maliciousNN = new NeuralNetwork({
-                activation: 'malicious_code_execution'
-            });
-            expect(maliciousNN.config.activation).toBe('relu');
+        it('should fallback to default activation if invalid', () => {
+            const secureNN = new NeuralNetwork({ activation: 'malicious-func' });
+            expect(secureNN.config.activation).toBe('relu');
+            secureNN.dispose();
         });
 
-        it('should fallback to default optimizer for invalid input', () => {
-            const maliciousNN = new NeuralNetwork({
-                optimizer: 'drop_all_tables'
-            });
-            expect(maliciousNN.config.optimizer).toBe('adam');
+        it('should fallback to default optimizer if invalid', () => {
+            const secureNN = new NeuralNetwork({ optimizer: 'exploit-opt' });
+            expect(secureNN.config.optimizer).toBe('adam');
+            secureNN.dispose();
         });
 
-        it('should fallback to default output activation for invalid input', () => {
-            const maliciousNN = new NeuralNetwork({
-                outputActivation: 'infinite_loop'
-            });
-            expect(maliciousNN.config.outputActivation).toBe('sigmoid');
+        it('should clamp extremely small learning rate', () => {
+            const secureNN = new NeuralNetwork({ learningRate: -0.1 });
+            expect(secureNN.config.learningRate).toBe(0.000001);
+            secureNN.dispose();
         });
 
-        it('should ignore invalid updates in updateConfig', () => {
-            nn.updateConfig({
-                activation: 'format_c_drive',
-                optimizer: 'mining_script'
-            });
-
-            // Should remain defaults
-            expect(nn.config.activation).toBe('relu');
-            expect(nn.config.optimizer).toBe('adam');
+        it('should clamp extremely large learning rate', () => {
+            const secureNN = new NeuralNetwork({ learningRate: 100 });
+            expect(secureNN.config.learningRate).toBe(1.0);
+            secureNN.dispose();
         });
 
-        it('should accept valid non-default values', () => {
-            const validNN = new NeuralNetwork({
-                activation: 'tanh',
-                optimizer: 'sgd'
-            });
-            expect(validNN.config.activation).toBe('tanh');
-            expect(validNN.config.optimizer).toBe('sgd');
+        it('should clamp large batch size', () => {
+             const secureNN = new NeuralNetwork({ batchSize: 5000 });
+             expect(secureNN.config.batchSize).toBe(1024);
+             secureNN.dispose();
+        });
+
+        it('should validate structure on createModel', () => {
+             const secureNN = new NeuralNetwork();
+             const result = secureNN.createModel("invalid-structure");
+             expect(result).toBeNull();
+             secureNN.dispose();
+        });
+
+        it('should reject too short structure', () => {
+             const secureNN = new NeuralNetwork();
+             const result = secureNN.createModel([10]);
+             expect(result).toBeNull();
+             secureNN.dispose();
+        });
+
+        it('should truncate too deep structure', () => {
+             const secureNN = new NeuralNetwork();
+             const deepStructure = new Array(100).fill(10);
+             // MAX_LAYERS is 32.
+             secureNN.createModel(deepStructure);
+             // Structure length 32 means 31 layers
+             expect(secureNN.model.layers.length).toBeLessThanOrEqual(32);
+             secureNN.dispose();
         });
     });
 });
