@@ -39,22 +39,8 @@ export class NeuralNetwork {
     this.connectionLayers = [];
     this.layerFeatures = {};
 
-    // Validate initial config
-    const initialConfig = { ...(config || {}) };
-    if (initialConfig.activation && !ALLOWED_ACTIVATIONS.includes(initialConfig.activation)) {
-      console.warn(`Invalid activation '${initialConfig.activation}'. Defaulting to 'relu'.`);
-      initialConfig.activation = 'relu';
-    }
-    if (initialConfig.outputActivation && !ALLOWED_ACTIVATIONS.includes(initialConfig.outputActivation)) {
-      console.warn(`Invalid outputActivation '${initialConfig.outputActivation}'. Defaulting to 'sigmoid'.`);
-      initialConfig.outputActivation = 'sigmoid';
-    }
-    if (initialConfig.optimizer && !ALLOWED_OPTIMIZERS.includes(initialConfig.optimizer)) {
-      console.warn(`Invalid optimizer '${initialConfig.optimizer}'. Defaulting to 'adam'.`);
-      initialConfig.optimizer = 'adam';
-    }
-
-    this.config = {
+    // Apply defaults and merge provided config
+    const merged = {
       learningRate: 0.1,
       optimizer: 'adam',
       loss: 'meanSquaredError',
@@ -62,8 +48,24 @@ export class NeuralNetwork {
       outputActivation: 'sigmoid',
       gradientClip: 0,
       batchSize: 32,
-      ...initialConfig
+      ...config
     };
+
+    // Security validation
+    if (!ALLOWED_OPTIMIZERS.includes(merged.optimizer)) {
+      console.warn(`Invalid optimizer '${merged.optimizer}', falling back to 'adam'`);
+      merged.optimizer = 'adam';
+    }
+    if (!ALLOWED_ACTIVATIONS.includes(merged.activation)) {
+      console.warn(`Invalid activation '${merged.activation}', falling back to 'relu'`);
+      merged.activation = 'relu';
+    }
+    if (!ALLOWED_ACTIVATIONS.includes(merged.outputActivation)) {
+      console.warn(`Invalid output activation '${merged.outputActivation}', falling back to 'sigmoid'`);
+      merged.outputActivation = 'sigmoid';
+    }
+
+    this.config = merged;
   }
 
   /**
@@ -72,29 +74,29 @@ export class NeuralNetwork {
    * @returns {{rebuild: boolean}} Object indicating if model needs rebuilding
    */
   updateConfig(newConfig) {
-    const validatedConfig = { ...newConfig };
+    const validConfig = { ...newConfig };
 
-    // Validate new config
-    if (validatedConfig.activation && !ALLOWED_ACTIVATIONS.includes(validatedConfig.activation)) {
-      console.warn(`Invalid activation '${validatedConfig.activation}'. Ignoring change.`);
-      delete validatedConfig.activation;
+    // Validate new config values before merging
+    if (validConfig.optimizer && !ALLOWED_OPTIMIZERS.includes(validConfig.optimizer)) {
+      console.warn(`Invalid optimizer '${validConfig.optimizer}', ignoring update.`);
+      delete validConfig.optimizer;
     }
-    if (validatedConfig.outputActivation && !ALLOWED_ACTIVATIONS.includes(validatedConfig.outputActivation)) {
-      console.warn(`Invalid outputActivation '${validatedConfig.outputActivation}'. Ignoring change.`);
-      delete validatedConfig.outputActivation;
+    if (validConfig.activation && !ALLOWED_ACTIVATIONS.includes(validConfig.activation)) {
+      console.warn(`Invalid activation '${validConfig.activation}', ignoring update.`);
+      delete validConfig.activation;
     }
-    if (validatedConfig.optimizer && !ALLOWED_OPTIMIZERS.includes(validatedConfig.optimizer)) {
-      console.warn(`Invalid optimizer '${validatedConfig.optimizer}'. Ignoring change.`);
-      delete validatedConfig.optimizer;
+    if (validConfig.outputActivation && !ALLOWED_ACTIVATIONS.includes(validConfig.outputActivation)) {
+      console.warn(`Invalid output activation '${validConfig.outputActivation}', ignoring update.`);
+      delete validConfig.outputActivation;
     }
 
-    const needsRebuild = validatedConfig.activation !== undefined && validatedConfig.activation !== this.config.activation;
-    const needsRecompile = validatedConfig.learningRate !== this.config.learningRate ||
-      validatedConfig.optimizer !== this.config.optimizer ||
-      validatedConfig.loss !== this.config.loss ||
-      validatedConfig.gradientClip !== this.config.gradientClip;
+    const needsRebuild = validConfig.activation !== undefined && validConfig.activation !== this.config.activation;
+    const needsRecompile = validConfig.learningRate !== this.config.learningRate ||
+      validConfig.optimizer !== this.config.optimizer ||
+      validConfig.loss !== this.config.loss ||
+      validConfig.gradientClip !== this.config.gradientClip;
 
-    this.config = { ...this.config, ...validatedConfig };
+    this.config = { ...this.config, ...validConfig };
 
     if (this.model) {
       if (needsRebuild) {

@@ -1,4 +1,0 @@
-## 2025-02-18 - [Defense in Depth for Wrapper Classes]
-**Vulnerability:** The `NeuralNetwork` wrapper class passed user configuration directly to TensorFlow.js without validation, allowing potentially invalid or unexpected values (like unknown activation functions) to be processed by the library.
-**Learning:** Even when wrapping a robust library like TensorFlow.js, input validation should occur at the wrapper boundary. This prevents "garbage in" and potential security issues if the underlying library has vulnerabilities in its parsing logic or if invalid inputs cause resource exhaustion.
-**Prevention:** Whitelist allowed values (e.g., activations, optimizers) in the wrapper class and sanitize/default invalid inputs before they reach the core library. Use shallow copies to avoid mutating input objects.

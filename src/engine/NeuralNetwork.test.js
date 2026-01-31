@@ -347,4 +347,47 @@ describe('NeuralNetwork', () => {
             expect(Object.keys(deadMap).length).toBe(0);
         });
     });
+
+    describe('Security Validation', () => {
+        it('should fallback to default activation for invalid input', () => {
+            const maliciousNN = new NeuralNetwork({
+                activation: 'malicious_code_execution'
+            });
+            expect(maliciousNN.config.activation).toBe('relu');
+        });
+
+        it('should fallback to default optimizer for invalid input', () => {
+            const maliciousNN = new NeuralNetwork({
+                optimizer: 'drop_all_tables'
+            });
+            expect(maliciousNN.config.optimizer).toBe('adam');
+        });
+
+        it('should fallback to default output activation for invalid input', () => {
+            const maliciousNN = new NeuralNetwork({
+                outputActivation: 'infinite_loop'
+            });
+            expect(maliciousNN.config.outputActivation).toBe('sigmoid');
+        });
+
+        it('should ignore invalid updates in updateConfig', () => {
+            nn.updateConfig({
+                activation: 'format_c_drive',
+                optimizer: 'mining_script'
+            });
+
+            // Should remain defaults
+            expect(nn.config.activation).toBe('relu');
+            expect(nn.config.optimizer).toBe('adam');
+        });
+
+        it('should accept valid non-default values', () => {
+            const validNN = new NeuralNetwork({
+                activation: 'tanh',
+                optimizer: 'sgd'
+            });
+            expect(validNN.config.activation).toBe('tanh');
+            expect(validNN.config.optimizer).toBe('sgd');
+        });
+    });
 });
