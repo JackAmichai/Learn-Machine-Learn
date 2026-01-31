@@ -1,5 +1,8 @@
 import * as tf from '@tensorflow/tfjs';
 
+export const ALLOWED_ACTIVATIONS = ['relu', 'sigmoid', 'tanh', 'linear', 'softmax'];
+export const ALLOWED_OPTIMIZERS = ['adam', 'sgd'];
+
 /**
  * Clamps a value between min and max bounds.
  * @param {number} value - The value to clamp
@@ -8,35 +11,6 @@ import * as tf from '@tensorflow/tfjs';
  * @returns {number} The clamped value
  */
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
-
-const ALLOWED_ACTIVATIONS = ['relu', 'sigmoid', 'tanh', 'linear', 'softmax'];
-const ALLOWED_OPTIMIZERS = ['adam', 'sgd'];
-
-/**
- * Validates and sanitizes configuration object.
- * @param {Object} config - The configuration object to sanitize
- * @returns {Object} A new sanitized configuration object
- */
-const sanitizeConfig = (config) => {
-  const safeConfig = { ...config };
-
-  if (safeConfig.activation !== undefined && !ALLOWED_ACTIVATIONS.includes(safeConfig.activation)) {
-    console.warn(`Invalid activation '${safeConfig.activation}'. Falling back to 'relu'.`);
-    safeConfig.activation = 'relu';
-  }
-
-  if (safeConfig.outputActivation !== undefined && !ALLOWED_ACTIVATIONS.includes(safeConfig.outputActivation)) {
-    console.warn(`Invalid outputActivation '${safeConfig.outputActivation}'. Falling back to 'sigmoid'.`);
-    safeConfig.outputActivation = 'sigmoid';
-  }
-
-  if (safeConfig.optimizer !== undefined && !ALLOWED_OPTIMIZERS.includes(safeConfig.optimizer)) {
-    console.warn(`Invalid optimizer '${safeConfig.optimizer}'. Falling back to 'adam'.`);
-    safeConfig.optimizer = 'adam';
-  }
-
-  return safeConfig;
-};
 
 /**
  * Neural network wrapper class for TensorFlow.js.
@@ -65,21 +39,31 @@ export class NeuralNetwork {
     this.connectionLayers = [];
     this.layerFeatures = {};
 
-    const defaults = {
+    // Validate initial config
+    const initialConfig = { ...(config || {}) };
+    if (initialConfig.activation && !ALLOWED_ACTIVATIONS.includes(initialConfig.activation)) {
+      console.warn(`Invalid activation '${initialConfig.activation}'. Defaulting to 'relu'.`);
+      initialConfig.activation = 'relu';
+    }
+    if (initialConfig.outputActivation && !ALLOWED_ACTIVATIONS.includes(initialConfig.outputActivation)) {
+      console.warn(`Invalid outputActivation '${initialConfig.outputActivation}'. Defaulting to 'sigmoid'.`);
+      initialConfig.outputActivation = 'sigmoid';
+    }
+    if (initialConfig.optimizer && !ALLOWED_OPTIMIZERS.includes(initialConfig.optimizer)) {
+      console.warn(`Invalid optimizer '${initialConfig.optimizer}'. Defaulting to 'adam'.`);
+      initialConfig.optimizer = 'adam';
+    }
+
+    this.config = {
       learningRate: 0.1,
       optimizer: 'adam',
       loss: 'meanSquaredError',
       activation: 'relu',
       outputActivation: 'sigmoid',
       gradientClip: 0,
-      batchSize: 32
+      batchSize: 32,
+      ...initialConfig
     };
-
-    // Merge provided config with defaults first
-    const mergedConfig = { ...defaults, ...config };
-
-    // Then sanitize the result
-    this.config = sanitizeConfig(mergedConfig);
   }
 
   /**
@@ -88,16 +72,29 @@ export class NeuralNetwork {
    * @returns {{rebuild: boolean}} Object indicating if model needs rebuilding
    */
   updateConfig(newConfig) {
-    // Sanitize the input configuration
-    const sanitizedNew = sanitizeConfig(newConfig);
+    const validatedConfig = { ...newConfig };
 
-    const needsRebuild = sanitizedNew.activation !== undefined && sanitizedNew.activation !== this.config.activation;
-    const needsRecompile = sanitizedNew.learningRate !== this.config.learningRate ||
-      sanitizedNew.optimizer !== this.config.optimizer ||
-      sanitizedNew.loss !== this.config.loss ||
-      sanitizedNew.gradientClip !== this.config.gradientClip;
+    // Validate new config
+    if (validatedConfig.activation && !ALLOWED_ACTIVATIONS.includes(validatedConfig.activation)) {
+      console.warn(`Invalid activation '${validatedConfig.activation}'. Ignoring change.`);
+      delete validatedConfig.activation;
+    }
+    if (validatedConfig.outputActivation && !ALLOWED_ACTIVATIONS.includes(validatedConfig.outputActivation)) {
+      console.warn(`Invalid outputActivation '${validatedConfig.outputActivation}'. Ignoring change.`);
+      delete validatedConfig.outputActivation;
+    }
+    if (validatedConfig.optimizer && !ALLOWED_OPTIMIZERS.includes(validatedConfig.optimizer)) {
+      console.warn(`Invalid optimizer '${validatedConfig.optimizer}'. Ignoring change.`);
+      delete validatedConfig.optimizer;
+    }
 
-    this.config = { ...this.config, ...sanitizedNew };
+    const needsRebuild = validatedConfig.activation !== undefined && validatedConfig.activation !== this.config.activation;
+    const needsRecompile = validatedConfig.learningRate !== this.config.learningRate ||
+      validatedConfig.optimizer !== this.config.optimizer ||
+      validatedConfig.loss !== this.config.loss ||
+      validatedConfig.gradientClip !== this.config.gradientClip;
+
+    this.config = { ...this.config, ...validatedConfig };
 
     if (this.model) {
       if (needsRebuild) {
