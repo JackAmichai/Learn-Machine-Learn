@@ -1,6 +1,9 @@
+import { useMemo } from 'react';
+
 export function NetworkGraph({ model, structure, modelVersion, deadNeurons }) {
     // Extract weights for visualization (recomputed when modelVersion increments)
-    const connectionWeights = (() => {
+    // ⚡ Bolt Optimization: Memoize this calculation to prevent synchronous dataSync() on every render
+    const connectionWeights = useMemo(() => {
         const version = modelVersion;
         if (version === null || version === undefined) {
             return [];
@@ -21,7 +24,7 @@ export function NetworkGraph({ model, structure, modelVersion, deadNeurons }) {
         } catch {
             return [];
         }
-    })();
+    }, [model, structure, modelVersion]);
 
     // Calculate generic coords
     const svgWidth = 600;
