@@ -64,6 +64,29 @@ const disposeDataset = (ds) => {
     ds.ys.dispose();
 };
 
+const sanitizeHyperparams = (params = {}) => {
+    const safe = { ...params };
+
+    // Allowed lists matching UI controls
+    const ALLOWED_ACTIVATIONS = ['relu', 'sigmoid', 'tanh', 'linear'];
+    const ALLOWED_OPTIMIZERS = ['adam', 'sgd'];
+
+    if (!ALLOWED_ACTIVATIONS.includes(safe.activation)) {
+        safe.activation = 'relu';
+    }
+
+    if (!ALLOWED_OPTIMIZERS.includes(safe.optimizer)) {
+        safe.optimizer = 'adam';
+    }
+
+    // Numerical validations
+    safe.learningRate = clamp(Number(safe.learningRate) || 0.1, 0.0001, 1.0);
+    safe.gradientClip = clamp(Number(safe.gradientClip) || 0, 0, 10);
+    safe.batchSize = clamp(Number(safe.batchSize) || 32, 1, 512);
+
+    return safe;
+};
+
 export function useNeuralNetwork() {
     const [isPlaying, setIsPlaying] = useState(false);
     const [epoch, setEpoch] = useState(0);
@@ -502,9 +525,11 @@ export function useNeuralNetwork() {
 
         const targetStructure = snapshot.structure;
         const nextMode = snapshot.mode || 'simple';
-        const nextHyperparams = snapshot.hyperparams
+        const rawHyperparams = snapshot.hyperparams
             ? { ...hyperparams, ...snapshot.hyperparams }
             : { ...hyperparams };
+        const nextHyperparams = sanitizeHyperparams(rawHyperparams);
+
         const persistedDatasetParams = sanitizeDatasetParams(snapshot.datasetParams || datasetParams);
         const persistedLayerFeatures = buildLayerFeatureMap(targetStructure, snapshot.layerFeatures || {});
 
