@@ -1,9 +1,9 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useMemo } from 'react';
 
 export function WeightHeatmap({ model, modelVersion, structure }) {
     const containerRef = useRef(null);
 
-    const weightsData = (() => {
+    const weightsData = useMemo(() => {
         if (modelVersion === null || modelVersion === undefined) {
             return null;
         }
@@ -54,7 +54,7 @@ export function WeightHeatmap({ model, modelVersion, structure }) {
             console.error('Heatmap error', error);
             return null;
         }
-    })();
+    }, [model, modelVersion, structure]);
 
     return (
         <div className="heatmap-container" ref={containerRef}>

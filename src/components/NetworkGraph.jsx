@@ -53,6 +53,18 @@ export const NetworkGraph = memo(function NetworkGraph({ model, structure, model
             isMounted = false;
         };
     }, [model, structure, modelVersion]);
+            }
+        }
+<<<<<<< HEAD
+
+        fetchWeights();
+
+        return () => {
+            isMounted = false;
+        };
+=======
+>>>>>>> origin/bolt-perf-memoize-weights-17856722670067585164
+    }, [model, structure, modelVersion]);
 
     // Calculate generic coords
     const svgWidth = 600;
