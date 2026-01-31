@@ -254,6 +254,26 @@ export class NeuralNetwork {
   }
 
   /**
+   * Asynchronously gets connection weights as a flat Float32Array.
+   * Prevents blocking the main thread during heavy training loops.
+   * @param {number} layerIndex - Index of the connection layer
+   * @returns {Promise<Float32Array|null>} Promise resolving to weight values
+   */
+  async getConnectionWeightsAsync(layerIndex) {
+    if (!this.connectionLayers[layerIndex]) return null;
+    try {
+      const weights = this.connectionLayers[layerIndex].getWeights();
+      if (!weights.length) return null;
+      const kernel = weights[0];
+      // data() returns a promise that resolves to the data
+      return await kernel.data();
+    } catch (e) {
+      console.error('Error fetching connection weights async:', e);
+      return null;
+    }
+  }
+
+  /**
    * Serializes all model weights to nested arrays.
    * Useful for saving/restoring model state.
    * @returns {Array} Serialized weights per layer
