@@ -55,6 +55,7 @@ const deserializeCustomSamples = (samples = []) => samples.map(sample => ({
 const sanitizeDatasetParams = (params = {}) => ({
     ...DEFAULT_DATASET_PARAMS,
     ...params,
+    size: clamp(Number(params.size) || DEFAULT_DATASET_PARAMS.size, 10, 5000),
     noise: typeof params.noise === 'number' ? params.noise : DEFAULT_DATASET_PARAMS.noise
 });
 
@@ -312,7 +313,7 @@ export function useNeuralNetwork() {
             if (frameId) cancelAnimationFrame(frameId);
             if (timerId) clearTimeout(timerId);
         };
-    }, [isPlaying, trainingMode, slowDelay, network, getTrainingBatch]);
+    }, [isPlaying, trainingMode, slowDelay, network, getTrainingBatch, batchSize]);
 
     const addLayer = () => {
         applyStructure(prev => {
