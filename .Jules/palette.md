@@ -5,3 +5,7 @@
 ## 2025-02-12 - Copy Friction in Code Exports
 **Learning:** Users instinctively look for a "Copy" button on any code block. Selecting text manually is high-friction, especially in modals.
 **Action:** Always include a "Copy to Clipboard" button with visual feedback ("Copied!") for any read-only code or token display.
+
+## 2025-02-12 - Copy Friction in Code Exports
+**Learning:** Users instinctively look for a "Copy" button on any code block. Selecting text manually is high-friction, especially in modals.
+**Action:** Always include a "Copy to Clipboard" button with visual feedback ("Copied!") for any read-only code or token display.
