@@ -1,60 +1,78 @@
-import { useRef, useEffect, useMemo } from 'react';
+import { useRef, useEffect, useState } from 'react';
 
 export function WeightHeatmap({ model, modelVersion, structure }) {
     const containerRef = useRef(null);
+    const [weightsData, setWeightsData] = useState(null);
 
-// Memoize weight extraction to avoid expensive synchronous TF.js calls on every render
-    const weightsData = useMemo(() => {
-        if (modelVersion === null || modelVersion === undefined) {
-            return null;
-        }
-        if (!model || !Array.isArray(structure) || structure.length < 2) return null;
-        const inputDim = structure[0];
-        const units = structure[1];
-        if (inputDim !== 100 || !units) return null; // Only visualize 10x10 vision grids
+    // Use async weight extraction to avoid blocking the main thread
+    useEffect(() => {
+        let isMounted = true;
 
-        if (typeof model.getConnectionWeights === 'function') {
+        async function fetchWeights() {
+            if (modelVersion === null || modelVersion === undefined) {
+                if (isMounted) setWeightsData(null);
+                return;
+            }
+            if (!model || !Array.isArray(structure) || structure.length < 2) {
+                if (isMounted) setWeightsData(null);
+                return;
+            }
+            const inputDim = structure[0];
+            const units = structure[1];
+            if (inputDim !== 100 || !units) {
+                if (isMounted) setWeightsData(null);
+                return;
+            } // Only visualize 10x10 vision grids
+
             try {
-                const kernel = model.getConnectionWeights(0);
-                if (!kernel) return null;
+                let wData = null;
+
+                // Priority: Async extraction
+                if (typeof model.getConnectionWeightsAsync === 'function') {
+                    wData = await model.getConnectionWeightsAsync(0);
+                }
+                // Fallback: Sync extraction
+                else if (typeof model.getConnectionWeights === 'function') {
+                    wData = model.getConnectionWeights(0);
+                }
+                // Fallback: Legacy
+                else if (model.model && model.model.layers?.length) {
+                    const layer = model.model.layers[0];
+                    if (layer) {
+                        const weights = layer.getWeights();
+                        if (weights.length) {
+                             wData = weights[0].dataSync();
+                        }
+                    }
+                }
+
+                if (!wData) {
+                    if (isMounted) setWeightsData(null);
+                    return;
+                }
+
                 const snapshot = [];
                 for (let u = 0; u < units; u++) {
                     const arr = new Float32Array(inputDim);
                     for (let i = 0; i < inputDim; i++) {
-                        arr[i] = kernel[i * units + u];
+                        arr[i] = wData[i * units + u];
                     }
                     snapshot.push(arr);
                 }
-                return snapshot;
+
+                if (isMounted) setWeightsData(snapshot);
+
             } catch (error) {
                 console.error('Heatmap error', error);
-                return null;
+                if (isMounted) setWeightsData(null);
             }
         }
 
-        // Fallback to legacy direct layer access if helper is unavailable
-        if (!model.model || !model.model.layers?.length) return null;
-        const layer = model.model.layers[0];
-        if (!layer) return null;
-        try {
-            const weights = layer.getWeights();
-            if (!weights.length) return null;
-            const wTensor = weights[0];
-            const snapshot = [];
-            // dataSync returns a copy - do NOT dispose the original tensors
-            const wData = wTensor.dataSync();
-            for (let u = 0; u < units; u++) {
-                const arr = new Float32Array(inputDim);
-                for (let i = 0; i < inputDim; i++) {
-                    arr[i] = wData[i * units + u];
-                }
-                snapshot.push(arr);
-            }
-            return snapshot;
-        } catch (error) {
-            console.error('Heatmap error', error);
-            return null;
-        }
+        fetchWeights();
+
+        return () => {
+            isMounted = false;
+        };
     }, [modelVersion, model, structure]);
 
     return (
