@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Tooltip } from './Tooltip';
+import { createPortal } from 'react-dom';
 import { ALLOWED_ACTIVATIONS, ALLOWED_OPTIMIZERS } from '../engine/NeuralNetwork';
 
 export function CodeExport({ structure, hyperparams }) {
@@ -8,14 +8,6 @@ export function CodeExport({ structure, hyperparams }) {
 
     const safeActivation = ALLOWED_ACTIVATIONS.includes(hyperparams.activation) ? hyperparams.activation : 'relu';
     const safeOptimizer = ALLOWED_OPTIMIZERS.includes(hyperparams.optimizer) ? hyperparams.optimizer : 'adam';
-
-    if (!isOpen) {
-        return (
-            <button className="btn-code" onClick={() => setIsOpen(true)}>
-                &lt;/&gt; Show Code <Tooltip word="Export" overrideText="View the code to build this model" />
-            </button>
-        );
-    }
 
     const generatePython = () => {
         let code = `import tensorflow as tf\nfrom tensorflow.keras import layers, models\n\n`;
@@ -68,26 +60,59 @@ export function CodeExport({ structure, hyperparams }) {
     };
 
     return (
-        <div className="code-modal-overlay">
-            <div className="code-modal">
-                <div className="modal-header">
-                    <h3>Export Model Code</h3>
-                    <button className="close" onClick={() => setIsOpen(false)}>×</button>
-                </div>
+        <>
+            <button className="btn-code" onClick={() => setIsOpen(true)}>
+                &lt;/&gt; Show Code / Export
+            </button>
 
-                <div className="lang-tabs">
-                    <button className={lang === 'python' ? 'active' : ''} onClick={() => setLang('python')}>Python (Keras)</button>
-                    <button className={lang === 'js' ? 'active' : ''} onClick={() => setLang('js')}>JavaScript (TF.js)</button>
-                </div>
+            {isOpen && createPortal(
+                <div
+                    className="code-modal-overlay"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="export-modal-title"
+                >
+                    <div className="code-modal">
+                        <div className="modal-header">
+                            <h3 id="export-modal-title">Export Model Code</h3>
+                            <button className="close" onClick={() => setIsOpen(false)} aria-label="Close">×</button>
+                        </div>
 
-                <div className="code-block">
-                    <pre>
-                        {lang === 'python' ? generatePython() : generateJS()}
-                    </pre>
-                </div>
+                        <div className="lang-tabs" role="tablist" aria-label="Code language selection">
+                            <button
+                                role="tab"
+                                aria-selected={lang === 'python'}
+                                aria-controls="code-panel"
+                                id="tab-python"
+                                className={lang === 'python' ? 'active' : ''}
+                                onClick={() => setLang('python')}
+                            >Python (Keras)</button>
+                            <button
+                                role="tab"
+                                aria-selected={lang === 'js'}
+                                aria-controls="code-panel"
+                                id="tab-js"
+                                className={lang === 'js' ? 'active' : ''}
+                                onClick={() => setLang('js')}
+                            >JavaScript (TF.js)</button>
+                        </div>
 
-                <p className="tip">Copy this code to run your model in a real environment!</p>
-            </div>
+                        <div
+                            className="code-block"
+                            role="tabpanel"
+                            id="code-panel"
+                            aria-labelledby={`tab-${lang}`}
+                        >
+                            <pre>
+                                {lang === 'python' ? generatePython() : generateJS()}
+                            </pre>
+                        </div>
+
+                        <p className="tip">Copy this code to run your model in a real environment!</p>
+                    </div>
+                </div>,
+                document.body
+            )}
 
             <style>{`
             .btn-code {
@@ -122,6 +147,7 @@ export function CodeExport({ structure, hyperparams }) {
                 width: 500px;
                 max-width: 90%;
                 box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+                color: var(--text-primary);
             }
             .modal-header {
                 display: flex;
@@ -181,6 +207,6 @@ export function CodeExport({ structure, hyperparams }) {
                 text-align: center;
             }
         `}</style>
-        </div>
+        </>
     );
 }
