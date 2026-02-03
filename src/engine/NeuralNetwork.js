@@ -285,6 +285,25 @@ export class NeuralNetwork {
   }
 
   /**
+   * Gets connection weights asynchronously to prevent UI blocking.
+   * @param {number} layerIndex - Index of the connection layer
+   * @returns {Promise<Float32Array|null>} Weight values or null if invalid
+   */
+  async getConnectionWeightsAsync(layerIndex) {
+    if (!this.connectionLayers[layerIndex]) return null;
+    try {
+      const weights = this.connectionLayers[layerIndex].getWeights();
+      if (!weights.length) return null;
+      const kernel = weights[0];
+      // data() returns a promise and does not block the main thread
+      return await kernel.data();
+    } catch (e) {
+      console.error('Error fetching connection weights async:', e);
+      return null;
+    }
+  }
+
+  /**
    * Makes predictions on input data.
    * @param {tf.Tensor2D} xs - Input tensor
    * @returns {tf.Tensor|null} Prediction tensor or null if no model
