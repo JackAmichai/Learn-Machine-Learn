@@ -113,4 +113,36 @@ describe('NetworkGraph', () => {
         // Should have called again
         expect(mockModel.getConnectionWeights).toHaveBeenCalledTimes(4);
     });
+
+    it('uses getConnectionWeightsAsync if available', async () => {
+        const structure = [2, 3, 1];
+        const mockModel = {
+            getConnectionWeightsAsync: vi.fn().mockImplementation(async (layerIdx) => {
+                const layerSize = structure[layerIdx];
+                const nextLayerSize = structure[layerIdx + 1];
+                const count = layerSize * nextLayerSize;
+                return new Float32Array(count).fill(0.1);
+            }),
+            // Even if sync exists, it should prefer async
+            getConnectionWeights: vi.fn(),
+            model: {}
+        };
+
+        render(
+            <NetworkGraph
+                model={mockModel}
+                structure={structure}
+                modelVersion={1}
+                deadNeurons={{}}
+            />
+        );
+
+        // Wait for expectations as effect is async
+        await vi.waitFor(() => {
+             expect(mockModel.getConnectionWeightsAsync).toHaveBeenCalled();
+        });
+
+        expect(mockModel.getConnectionWeightsAsync).toHaveBeenCalledTimes(2);
+        expect(mockModel.getConnectionWeights).not.toHaveBeenCalled();
+    });
 });
