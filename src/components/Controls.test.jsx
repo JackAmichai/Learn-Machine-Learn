@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { Controls } from './Controls';
 
@@ -68,5 +68,19 @@ describe('Controls Component', () => {
     // Check for "Decrease neurons" button
     const decreaseButton = screen.getByRole('button', { name: new RegExp(`decrease neurons in layer ${layerIndex}`, 'i') });
     expect(decreaseButton).toBeInTheDocument();
+  });
+
+  it('rejects files larger than 5MB', () => {
+    render(<Controls {...mockProps} />);
+
+    const input = screen.getByTestId('file-upload');
+    const file = new File([''], 'large.json', { type: 'application/json' });
+    Object.defineProperty(file, 'size', { value: 5 * 1024 * 1024 + 1 });
+
+    fireEvent.change(input, { target: { files: [file] } });
+
+    const status = screen.getByRole('status');
+    expect(status).toHaveTextContent(/File too large \(max 5MB\)/i);
+    expect(mockProps.importModelJSON).not.toHaveBeenCalled();
   });
 });
