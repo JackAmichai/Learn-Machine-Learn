@@ -93,6 +93,15 @@ export function Controls(props) {
     const handleImportFile = (event) => {
         const file = event.target.files?.[0];
         if (!file) return;
+
+        if (file.size > 5 * 1024 * 1024) {
+            setStatus('error', 'File too large. Max size is 5MB.');
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+            return;
+        }
+
         const reader = new FileReader();
         reader.onload = () => {
             try {
@@ -440,6 +449,7 @@ export function Controls(props) {
                 <input
                     ref={fileInputRef}
                     type="file"
+                    data-testid="file-upload"
                     accept="application/json"
                     onChange={handleImportFile}
                     style={{ display: 'none' }}
