@@ -12,6 +12,13 @@ vi.mock('./CodeExport', () => ({
   CodeExport: () => <div>CodeExport</div>
 }));
 
+// Mock useToast
+vi.mock('../hooks/useToast', () => ({
+  useToast: () => ({
+    pushToast: vi.fn()
+  })
+}));
+
 describe('Controls Component', () => {
   const mockProps = {
     isPlaying: false,

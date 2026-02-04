@@ -1,5 +1,6 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { DataType } from '../engine/data';
+import { useToast } from '../hooks/useToast';
 import { Tooltip } from './Tooltip';
 import { CodeExport } from './CodeExport';
 
@@ -44,20 +45,15 @@ export function Controls(props) {
     } = props;
 
     const fileInputRef = useRef(null);
-    const [persistStatus, setPersistStatus] = useState(null);
-
-    const setStatus = (type, text) => {
-        setPersistStatus({ type, text, ts: Date.now() });
-        setTimeout(() => setPersistStatus(null), 5000);
-    };
+    const { pushToast } = useToast();
 
     const handleSaveLocal = () => {
         try {
             const snapshot = saveModelToLocal();
             const stamp = snapshot?.timestamp ? new Date(snapshot.timestamp).toLocaleTimeString() : '';
-            setStatus('success', `Saved to browser storage ${stamp ? `@ ${stamp}` : ''}`.trim());
+            pushToast({ type: 'success', title: 'Saved Locally', message: `Saved to browser storage ${stamp ? `@ ${stamp}` : ''}`.trim() });
         } catch (err) {
-            setStatus('error', err.message);
+            pushToast({ type: 'danger', title: 'Save Failed', message: err.message });
         }
     };
 
@@ -65,12 +61,12 @@ export function Controls(props) {
         try {
             const snapshot = loadModelFromLocal();
             if (!snapshot) {
-                setStatus('info', 'No saved model found in this browser yet.');
+                pushToast({ type: 'info', title: 'No Model Found', message: 'No saved model found in this browser yet.' });
                 return;
             }
-            setStatus('success', 'Model restored from browser storage.');
+            pushToast({ type: 'success', title: 'Loaded', message: 'Model restored from browser storage.' });
         } catch (err) {
-            setStatus('error', err.message);
+            pushToast({ type: 'danger', title: 'Load Failed', message: err.message });
         }
     };
 
@@ -84,9 +80,9 @@ export function Controls(props) {
             a.download = `learn-ml-model-${Date.now()}.json`;
             a.click();
             URL.revokeObjectURL(url);
-            setStatus('success', 'Model exported as JSON.');
+            pushToast({ type: 'success', title: 'Exported', message: 'Model exported as JSON.' });
         } catch (err) {
-            setStatus('error', err.message);
+            pushToast({ type: 'danger', title: 'Export Failed', message: err.message });
         }
     };
 
@@ -97,9 +93,9 @@ export function Controls(props) {
         reader.onload = () => {
             try {
                 importModelJSON(reader.result);
-                setStatus('success', `Imported ${file.name}.`);
+                pushToast({ type: 'success', title: 'Imported', message: `Imported ${file.name}.` });
             } catch (err) {
-                setStatus('error', err.message);
+                pushToast({ type: 'danger', title: 'Import Failed', message: err.message });
             } finally {
                 if (fileInputRef.current) {
                     fileInputRef.current.value = '';
@@ -444,11 +440,6 @@ export function Controls(props) {
                     onChange={handleImportFile}
                     style={{ display: 'none' }}
                 />
-                {persistStatus && (
-                    <div className={`persist-status ${persistStatus.type}`} role="status">
-                        {persistStatus.text}
-                    </div>
-                )}
             </div>
 
             {/* Educational Placeholder for other types */}
@@ -820,26 +811,6 @@ export function Controls(props) {
             }
             .persist-grid button:hover {
                 background: rgba(255,255,255,0.08);
-            }
-            .persist-status {
-                margin-top: 10px;
-                font-size: 11px;
-                padding: 6px 8px;
-                border-radius: 6px;
-                border-left: 3px solid var(--glass-border);
-                color: var(--text-secondary);
-                background: rgba(0,0,0,0.2);
-            }
-            .persist-status.success {
-                border-color: var(--accent-primary);
-                color: var(--accent-primary);
-            }
-            .persist-status.error {
-                border-color: var(--accent-danger);
-                color: var(--accent-danger);
-            }
-            .persist-status.info {
-                border-color: var(--text-secondary);
             }
             .math-intro {
                 font-size: 11px;
