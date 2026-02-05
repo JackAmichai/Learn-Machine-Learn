@@ -63,14 +63,6 @@ describe('Controls Security', () => {
         // Create a large file (> 5MB)
         // 5 * 1024 * 1024 = 5,242,880 bytes. We'll use 5.5MB.
         const size = 5.5 * 1024 * 1024;
-        const largeFile = {
-            name: 'large_model.json',
-            size: size,
-            type: 'application/json',
-            text: async () => '{}', // Mock for standard File API if used
-            // ArrayBuffer for FileReader to consume (mocking internal behavior if needed,
-            // but JSDOM FileReader usually needs the Blob part)
-        };
 
         // In JSDOM/Vitest, creating a real "File" with large content might be slow or consume memory.
         // We can define 'size' property explicitly on a smaller blob if the code only checks .size
@@ -92,7 +84,7 @@ describe('Controls Security', () => {
         await waitFor(() => {
              // Check if error message appeared
              // We look for part of the message we intend to implement
-             const errorMsg = screen.queryByText(/File is too large/i);
+             expect(screen.queryByText(/File is too large/i)).toBeInTheDocument();
              // In the FAILURE case (before fix), this should be null, and importModelJSON should be called
         });
 
