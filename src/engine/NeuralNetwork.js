@@ -333,6 +333,26 @@ export class NeuralNetwork {
   }
 
   /**
+   * Gets connection weights as a flat Float32Array asynchronously.
+   * @param {number} layerIndex - Index of the connection layer
+   * @returns {Promise<Float32Array|null>} Weight values or null if invalid
+   */
+  async getConnectionWeightsAsync(layerIndex) {
+    if (!this.connectionLayers[layerIndex]) return null;
+    try {
+      const weights = this.connectionLayers[layerIndex].getWeights();
+      if (!weights.length) return null;
+      const kernel = weights[0];
+      // data() returns a promise - do NOT dispose the original tensors
+      // as they are the layer's internal state
+      return await kernel.data();
+    } catch (e) {
+      console.error('Error fetching connection weights:', e);
+      return null;
+    }
+  }
+
+  /**
    * Serializes all model weights to nested arrays.
    * Useful for saving/restoring model state.
    * @returns {Array} Serialized weights per layer
@@ -369,17 +389,17 @@ export class NeuralNetwork {
   /**
    * Scans the network for dead neurons (always zero activation).
    * @param {tf.Tensor2D} xs - Input batch
-   * @returns {Object} Map of layerIndex -> Array of dead neuron indices
+   * @returns {Promise<Object>} Map of layerIndex -> Array of dead neuron indices
    */
-  scanForDeadNeurons(xs) {
+  async scanForDeadNeurons(xs) {
     if (!this.model) return {};
 
     // We need to traverse the model layers manually.
     // structure index 0 is input.
     // structure index 1 is first hidden layer (first Dense).
 
-    return tf.tidy(() => {
-      const deadMap = {};
+    const { masks, cleanup } = tf.tidy(() => {
+      const masks = [];
       let current = xs;
       let denseLayerIndex = 1;
 
@@ -393,22 +413,34 @@ export class NeuralNetwork {
           // We check max activation across the batch.
           const maxActivations = current.max(0); // Shape [units]
           const isDead = maxActivations.lessEqual(1e-5);
-          const deadIndices = [];
-          const deadData = isDead.dataSync(); // safe for small layer sizes
-
-          for (let j = 0; j < deadData.length; j++) {
-            if (deadData[j]) deadIndices.push(j);
-          }
-
-          if (deadIndices.length > 0) {
-            deadMap[denseLayerIndex] = deadIndices;
-          }
-
+          masks.push({ index: denseLayerIndex, tensor: isDead });
           denseLayerIndex++;
         }
       }
-      return deadMap;
+
+      masks.forEach(m => tf.keep(m.tensor));
+      return {
+        masks,
+        cleanup: () => masks.forEach(m => m.tensor.dispose())
+      };
     });
+
+    try {
+      const deadMap = {};
+      await Promise.all(masks.map(async ({ index, tensor }) => {
+        const deadData = await tensor.data();
+        const deadIndices = [];
+        for (let j = 0; j < deadData.length; j++) {
+            if (deadData[j]) deadIndices.push(j);
+        }
+        if (deadIndices.length > 0) {
+            deadMap[index] = deadIndices;
+        }
+      }));
+      return deadMap;
+    } finally {
+      cleanup();
+    }
   }
 
   /**
