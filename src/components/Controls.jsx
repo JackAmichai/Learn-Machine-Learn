@@ -93,6 +93,16 @@ export function Controls(props) {
     const handleImportFile = (event) => {
         const file = event.target.files?.[0];
         if (!file) return;
+
+        // Security: Limit file size to 5MB to prevent memory exhaustion
+        if (file.size > 5 * 1024 * 1024) {
+            setStatus('error', 'File too large (>5MB).');
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+            return;
+        }
+
         const reader = new FileReader();
         reader.onload = () => {
             try {
@@ -438,6 +448,7 @@ export function Controls(props) {
                     <button onClick={() => fileInputRef.current?.click()}>Import JSON</button>
                 </div>
                 <input
+                    data-testid="file-upload"
                     ref={fileInputRef}
                     type="file"
                     accept="application/json"
