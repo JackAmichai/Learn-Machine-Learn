@@ -2,9 +2,9 @@ import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { Controls } from './Controls';
 
-// Mock Tooltip
+// Mock Tooltip - mimicking the real interactive nature (button)
 vi.mock('./Tooltip', () => ({
-  Tooltip: ({ word }) => <span>{word}</span>
+  Tooltip: ({ word }) => <button data-testid={`tooltip-${word}`}>{word}</button>
 }));
 
 // Mock CodeExport
@@ -68,5 +68,26 @@ describe('Controls Component', () => {
     // Check for "Decrease neurons" button
     const decreaseButton = screen.getByRole('button', { name: new RegExp(`decrease neurons in layer ${layerIndex}`, 'i') });
     expect(decreaseButton).toBeInTheDocument();
+  });
+
+  it('renders Hyperparameters without invalid nested interactive elements in labels', () => {
+    render(<Controls {...mockProps} />);
+
+    // Check Learning Rate
+    const lrTooltip = screen.getByTestId('tooltip-Learning Rate');
+    const lrLabel = lrTooltip.closest('label');
+    expect(lrLabel).toBeNull();
+
+    // Check Activation (might have multiples, check all)
+    const activationTooltips = screen.getAllByTestId('tooltip-Activation');
+    activationTooltips.forEach(t => expect(t.closest('label')).toBeNull());
+
+    // Check Optimizer (might have multiples)
+    const optimizerTooltips = screen.getAllByTestId('tooltip-Optimizer');
+    optimizerTooltips.forEach(t => expect(t.closest('label')).toBeNull());
+
+    // Check Batch Size
+    const bsTooltip = screen.getByTestId('tooltip-Batch Size');
+    expect(bsTooltip.closest('label')).toBeNull();
   });
 });
