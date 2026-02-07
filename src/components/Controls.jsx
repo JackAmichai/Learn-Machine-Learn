@@ -219,9 +219,10 @@ export function Controls(props) {
             <div className="section">
                 <h3>Hyperparameters</h3>
                 <div className="hp-grid">
-                    <label><Tooltip word="Learning Rate" /></label>
+                    <span><Tooltip word="Learning Rate" /></span>
                     <div className="lr-control">
                         <input
+                            id="learning-rate"
                             aria-label="Learning Rate"
                             type="range"
                             min="0.001" max="0.3" step="0.001"
@@ -231,8 +232,9 @@ export function Controls(props) {
                         <span>{hyperparams.learningRate}</span>
                     </div>
 
-                    <label><Tooltip word="Activation" /></label>
+                    <span><Tooltip word="Activation" /></span>
                     <select
+                        id="activation-function"
                         aria-label="Activation Function"
                         value={hyperparams.activation}
                         onChange={(e) => updateHyperparams({ activation: e.target.value })}
@@ -243,8 +245,9 @@ export function Controls(props) {
                         <option value="linear">Linear</option>
                     </select>
 
-                    <label><Tooltip word="Optimizer" /></label>
+                    <span><Tooltip word="Optimizer" /></span>
                     <select
+                        id="optimizer-select"
                         aria-label="Optimizer"
                         value={hyperparams.optimizer}
                         onChange={(e) => updateHyperparams({ optimizer: e.target.value })}
@@ -253,9 +256,10 @@ export function Controls(props) {
                         <option value="sgd">SGD</option>
                     </select>
 
-                    <label><Tooltip word="Batch Size" /></label>
+                    <span><Tooltip word="Batch Size" /></span>
                     <div className="lr-control">
                         <input
+                            id="batch-size"
                             aria-label="Batch Size"
                             type="range"
                             min="1" max="128" step="1"
