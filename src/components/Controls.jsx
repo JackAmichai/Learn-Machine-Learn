@@ -346,7 +346,10 @@ export function Controls(props) {
             <div className="section">
                 <div className="p-header">
                     <h3>Architecture</h3>
-                    <button className="btn-sm" onClick={addLayer} aria-label="Add a hidden layer">+ <Tooltip word="Layer" /></button>
+                    <div className="add-layer-group">
+                        <Tooltip word="Layer" />
+                        <button className="btn-sm" onClick={addLayer} aria-label="Add a hidden layer">+</button>
+                    </div>
                 </div>
 
                 <div className="layers-list">
@@ -869,6 +872,12 @@ export function Controls(props) {
                 display: flex;
                 flex-wrap: wrap;
                 gap: 10px;
+                font-size: 12px;
+            }
+            .add-layer-group {
+                display: flex;
+                align-items: center;
+                gap: 6px;
                 font-size: 12px;
             }
         `}</style>
