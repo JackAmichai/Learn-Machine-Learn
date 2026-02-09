@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useId } from 'react';
 import { MATH_TOPICS } from '../engine/mathContent';
 
 export function MathModal({ topic, onClose }) {
@@ -180,6 +180,8 @@ export function MathModal({ topic, onClose }) {
 }
 
 function FormulaPlayground({ formula, sliderValues, onSliderChange, activeFormula, onPartHover }) {
+    const baseId = useId();
+
     // Initialize slider values with defaults
     const getSliderValue = (key, defaultVal) => {
         return sliderValues[key] !== undefined ? sliderValues[key] : defaultVal;
@@ -222,27 +224,32 @@ function FormulaPlayground({ formula, sliderValues, onSliderChange, activeFormul
             </div>
 
             <div className="formula-controls">
-                {formula.variables.map((variable, idx) => (
-                    <div key={idx} className="control-row">
-                        <label 
-                            className={activeFormula === variable.key ? 'highlight' : ''}
-                            onMouseEnter={() => onPartHover(variable.key)}
-                            onMouseLeave={() => onPartHover(null)}
-                        >
-                            <span className="var-symbol">{variable.symbol}</span>
-                            <span className="var-name">{variable.name}</span>
-                        </label>
-                        <input
-                            type="range"
-                            min={variable.min}
-                            max={variable.max}
-                            step={variable.step}
-                            value={getSliderValue(variable.key, variable.default)}
-                            onChange={(e) => onSliderChange(variable.key, e.target.value)}
-                        />
-                        <span className="var-value">{getSliderValue(variable.key, variable.default).toFixed(variable.decimals || 2)}</span>
-                    </div>
-                ))}
+                {formula.variables.map((variable, idx) => {
+                    const inputId = `${baseId}-${variable.key}`;
+                    return (
+                        <div key={idx} className="control-row">
+                            <label
+                                htmlFor={inputId}
+                                className={activeFormula === variable.key ? 'highlight' : ''}
+                                onMouseEnter={() => onPartHover(variable.key)}
+                                onMouseLeave={() => onPartHover(null)}
+                            >
+                                <span className="var-symbol">{variable.symbol}</span>
+                                <span className="var-name">{variable.name}</span>
+                            </label>
+                            <input
+                                id={inputId}
+                                type="range"
+                                min={variable.min}
+                                max={variable.max}
+                                step={variable.step}
+                                value={getSliderValue(variable.key, variable.default)}
+                                onChange={(e) => onSliderChange(variable.key, e.target.value)}
+                            />
+                            <span className="var-value">{getSliderValue(variable.key, variable.default).toFixed(variable.decimals || 2)}</span>
+                        </div>
+                    );
+                })}
             </div>
 
             {formula.insights && (
