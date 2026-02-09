@@ -369,18 +369,21 @@ export class NeuralNetwork {
   /**
    * Scans the network for dead neurons (always zero activation).
    * @param {tf.Tensor2D} xs - Input batch
-   * @returns {Object} Map of layerIndex -> Array of dead neuron indices
+   * @returns {Promise<Object>} Map of layerIndex -> Array of dead neuron indices
    */
-  scanForDeadNeurons(xs) {
+  async scanForDeadNeurons(xs) {
     if (!this.model) return {};
 
     // We need to traverse the model layers manually.
     // structure index 0 is input.
     // structure index 1 is first hidden layer (first Dense).
 
-    return tf.tidy(() => {
-      const deadMap = {};
+    // 1. Compute activations in tidy (synchronous graph execution)
+    // We return the boolean tensors to keep them alive for async data read.
+    const { tensors, indices } = tf.tidy(() => {
       let current = xs;
+      const layerTensors = [];
+      const layerIndices = [];
       let denseLayerIndex = 1;
 
       for (const layer of this.model.layers) {
@@ -393,22 +396,36 @@ export class NeuralNetwork {
           // We check max activation across the batch.
           const maxActivations = current.max(0); // Shape [units]
           const isDead = maxActivations.lessEqual(1e-5);
-          const deadIndices = [];
-          const deadData = isDead.dataSync(); // safe for small layer sizes
-
-          for (let j = 0; j < deadData.length; j++) {
-            if (deadData[j]) deadIndices.push(j);
-          }
-
-          if (deadIndices.length > 0) {
-            deadMap[denseLayerIndex] = deadIndices;
-          }
+          layerTensors.push(isDead);
+          layerIndices.push(denseLayerIndex);
 
           denseLayerIndex++;
         }
       }
-      return deadMap;
+      return { tensors: layerTensors, indices: layerIndices };
     });
+
+    // 2. Async read from GPU
+    try {
+      const dataPromises = tensors.map(t => t.data());
+      const allData = await Promise.all(dataPromises);
+
+      const deadMap = {};
+      allData.forEach((deadData, i) => {
+        const trueLayerIndex = indices[i];
+        const deadIndices = [];
+        for (let j = 0; j < deadData.length; j++) {
+          if (deadData[j]) deadIndices.push(j);
+        }
+        if (deadIndices.length > 0) {
+          deadMap[trueLayerIndex] = deadIndices;
+        }
+      });
+      return deadMap;
+    } finally {
+      // 3. Dispose the kept tensors
+      tensors.forEach(t => t.dispose());
+    }
   }
 
   /**
