@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Tooltip } from './Tooltip';
+import { useToast } from '../hooks/useToast';
 import { ALLOWED_ACTIVATIONS, ALLOWED_OPTIMIZERS } from '../engine/NeuralNetwork';
 
 export function CodeExport({ structure, hyperparams }) {
     const [isOpen, setIsOpen] = useState(false);
     const [lang, setLang] = useState('python'); // 'python' or 'js'
+    const { pushToast } = useToast();
 
     const safeActivation = ALLOWED_ACTIVATIONS.includes(hyperparams.activation) ? hyperparams.activation : 'relu';
     const safeOptimizer = ALLOWED_OPTIMIZERS.includes(hyperparams.optimizer) ? hyperparams.optimizer : 'adam';
@@ -67,6 +69,17 @@ export function CodeExport({ structure, hyperparams }) {
         return code;
     };
 
+    const handleCopy = () => {
+        const code = lang === 'python' ? generatePython() : generateJS();
+        navigator.clipboard.writeText(code)
+            .then(() => {
+                pushToast({ type: 'success', title: 'Copied!', message: 'Code copied to clipboard.' });
+            })
+            .catch(() => {
+                pushToast({ type: 'error', title: 'Error', message: 'Failed to copy code.' });
+            });
+    };
+
     return (
         <div className="code-modal-overlay">
             <div className="code-modal">
@@ -81,6 +94,9 @@ export function CodeExport({ structure, hyperparams }) {
                 </div>
 
                 <div className="code-block">
+                    <button className="copy-btn" onClick={handleCopy} aria-label="Copy code to clipboard">
+                        📋
+                    </button>
                     <pre>
                         {lang === 'python' ? generatePython() : generateJS()}
                     </pre>
@@ -160,11 +176,31 @@ export function CodeExport({ structure, hyperparams }) {
                 font-weight: bold;
             }
             .code-block {
+                position: relative;
                 background: #1e1e1e;
                 padding: 20px;
                 border-radius: 0 8px 8px 8px;
                 overflow-x: auto;
                 border: 1px solid var(--glass-border);
+            }
+            .copy-btn {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: transparent;
+                border: 1px solid rgba(255,255,255,0.2);
+                color: #d4d4d4;
+                font-size: 16px;
+                cursor: pointer;
+                padding: 6px;
+                border-radius: 6px;
+                transition: all 0.2s;
+                opacity: 0.6;
+            }
+            .copy-btn:hover {
+                background: rgba(255,255,255,0.1);
+                opacity: 1;
+                transform: scale(1.05);
             }
             .code-block pre {
                 margin: 0;
