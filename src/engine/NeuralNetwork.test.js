@@ -237,6 +237,26 @@ describe('NeuralNetwork', () => {
         });
     });
 
+    describe('getConnectionWeightsAsync', () => {
+        it('should return weights asynchronously for valid layer index', async () => {
+            nn.createModel([2, 4, 1]);
+
+            const weights = await nn.getConnectionWeightsAsync(0);
+            expect(weights).not.toBeNull();
+            // Layer 0 connects 2 inputs to 4 hidden = 8 weights
+            expect(weights.length).toBe(8);
+            // Should be a TypedArray (likely Float32Array)
+            expect(weights.length).toBeGreaterThan(0);
+        });
+
+        it('should return null for invalid layer index', async () => {
+            nn.createModel([2, 4, 1]);
+
+            const weights = await nn.getConnectionWeightsAsync(99);
+            expect(weights).toBeNull();
+        });
+    });
+
     describe('dispose', () => {
         it('should dispose the model', () => {
             const testNN = new NeuralNetwork();
@@ -263,7 +283,7 @@ describe('NeuralNetwork', () => {
             });
         });
 
-        it('should detect dead neurons', () => {
+        it('should detect dead neurons', async () => {
             // Create a model: Input 2 -> Hidden 4 -> Output 1
             nn.createModel([2, 4, 1]);
 
@@ -293,7 +313,7 @@ describe('NeuralNetwork', () => {
             ]);
 
             // Run scan
-            const deadMap = nn.scanForDeadNeurons(xs);
+            const deadMap = await nn.scanForDeadNeurons(xs);
 
             // Expected: Layer index 1 (first hidden) should have neurons 0 and 1 dead.
             // Neurons 2 and 3 should be active (positive weights/biases).
@@ -311,7 +331,7 @@ describe('NeuralNetwork', () => {
             expect(deadMap[1]).not.toContain(3);
         });
 
-        it('should return empty object for no dead neurons', () => {
+        it('should return empty object for no dead neurons', async () => {
             nn.createModel([2, 2, 1]);
 
             const layer1 = nn.model.layers[0];
@@ -321,7 +341,7 @@ describe('NeuralNetwork', () => {
 
             const xs = tf.tensor2d([[1, 1]]);
 
-            const deadMap = nn.scanForDeadNeurons(xs);
+            const deadMap = await nn.scanForDeadNeurons(xs);
 
             weights.dispose();
             biases.dispose();
