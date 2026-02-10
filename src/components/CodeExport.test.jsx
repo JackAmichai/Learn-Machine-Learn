@@ -1,6 +1,14 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
 import { CodeExport } from './CodeExport';
+
+// Mock useToast
+const mockPushToast = vi.fn();
+vi.mock('../hooks/useToast', () => ({
+    useToast: () => ({
+        pushToast: mockPushToast
+    })
+}));
 
 describe('CodeExport Security', () => {
     const defaultStructure = [2, 4, 1];
@@ -38,5 +46,40 @@ describe('CodeExport Security', () => {
         const codeContent = preElement.textContent;
 
         expect(codeContent).not.toContain("import os; os.system('echo hacked')");
+    });
+});
+
+describe('CodeExport Functionality', () => {
+    const defaultStructure = [2, 4, 1];
+    const defaultHyperparams = {
+        activation: 'relu',
+        optimizer: 'adam'
+    };
+
+    it('should copy code to clipboard and show toast', async () => {
+        const writeTextMock = vi.fn().mockResolvedValue(undefined);
+        Object.assign(navigator, {
+            clipboard: {
+                writeText: writeTextMock
+            }
+        });
+
+        render(<CodeExport structure={defaultStructure} hyperparams={defaultHyperparams} />);
+
+        // Open modal
+        fireEvent.click(screen.getByText(/Show Code/i));
+
+        // Click copy button
+        const copyBtn = screen.getByLabelText('Copy code to clipboard');
+        fireEvent.click(copyBtn);
+
+        expect(writeTextMock).toHaveBeenCalled();
+
+        await waitFor(() => {
+            expect(mockPushToast).toHaveBeenCalledWith(expect.objectContaining({
+                type: 'success',
+                title: 'Copied!'
+            }));
+        });
     });
 });
