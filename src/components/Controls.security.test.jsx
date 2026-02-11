@@ -42,12 +42,12 @@ describe('Controls Security Tests', () => {
     updateLayerFeatures: vi.fn()
   };
 
-  const originalFileReader = global.FileReader;
+  const originalFileReader = window.FileReader;
   const mockReadAsText = vi.fn();
   let readerInstance;
 
   beforeEach(() => {
-    global.FileReader = vi.fn(function() {
+    window.FileReader = vi.fn(function() {
       readerInstance = {
         readAsText: mockReadAsText,
         onload: null,
@@ -58,7 +58,7 @@ describe('Controls Security Tests', () => {
   });
 
   afterEach(() => {
-    global.FileReader = originalFileReader;
+    window.FileReader = originalFileReader;
     vi.clearAllMocks();
   });
 
