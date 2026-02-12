@@ -32,21 +32,42 @@ const KERNEL_LIBRARY = {
 
 export function VisionCanvas({ onAddSample, onPredict, disabled }) {
     const canvasRef = useRef(null);
+    const accentColorRef = useRef('#00ff95');
     const [isDrawing, setIsDrawing] = useState(false);
     const [selectedLabel, setSelectedLabel] = useState(0); // 0 or 1 for A/B
     const [grid, setGrid] = useState(new Float32Array(100).fill(0)); // 10x10
     const [kernelKey, setKernelKey] = useState('sobelX');
 
+    // Optimization: Cache accent color to avoid getComputedStyle in loop
+    const updateAccentColor = () => {
+        if (typeof document !== 'undefined') {
+            const style = getComputedStyle(document.body);
+            const color = style.getPropertyValue('--accent-primary');
+            if (color) accentColorRef.current = color.trim();
+        }
+    };
+
+    useEffect(() => {
+        updateAccentColor();
+    }, []);
+
+    const handleMouseDown = () => {
+        setIsDrawing(true);
+        updateAccentColor(); // Ensure color is fresh on start of interaction
+    };
+
     const draw = (e) => {
         if (!isDrawing || disabled) return;
         const canvas = canvasRef.current;
-        const rect = canvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+
+        // Optimization: Use nativeEvent.offsetX/Y to avoid getBoundingClientRect() layout thrashing
+        // and clientWidth for dimensions.
+        const { offsetX, offsetY } = e.nativeEvent;
+        const { clientWidth, clientHeight } = canvas;
 
         // Map to 10x10 grid
-        const col = Math.floor(x / (rect.width / 10));
-        const row = Math.floor(y / (rect.height / 10));
+        const col = Math.floor(offsetX / (clientWidth / 10));
+        const row = Math.floor(offsetY / (clientHeight / 10));
 
         if (col >= 0 && col < 10 && row >= 0 && row < 10) {
             const idx = row * 10 + col;
@@ -55,8 +76,8 @@ export function VisionCanvas({ onAddSample, onPredict, disabled }) {
             setGrid(newGrid);
 
             const ctx = canvas.getContext('2d');
-            ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--accent-primary');
-            ctx.fillRect(col * (rect.width / 10), row * (rect.height / 10), rect.width / 10, rect.height / 10);
+            ctx.fillStyle = accentColorRef.current;
+            ctx.fillRect(col * (clientWidth / 10), row * (clientHeight / 10), clientWidth / 10, clientHeight / 10);
         }
     };
 
@@ -129,7 +150,10 @@ export function VisionCanvas({ onAddSample, onPredict, disabled }) {
         const ctx = canvas.getContext('2d');
         const w = canvas.width;
         const cellW = w / 10;
-        ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--accent-primary');
+
+        updateAccentColor();
+        ctx.fillStyle = accentColorRef.current;
+
         for (let i = 0; i < 100; i++) {
             if (g[i]) {
                 const r = Math.floor(i / 10);
@@ -162,7 +186,7 @@ export function VisionCanvas({ onAddSample, onPredict, disabled }) {
                 width={200}
                 height={200}
                 className={`pixel-canvas ${disabled ? 'disabled' : ''}`}
-                onMouseDown={() => setIsDrawing(true)}
+                onMouseDown={handleMouseDown}
                 onMouseMove={draw}
                 onMouseUp={() => setIsDrawing(false)}
                 onMouseLeave={() => setIsDrawing(false)}
