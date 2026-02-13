@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useId } from 'react';
 import { MATH_TOPICS } from '../engine/mathContent';
 
 export function MathModal({ topic, onClose }) {
@@ -180,6 +180,8 @@ export function MathModal({ topic, onClose }) {
 }
 
 function FormulaPlayground({ formula, sliderValues, onSliderChange, activeFormula, onPartHover }) {
+    const idPrefix = useId();
+
     // Initialize slider values with defaults
     const getSliderValue = (key, defaultVal) => {
         return sliderValues[key] !== undefined ? sliderValues[key] : defaultVal;
@@ -201,22 +203,31 @@ function FormulaPlayground({ formula, sliderValues, onSliderChange, activeFormul
             <div className="formula-display">
                 <span className="formula-name">{formula.name}:</span>
                 <div className="formula-parts">
-                    {formula.parts.map((part, idx) => (
-                        <span 
-                            key={idx}
-                            className={`formula-part ${activeFormula === part.key ? 'active' : ''}`}
-                            onMouseEnter={() => onPartHover(part.key)}
-                            onMouseLeave={() => onPartHover(null)}
-                        >
-                            {part.symbol}
-                            {part.key && activeFormula === part.key && (
-                                <div className="part-tooltip">
-                                    <strong>{part.name}</strong>
-                                    <p>{part.description}</p>
-                                </div>
-                            )}
-                        </span>
-                    ))}
+                    {formula.parts.map((part, idx) => {
+                        const tooltipId = `${idPrefix}-tooltip-${idx}`;
+                        return (
+                            <span
+                                key={idx}
+                                className={`formula-part ${activeFormula === part.key ? 'active' : ''}`}
+                                onMouseEnter={() => onPartHover(part.key)}
+                                onMouseLeave={() => onPartHover(null)}
+                                tabIndex={part.key ? 0 : undefined}
+                                role={part.key ? "button" : undefined}
+                                aria-expanded={part.key ? activeFormula === part.key : undefined}
+                                aria-describedby={part.key && activeFormula === part.key ? tooltipId : undefined}
+                                onFocus={() => part.key && onPartHover(part.key)}
+                                onBlur={() => part.key && onPartHover(null)}
+                            >
+                                {part.symbol}
+                                {part.key && activeFormula === part.key && (
+                                    <div id={tooltipId} className="part-tooltip" role="tooltip">
+                                        <strong>{part.name}</strong>
+                                        <p>{part.description}</p>
+                                    </div>
+                                )}
+                            </span>
+                        );
+                    })}
                     <span className="formula-result">= {typeof result === 'number' ? result.toFixed(4) : result}</span>
                 </div>
             </div>
@@ -239,6 +250,8 @@ function FormulaPlayground({ formula, sliderValues, onSliderChange, activeFormul
                             step={variable.step}
                             value={getSliderValue(variable.key, variable.default)}
                             onChange={(e) => onSliderChange(variable.key, e.target.value)}
+                            onFocus={() => onPartHover(variable.key)}
+                            onBlur={() => onPartHover(null)}
                         />
                         <span className="var-value">{getSliderValue(variable.key, variable.default).toFixed(variable.decimals || 2)}</span>
                     </div>
