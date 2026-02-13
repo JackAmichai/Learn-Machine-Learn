@@ -93,6 +93,15 @@ export function Controls(props) {
     const handleImportFile = (event) => {
         const file = event.target.files?.[0];
         if (!file) return;
+
+        if (file.size > 5 * 1024 * 1024) { // 5MB limit
+            setStatus('error', 'File too large (max 5MB)');
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+            return;
+        }
+
         const reader = new FileReader();
         reader.onload = () => {
             try {
@@ -443,6 +452,7 @@ export function Controls(props) {
                     accept="application/json"
                     onChange={handleImportFile}
                     style={{ display: 'none' }}
+                    data-testid="file-upload"
                 />
                 {persistStatus && (
                     <div className={`persist-status ${persistStatus.type}`} role="status">
