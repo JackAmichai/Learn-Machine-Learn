@@ -1,42 +1,108 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { CodeExport } from './CodeExport';
+import * as toastHook from '../hooks/useToast';
 
-describe('CodeExport Security', () => {
+// Mock useToast hook
+const pushToastSpy = vi.fn();
+vi.spyOn(toastHook, 'useToast').mockReturnValue({ pushToast: pushToastSpy });
+
+describe('CodeExport', () => {
     const defaultStructure = [2, 4, 1];
 
-    it('should sanitize activation function to prevent code injection', () => {
-        const maliciousHyperparams = {
-            activation: "relu', input_shape=(1,)); import os; os.system('echo hacked'); #",
+    beforeEach(() => {
+        pushToastSpy.mockClear();
+        // Mock clipboard API
+        Object.assign(navigator, {
+            clipboard: {
+                writeText: vi.fn().mockResolvedValue(undefined),
+            },
+        });
+    });
+
+    afterEach(() => {
+        vi.restoreAllMocks();
+        // Re-mock useToast because we want it persistent across tests in this file
+        vi.spyOn(toastHook, 'useToast').mockReturnValue({ pushToast: pushToastSpy });
+    });
+
+    describe('Security', () => {
+        it('should sanitize activation function to prevent code injection', () => {
+            const maliciousHyperparams = {
+                activation: "relu', input_shape=(1,)); import os; os.system('echo hacked'); #",
+                optimizer: 'adam'
+            };
+
+            render(<CodeExport structure={defaultStructure} hyperparams={maliciousHyperparams} />);
+
+            // Open the modal
+            fireEvent.click(screen.getByText(/Show Code/i));
+
+            // Check Python code
+            const preElement = screen.getByText(/import tensorflow/i).closest('pre');
+            const codeContent = preElement.textContent;
+
+            // The malicious payload should NOT be present in its executable form
+            expect(codeContent).not.toContain("import os; os.system('echo hacked')");
+        });
+
+        it('should sanitize optimizer to prevent code injection', () => {
+            const maliciousHyperparams = {
+                activation: 'relu',
+                optimizer: "adam', metrics=['accuracy']); import os; os.system('echo hacked'); #"
+            };
+
+            render(<CodeExport structure={defaultStructure} hyperparams={maliciousHyperparams} />);
+
+            fireEvent.click(screen.getByText(/Show Code/i));
+
+            const preElement = screen.getByText(/import tensorflow/i).closest('pre');
+            const codeContent = preElement.textContent;
+
+            expect(codeContent).not.toContain("import os; os.system('echo hacked')");
+        });
+    });
+
+    describe('UX', () => {
+        const defaultHyperparams = {
+            activation: 'relu',
             optimizer: 'adam'
         };
 
-        render(<CodeExport structure={defaultStructure} hyperparams={maliciousHyperparams} />);
+        it('should copy code to clipboard and show success toast', async () => {
+            render(<CodeExport structure={defaultStructure} hyperparams={defaultHyperparams} />);
 
-        // Open the modal
-        fireEvent.click(screen.getByText(/Show Code/i));
+            // Open modal
+            fireEvent.click(screen.getByText(/Show Code/i));
 
-        // Check Python code
-        const preElement = screen.getByText(/import tensorflow/i).closest('pre');
-        const codeContent = preElement.textContent;
+            // Click copy
+            fireEvent.click(screen.getByLabelText('Copy code to clipboard'));
 
-        // The malicious payload should NOT be present in its executable form
-        expect(codeContent).not.toContain("import os; os.system('echo hacked')");
-    });
+            await waitFor(() => {
+                expect(navigator.clipboard.writeText).toHaveBeenCalled();
+                expect(pushToastSpy).toHaveBeenCalledWith(expect.objectContaining({
+                    type: 'success',
+                    title: 'Copied!'
+                }));
+            });
+        });
 
-    it('should sanitize optimizer to prevent code injection', () => {
-        const maliciousHyperparams = {
-            activation: 'relu',
-            optimizer: "adam', metrics=['accuracy']); import os; os.system('echo hacked'); #"
-        };
+        it('should show error toast on copy failure', async () => {
+            // Mock failure
+            navigator.clipboard.writeText.mockRejectedValue(new Error('Copy failed'));
 
-        render(<CodeExport structure={defaultStructure} hyperparams={maliciousHyperparams} />);
+            render(<CodeExport structure={defaultStructure} hyperparams={defaultHyperparams} />);
 
-        fireEvent.click(screen.getByText(/Show Code/i));
+            fireEvent.click(screen.getByText(/Show Code/i));
+            fireEvent.click(screen.getByLabelText('Copy code to clipboard'));
 
-        const preElement = screen.getByText(/import tensorflow/i).closest('pre');
-        const codeContent = preElement.textContent;
-
-        expect(codeContent).not.toContain("import os; os.system('echo hacked')");
+            await waitFor(() => {
+                expect(navigator.clipboard.writeText).toHaveBeenCalled();
+                expect(pushToastSpy).toHaveBeenCalledWith(expect.objectContaining({
+                    type: 'error',
+                    title: 'Copy Failed'
+                }));
+            });
+        });
     });
 });
