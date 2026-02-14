@@ -51,10 +51,10 @@ describe('Controls Security Tests', () => {
   let readAsTextMock;
 
   beforeEach(() => {
-    originalFileReader = global.FileReader;
+    originalFileReader = window.FileReader;
     readAsTextMock = vi.fn();
 
-    global.FileReader = class {
+    window.FileReader = class {
       constructor() {
         this.readAsText = readAsTextMock;
         this.onload = null;
@@ -63,7 +63,7 @@ describe('Controls Security Tests', () => {
   });
 
   afterEach(() => {
-    global.FileReader = originalFileReader;
+    window.FileReader = originalFileReader;
     vi.clearAllMocks();
   });
 
