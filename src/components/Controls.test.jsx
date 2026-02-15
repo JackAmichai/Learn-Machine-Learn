@@ -69,4 +69,22 @@ describe('Controls Component', () => {
     const decreaseButton = screen.getByRole('button', { name: new RegExp(`decrease neurons in layer ${layerIndex}`, 'i') });
     expect(decreaseButton).toBeInTheDocument();
   });
+
+  it('renders task mode selector with correct aria attributes', () => {
+    render(<Controls {...mockProps} />);
+
+    // Verify group role
+    const group = screen.getByRole('group', { name: /task mode selector/i });
+    expect(group).toBeInTheDocument();
+
+    // Verify Simple 2D button (active)
+    const simpleButton = screen.getByRole('button', { name: /simple 2d/i });
+    expect(simpleButton).toBeInTheDocument();
+    expect(simpleButton).toHaveAttribute('aria-pressed', 'true');
+
+    // Verify Vision button (inactive)
+    const visionButton = screen.getByRole('button', { name: /vision/i });
+    expect(visionButton).toBeInTheDocument();
+    expect(visionButton).toHaveAttribute('aria-pressed', 'false');
+  });
 });

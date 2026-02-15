@@ -120,14 +120,16 @@ export function Controls(props) {
             {/* Task Mode Selector */}
             <div className="section">
                 <h3>Task Mode</h3>
-                <div className="mode-select">
+                <div className="mode-select" role="group" aria-label="Task Mode Selector">
                     <button
                         className={mode === 'simple' ? 'active' : ''}
                         onClick={() => setMode('simple')}
+                        aria-pressed={mode === 'simple'}
                     >Simple 2D</button>
                     <button
                         className={mode === 'vision' ? 'active' : ''}
                         onClick={() => setMode('vision')}
+                        aria-pressed={mode === 'vision'}
                     >Vision (Beta)</button>
                 </div>
             </div>
