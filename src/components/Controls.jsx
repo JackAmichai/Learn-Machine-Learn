@@ -11,6 +11,7 @@ const SIMPLE_DATASETS = [
 ];
 
 const DEFAULT_LAYER_CONTROLS = { batchNorm: false, dropout: false, dropoutRate: 0.2 };
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 export function Controls(props) {
     const {
@@ -93,6 +94,13 @@ export function Controls(props) {
     const handleImportFile = (event) => {
         const file = event.target.files?.[0];
         if (!file) return;
+
+        if (file.size > MAX_FILE_SIZE) {
+            setStatus('error', 'File exceeds maximum size of 5MB.');
+            if (fileInputRef.current) fileInputRef.current.value = '';
+            return;
+        }
+
         const reader = new FileReader();
         reader.onload = () => {
             try {
@@ -438,6 +446,7 @@ export function Controls(props) {
                     <button onClick={() => fileInputRef.current?.click()}>Import JSON</button>
                 </div>
                 <input
+                    data-testid="file-upload"
                     ref={fileInputRef}
                     type="file"
                     accept="application/json"
