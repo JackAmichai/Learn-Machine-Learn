@@ -37,12 +37,34 @@ export function VisionCanvas({ onAddSample, onPredict, disabled }) {
     const [grid, setGrid] = useState(new Float32Array(100).fill(0)); // 10x10
     const [kernelKey, setKernelKey] = useState('sobelX');
 
-    const draw = (e) => {
-        if (!isDrawing || disabled) return;
+    const getCoordinates = (e) => {
         const canvas = canvasRef.current;
         const rect = canvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+        let clientX = e.clientX;
+        let clientY = e.clientY;
+
+        if (e.touches && e.touches.length > 0) {
+            clientX = e.touches[0].clientX;
+            clientY = e.touches[0].clientY;
+        }
+
+        return {
+            x: clientX - rect.left,
+            y: clientY - rect.top
+        };
+    };
+
+    const draw = (e, force = false) => {
+        if ((!isDrawing && !force) || disabled) return;
+
+        // Prevent scrolling on touch devices
+        if (e.cancelable && (e.type === 'touchmove' || e.type === 'touchstart')) {
+            e.preventDefault();
+        }
+
+        const canvas = canvasRef.current;
+        const rect = canvas.getBoundingClientRect();
+        const { x, y } = getCoordinates(e);
 
         // Map to 10x10 grid
         const col = Math.floor(x / (rect.width / 10));
@@ -162,13 +184,18 @@ export function VisionCanvas({ onAddSample, onPredict, disabled }) {
                 width={200}
                 height={200}
                 className={`pixel-canvas ${disabled ? 'disabled' : ''}`}
-                onMouseDown={() => setIsDrawing(true)}
+                onMouseDown={(e) => { setIsDrawing(true); draw(e, true); }}
                 onMouseMove={draw}
                 onMouseUp={() => setIsDrawing(false)}
                 onMouseLeave={() => setIsDrawing(false)}
+                onTouchStart={(e) => { setIsDrawing(true); draw(e, true); }}
+                onTouchMove={draw}
+                onTouchEnd={() => setIsDrawing(false)}
+                onTouchCancel={() => setIsDrawing(false)}
+                style={{ touchAction: 'none' }}
                 tabIndex={disabled ? -1 : 0}
                 role="img"
-                aria-label="10 by 10 pixel drawing canvas. Click and drag to draw patterns for training."
+                aria-label="10 by 10 pixel drawing canvas. Click or touch and drag to draw patterns for training."
                 aria-disabled={disabled}
             />
 
