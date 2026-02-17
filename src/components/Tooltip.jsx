@@ -73,7 +73,7 @@ const DICTIONARY = {
     "Bias-Variance Tradeoff": "The balance between a model that is too simple (high bias, underfits) and too complex (high variance, overfits)."
 };
 
-export function Tooltip({ word, overrideText }) {
+export function Tooltip({ word, overrideText, children }) {
     const [isVisible, setIsVisible] = useState(false);
     const [showMathPrompt, setShowMathPrompt] = useState(false);
     const { openMath } = useMath();
@@ -125,7 +125,7 @@ export function Tooltip({ word, overrideText }) {
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
         >
-            <span className={`tooltip-word ${hasMath ? 'has-math' : ''}`}>{word}</span>
+            <span className={`tooltip-word ${hasMath ? 'has-math' : ''}`}>{children || word}</span>
 
             {isVisible && !showMathPrompt && (
                 <div 

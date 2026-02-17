@@ -120,14 +120,16 @@ export function Controls(props) {
             {/* Task Mode Selector */}
             <div className="section">
                 <h3>Task Mode</h3>
-                <div className="mode-select">
+                <div className="mode-select" role="group" aria-label="Task Mode">
                     <button
                         className={mode === 'simple' ? 'active' : ''}
                         onClick={() => setMode('simple')}
+                        aria-pressed={mode === 'simple'}
                     >Simple 2D</button>
                     <button
                         className={mode === 'vision' ? 'active' : ''}
                         onClick={() => setMode('vision')}
+                        aria-pressed={mode === 'vision'}
                     >Vision (Beta)</button>
                 </div>
             </div>
@@ -345,8 +347,8 @@ export function Controls(props) {
 
             <div className="section">
                 <div className="p-header">
-                    <h3>Architecture</h3>
-                    <button className="btn-sm" onClick={addLayer} aria-label="Add a hidden layer">+ <Tooltip word="Layer" /></button>
+                    <h3>Architecture <Tooltip word="Layer">ℹ️</Tooltip></h3>
+                    <button className="btn-sm" onClick={addLayer} aria-label="Add a hidden layer">+ Add Layer</button>
                 </div>
 
                 <div className="layers-list">
