@@ -1,60 +1,116 @@
-import { useRef, useEffect, useMemo } from 'react';
+import { useRef, useEffect, useState } from 'react';
 
 export function WeightHeatmap({ model, modelVersion, structure }) {
     const containerRef = useRef(null);
+    const [weightsData, setWeightsData] = useState(null);
 
-// Memoize weight extraction to avoid expensive synchronous TF.js calls on every render
-    const weightsData = useMemo(() => {
-        if (modelVersion === null || modelVersion === undefined) {
-            return null;
-        }
-        if (!model || !Array.isArray(structure) || structure.length < 2) return null;
-        const inputDim = structure[0];
-        const units = structure[1];
-        if (inputDim !== 100 || !units) return null; // Only visualize 10x10 vision grids
+    // Fetch weights asynchronously to avoid blocking the main thread
+    useEffect(() => {
+        let isMounted = true;
 
-        if (typeof model.getConnectionWeights === 'function') {
+        async function fetchWeights() {
+            if (modelVersion === null || modelVersion === undefined) {
+                if (isMounted) setWeightsData(null);
+                return;
+            }
+            if (!model || !Array.isArray(structure) || structure.length < 2) {
+                if (isMounted) setWeightsData(null);
+                return;
+            }
+            const inputDim = structure[0];
+            const units = structure[1];
+            if (inputDim !== 100 || !units) {
+                if (isMounted) setWeightsData(null);
+                return;
+            }
+
             try {
-                const kernel = model.getConnectionWeights(0);
-                if (!kernel) return null;
+                // Optimization: Use async data extraction to avoid blocking UI thread
+                if (typeof model.getConnectionWeightsAsync === 'function') {
+                    const data = await model.getConnectionWeightsAsync(0);
+                    if (!isMounted) return;
+
+                    if (!data) {
+                        setWeightsData(null);
+                        return;
+                    }
+
+                    const snapshot = [];
+                    for (let u = 0; u < units; u++) {
+                        const arr = new Float32Array(inputDim);
+                        for (let i = 0; i < inputDim; i++) {
+                            arr[i] = data[i * units + u];
+                        }
+                        snapshot.push(arr);
+                    }
+                    setWeightsData(snapshot);
+                    return;
+                }
+
+                // Fallback: Synchronous (blocks UI, legacy behavior)
+                if (typeof model.getConnectionWeights === 'function') {
+                    const kernel = model.getConnectionWeights(0);
+                    if (!isMounted) return;
+
+                    if (!kernel) {
+                        setWeightsData(null);
+                        return;
+                    }
+                    const snapshot = [];
+                    for (let u = 0; u < units; u++) {
+                        const arr = new Float32Array(inputDim);
+                        for (let i = 0; i < inputDim; i++) {
+                            arr[i] = kernel[i * units + u];
+                        }
+                        snapshot.push(arr);
+                    }
+                    setWeightsData(snapshot);
+                    return;
+                }
+
+                // Legacy Fallback to direct layer access
+                if (!model.model || !model.model.layers?.length) {
+                    if (isMounted) setWeightsData(null);
+                    return;
+                }
+                const layer = model.model.layers[0];
+                if (!layer) {
+                     if (isMounted) setWeightsData(null);
+                     return;
+                }
+                const weights = layer.getWeights();
+                if (!weights.length) {
+                     if (isMounted) setWeightsData(null);
+                     return;
+                }
+                const wTensor = weights[0];
+
+                // dataSync returns a copy - do NOT dispose the original tensors
+                const wData = wTensor.dataSync();
+
+                if (!isMounted) return;
+
                 const snapshot = [];
                 for (let u = 0; u < units; u++) {
                     const arr = new Float32Array(inputDim);
                     for (let i = 0; i < inputDim; i++) {
-                        arr[i] = kernel[i * units + u];
+                        arr[i] = wData[i * units + u];
                     }
                     snapshot.push(arr);
                 }
-                return snapshot;
+                setWeightsData(snapshot);
+
             } catch (error) {
                 console.error('Heatmap error', error);
-                return null;
+                if (isMounted) setWeightsData(null);
             }
         }
 
-        // Fallback to legacy direct layer access if helper is unavailable
-        if (!model.model || !model.model.layers?.length) return null;
-        const layer = model.model.layers[0];
-        if (!layer) return null;
-        try {
-            const weights = layer.getWeights();
-            if (!weights.length) return null;
-            const wTensor = weights[0];
-            const snapshot = [];
-            // dataSync returns a copy - do NOT dispose the original tensors
-            const wData = wTensor.dataSync();
-            for (let u = 0; u < units; u++) {
-                const arr = new Float32Array(inputDim);
-                for (let i = 0; i < inputDim; i++) {
-                    arr[i] = wData[i * units + u];
-                }
-                snapshot.push(arr);
-            }
-            return snapshot;
-        } catch (error) {
-            console.error('Heatmap error', error);
-            return null;
-        }
+        fetchWeights();
+
+        return () => {
+            isMounted = false;
+        };
     }, [modelVersion, model, structure]);
 
     return (
