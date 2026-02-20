@@ -25,8 +25,8 @@ importers:
         specifier: ^9.39.1
         version: 9.39.2
       '@rollup/rollup-linux-x64-gnu':
-        specifier: ^4.57.1
-        version: 4.57.1
+        specifier: ^4.53.4
+        version: 4.53.4
       '@testing-library/jest-dom':
         specifier: ^6.9.1
         version: 6.9.1
@@ -660,13 +660,13 @@ packages:
     cpu: [s390x]
     os: [linux]
 
-  '@rollup/rollup-linux-x64-gnu@4.57.0':
-    resolution: {integrity: sha512-OR5p5yG5OKSxHReWmwvM0P+VTPMwoBS45PXTMYaskKQqybkS3Kmugq1W+YbNWArF8/s7jQScgzXUhArzEQ7x0A==}
+  '@rollup/rollup-linux-x64-gnu@4.53.4':
+    resolution: {integrity: sha512-jjEMkzvASQBbzzlzf4os7nzSBd/cvPrpqXCUOqoeCh1dQ4BP3RZCJk8XBeik4MUln3m+8LeTJcY54C/u8wb3DQ==}
     cpu: [x64]
     os: [linux]
 
-  '@rollup/rollup-linux-x64-gnu@4.57.1':
-    resolution: {integrity: sha512-ABca4ceT4N+Tv/GtotnWAeXZUZuM/9AQyCyKYyKnpk4yoA7QIAuBt6Hkgpw8kActYlew2mvckXkvx0FfoInnLg==}
+  '@rollup/rollup-linux-x64-gnu@4.57.0':
+    resolution: {integrity: sha512-OR5p5yG5OKSxHReWmwvM0P+VTPMwoBS45PXTMYaskKQqybkS3Kmugq1W+YbNWArF8/s7jQScgzXUhArzEQ7x0A==}
     cpu: [x64]
     os: [linux]
 
@@ -2255,10 +2255,10 @@ snapshots:
   '@rollup/rollup-linux-s390x-gnu@4.57.0':
     optional: true
 
+  '@rollup/rollup-linux-x64-gnu@4.53.4': {}
+
   '@rollup/rollup-linux-x64-gnu@4.57.0':
     optional: true
-
-  '@rollup/rollup-linux-x64-gnu@4.57.1': {}
 
   '@rollup/rollup-linux-x64-musl@4.57.0':
     optional: true
