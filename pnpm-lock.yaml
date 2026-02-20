@@ -24,6 +24,9 @@ importers:
       '@eslint/js':
         specifier: ^9.39.1
         version: 9.39.2
+      '@rollup/rollup-linux-x64-gnu':
+        specifier: ^4.53.4
+        version: 4.53.4
       '@testing-library/jest-dom':
         specifier: ^6.9.1
         version: 6.9.1
@@ -655,6 +658,11 @@ packages:
   '@rollup/rollup-linux-s390x-gnu@4.57.0':
     resolution: {integrity: sha512-Q9eh+gUGILIHEaJf66aF6a414jQbDnn29zeu0eX3dHMuysnhTvsUvZTCAyZ6tJhUjnvzBKE4FtuaYxutxRZpOg==}
     cpu: [s390x]
+    os: [linux]
+
+  '@rollup/rollup-linux-x64-gnu@4.53.4':
+    resolution: {integrity: sha512-jjEMkzvASQBbzzlzf4os7nzSBd/cvPrpqXCUOqoeCh1dQ4BP3RZCJk8XBeik4MUln3m+8LeTJcY54C/u8wb3DQ==}
+    cpu: [x64]
     os: [linux]
 
   '@rollup/rollup-linux-x64-gnu@4.57.0':
@@ -2246,6 +2254,8 @@ snapshots:
 
   '@rollup/rollup-linux-s390x-gnu@4.57.0':
     optional: true
+
+  '@rollup/rollup-linux-x64-gnu@4.53.4': {}
 
   '@rollup/rollup-linux-x64-gnu@4.57.0':
     optional: true
