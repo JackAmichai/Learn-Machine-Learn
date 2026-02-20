@@ -280,7 +280,7 @@ export function useNeuralNetwork() {
                 scanCounterRef.current++;
                 if (scanCounterRef.current >= 20 && !cancelled && history) {
                     scanCounterRef.current = 0;
-                    const deadMap = network.scanForDeadNeurons(xs);
+                    const deadMap = await network.scanForDeadNeurons(xs);
                     setDeadNeurons(deadMap);
                 }
 
@@ -312,7 +312,7 @@ export function useNeuralNetwork() {
             if (frameId) cancelAnimationFrame(frameId);
             if (timerId) clearTimeout(timerId);
         };
-    }, [isPlaying, trainingMode, slowDelay, network, getTrainingBatch]);
+    }, [isPlaying, trainingMode, slowDelay, network, getTrainingBatch, batchSize]);
 
     const addLayer = () => {
         applyStructure(prev => {
