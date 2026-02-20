@@ -333,6 +333,26 @@ export class NeuralNetwork {
   }
 
   /**
+   * Async version of getConnectionWeights to avoid blocking UI.
+   * @param {number} layerIndex - Index of the connection layer
+   * @returns {Promise<Float32Array|null>} Weight values or null if invalid
+   */
+  async getConnectionWeightsAsync(layerIndex) {
+    if (!this.connectionLayers[layerIndex]) return null;
+    try {
+      const weights = this.connectionLayers[layerIndex].getWeights();
+      if (!weights.length) return null;
+      const kernel = weights[0];
+      // data() returns a promise resolving to TypedArray
+      // We do not dispose the kernel as it belongs to the layer
+      return await kernel.data();
+    } catch (e) {
+      console.error('Error fetching connection weights async:', e);
+      return null;
+    }
+  }
+
+  /**
    * Serializes all model weights to nested arrays.
    * Useful for saving/restoring model state.
    * @returns {Array} Serialized weights per layer
@@ -368,18 +388,21 @@ export class NeuralNetwork {
 
   /**
    * Scans the network for dead neurons (always zero activation).
+   * Async to avoid blocking the UI thread during training.
    * @param {tf.Tensor2D} xs - Input batch
-   * @returns {Object} Map of layerIndex -> Array of dead neuron indices
+   * @returns {Promise<Object>} Map of layerIndex -> Array of dead neuron indices
    */
-  scanForDeadNeurons(xs) {
+  async scanForDeadNeurons(xs) {
     if (!this.model) return {};
 
     // We need to traverse the model layers manually.
     // structure index 0 is input.
     // structure index 1 is first hidden layer (first Dense).
 
-    return tf.tidy(() => {
-      const deadMap = {};
+    // 1. Compute boolean tensors synchronously inside tf.tidy
+    const { indices, booleanTensors } = tf.tidy(() => {
+      const booleanTensors = [];
+      const indices = [];
       let current = xs;
       let denseLayerIndex = 1;
 
@@ -393,22 +416,41 @@ export class NeuralNetwork {
           // We check max activation across the batch.
           const maxActivations = current.max(0); // Shape [units]
           const isDead = maxActivations.lessEqual(1e-5);
-          const deadIndices = [];
-          const deadData = isDead.dataSync(); // safe for small layer sizes
 
-          for (let j = 0; j < deadData.length; j++) {
-            if (deadData[j]) deadIndices.push(j);
-          }
-
-          if (deadIndices.length > 0) {
-            deadMap[denseLayerIndex] = deadIndices;
-          }
+          // Keep the boolean tensor for async download
+          booleanTensors.push(isDead);
+          indices.push(denseLayerIndex);
 
           denseLayerIndex++;
         }
       }
-      return deadMap;
+      return { indices, booleanTensors };
     });
+
+    // 2. Fetch data asynchronously outside tf.tidy
+    const deadMap = {};
+    try {
+      const promises = booleanTensors.map(t => t.data());
+      const results = await Promise.all(promises);
+
+      results.forEach((data, i) => {
+        const layerIdx = indices[i];
+        const deadIndices = [];
+        for (let j = 0; j < data.length; j++) {
+          if (data[j]) deadIndices.push(j);
+        }
+        if (deadIndices.length > 0) {
+          deadMap[layerIdx] = deadIndices;
+        }
+      });
+    } catch (e) {
+      console.error('Error scanning for dead neurons:', e);
+    } finally {
+      // 3. Dispose the boolean tensors we kept out of tidy
+      booleanTensors.forEach(t => t.dispose());
+    }
+
+    return deadMap;
   }
 
   /**
