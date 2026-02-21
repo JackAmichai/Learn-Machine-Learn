@@ -69,4 +69,21 @@ describe('Controls Component', () => {
     const decreaseButton = screen.getByRole('button', { name: new RegExp(`decrease neurons in layer ${layerIndex}`, 'i') });
     expect(decreaseButton).toBeInTheDocument();
   });
+
+  it('renders task mode buttons with correct aria-pressed state', () => {
+    const props = { ...mockProps, mode: 'simple' };
+    const { rerender } = render(<Controls {...props} />);
+
+    const simpleBtn = screen.getByRole('button', { name: /simple 2d/i });
+    const visionBtn = screen.getByRole('button', { name: /vision/i });
+
+    expect(simpleBtn).toHaveAttribute('aria-pressed', 'true');
+    expect(visionBtn).toHaveAttribute('aria-pressed', 'false');
+
+    // Update props to vision mode
+    rerender(<Controls {...props} mode="vision" />);
+
+    expect(simpleBtn).toHaveAttribute('aria-pressed', 'false');
+    expect(visionBtn).toHaveAttribute('aria-pressed', 'true');
+  });
 });
