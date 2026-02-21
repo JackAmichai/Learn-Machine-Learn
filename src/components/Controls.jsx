@@ -124,10 +124,12 @@ export function Controls(props) {
                     <button
                         className={mode === 'simple' ? 'active' : ''}
                         onClick={() => setMode('simple')}
+                        aria-pressed={mode === 'simple'}
                     >Simple 2D</button>
                     <button
                         className={mode === 'vision' ? 'active' : ''}
                         onClick={() => setMode('vision')}
+                        aria-pressed={mode === 'vision'}
                     >Vision (Beta)</button>
                 </div>
             </div>
@@ -219,7 +221,7 @@ export function Controls(props) {
             <div className="section">
                 <h3>Hyperparameters</h3>
                 <div className="hp-grid">
-                    <label><Tooltip word="Learning Rate" /></label>
+                    <span><Tooltip word="Learning Rate" /></span>
                     <div className="lr-control">
                         <input
                             aria-label="Learning Rate"
@@ -231,7 +233,7 @@ export function Controls(props) {
                         <span>{hyperparams.learningRate}</span>
                     </div>
 
-                    <label><Tooltip word="Activation" /></label>
+                    <span><Tooltip word="Activation" /></span>
                     <select
                         aria-label="Activation Function"
                         value={hyperparams.activation}
@@ -243,7 +245,7 @@ export function Controls(props) {
                         <option value="linear">Linear</option>
                     </select>
 
-                    <label><Tooltip word="Optimizer" /></label>
+                    <span><Tooltip word="Optimizer" /></span>
                     <select
                         aria-label="Optimizer"
                         value={hyperparams.optimizer}
@@ -253,7 +255,7 @@ export function Controls(props) {
                         <option value="sgd">SGD</option>
                     </select>
 
-                    <label><Tooltip word="Batch Size" /></label>
+                    <span><Tooltip word="Batch Size" /></span>
                     <div className="lr-control">
                         <input
                             aria-label="Batch Size"
