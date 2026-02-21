@@ -369,17 +369,19 @@ export class NeuralNetwork {
   /**
    * Scans the network for dead neurons (always zero activation).
    * @param {tf.Tensor2D} xs - Input batch
-   * @returns {Object} Map of layerIndex -> Array of dead neuron indices
+   * @returns {Promise<Object>} Map of layerIndex -> Array of dead neuron indices
    */
-  scanForDeadNeurons(xs) {
+  async scanForDeadNeurons(xs) {
     if (!this.model) return {};
 
     // We need to traverse the model layers manually.
     // structure index 0 is input.
     // structure index 1 is first hidden layer (first Dense).
 
-    return tf.tidy(() => {
-      const deadMap = {};
+    // 1. Compute isDead tensors inside tf.tidy
+    const { indices, tensors } = tf.tidy(() => {
+      const tensors = [];
+      const indices = [];
       let current = xs;
       let denseLayerIndex = 1;
 
@@ -393,22 +395,43 @@ export class NeuralNetwork {
           // We check max activation across the batch.
           const maxActivations = current.max(0); // Shape [units]
           const isDead = maxActivations.lessEqual(1e-5);
-          const deadIndices = [];
-          const deadData = isDead.dataSync(); // safe for small layer sizes
 
-          for (let j = 0; j < deadData.length; j++) {
-            if (deadData[j]) deadIndices.push(j);
-          }
-
-          if (deadIndices.length > 0) {
-            deadMap[denseLayerIndex] = deadIndices;
-          }
+          tensors.push(isDead);
+          indices.push(denseLayerIndex);
 
           denseLayerIndex++;
         }
       }
-      return deadMap;
+      return { indices, tensors };
     });
+
+    // 2. Fetch data asynchronously to avoid blocking UI
+    const deadMap = {};
+    try {
+      const dataPromises = tensors.map(t => t.data());
+      const allDeadData = await Promise.all(dataPromises);
+
+      for (let i = 0; i < allDeadData.length; i++) {
+        const deadData = allDeadData[i];
+        const layerIdx = indices[i];
+        const deadIndices = [];
+
+        for (let j = 0; j < deadData.length; j++) {
+          if (deadData[j]) deadIndices.push(j);
+        }
+
+        if (deadIndices.length > 0) {
+          deadMap[layerIdx] = deadIndices;
+        }
+      }
+    } catch (e) {
+      console.error("Error scanning for dead neurons:", e);
+    } finally {
+      // 3. Dispose tensors manually since they were returned from tf.tidy
+      tensors.forEach(t => t.dispose());
+    }
+
+    return deadMap;
   }
 
   /**
