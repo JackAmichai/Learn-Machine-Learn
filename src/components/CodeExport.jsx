@@ -11,9 +11,33 @@ export function CodeExport({ structure, hyperparams }) {
 
     if (!isOpen) {
         return (
-            <button className="btn-code" onClick={() => setIsOpen(true)}>
-                &lt;/&gt; Show Code <Tooltip word="Export" overrideText="View the code to build this model" />
-            </button>
+            <div className="export-trigger-wrapper">
+                <button className="btn-code" onClick={() => setIsOpen(true)}>
+                    &lt;/&gt; Show Code
+                </button>
+                <Tooltip word="Export" overrideText="View the code to build this model" />
+                <style>{`
+                .export-trigger-wrapper {
+                    margin-top: 20px;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                }
+                .btn-code {
+                    flex: 1;
+                    padding: 10px;
+                    background: var(--bg-secondary);
+                    border: 1px solid var(--glass-border);
+                    color: var(--accent-primary);
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-family: monospace;
+                }
+                .btn-code:hover {
+                    background: var(--glass-border);
+                }
+                `}</style>
+            </div>
         );
     }
 
@@ -72,7 +96,7 @@ export function CodeExport({ structure, hyperparams }) {
             <div className="code-modal">
                 <div className="modal-header">
                     <h3>Export Model Code</h3>
-                    <button className="close" onClick={() => setIsOpen(false)}>×</button>
+                    <button className="close" onClick={() => setIsOpen(false)} aria-label="Close">×</button>
                 </div>
 
                 <div className="lang-tabs">
@@ -90,20 +114,6 @@ export function CodeExport({ structure, hyperparams }) {
             </div>
 
             <style>{`
-            .btn-code {
-                width: 100%;
-                margin-top: 20px;
-                padding: 10px;
-                background: var(--bg-secondary);
-                border: 1px solid var(--glass-border);
-                color: var(--accent-primary);
-                border-radius: 8px;
-                cursor: pointer;
-                font-family: monospace;
-            }
-            .btn-code:hover {
-                background: var(--glass-border);
-            }
             .code-modal-overlay {
                 position: fixed;
                 top: 0; left: 0; right: 0; bottom: 0;
