@@ -219,7 +219,7 @@ export function Controls(props) {
             <div className="section">
                 <h3>Hyperparameters</h3>
                 <div className="hp-grid">
-                    <label><Tooltip word="Learning Rate" /></label>
+                    <span><Tooltip word="Learning Rate" /></span>
                     <div className="lr-control">
                         <input
                             aria-label="Learning Rate"
@@ -231,7 +231,7 @@ export function Controls(props) {
                         <span>{hyperparams.learningRate}</span>
                     </div>
 
-                    <label><Tooltip word="Activation" /></label>
+                    <span><Tooltip word="Activation" /></span>
                     <select
                         aria-label="Activation Function"
                         value={hyperparams.activation}
@@ -243,7 +243,7 @@ export function Controls(props) {
                         <option value="linear">Linear</option>
                     </select>
 
-                    <label><Tooltip word="Optimizer" /></label>
+                    <span><Tooltip word="Optimizer" /></span>
                     <select
                         aria-label="Optimizer"
                         value={hyperparams.optimizer}
@@ -253,7 +253,7 @@ export function Controls(props) {
                         <option value="sgd">SGD</option>
                     </select>
 
-                    <label><Tooltip word="Batch Size" /></label>
+                    <span><Tooltip word="Batch Size" /></span>
                     <div className="lr-control">
                         <input
                             aria-label="Batch Size"
@@ -346,7 +346,10 @@ export function Controls(props) {
             <div className="section">
                 <div className="p-header">
                     <h3>Architecture</h3>
-                    <button className="btn-sm" onClick={addLayer} aria-label="Add a hidden layer">+ <Tooltip word="Layer" /></button>
+                    <div className="add-layer-group">
+                        <Tooltip word="Layer" />
+                        <button className="btn-sm" onClick={addLayer} aria-label="Add a hidden layer">+</button>
+                    </div>
                 </div>
 
                 <div className="layers-list">
@@ -656,6 +659,11 @@ export function Controls(props) {
                 justify-content: space-between;
                 align-items: center;
                 margin-bottom: 10px;
+            }
+            .add-layer-group {
+                display: flex;
+                align-items: center;
+                gap: 8px;
             }
             .btn-sm {
                 font-size: 12px;
