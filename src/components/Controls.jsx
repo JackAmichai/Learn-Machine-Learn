@@ -3,6 +3,8 @@ import { DataType } from '../engine/data';
 import { Tooltip } from './Tooltip';
 import { CodeExport } from './CodeExport';
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
 const SIMPLE_DATASETS = [
     { type: DataType.SPIRAL, label: 'Spiral Arms', hint: 'Interleaving swirls demand complex decision boundaries.' },
     { type: DataType.CIRCLE, label: 'Dual Rings', hint: 'Inner vs outer rings for radial separation.' },
@@ -93,6 +95,15 @@ export function Controls(props) {
     const handleImportFile = (event) => {
         const file = event.target.files?.[0];
         if (!file) return;
+
+        if (file.size > MAX_FILE_SIZE) {
+            setStatus('error', 'File too large (max 5MB).');
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+            return;
+        }
+
         const reader = new FileReader();
         reader.onload = () => {
             try {
