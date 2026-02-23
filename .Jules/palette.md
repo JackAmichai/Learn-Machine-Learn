@@ -1,3 +1,3 @@
-## 2025-02-12 - Tooltip Nesting Patterns
-**Learning:** Interactive tooltips (via `Tooltip.jsx`) are frequently nested inside or adjacent to other interactive elements (buttons, labels), creating potential invalid HTML (nested interactive controls) and focus management issues.
-**Action:** In future, refactor `Tooltip` to be a non-interactive icon unless explicitly focused, or restructure UI to place help icons *outside* buttons/labels.
+## 2024-05-21 - Tooltip Nesting Patterns
+**Learning:** Nesting `<Tooltip>` components directly inside interactive elements (like `<button>` or `<label>`) creates invalid HTML (buttons inside buttons) and breaks accessibility trees.
+**Action:** Always place the Tooltip component *adjacent* to the trigger element, using a flex wrapper or positioned container to maintain the visual relationship without nesting the DOM elements.

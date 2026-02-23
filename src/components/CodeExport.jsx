@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Tooltip } from './Tooltip';
 import { ALLOWED_ACTIVATIONS, ALLOWED_OPTIMIZERS } from '../engine/NeuralNetwork';
 
@@ -8,14 +9,6 @@ export function CodeExport({ structure, hyperparams }) {
 
     const safeActivation = ALLOWED_ACTIVATIONS.includes(hyperparams.activation) ? hyperparams.activation : 'relu';
     const safeOptimizer = ALLOWED_OPTIMIZERS.includes(hyperparams.optimizer) ? hyperparams.optimizer : 'adam';
-
-    if (!isOpen) {
-        return (
-            <button className="btn-code" onClick={() => setIsOpen(true)}>
-                &lt;/&gt; Show Code <Tooltip word="Export" overrideText="View the code to build this model" />
-            </button>
-        );
-    }
 
     const generatePython = () => {
         let code = `import tensorflow as tf\nfrom tensorflow.keras import layers, models\n\n`;
@@ -68,31 +61,50 @@ export function CodeExport({ structure, hyperparams }) {
     };
 
     return (
-        <div className="code-modal-overlay">
-            <div className="code-modal">
-                <div className="modal-header">
-                    <h3>Export Model Code</h3>
-                    <button className="close" onClick={() => setIsOpen(false)}>×</button>
-                </div>
-
-                <div className="lang-tabs">
-                    <button className={lang === 'python' ? 'active' : ''} onClick={() => setLang('python')}>Python (Keras)</button>
-                    <button className={lang === 'js' ? 'active' : ''} onClick={() => setLang('js')}>JavaScript (TF.js)</button>
-                </div>
-
-                <div className="code-block">
-                    <pre>
-                        {lang === 'python' ? generatePython() : generateJS()}
-                    </pre>
-                </div>
-
-                <p className="tip">Copy this code to run your model in a real environment!</p>
+        <>
+            <div className="show-code-wrapper">
+                <button className="btn-code" onClick={() => setIsOpen(true)}>
+                    &lt;/&gt; Show Code
+                </button>
+                <Tooltip word="Export" overrideText="View the code to build this model" />
             </div>
 
+            {isOpen && createPortal(
+                <div className="code-modal-overlay">
+                    <div className="code-modal">
+                        <div className="modal-header">
+                            <h3>Export Model Code</h3>
+                            <button className="close" onClick={() => setIsOpen(false)} aria-label="Close">×</button>
+                        </div>
+
+                        <div className="lang-tabs">
+                            <button className={lang === 'python' ? 'active' : ''} onClick={() => setLang('python')}>Python (Keras)</button>
+                            <button className={lang === 'js' ? 'active' : ''} onClick={() => setLang('js')}>JavaScript (TF.js)</button>
+                        </div>
+
+                        <div className="code-block">
+                            <pre>
+                                {lang === 'python' ? generatePython() : generateJS()}
+                            </pre>
+                        </div>
+
+                        <p className="tip">Copy this code to run your model in a real environment!</p>
+                    </div>
+                </div>,
+                document.body
+            )}
+
             <style>{`
-            .btn-code {
-                width: 100%;
+            .show-code-wrapper {
+                display: flex;
+                align-items: center;
+                gap: 12px;
                 margin-top: 20px;
+                width: 100%;
+                justify-content: center;
+            }
+            .btn-code {
+                flex: 1;
                 padding: 10px;
                 background: var(--bg-secondary);
                 border: 1px solid var(--glass-border);
@@ -181,6 +193,6 @@ export function CodeExport({ structure, hyperparams }) {
                 text-align: center;
             }
         `}</style>
-        </div>
+        </>
     );
 }
