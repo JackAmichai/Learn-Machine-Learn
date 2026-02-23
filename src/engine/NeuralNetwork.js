@@ -369,17 +369,20 @@ export class NeuralNetwork {
   /**
    * Scans the network for dead neurons (always zero activation).
    * @param {tf.Tensor2D} xs - Input batch
-   * @returns {Object} Map of layerIndex -> Array of dead neuron indices
+   * @returns {Promise<Object>} Map of layerIndex -> Array of dead neuron indices
    */
-  scanForDeadNeurons(xs) {
+  async scanForDeadNeurons(xs) {
     if (!this.model) return {};
 
     // We need to traverse the model layers manually.
     // structure index 0 is input.
     // structure index 1 is first hidden layer (first Dense).
 
-    return tf.tidy(() => {
-      const deadMap = {};
+    const layerIndices = [];
+
+    // Phase 1: Compute boolean tensors synchronously (GPU queueing)
+    const activations = tf.tidy(() => {
+      const acts = [];
       let current = xs;
       let denseLayerIndex = 1;
 
@@ -393,22 +396,38 @@ export class NeuralNetwork {
           // We check max activation across the batch.
           const maxActivations = current.max(0); // Shape [units]
           const isDead = maxActivations.lessEqual(1e-5);
-          const deadIndices = [];
-          const deadData = isDead.dataSync(); // safe for small layer sizes
-
-          for (let j = 0; j < deadData.length; j++) {
-            if (deadData[j]) deadIndices.push(j);
-          }
-
-          if (deadIndices.length > 0) {
-            deadMap[denseLayerIndex] = deadIndices;
-          }
-
+          acts.push(isDead); // Keep the boolean tensor
+          layerIndices.push(denseLayerIndex);
           denseLayerIndex++;
         }
       }
-      return deadMap;
+      return acts;
     });
+
+    const deadMap = {};
+
+    // Phase 2: Fetch data asynchronously (non-blocking)
+    try {
+      const promises = activations.map(t => t.data());
+      const results = await Promise.all(promises);
+
+      results.forEach((deadData, i) => {
+        const deadIndices = [];
+        for (let j = 0; j < deadData.length; j++) {
+          if (deadData[j]) deadIndices.push(j);
+        }
+        if (deadIndices.length > 0) {
+          deadMap[layerIndices[i]] = deadIndices;
+        }
+      });
+    } catch (e) {
+      console.error('Error scanning for dead neurons:', e);
+    } finally {
+      // Phase 3: Cleanup
+      activations.forEach(t => t.dispose());
+    }
+
+    return deadMap;
   }
 
   /**
