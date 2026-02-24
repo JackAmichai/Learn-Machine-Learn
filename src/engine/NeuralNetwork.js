@@ -369,17 +369,15 @@ export class NeuralNetwork {
   /**
    * Scans the network for dead neurons (always zero activation).
    * @param {tf.Tensor2D} xs - Input batch
-   * @returns {Object} Map of layerIndex -> Array of dead neuron indices
+   * @returns {Promise<Object>} Map of layerIndex -> Array of dead neuron indices
    */
-  scanForDeadNeurons(xs) {
+  async scanForDeadNeurons(xs) {
     if (!this.model) return {};
 
-    // We need to traverse the model layers manually.
-    // structure index 0 is input.
-    // structure index 1 is first hidden layer (first Dense).
-
-    return tf.tidy(() => {
-      const deadMap = {};
+    // Phase 1: Compute boolean masks (Synchronous, GPU)
+    // We return objects containing tensors so tf.tidy doesn't dispose them
+    const deadTensors = tf.tidy(() => {
+      const results = [];
       let current = xs;
       let denseLayerIndex = 1;
 
@@ -393,22 +391,35 @@ export class NeuralNetwork {
           // We check max activation across the batch.
           const maxActivations = current.max(0); // Shape [units]
           const isDead = maxActivations.lessEqual(1e-5);
-          const deadIndices = [];
-          const deadData = isDead.dataSync(); // safe for small layer sizes
-
-          for (let j = 0; j < deadData.length; j++) {
-            if (deadData[j]) deadIndices.push(j);
-          }
-
-          if (deadIndices.length > 0) {
-            deadMap[denseLayerIndex] = deadIndices;
-          }
-
+          results.push({ index: denseLayerIndex, tensor: isDead });
           denseLayerIndex++;
         }
       }
-      return deadMap;
+      return results;
     });
+
+    // Phase 2: Async data fetch (Non-blocking)
+    const deadMap = {};
+    try {
+      await Promise.all(deadTensors.map(async ({ index, tensor }) => {
+        const data = await tensor.data();
+        const deadIndices = [];
+        for (let i = 0; i < data.length; i++) {
+          if (data[i]) deadIndices.push(i);
+        }
+        if (deadIndices.length > 0) {
+          deadMap[index] = deadIndices;
+        }
+        // Manual dispose as we kept them alive outside tidy
+        tensor.dispose();
+      }));
+    } catch (err) {
+      console.error('Error scanning for dead neurons:', err);
+      // Ensure cleanup on error
+      deadTensors.forEach(({ tensor }) => !tensor.isDisposed && tensor.dispose());
+    }
+
+    return deadMap;
   }
 
   /**
