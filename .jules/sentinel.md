@@ -12,3 +12,10 @@
 **Prevention:**
 1.  Explicitly add platform-specific optional dependencies (like `@rollup/rollup-linux-x64-gnu`) to `devDependencies` if the CI environment requires them and they aren't automatically handled.
 2.  Or, run `npm install --package-lock-only` to update the lockfile to include all optional dependencies across platforms.
+
+## 2026-02-25 - [Testing] String Matching in Security Tests
+**Vulnerability:** Security tests failed in CI because `console.warn` assertions used `expect.stringContaining("Invalid outputActivation")` (camelCase), while the application code logged "Invalid output activation" (with space).
+**Learning:** Error messages in code often use natural language (spaces), while variable names use camelCase. Mismatches here can cause false negatives or false positives in security regression testing.
+**Prevention:**
+1.  Copy-paste exact error strings from the source code into tests.
+2.  Use looser matching (e.g., regex `/Invalid output activation/i`) if minor formatting changes are expected.
