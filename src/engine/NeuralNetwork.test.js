@@ -237,6 +237,24 @@ describe('NeuralNetwork', () => {
         });
     });
 
+    describe('getConnectionWeightsAsync', () => {
+        it('should return weights asynchronously for valid layer index', async () => {
+            nn.createModel([2, 4, 1]);
+
+            const weights = await nn.getConnectionWeightsAsync(0);
+            expect(weights).not.toBeNull();
+            expect(weights.length).toBe(8);
+            expect(weights).toBeInstanceOf(Float32Array);
+        });
+
+        it('should return null for invalid layer index', async () => {
+            nn.createModel([2, 4, 1]);
+
+            const weights = await nn.getConnectionWeightsAsync(99);
+            expect(weights).toBeNull();
+        });
+    });
+
     describe('dispose', () => {
         it('should dispose the model', () => {
             const testNN = new NeuralNetwork();
