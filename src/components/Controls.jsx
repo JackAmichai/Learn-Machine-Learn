@@ -93,6 +93,17 @@ export function Controls(props) {
     const handleImportFile = (event) => {
         const file = event.target.files?.[0];
         if (!file) return;
+
+        // Security: Limit file size to 5MB to prevent memory exhaustion (DoS)
+        const MAX_FILE_SIZE = 5 * 1024 * 1024;
+        if (file.size > MAX_FILE_SIZE) {
+            setStatus('error', 'File too large. Max size is 5MB.');
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+            return;
+        }
+
         const reader = new FileReader();
         reader.onload = () => {
             try {
@@ -708,6 +719,7 @@ export function Controls(props) {
             .pill-group {
                 display: flex;
                 gap: 6px;
+                margin-bottom: 0;
             }
             .pill-toggle {
                 flex: 1;
