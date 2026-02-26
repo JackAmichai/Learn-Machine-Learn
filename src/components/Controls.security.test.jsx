@@ -11,8 +11,6 @@ vi.mock('./CodeExport', () => ({
 }));
 
 describe('Controls Security Tests', () => {
-  const originalFileReader = global.FileReader;
-
   afterEach(() => {
     vi.unstubAllGlobals();
   });
