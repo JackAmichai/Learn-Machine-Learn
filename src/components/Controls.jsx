@@ -93,6 +93,14 @@ export function Controls(props) {
     const handleImportFile = (event) => {
         const file = event.target.files?.[0];
         if (!file) return;
+
+        // Security: Prevent DoS via large files (limit to 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            setStatus('error', 'File too large (max 5MB).');
+            if (fileInputRef.current) fileInputRef.current.value = '';
+            return;
+        }
+
         const reader = new FileReader();
         reader.onload = () => {
             try {
