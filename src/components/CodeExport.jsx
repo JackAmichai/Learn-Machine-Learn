@@ -5,6 +5,7 @@ import { ALLOWED_ACTIVATIONS, ALLOWED_OPTIMIZERS } from '../engine/NeuralNetwork
 export function CodeExport({ structure, hyperparams }) {
     const [isOpen, setIsOpen] = useState(false);
     const [lang, setLang] = useState('python'); // 'python' or 'js'
+    const [copied, setCopied] = useState(false);
 
     const safeActivation = ALLOWED_ACTIVATIONS.includes(hyperparams.activation) ? hyperparams.activation : 'relu';
     const safeOptimizer = ALLOWED_OPTIMIZERS.includes(hyperparams.optimizer) ? hyperparams.optimizer : 'adam';
@@ -67,6 +68,13 @@ export function CodeExport({ structure, hyperparams }) {
         return code;
     };
 
+    const handleCopy = () => {
+        const code = lang === 'python' ? generatePython() : generateJS();
+        navigator.clipboard.writeText(code);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
+
     return (
         <div className="code-modal-overlay">
             <div className="code-modal">
@@ -81,6 +89,13 @@ export function CodeExport({ structure, hyperparams }) {
                 </div>
 
                 <div className="code-block">
+                    <button
+                        className="copy-btn"
+                        onClick={handleCopy}
+                        aria-label={copied ? "Copied code to clipboard" : "Copy code to clipboard"}
+                    >
+                        {copied ? '✓ Copied!' : 'Copy'}
+                    </button>
                     <pre>
                         {lang === 'python' ? generatePython() : generateJS()}
                     </pre>
@@ -165,6 +180,7 @@ export function CodeExport({ structure, hyperparams }) {
                 border-radius: 0 8px 8px 8px;
                 overflow-x: auto;
                 border: 1px solid var(--glass-border);
+                position: relative;
             }
             .code-block pre {
                 margin: 0;
@@ -172,6 +188,23 @@ export function CodeExport({ structure, hyperparams }) {
                 font-size: 13px;
                 color: #d4d4d4;
                 white-space: pre-wrap;
+            }
+            .copy-btn {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: rgba(255, 255, 255, 0.1);
+                color: #fff;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 6px;
+                padding: 4px 10px;
+                font-size: 12px;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+            .copy-btn:hover {
+                background: rgba(255, 255, 255, 0.2);
+                transform: translateY(-1px);
             }
             .tip {
                 margin-top: 15px;

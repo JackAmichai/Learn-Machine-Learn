@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { CodeExport } from './CodeExport';
 
 describe('CodeExport Security', () => {
@@ -38,5 +38,44 @@ describe('CodeExport Security', () => {
         const codeContent = preElement.textContent;
 
         expect(codeContent).not.toContain("import os; os.system('echo hacked')");
+    });
+});
+
+describe('CodeExport Copy Functionality', () => {
+    const defaultStructure = [2, 4, 1];
+    const defaultHyperparams = { activation: 'relu', optimizer: 'adam' };
+
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
+
+    it('should copy code to clipboard when copy button is clicked', async () => {
+        // Mock clipboard API
+        const writeTextMock = vi.fn().mockResolvedValue(undefined);
+        Object.assign(navigator, {
+            clipboard: {
+                writeText: writeTextMock,
+            },
+        });
+
+        render(<CodeExport structure={defaultStructure} hyperparams={defaultHyperparams} />);
+
+        // Open the modal
+        fireEvent.click(screen.getByText(/Show Code/i));
+
+        // Find the copy button (using accessible name)
+        const copyButton = screen.getByRole('button', { name: /Copy code to clipboard/i });
+
+        // Click copy
+        fireEvent.click(copyButton);
+
+        // Verify clipboard writeText was called
+        expect(writeTextMock).toHaveBeenCalled();
+
+        // Check if button text changes to "Copied!"
+        expect(await screen.findByText('✓ Copied!')).toBeInTheDocument();
+
+        // Check aria-label update
+        expect(copyButton).toHaveAttribute('aria-label', 'Copied code to clipboard');
     });
 });
