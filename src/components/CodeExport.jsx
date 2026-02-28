@@ -11,7 +11,12 @@ export function CodeExport({ structure, hyperparams }) {
 
     if (!isOpen) {
         return (
-            <button className="btn-code" onClick={() => setIsOpen(true)}>
+            <button
+                className="btn-code"
+                onClick={() => setIsOpen(true)}
+                aria-expanded="false"
+                aria-haspopup="dialog"
+            >
                 &lt;/&gt; Show Code <Tooltip word="Export" overrideText="View the code to build this model" />
             </button>
         );
@@ -69,18 +74,52 @@ export function CodeExport({ structure, hyperparams }) {
 
     return (
         <div className="code-modal-overlay">
-            <div className="code-modal">
+            <div
+                className="code-modal"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="code-modal-title"
+            >
                 <div className="modal-header">
-                    <h3>Export Model Code</h3>
-                    <button className="close" onClick={() => setIsOpen(false)}>×</button>
+                    <h3 id="code-modal-title">Export Model Code</h3>
+                    <button
+                        className="close"
+                        onClick={() => setIsOpen(false)}
+                        aria-label="Close code export modal"
+                    >
+                        ×
+                    </button>
                 </div>
 
-                <div className="lang-tabs">
-                    <button className={lang === 'python' ? 'active' : ''} onClick={() => setLang('python')}>Python (Keras)</button>
-                    <button className={lang === 'js' ? 'active' : ''} onClick={() => setLang('js')}>JavaScript (TF.js)</button>
+                <div className="lang-tabs" role="tablist" aria-label="Programming Language">
+                    <button
+                        className={lang === 'python' ? 'active' : ''}
+                        onClick={() => setLang('python')}
+                        role="tab"
+                        aria-selected={lang === 'python'}
+                        id="tab-python"
+                        aria-controls="panel-python"
+                    >
+                        Python (Keras)
+                    </button>
+                    <button
+                        className={lang === 'js' ? 'active' : ''}
+                        onClick={() => setLang('js')}
+                        role="tab"
+                        aria-selected={lang === 'js'}
+                        id="tab-js"
+                        aria-controls="panel-js"
+                    >
+                        JavaScript (TF.js)
+                    </button>
                 </div>
 
-                <div className="code-block">
+                <div
+                    className="code-block"
+                    role="tabpanel"
+                    id={`panel-${lang}`}
+                    aria-labelledby={`tab-${lang}`}
+                >
                     <pre>
                         {lang === 'python' ? generatePython() : generateJS()}
                     </pre>
