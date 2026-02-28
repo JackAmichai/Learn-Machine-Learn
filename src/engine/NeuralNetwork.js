@@ -73,7 +73,7 @@ export class NeuralNetwork {
 
     // Validate output activation
     if (safeConfig.outputActivation && !ALLOWED_ACTIVATIONS.includes(safeConfig.outputActivation)) {
-      console.warn(`Invalid output activation '${safeConfig.outputActivation}'. Defaulting to 'sigmoid'.`);
+      console.warn(`Invalid outputActivation '${safeConfig.outputActivation}'. Defaulting to 'sigmoid'.`);
       safeConfig.outputActivation = 'sigmoid';
     }
 
