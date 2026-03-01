@@ -5,15 +5,21 @@ import { ALLOWED_ACTIVATIONS, ALLOWED_OPTIMIZERS } from '../engine/NeuralNetwork
 export function CodeExport({ structure, hyperparams }) {
     const [isOpen, setIsOpen] = useState(false);
     const [lang, setLang] = useState('python'); // 'python' or 'js'
+    const [isCopied, setIsCopied] = useState(false);
 
     const safeActivation = ALLOWED_ACTIVATIONS.includes(hyperparams.activation) ? hyperparams.activation : 'relu';
     const safeOptimizer = ALLOWED_OPTIMIZERS.includes(hyperparams.optimizer) ? hyperparams.optimizer : 'adam';
 
     if (!isOpen) {
         return (
-            <button className="btn-code" onClick={() => setIsOpen(true)}>
-                &lt;/&gt; Show Code <Tooltip word="Export" overrideText="View the code to build this model" />
-            </button>
+            <div className="btn-code-wrapper">
+                <button className="btn-code" onClick={() => setIsOpen(true)}>
+                    &lt;/&gt; Show Code
+                </button>
+                <div className="tooltip-wrapper">
+                    <Tooltip word="Export" overrideText="View the code to build this model" />
+                </div>
+            </div>
         );
     }
 
@@ -67,12 +73,20 @@ export function CodeExport({ structure, hyperparams }) {
         return code;
     };
 
+    const handleCopy = () => {
+        const code = lang === 'python' ? generatePython() : generateJS();
+        navigator.clipboard.writeText(code).then(() => {
+            setIsCopied(true);
+            setTimeout(() => setIsCopied(false), 2000);
+        });
+    };
+
     return (
         <div className="code-modal-overlay">
             <div className="code-modal">
                 <div className="modal-header">
                     <h3>Export Model Code</h3>
-                    <button className="close" onClick={() => setIsOpen(false)}>×</button>
+                    <button className="close" onClick={() => setIsOpen(false)} aria-label="Close modal">×</button>
                 </div>
 
                 <div className="lang-tabs">
@@ -81,6 +95,14 @@ export function CodeExport({ structure, hyperparams }) {
                 </div>
 
                 <div className="code-block">
+                    <button
+                        className="btn-copy"
+                        onClick={handleCopy}
+                        aria-label="Copy code to clipboard"
+                        aria-live="polite"
+                    >
+                        {isCopied ? 'Copied!' : 'Copy Code'}
+                    </button>
                     <pre>
                         {lang === 'python' ? generatePython() : generateJS()}
                     </pre>
@@ -90,9 +112,21 @@ export function CodeExport({ structure, hyperparams }) {
             </div>
 
             <style>{`
-            .btn-code {
-                width: 100%;
+            .btn-code-wrapper {
                 margin-top: 20px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .tooltip-wrapper {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--text-secondary);
+                font-size: 14px;
+            }
+            .btn-code {
+                flex: 1;
                 padding: 10px;
                 background: var(--bg-secondary);
                 border: 1px solid var(--glass-border);
@@ -100,6 +134,10 @@ export function CodeExport({ structure, hyperparams }) {
                 border-radius: 8px;
                 cursor: pointer;
                 font-family: monospace;
+            }
+            .btn-code:focus-visible {
+                outline: 2px solid var(--accent-primary);
+                outline-offset: 2px;
             }
             .btn-code:hover {
                 background: var(--glass-border);
@@ -160,11 +198,33 @@ export function CodeExport({ structure, hyperparams }) {
                 font-weight: bold;
             }
             .code-block {
+                position: relative;
                 background: #1e1e1e;
                 padding: 20px;
+                padding-top: 40px;
                 border-radius: 0 8px 8px 8px;
                 overflow-x: auto;
                 border: 1px solid var(--glass-border);
+            }
+            .btn-copy {
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                padding: 4px 10px;
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid var(--glass-border);
+                color: var(--text-primary);
+                border-radius: 6px;
+                font-size: 11px;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+            .btn-copy:hover {
+                background: rgba(255, 255, 255, 0.2);
+            }
+            .btn-copy:focus-visible {
+                outline: 2px solid var(--accent-primary);
+                outline-offset: 2px;
             }
             .code-block pre {
                 margin: 0;
