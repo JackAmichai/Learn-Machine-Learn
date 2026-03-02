@@ -5,6 +5,12 @@ import { CodeExport } from './CodeExport';
 describe('CodeExport Security', () => {
     const defaultStructure = [2, 4, 1];
 
+    Object.assign(navigator, {
+        clipboard: {
+            writeText: vi.fn(),
+        },
+    });
+
     it('should sanitize activation function to prevent code injection', () => {
         const maliciousHyperparams = {
             activation: "relu', input_shape=(1,)); import os; os.system('echo hacked'); #",
