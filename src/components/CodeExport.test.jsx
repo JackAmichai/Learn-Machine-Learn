@@ -1,5 +1,5 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { render, screen, fireEvent, act } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
 import { CodeExport } from './CodeExport';
 
 describe('CodeExport Security', () => {
@@ -38,5 +38,37 @@ describe('CodeExport Security', () => {
         const codeContent = preElement.textContent;
 
         expect(codeContent).not.toContain("import os; os.system('echo hacked')");
+    });
+
+    it('should copy code to clipboard and show feedback', async () => {
+        // Mock navigator.clipboard
+        const mockWriteText = vi.fn().mockResolvedValue(undefined);
+        Object.assign(navigator, {
+            clipboard: {
+                writeText: mockWriteText,
+            },
+        });
+
+        render(<CodeExport structure={defaultStructure} hyperparams={{ activation: 'relu', optimizer: 'adam' }} />);
+
+        // Open modal
+        fireEvent.click(screen.getByText(/Show Code/i));
+
+        // Find copy button
+        const copyButton = screen.getByRole('button', { name: /Copy code to clipboard/i });
+        expect(copyButton.textContent).toBe('Copy');
+
+        // Click copy button
+        await act(async () => {
+            fireEvent.click(copyButton);
+        });
+
+        // Assert clipboard was called
+        expect(mockWriteText).toHaveBeenCalled();
+        const codePassedToClipboard = mockWriteText.mock.calls[0][0];
+        expect(codePassedToClipboard).toContain('import tensorflow as tf');
+
+        // Verify state update occurred
+        expect(copyButton.textContent).toBe('Copied!');
     });
 });
