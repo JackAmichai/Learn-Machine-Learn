@@ -1,0 +1,4 @@
+## 2024-05-18 - XSS Risk with dynamically rendered HTML content
+**Vulnerability:** The codebase uses `dangerouslySetInnerHTML` in `src/components/MathModal.jsx` without proper input sanitization, which creates a critical vulnerability if the input data (`data.content`) is ever supplied by a user or an external source (Cross-Site Scripting (XSS)).
+**Learning:** When using `dangerouslySetInnerHTML` in React components, the project mandates using `dompurify` (`DOMPurify.sanitize()`) to sanitize the HTML string and prevent Cross-Site Scripting (XSS) vulnerabilities. This codebase specifically relies on `dompurify` as the architectural standard for sanitization.
+**Prevention:** Always wrap variables passed to `dangerouslySetInnerHTML` in `DOMPurify.sanitize()` to ensure any script tags or malicious payloads are stripped out before rendering in the DOM.
