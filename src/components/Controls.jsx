@@ -589,6 +589,11 @@ export function Controls(props) {
                 border: 1px solid var(--glass-border);
                 border-radius: 6px;
                 color: var(--text-secondary);
+                outline: none;
+            }
+            .mode-select button:focus-visible {
+                outline: 2px solid var(--accent-primary);
+                outline-offset: 2px;
             }
             .mode-select button.active {
                 background: var(--accent-primary);
@@ -663,6 +668,11 @@ export function Controls(props) {
                 color: var(--text-primary);
                 padding: 4px 8px;
                 border-radius: 4px;
+                outline: none;
+            }
+            .btn-sm:focus-visible {
+                outline: 2px solid var(--accent-primary);
+                outline-offset: 2px;
             }
             .layer-item {
                 background: rgba(0,0,0,0.2);
