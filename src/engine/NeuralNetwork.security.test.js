@@ -34,7 +34,7 @@ describe('NeuralNetwork Security Validation', () => {
             const safeNN = new NeuralNetwork(unsafeConfig);
 
             expect(safeNN.config.outputActivation).toBe('sigmoid');
-            expect(console.warn).toHaveBeenCalledWith(expect.stringContaining("Invalid output activation"));
+            expect(console.warn).toHaveBeenCalledWith(expect.stringContaining("Invalid outputActivation"));
             safeNN.dispose();
         });
 
@@ -92,7 +92,7 @@ describe('NeuralNetwork Security Validation', () => {
             nn = new NeuralNetwork({ outputActivation: 'sigmoid' });
             nn.updateConfig({ outputActivation: 'malicious' });
             expect(nn.config.outputActivation).toBe('sigmoid');
-            expect(console.warn).toHaveBeenCalledWith(expect.stringContaining("Invalid output activation"));
+            expect(console.warn).toHaveBeenCalledWith(expect.stringContaining("Invalid outputActivation"));
         });
 
         it('should ignore invalid optimizer updates', () => {
