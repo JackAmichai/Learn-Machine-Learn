@@ -312,6 +312,7 @@ export function useNeuralNetwork() {
             if (frameId) cancelAnimationFrame(frameId);
             if (timerId) clearTimeout(timerId);
         };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isPlaying, trainingMode, slowDelay, network, getTrainingBatch]);
 
     const addLayer = () => {

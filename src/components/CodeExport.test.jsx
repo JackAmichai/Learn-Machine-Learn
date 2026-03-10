@@ -1,8 +1,20 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
 import { CodeExport } from './CodeExport';
 
 describe('CodeExport Security', () => {
+    beforeAll(() => {
+        Object.assign(navigator, {
+            clipboard: {
+                writeText: vi.fn().mockResolvedValue(),
+            },
+        });
+    });
+
+    afterAll(() => {
+        vi.restoreAllMocks();
+    });
+
     const defaultStructure = [2, 4, 1];
 
     it('should sanitize activation function to prevent code injection', () => {
