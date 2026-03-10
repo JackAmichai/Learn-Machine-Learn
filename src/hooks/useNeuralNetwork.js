@@ -312,7 +312,7 @@ export function useNeuralNetwork() {
             if (frameId) cancelAnimationFrame(frameId);
             if (timerId) clearTimeout(timerId);
         };
-    }, [isPlaying, trainingMode, slowDelay, network, getTrainingBatch]);
+    }, [isPlaying, trainingMode, slowDelay, batchSize, network, getTrainingBatch]);
 
     const addLayer = () => {
         applyStructure(prev => {
