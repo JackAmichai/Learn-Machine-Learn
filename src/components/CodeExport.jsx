@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Tooltip } from './Tooltip';
 import { ALLOWED_ACTIVATIONS, ALLOWED_OPTIMIZERS } from '../engine/NeuralNetwork';
 
 export function CodeExport({ structure, hyperparams }) {
     const [isOpen, setIsOpen] = useState(false);
     const [lang, setLang] = useState('python'); // 'python' or 'js'
+    const [copied, setCopied] = useState(false);
 
     const safeActivation = ALLOWED_ACTIVATIONS.includes(hyperparams.activation) ? hyperparams.activation : 'relu';
     const safeOptimizer = ALLOWED_OPTIMIZERS.includes(hyperparams.optimizer) ? hyperparams.optimizer : 'adam';
@@ -67,20 +69,35 @@ export function CodeExport({ structure, hyperparams }) {
         return code;
     };
 
-    return (
-        <div className="code-modal-overlay">
+    const handleCopy = () => {
+        const codeToCopy = lang === 'python' ? generatePython() : generateJS();
+        navigator.clipboard.writeText(codeToCopy).then(() => {
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        });
+    };
+
+    return createPortal(
+        <div className="code-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="code-export-title">
             <div className="code-modal">
                 <div className="modal-header">
-                    <h3>Export Model Code</h3>
-                    <button className="close" onClick={() => setIsOpen(false)}>×</button>
+                    <h3 id="code-export-title">Export Model Code</h3>
+                    <button className="close" onClick={() => setIsOpen(false)} aria-label="Close export modal">×</button>
                 </div>
 
                 <div className="lang-tabs">
                     <button className={lang === 'python' ? 'active' : ''} onClick={() => setLang('python')}>Python (Keras)</button>
                     <button className={lang === 'js' ? 'active' : ''} onClick={() => setLang('js')}>JavaScript (TF.js)</button>
+                    <button
+                        className="btn-copy"
+                        onClick={handleCopy}
+                        aria-label="Copy code to clipboard"
+                    >
+                        {copied ? 'Copied!' : 'Copy Code'}
+                    </button>
                 </div>
 
-                <div className="code-block">
+                <div className="code-block" tabIndex={0} aria-label={`Generated ${lang === 'python' ? 'Python' : 'JavaScript'} code`}>
                     <pre>
                         {lang === 'python' ? generatePython() : generateJS()}
                     </pre>
@@ -159,6 +176,19 @@ export function CodeExport({ structure, hyperparams }) {
                 color: black;
                 font-weight: bold;
             }
+            .lang-tabs .btn-copy {
+                margin-left: auto;
+                background: var(--accent-secondary);
+                color: white;
+                border-radius: 8px 8px 0 0;
+                font-weight: bold;
+                transition: transform 0.1s;
+            }
+            .lang-tabs .btn-copy:hover {
+                transform: translateY(-2px);
+                background: var(--accent-primary);
+                color: black;
+            }
             .code-block {
                 background: #1e1e1e;
                 padding: 20px;
@@ -181,6 +211,7 @@ export function CodeExport({ structure, hyperparams }) {
                 text-align: center;
             }
         `}</style>
-        </div>
+        </div>,
+        document.body
     );
 }
