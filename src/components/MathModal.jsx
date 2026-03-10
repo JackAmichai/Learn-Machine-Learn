@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import DOMPurify from 'dompurify';
 import { MATH_TOPICS } from '../engine/mathContent';
 
 export function MathModal({ topic, onClose }) {
@@ -44,7 +45,8 @@ export function MathModal({ topic, onClose }) {
                     >×</button>
                 </div>
 
-                <div className="math-body" dangerouslySetInnerHTML={{ __html: data.content }} />
+                {/* Security improvement: Sanitize HTML content to prevent XSS */}
+                <div className="math-body" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data.content) }} />
 
                 {/* Interactive Formula Explorer */}
                 {interactiveFormulas.length > 0 && (

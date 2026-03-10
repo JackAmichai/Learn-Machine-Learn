@@ -1,0 +1,4 @@
+## 2024-05-14 - Fix Potential XSS Vulnerability in MathModal
+**Vulnerability:** The `MathModal.jsx` component rendered math content using `dangerouslySetInnerHTML={{ __html: data.content }}` without any sanitization. If the `MATH_TOPICS` data source was ever modified to include user-generated or unsanitized external content, it would create an immediate Cross-Site Scripting (XSS) vulnerability.
+**Learning:** The project mandates using `DOMPurify.sanitize()` when working with `dangerouslySetInnerHTML`. Relying on static internal data files being "safe" is a bad assumption when building a secure, scalable application.
+**Prevention:** Always wrap variables passed to `dangerouslySetInnerHTML` in `DOMPurify.sanitize()`, regardless of the immediate data source, to prevent future injection attacks.
