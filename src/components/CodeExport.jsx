@@ -5,6 +5,7 @@ import { ALLOWED_ACTIVATIONS, ALLOWED_OPTIMIZERS } from '../engine/NeuralNetwork
 export function CodeExport({ structure, hyperparams }) {
     const [isOpen, setIsOpen] = useState(false);
     const [lang, setLang] = useState('python'); // 'python' or 'js'
+    const [copied, setCopied] = useState(false);
 
     const safeActivation = ALLOWED_ACTIVATIONS.includes(hyperparams.activation) ? hyperparams.activation : 'relu';
     const safeOptimizer = ALLOWED_OPTIMIZERS.includes(hyperparams.optimizer) ? hyperparams.optimizer : 'adam';
@@ -67,6 +68,13 @@ export function CodeExport({ structure, hyperparams }) {
         return code;
     };
 
+    const handleCopy = () => {
+        const code = lang === 'python' ? generatePython() : generateJS();
+        navigator.clipboard.writeText(code);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
+
     return (
         <div className="code-modal-overlay">
             <div className="code-modal">
@@ -80,10 +88,19 @@ export function CodeExport({ structure, hyperparams }) {
                     <button className={lang === 'js' ? 'active' : ''} onClick={() => setLang('js')}>JavaScript (TF.js)</button>
                 </div>
 
-                <div className="code-block">
-                    <pre>
-                        {lang === 'python' ? generatePython() : generateJS()}
-                    </pre>
+                <div className="code-block-wrapper">
+                    <button
+                        className="btn-copy"
+                        onClick={handleCopy}
+                        aria-label="Copy code to clipboard"
+                    >
+                        {copied ? 'Copied!' : 'Copy'}
+                    </button>
+                    <div className="code-block">
+                        <pre>
+                            {lang === 'python' ? generatePython() : generateJS()}
+                        </pre>
+                    </div>
                 </div>
 
                 <p className="tip">Copy this code to run your model in a real environment!</p>
@@ -158,6 +175,31 @@ export function CodeExport({ structure, hyperparams }) {
                 background: var(--accent-primary);
                 color: black;
                 font-weight: bold;
+            }
+            .code-block-wrapper {
+                position: relative;
+            }
+            .btn-copy {
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                padding: 4px 8px;
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                color: var(--text-secondary);
+                border-radius: 4px;
+                font-size: 11px;
+                cursor: pointer;
+                z-index: 10;
+                transition: all 0.2s;
+            }
+            .btn-copy:hover {
+                background: rgba(255, 255, 255, 0.2);
+                color: var(--text-primary);
+            }
+            .btn-copy:focus-visible {
+                outline: 2px solid var(--accent-primary);
+                outline-offset: -1px;
             }
             .code-block {
                 background: #1e1e1e;
