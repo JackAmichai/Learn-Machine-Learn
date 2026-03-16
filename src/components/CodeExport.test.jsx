@@ -1,5 +1,5 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { render, screen, fireEvent, act } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
 import { CodeExport } from './CodeExport';
 
 describe('CodeExport Security', () => {
@@ -38,5 +38,36 @@ describe('CodeExport Security', () => {
         const codeContent = preElement.textContent;
 
         expect(codeContent).not.toContain("import os; os.system('echo hacked')");
+    });
+});
+
+describe('CodeExport UX', () => {
+    const defaultStructure = [2, 4, 1];
+    const defaultHyperparams = { activation: 'relu', optimizer: 'adam' };
+
+    it('should copy code to clipboard and show feedback', async () => {
+        // Mock clipboard
+        const originalClipboard = navigator.clipboard;
+        Object.assign(navigator, {
+            clipboard: {
+                writeText: vi.fn().mockImplementation(() => Promise.resolve()),
+            },
+        });
+
+        render(<CodeExport structure={defaultStructure} hyperparams={defaultHyperparams} />);
+        fireEvent.click(screen.getByText(/Show Code/i));
+
+        const copyBtn = screen.getByRole('button', { name: /Copy code to clipboard/i });
+        expect(copyBtn).toHaveTextContent('Copy');
+
+        await act(async () => {
+            fireEvent.click(copyBtn);
+        });
+
+        expect(navigator.clipboard.writeText).toHaveBeenCalled();
+        expect(copyBtn).toHaveTextContent('Copied!');
+
+        // Restore clipboard
+        Object.assign(navigator, { clipboard: originalClipboard });
     });
 });
