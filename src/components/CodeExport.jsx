@@ -89,15 +89,27 @@ export function CodeExport({ structure, hyperparams }) {
                     <button className={lang === 'js' ? 'active' : ''} onClick={() => setLang('js')}>JavaScript (TF.js)</button>
                 </div>
 
-                <div className="code-block-container">
+                <div style={{ position: 'relative' }}>
                     <button
-                        className="btn-copy"
                         onClick={handleCopy}
                         aria-label="Copy code to clipboard"
+                        style={{
+                            position: 'absolute',
+                            top: '8px',
+                            right: '8px',
+                            background: 'rgba(255, 255, 255, 0.1)',
+                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                            color: '#d4d4d4',
+                            padding: '4px 8px',
+                            borderRadius: '4px',
+                            fontSize: '11px',
+                            cursor: 'pointer',
+                            zIndex: 10
+                        }}
                     >
                         {copied ? 'Copied!' : 'Copy'}
                     </button>
-                    <div className="code-block-scroll">
+                    <div className="code-block">
                         <pre>
                             {lang === 'python' ? generatePython() : generateJS()}
                         </pre>
@@ -177,39 +189,14 @@ export function CodeExport({ structure, hyperparams }) {
                 color: black;
                 font-weight: bold;
             }
-            .code-block-container {
-                position: relative;
+            .code-block {
                 background: #1e1e1e;
+                padding: 20px;
                 border-radius: 0 8px 8px 8px;
+                overflow-x: auto;
                 border: 1px solid var(--glass-border);
             }
-            .btn-copy {
-                position: absolute;
-                top: 8px;
-                right: 8px;
-                background: rgba(255, 255, 255, 0.1);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                color: #d4d4d4;
-                padding: 4px 8px;
-                border-radius: 4px;
-                font-size: 11px;
-                cursor: pointer;
-                transition: all 0.2s;
-                z-index: 10;
-            }
-            .btn-copy:hover {
-                background: rgba(255, 255, 255, 0.2);
-                color: #fff;
-            }
-            .btn-copy:focus-visible {
-                outline: 2px solid var(--accent-primary);
-                outline-offset: 2px;
-            }
-            .code-block-scroll {
-                padding: 20px;
-                overflow-x: auto;
-            }
-            .code-block-scroll pre {
+            .code-block pre {
                 margin: 0;
                 font-family: 'Fira Code', monospace;
                 font-size: 13px;
