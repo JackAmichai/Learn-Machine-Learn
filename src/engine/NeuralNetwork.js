@@ -311,6 +311,7 @@ export class NeuralNetwork {
       return null;
     }
   }
+
   /**
    * Gets connection weights asynchronously.
    * Prevents blocking the main thread when transferring data from GPU to CPU.
