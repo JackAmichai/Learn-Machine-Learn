@@ -118,6 +118,8 @@ export function Tooltip({ word, overrideText }) {
             className="tooltip-container"
             tabIndex={0}
             role="button"
+            aria-label={overrideText || word}
+            aria-expanded={isVisible}
             aria-describedby={isVisible ? `tooltip-${word}` : undefined}
             onMouseEnter={() => setIsVisible(true)}
             onMouseLeave={() => { setIsVisible(false); setShowMathPrompt(false); }}
