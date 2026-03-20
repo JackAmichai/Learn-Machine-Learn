@@ -84,6 +84,8 @@ export function OutputPlot({ model, data, modelVersion }) {
                 ref={canvasRef}
                 width={400}
                 height={400}
+                role="img"
+                aria-label="Output Plot displaying the neural network's decision boundary and data points"
                 style={{
                     width: '100%',
                     height: '100%',
