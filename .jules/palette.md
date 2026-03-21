@@ -1,0 +1,3 @@
+## 2024-05-24 - Add accessible copy button to Code Export
+**Learning:** Adding a copy-to-clipboard button significantly improves UX for code exports, but requires careful timeout management to ensure the "Copied!" feedback state resets predictably without overlapping timeouts.
+**Action:** Use a `useRef` to store the timeout ID and clear it before setting a new one when `navigator.clipboard.writeText` is successful. Wrap absolute positioned copy buttons in a container separate from scrollable code areas to ensure the button remains fixed while the code scrolls. Implement proper ARIA `role="tablist"`, `role="tab"`, and `aria-selected` attributes for custom tab interfaces to ensure screen reader accessibility.
