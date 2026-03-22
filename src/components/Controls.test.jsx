@@ -51,6 +51,33 @@ describe('Controls Component', () => {
     updateLayerFeatures: vi.fn()
   };
 
+  it('enforces a 5MB file size limit for model JSON imports', async () => {
+    // We dynamically import user-event to be safe, although we can also import it at the top
+    const { default: userEvent } = await import('@testing-library/user-event');
+    render(<Controls {...mockProps} />);
+
+    // Find the hidden file input
+    const fileInput = document.querySelector("input[type='file'][accept='application/json']");
+    expect(fileInput).toBeInTheDocument();
+
+    // Create a mock file larger than 5MB
+    const largeContent = new Array(5 * 1024 * 1024 + 10).fill('a').join('');
+    const largeFile = new File([largeContent], 'large.json', { type: 'application/json' });
+
+    // Mock the FileReader just in case
+    vi.stubGlobal('FileReader', class MockFileReader {
+      readAsText() {}
+    });
+
+    await userEvent.upload(fileInput, largeFile);
+
+    // The component should call setStatus with an error message
+    expect(screen.getByText('File size exceeds 5MB limit.')).toBeInTheDocument();
+
+    // Cleanup
+    vi.unstubAllGlobals();
+  });
+
   it('renders layer controls with accessible labels', () => {
     render(<Controls {...mockProps} />);
 
