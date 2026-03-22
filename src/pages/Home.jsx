@@ -155,7 +155,7 @@ export function Home() {
                 </li>
               ))}
             </ul>
-            <button onClick={() => setShowShortcuts(false)} className="btn-close-shortcuts">
+            <button onClick={() => setShowShortcuts(false)} className="btn-close-shortcuts" aria-label="Close shortcuts modal">
               Close (Esc)
             </button>
           </div>
@@ -180,7 +180,7 @@ export function Home() {
             <button className="btn-shortcuts" onClick={() => setShowShortcuts(true)} aria-label="Show keyboard shortcuts">
               ⌨️
             </button>
-            <button className="btn-tour" onClick={() => setShowTour(true)}>Start Tour</button>
+            <button className="btn-tour" onClick={() => setShowTour(true)} aria-label="Start interactive tour">Start Tour</button>
             <button className="btn-fullscreen" onClick={toggleFullscreen} aria-pressed={isFullscreen} aria-label="Toggle fullscreen mode">
               {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
             </button>

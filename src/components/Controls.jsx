@@ -120,14 +120,16 @@ export function Controls(props) {
             {/* Task Mode Selector */}
             <div className="section">
                 <h3>Task Mode</h3>
-                <div className="mode-select">
+                <div className="mode-select" role="group" aria-label="Task Mode">
                     <button
                         className={mode === 'simple' ? 'active' : ''}
                         onClick={() => setMode('simple')}
+                        aria-pressed={mode === 'simple'}
                     >Simple 2D</button>
                     <button
                         className={mode === 'vision' ? 'active' : ''}
                         onClick={() => setMode('vision')}
+                        aria-pressed={mode === 'vision'}
                     >Vision (Beta)</button>
                 </div>
             </div>
@@ -432,10 +434,10 @@ export function Controls(props) {
                 <h3>Model Persistence</h3>
                 <p className="persist-tip">Save the current weights, structure, and hyperparameters or share them as a portable JSON file.</p>
                 <div className="persist-grid">
-                    <button onClick={handleSaveLocal}>Save to Browser</button>
-                    <button onClick={handleLoadLocal}>Load from Browser</button>
-                    <button onClick={handleExportJSON}>Export JSON</button>
-                    <button onClick={() => fileInputRef.current?.click()}>Import JSON</button>
+                    <button onClick={handleSaveLocal} aria-label="Save model to browser storage">Save to Browser</button>
+                    <button onClick={handleLoadLocal} aria-label="Load model from browser storage">Load from Browser</button>
+                    <button onClick={handleExportJSON} aria-label="Export model as JSON file">Export JSON</button>
+                    <button onClick={() => fileInputRef.current?.click()} aria-label="Import model from JSON file">Import JSON</button>
                 </div>
                 <input
                     ref={fileInputRef}
@@ -455,13 +457,13 @@ export function Controls(props) {
             <div className="section">
                 <h3>Network Type</h3>
                 <div className="type-grid">
-                    <button className="active">Dense (MLP)</button>
+                    <button className="active" aria-current="true">Dense (MLP)</button>
                     <div className="ed-wrapper">
-                        <button disabled>CNN</button>
+                        <button disabled aria-disabled="true">CNN</button>
                         <Tooltip word="CNN" />
                     </div>
                     <div className="ed-wrapper">
-                        <button disabled>RNN</button>
+                        <button disabled aria-disabled="true">RNN</button>
                         <Tooltip word="RNN" />
                     </div>
                 </div>
