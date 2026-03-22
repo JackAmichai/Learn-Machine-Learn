@@ -11,7 +11,7 @@ export function CodeExport({ structure, hyperparams }) {
 
     if (!isOpen) {
         return (
-            <button className="btn-code" onClick={() => setIsOpen(true)}>
+            <button className="btn-code" onClick={() => setIsOpen(true)} aria-label="Show exported model code">
                 &lt;/&gt; Show Code <Tooltip word="Export" overrideText="View the code to build this model" />
             </button>
         );
@@ -72,12 +72,12 @@ export function CodeExport({ structure, hyperparams }) {
             <div className="code-modal">
                 <div className="modal-header">
                     <h3>Export Model Code</h3>
-                    <button className="close" onClick={() => setIsOpen(false)}>×</button>
+                    <button className="close" onClick={() => setIsOpen(false)} aria-label="Close export modal">×</button>
                 </div>
 
-                <div className="lang-tabs">
-                    <button className={lang === 'python' ? 'active' : ''} onClick={() => setLang('python')}>Python (Keras)</button>
-                    <button className={lang === 'js' ? 'active' : ''} onClick={() => setLang('js')}>JavaScript (TF.js)</button>
+                <div className="lang-tabs" role="tablist" aria-label="Programming Language">
+                    <button className={lang === 'python' ? 'active' : ''} onClick={() => setLang('python')} role="tab" aria-selected={lang === 'python'}>Python (Keras)</button>
+                    <button className={lang === 'js' ? 'active' : ''} onClick={() => setLang('js')} role="tab" aria-selected={lang === 'js'}>JavaScript (TF.js)</button>
                 </div>
 
                 <div className="code-block">
