@@ -188,7 +188,7 @@ export function useNeuralNetwork() {
 
     useEffect(() => {
         resetStepState('Configuration changed - run forward pass.');
-    }, [datasetParams.type, datasetParams.size, datasetParams.noise, mode, structure]);
+    }, [datasetParams.type, datasetParams.size, datasetParams.noise, mode, structure, batchSize]);
 
     useEffect(() => {
         if (mode === 'vision') {
@@ -312,7 +312,7 @@ export function useNeuralNetwork() {
             if (frameId) cancelAnimationFrame(frameId);
             if (timerId) clearTimeout(timerId);
         };
-    }, [isPlaying, trainingMode, slowDelay, network, getTrainingBatch]);
+    }, [isPlaying, trainingMode, slowDelay, network, getTrainingBatch, batchSize]);
 
     const addLayer = () => {
         applyStructure(prev => {
