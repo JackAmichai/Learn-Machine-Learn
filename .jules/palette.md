@@ -1,0 +1,3 @@
+## 2024-03-26 - Keyboard Navigation for Scrollable Regions
+**Learning:** Scrollable regions (like overflow: auto containers) are not focusable by default. Keyboard users cannot scroll them.
+**Action:** Always add `tabIndex={0}` to scrollable regions to ensure they can be focused and scrolled via keyboard navigation, improving accessibility. Include an appropriate `role` and `aria-label` to give context to screen reader users when they focus the region.
