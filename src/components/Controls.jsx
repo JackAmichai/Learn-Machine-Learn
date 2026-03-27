@@ -124,10 +124,12 @@ export function Controls(props) {
                     <button
                         className={mode === 'simple' ? 'active' : ''}
                         onClick={() => setMode('simple')}
+                        aria-pressed={mode === 'simple'}
                     >Simple 2D</button>
                     <button
                         className={mode === 'vision' ? 'active' : ''}
                         onClick={() => setMode('vision')}
+                        aria-pressed={mode === 'vision'}
                     >Vision (Beta)</button>
                 </div>
             </div>
