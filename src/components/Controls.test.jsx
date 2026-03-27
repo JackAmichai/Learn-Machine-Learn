@@ -69,4 +69,22 @@ describe('Controls Component', () => {
     const decreaseButton = screen.getByRole('button', { name: new RegExp(`decrease neurons in layer ${layerIndex}`, 'i') });
     expect(decreaseButton).toBeInTheDocument();
   });
+
+  it('rejects files larger than 5MB on import', async () => {
+    // We need userEvent to simulate file upload
+    const { userEvent } = await import('@testing-library/user-event');
+    const user = userEvent.setup();
+
+    render(<Controls {...mockProps} />);
+
+    // Create a mock file slightly larger than 5MB
+    const largeFile = new File([new ArrayBuffer(5 * 1024 * 1024 + 1)], 'large.json', { type: 'application/json' });
+
+    // The input[type="file"] is hidden
+    const fileInput = document.querySelector('input[type="file"]');
+    await user.upload(fileInput, largeFile);
+
+    expect(screen.getByText(/File too large\. Maximum size is 5MB\./)).toBeInTheDocument();
+    expect(mockProps.importModelJSON).not.toHaveBeenCalled();
+  });
 });
