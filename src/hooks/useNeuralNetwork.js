@@ -312,7 +312,7 @@ export function useNeuralNetwork() {
             if (frameId) cancelAnimationFrame(frameId);
             if (timerId) clearTimeout(timerId);
         };
-    }, [isPlaying, trainingMode, slowDelay, network, getTrainingBatch]);
+    }, [isPlaying, trainingMode, slowDelay, network, getTrainingBatch, batchSize]);
 
     const addLayer = () => {
         applyStructure(prev => {
@@ -404,14 +404,19 @@ export function useNeuralNetwork() {
         }
     };
 
-    const predictSample = (inputGrid) => {
+    const predictSample = async (inputGrid) => {
         if (!network.model) return null;
         // return class probs
-        const res = tf.tidy(() => {
-            const input = tf.tensor2d([Array.from(inputGrid)]);
-            return network.predict(input).dataSync();
-        });
-        return res; // Float32Array
+        let input, predsTensor;
+        try {
+            input = tf.tensor2d([Array.from(inputGrid)]);
+            predsTensor = network.predict(input);
+            const res = await predsTensor.data();
+            return res; // Float32Array
+        } finally {
+            if (input) input.dispose();
+            if (predsTensor) predsTensor.dispose();
+        }
     };
 
     const runForwardPass = async () => {
