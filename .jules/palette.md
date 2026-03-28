@@ -1,0 +1,3 @@
+## 2024-05-17 - Icon-Only Toggle Button Accessibility
+**Learning:** For icon-only toggle buttons (like `ThemeToggle`), using a static `aria-label` describing the feature (e.g., 'Dark Theme') and a dynamic `aria-pressed` attribute to communicate the current state to screen readers is much better than dynamically changing the `aria-label`. Dynamic labels can cause unexpected behavior and don't clearly convey that the element is a toggle.
+**Action:** Use a static `aria-label` with a dynamic `aria-pressed` attribute for all icon-only toggle buttons.
