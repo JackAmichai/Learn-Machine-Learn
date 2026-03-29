@@ -1,9 +1,27 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { CodeExport } from './CodeExport';
 
 describe('CodeExport Security', () => {
     const defaultStructure = [2, 4, 1];
+
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
+
+    it('should copy code to clipboard', () => {
+        const hyperparams = { activation: 'relu', optimizer: 'adam' };
+        Object.assign(navigator, { clipboard: { writeText: vi.fn() } });
+
+        render(<CodeExport structure={defaultStructure} hyperparams={hyperparams} />);
+        fireEvent.click(screen.getByText(/Show Code/i));
+
+        const copyButton = screen.getByRole('button', { name: /copy code to clipboard/i });
+        fireEvent.click(copyButton);
+
+        expect(navigator.clipboard.writeText).toHaveBeenCalled();
+        expect(copyButton.textContent).toBe('Copied!');
+    });
 
     it('should sanitize activation function to prevent code injection', () => {
         const maliciousHyperparams = {
