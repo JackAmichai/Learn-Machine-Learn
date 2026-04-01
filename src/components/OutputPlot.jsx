@@ -1,43 +1,82 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import * as tf from '@tensorflow/tfjs';
 
 export function OutputPlot({ model, data, modelVersion }) {
     const canvasRef = useRef(null);
+    const [predsData, setPredsData] = useState(null);
+
+    useEffect(() => {
+        let isMounted = true;
+
+        // Optimization: Use async predictions extraction to prevent blocking the UI thread
+        // Replacing synchronous dataSync() with await data() eliminates severe UI jank during training
+        async function fetchPredictions() {
+            if (!model || !data) {
+                if (isMounted) setPredsData(null);
+                return;
+            }
+
+            const gridSize = 50;
+            const inputs = [];
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    const x = (i / gridSize) * 3 - 1.5;
+                    const y = (j / gridSize) * 3 - 1.5;
+                    inputs.push([x, y]);
+                }
+            }
+
+            let inputTensor;
+            let predsTensor;
+            try {
+                inputTensor = tf.tensor2d(inputs);
+                predsTensor = model.predict(inputTensor);
+                // Extract values asynchronously to keep the main thread free
+                const dataArr = await predsTensor.data();
+                if (isMounted) {
+                    setPredsData(dataArr);
+                }
+            } catch (err) {
+                console.error('Error fetching output predictions:', err);
+                if (isMounted) {
+                    setPredsData(null);
+                }
+            } finally {
+                // Must manually dispose tensors when using async, as tf.tidy is synchronous-only
+                if (inputTensor) inputTensor.dispose();
+                if (predsTensor) predsTensor.dispose();
+            }
+        }
+
+        fetchPredictions();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [model, data, modelVersion]);
 
     useEffect(() => {
         const canvas = canvasRef.current;
-        if (!canvas || !model || !data) return;
+        if (!canvas || !data) return;
 
         const ctx = canvas.getContext('2d');
         const width = canvas.width;
         const height = canvas.height;
 
+        // Clear canvas
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, width, height);
+
         // 1. Draw Decision Boundary (Grid)
-        // We create a grid of inputs
-        const gridSize = 50; // resolution
-        const inputs = [];
-
-        for (let i = 0; i < gridSize; i++) {
-            for (let j = 0; j < gridSize; j++) {
-                // Map 0..width to -1.5..1.5
-                const x = (i / gridSize) * 3 - 1.5;
-                const y = (j / gridSize) * 3 - 1.5; // Inverted Y usually in canvas? 
-                // Actually, let's keep it simple math coords.
-                inputs.push([x, y]); // TF logic handles y direction
-            }
-        }
-
-        tf.tidy(() => {
-            const inputTensor = tf.tensor2d(inputs);
-            const preds = model.predict(inputTensor).dataSync();
-
-            // Draw the heatmap
+        if (predsData) {
+            const gridSize = 50;
             const wCell = width / gridSize;
             const hCell = height / gridSize;
 
             for (let i = 0; i < gridSize; i++) {
                 for (let j = 0; j < gridSize; j++) {
-                    const val = preds[i * gridSize + j];
+                    const val = predsData[i * gridSize + j];
 
                     // Premium look: Purple (0) → Cyan (1)
                     const c1 = [112, 0, 255];
@@ -48,15 +87,10 @@ export function OutputPlot({ model, data, modelVersion }) {
                     const bComp = c1[2] + (c2[2] - c1[2]) * val;
 
                     ctx.fillStyle = `rgba(${rComp}, ${gComp}, ${bComp}, 0.3)`;
-                    // Correction for canvas Y axis (0 is top)
-                    // Math y=-1.5 is bottom. Canvas y=height is bottom.
-                    // x is i, y is j.
-
-                    // Draw rect
                     ctx.fillRect(i * wCell, height - (j + 1) * hCell, wCell, hCell);
                 }
             }
-        });
+        }
 
         // 2. Draw Data Points
         if (data.points) {
@@ -76,7 +110,7 @@ export function OutputPlot({ model, data, modelVersion }) {
             });
         }
 
-    }, [model, data, modelVersion]);
+    }, [data, predsData]);
 
     return (
         <div style={{ position: 'relative', width: '100%', height: '100%' }}>
