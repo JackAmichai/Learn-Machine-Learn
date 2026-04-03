@@ -184,12 +184,14 @@ export function Controls(props) {
                             <button
                                 onClick={runForwardPass}
                                 disabled={stepState.busy || stepState.phase !== 'forward'}
+                                aria-label="Forward Pass (Run one step)"
                             >
                                 Forward Pass
                             </button>
                             <button
                                 onClick={runBackwardPass}
                                 disabled={stepState.busy || stepState.phase !== 'backward'}
+                                aria-label="Backward Pass (Update weights)"
                             >
                                 Backward Pass
                             </button>
@@ -432,10 +434,10 @@ export function Controls(props) {
                 <h3>Model Persistence</h3>
                 <p className="persist-tip">Save the current weights, structure, and hyperparameters or share them as a portable JSON file.</p>
                 <div className="persist-grid">
-                    <button onClick={handleSaveLocal}>Save to Browser</button>
-                    <button onClick={handleLoadLocal}>Load from Browser</button>
-                    <button onClick={handleExportJSON}>Export JSON</button>
-                    <button onClick={() => fileInputRef.current?.click()}>Import JSON</button>
+                    <button onClick={handleSaveLocal} aria-label="Save to Browser Local Storage">Save to Browser</button>
+                    <button onClick={handleLoadLocal} aria-label="Load from Browser Local Storage">Load from Browser</button>
+                    <button onClick={handleExportJSON} aria-label="Export JSON file of the model">Export JSON</button>
+                    <button onClick={() => fileInputRef.current?.click()} aria-label="Import JSON file of a model">Import JSON</button>
                 </div>
                 <input
                     ref={fileInputRef}

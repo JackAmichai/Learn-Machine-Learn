@@ -72,7 +72,7 @@ export const NetworkGraph = memo(function NetworkGraph({ model, structure, model
     };
 
     return (
-        <svg width="100%" height="100%" viewBox={`0 0 ${svgWidth} ${svgHeight}`} style={{ overflow: 'visible' }}>
+        <svg width="100%" height="100%" viewBox={`0 0 ${svgWidth} ${svgHeight}`} style={{ overflow: 'visible' }} role="img" aria-label="Neural network architecture visualization">
             {/* Connections */}
             {structure.map((layerSize, lIdx) => {
                 if (lIdx === structure.length - 1) return null; // No connections from output forward
