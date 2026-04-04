@@ -73,7 +73,7 @@ export class NeuralNetwork {
 
     // Validate output activation
     if (safeConfig.outputActivation && !ALLOWED_ACTIVATIONS.includes(safeConfig.outputActivation)) {
-      console.warn(`Invalid output activation '${safeConfig.outputActivation}'. Defaulting to 'sigmoid'.`);
+      console.warn(`Invalid outputActivation '${safeConfig.outputActivation}'. Defaulting to 'sigmoid'.`);
       safeConfig.outputActivation = 'sigmoid';
     }
 
@@ -333,6 +333,24 @@ export class NeuralNetwork {
   }
 
   /**
+   * Gets connection weights as a flat Float32Array asynchronously.
+   * @param {number} layerIndex - Index of the connection layer
+   * @returns {Promise<Float32Array|null>} Weight values or null if invalid
+   */
+  async getConnectionWeightsAsync(layerIndex) {
+    if (!this.connectionLayers[layerIndex]) return null;
+    try {
+      const weights = this.connectionLayers[layerIndex].getWeights();
+      if (!weights.length) return null;
+      const kernel = weights[0];
+      return await kernel.data();
+    } catch (e) {
+      console.error('Error fetching connection weights:', e);
+      return null;
+    }
+  }
+
+  /**
    * Serializes all model weights to nested arrays.
    * Useful for saving/restoring model state.
    * @returns {Array} Serialized weights per layer
@@ -409,6 +427,51 @@ export class NeuralNetwork {
       }
       return deadMap;
     });
+  }
+
+  /**
+   * Scans the network for dead neurons asynchronously.
+   * @param {tf.Tensor2D} xs - Input batch
+   * @returns {Promise<Object>} Map of layerIndex -> Array of dead neuron indices
+   */
+  async scanForDeadNeuronsAsync(xs) {
+    if (!this.model) return {};
+
+    const deadMap = {};
+    let current = xs;
+    let denseLayerIndex = 1;
+    let isInitial = true;
+
+    try {
+      for (const layer of this.model.layers) {
+        const next = layer.apply(current);
+        if (!isInitial) current.dispose();
+        current = next;
+        isInitial = false;
+
+        if (layer.getClassName() === 'Dense') {
+          const maxActivations = current.max(0);
+          const isDead = maxActivations.lessEqual(1e-5);
+          maxActivations.dispose();
+          const deadIndices = [];
+          const deadData = await isDead.data();
+          isDead.dispose();
+
+          for (let j = 0; j < deadData.length; j++) {
+            if (deadData[j]) deadIndices.push(j);
+          }
+
+          if (deadIndices.length > 0) {
+            deadMap[denseLayerIndex] = deadIndices;
+          }
+
+          denseLayerIndex++;
+        }
+      }
+    } finally {
+      if (!isInitial) current.dispose();
+    }
+    return deadMap;
   }
 
   /**
