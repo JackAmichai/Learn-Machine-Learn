@@ -1,0 +1,3 @@
+## 2024-04-04 - Accessible Emojis as Icons
+**Learning:** When using raw Unicode emojis (like ▶ or ⏸) as visual icons next to text, screen readers will often announce the literal character name (e.g., "Black Right-Pointing Triangle Train" or "Double Vertical Bar Pause"), which creates a confusing and verbose experience for assistive technology users.
+**Action:** Always wrap decorative Unicode emojis and symbols in a `<span aria-hidden="true">` wrapper so they are hidden from the accessibility tree, allowing the adjacent text (e.g., "Train" or "Pause") to serve as the clear, accessible name.
