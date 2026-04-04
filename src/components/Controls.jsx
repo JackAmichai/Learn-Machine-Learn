@@ -145,7 +145,11 @@ export function Controls(props) {
                     aria-pressed={isPlaying}
                     disabled={trainingMode === 'step'}
                 >
-                    {isPlaying ? 'Pause' : 'Train'}
+                    {isPlaying ? (
+                        <><span aria-hidden="true">⏸</span> Pause</>
+                    ) : (
+                        <><span aria-hidden="true">▶</span> Train</>
+                    )}
                 </button>
                 <div className="train-mode-toggle" role="group" aria-label="Training playback mode">
                     {[
