@@ -184,7 +184,7 @@ export function useNeuralNetwork() {
         if (trainingMode === 'step' && isPlaying) {
             setIsPlaying(false);
         }
-    }, [trainingMode, isPlaying]);
+    }, [trainingMode, isPlaying, batchSize]);
 
     useEffect(() => {
         resetStepState('Configuration changed - run forward pass.');
@@ -312,7 +312,7 @@ export function useNeuralNetwork() {
             if (frameId) cancelAnimationFrame(frameId);
             if (timerId) clearTimeout(timerId);
         };
-    }, [isPlaying, trainingMode, slowDelay, network, getTrainingBatch]);
+    }, [isPlaying, trainingMode, slowDelay, network, getTrainingBatch, batchSize]);
 
     const addLayer = () => {
         applyStructure(prev => {
