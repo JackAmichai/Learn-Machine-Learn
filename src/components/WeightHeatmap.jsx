@@ -1,4 +1,4 @@
-import { useRef, useEffect, useMemo } from 'react';
+import { useRef, useEffect, useMemo, useState } from 'react';
 
 export function WeightHeatmap({ model, modelVersion, structure }) {
     const containerRef = useRef(null);
@@ -32,36 +32,78 @@ export function WeightHeatmap({ model, modelVersion, structure }) {
             }
         }
 
-        // Fallback to legacy direct layer access if helper is unavailable
-        if (!model.model || !model.model.layers?.length) return null;
-        const layer = model.model.layers[0];
-        if (!layer) return null;
-        try {
-            const weights = layer.getWeights();
-            if (!weights.length) return null;
-            const wTensor = weights[0];
-            const snapshot = [];
-            // dataSync returns a copy - do NOT dispose the original tensors
-            const wData = wTensor.dataSync();
-            for (let u = 0; u < units; u++) {
-                const arr = new Float32Array(inputDim);
-                for (let i = 0; i < inputDim; i++) {
-                    arr[i] = wData[i * units + u];
-                }
-                snapshot.push(arr);
-            }
-            return snapshot;
-        } catch (error) {
-            console.error('Heatmap error', error);
-            return null;
-        }
+        // Let useEffect handle async data gathering instead of useMemo
+        return null;
     }, [modelVersion, model, structure]);
+
+    const [weightsDataAsync, setWeightsDataAsync] = useState(null);
+
+    useEffect(() => {
+        let isMounted = true;
+
+        async function fetchWeights() {
+            if (modelVersion === null || modelVersion === undefined) {
+                if (isMounted) setWeightsDataAsync(null);
+                return;
+            }
+            if (!model || !Array.isArray(structure) || structure.length < 2) {
+                if (isMounted) setWeightsDataAsync(null);
+                return;
+            }
+            const inputDim = structure[0];
+            const units = structure[1];
+            if (inputDim !== 100 || !units) {
+                if (isMounted) setWeightsDataAsync(null);
+                return;
+            }
+
+            try {
+                let kernelData;
+                if (typeof model.getConnectionWeightsAsync === 'function') {
+                    kernelData = await model.getConnectionWeightsAsync(0);
+                } else if (model.model && model.model.layers?.length > 0) {
+                    const layer = model.model.layers[0];
+                    if (layer) {
+                        const weights = layer.getWeights();
+                        if (weights.length > 0) {
+                            const wTensor = weights[0];
+                            kernelData = await wTensor.data();
+                        }
+                    }
+                }
+
+                if (!kernelData || !isMounted) return;
+
+                const snapshot = [];
+                for (let u = 0; u < units; u++) {
+                    const arr = new Float32Array(inputDim);
+                    for (let i = 0; i < inputDim; i++) {
+                        arr[i] = kernelData[i * units + u];
+                    }
+                    snapshot.push(arr);
+                }
+                if (isMounted) {
+                    setWeightsDataAsync(snapshot);
+                }
+            } catch (error) {
+                console.error('Heatmap async error', error);
+                if (isMounted) setWeightsDataAsync(null);
+            }
+        }
+
+        fetchWeights();
+
+        return () => { isMounted = false; };
+    }, [modelVersion, model, structure]);
+
+    // Use weightsData from useMemo (if we restored it) or weightsDataAsync
+    const finalWeightsData = weightsData || weightsDataAsync;
 
     return (
         <div className="heatmap-container" ref={containerRef}>
             <h3>what the brain sees (layer 1 weights)</h3>
             <div className="heatmap-grid">
-                {weightsData && weightsData.slice(0, 8).map((w, i) => (
+                {finalWeightsData && finalWeightsData.slice(0, 8).map((w, i) => (
                     <UnitHeatmap key={i} weights={w} index={i} />
                 ))}
             </div>

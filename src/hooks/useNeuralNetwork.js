@@ -404,14 +404,19 @@ export function useNeuralNetwork() {
         }
     };
 
-    const predictSample = (inputGrid) => {
+    const predictSample = async (inputGrid) => {
         if (!network.model) return null;
         // return class probs
-        const res = tf.tidy(() => {
-            const input = tf.tensor2d([Array.from(inputGrid)]);
-            return network.predict(input).dataSync();
-        });
-        return res; // Float32Array
+        let inputTensor, predsTensor;
+        try {
+            inputTensor = tf.tensor2d([Array.from(inputGrid)]);
+            predsTensor = network.predict(inputTensor);
+            const res = await predsTensor.data();
+            return res; // Float32Array
+        } finally {
+            if (inputTensor) inputTensor.dispose();
+            if (predsTensor) predsTensor.dispose();
+        }
     };
 
     const runForwardPass = async () => {

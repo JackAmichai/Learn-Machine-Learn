@@ -31,12 +31,16 @@ export const NetworkGraph = memo(function NetworkGraph({ model, structure, model
                 }
                 // Legacy fallback
                 else if (model.model && model.model.layers) {
-                    const results = model.model.layers.map(layer => {
+                    const results = [];
+                    for (const layer of model.model.layers) {
                         const weights = layer.getWeights();
-                        if (!weights.length) return null;
-                        const kernel = weights[0];
-                        return kernel ? kernel.dataSync() : null;
-                    });
+                        if (!weights.length) {
+                            results.push(null);
+                        } else {
+                            const kernel = weights[0];
+                            results.push(kernel ? await kernel.data() : null);
+                        }
+                    }
                     if (isMounted) setConnectionWeights(results);
                 } else {
                     if (isMounted) setConnectionWeights([]);
