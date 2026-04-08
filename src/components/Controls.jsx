@@ -219,10 +219,10 @@ export function Controls(props) {
             <div className="section">
                 <h3>Hyperparameters</h3>
                 <div className="hp-grid">
-                    <label><Tooltip word="Learning Rate" /></label>
+                    <label htmlFor="learning-rate"><Tooltip word="Learning Rate" /></label>
                     <div className="lr-control">
                         <input
-                            aria-label="Learning Rate"
+                            id="learning-rate"
                             type="range"
                             min="0.001" max="0.3" step="0.001"
                             value={hyperparams.learningRate}
@@ -231,9 +231,9 @@ export function Controls(props) {
                         <span>{hyperparams.learningRate}</span>
                     </div>
 
-                    <label><Tooltip word="Activation" /></label>
+                    <label htmlFor="activation-function"><Tooltip word="Activation" /></label>
                     <select
-                        aria-label="Activation Function"
+                        id="activation-function"
                         value={hyperparams.activation}
                         onChange={(e) => updateHyperparams({ activation: e.target.value })}
                     >
@@ -243,9 +243,9 @@ export function Controls(props) {
                         <option value="linear">Linear</option>
                     </select>
 
-                    <label><Tooltip word="Optimizer" /></label>
+                    <label htmlFor="optimizer"><Tooltip word="Optimizer" /></label>
                     <select
-                        aria-label="Optimizer"
+                        id="optimizer"
                         value={hyperparams.optimizer}
                         onChange={(e) => updateHyperparams({ optimizer: e.target.value })}
                     >
@@ -253,10 +253,10 @@ export function Controls(props) {
                         <option value="sgd">SGD</option>
                     </select>
 
-                    <label><Tooltip word="Batch Size" /></label>
+                    <label htmlFor="batch-size"><Tooltip word="Batch Size" /></label>
                     <div className="lr-control">
                         <input
-                            aria-label="Batch Size"
+                            id="batch-size"
                             type="range"
                             min="1" max="128" step="1"
                             value={hyperparams.batchSize || 32}
