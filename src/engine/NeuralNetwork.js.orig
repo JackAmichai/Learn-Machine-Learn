@@ -18,7 +18,7 @@ const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
  * Neural network wrapper class for TensorFlow.js.
  * Provides a simplified interface for creating, training, and managing
  * neural network models with support for various architectures and features.
- * 
+ *
  * @example
  * const nn = new NeuralNetwork({ learningRate: 0.01 });
  * nn.createModel([2, 8, 4, 1]); // 2 inputs, 2 hidden layers, 1 output
@@ -73,7 +73,7 @@ export class NeuralNetwork {
 
     // Validate output activation
     if (safeConfig.outputActivation && !ALLOWED_ACTIVATIONS.includes(safeConfig.outputActivation)) {
-      console.warn(`Invalid outputActivation '${safeConfig.outputActivation}'. Defaulting to 'sigmoid'.`);
+      console.warn(`Invalid output activation '${safeConfig.outputActivation}'. Defaulting to 'sigmoid'.`);
       safeConfig.outputActivation = 'sigmoid';
     }
 
