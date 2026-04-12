@@ -1,0 +1,3 @@
+## 2024-11-20 - Asynchronous Tensor Extraction in Rendering Loops
+**Learning:** `tf.tidy()` strictly relies on synchronous execution to track and clean up tensors. It cannot be used with async code like `await tensor.data()`. If you replace `dataSync()` with `data()` to unblock the main UI thread during renders (e.g., drawing 50x50 grids), you must remove `tf.tidy()` and manually dispose of the tensors to prevent GPU memory leaks.
+**Action:** When extracting large tensors asynchronously within React components, use a standard `try/finally` block to manually call `.dispose()` on all locally created tensors.
