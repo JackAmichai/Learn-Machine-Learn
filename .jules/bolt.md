@@ -17,3 +17,7 @@
 ## 2024-05-22 - Asynchronous TF.js Operations and React State
 **Learning:** Replacing synchronous `.dataSync()` with asynchronous `.data()` inside React `useEffect` hooks introduces risks of out-of-order execution, memory leaks, and updating unmounted components. Furthermore, asynchronous tensor resolution cannot be wrapped in `tf.tidy()`.
 **Action:** Always implement a manual `.dispose()` cleanup in a `finally` block and use an `isMounted` flag pattern when fetching tensor data asynchronously in React to guarantee cleanup and prevent warnings.
+
+## 2024-05-22 - GitHub Actions npm Dependency Bug
+**Learning:** `npm` sometimes fails with missing optional dependencies (like `@rollup/rollup-linux-x64-gnu`) on GitHub Actions Linux runners.
+**Action:** When working on this codebase, always switch `.github/workflows/ci.yml` from using `npm` to using `pnpm` (which handles optional dependencies reliably). Use `corepack enable pnpm` before the `actions/setup-node` step.
