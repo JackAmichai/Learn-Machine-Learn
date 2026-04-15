@@ -1,65 +1,4 @@
 export const MATH_TOPICS = {
-    "LinearRegression": {
-        title: "Linear Regression: Fitting the Line",
-        content: `
-            <p><strong>Linear Regression</strong> finds the best-fitting straight line through data points. It's the simplest form of supervised learning!</p>
-            <div class="equation">y = mx + b</div>
-            <p>The goal is to minimize the distance between the line and the actual data points (usually using Mean Squared Error).</p>
-        `,
-        interactiveFormulas: [
-            {
-                name: "Prediction",
-                components: [
-                    { symbol: "ŷ", key: "pred", name: "Prediction", description: "Predicted value" },
-                    { symbol: " = m", key: "slope", name: "Slope", description: "Weight of input" },
-                    { symbol: " * x + b", key: "bias", name: "Intercept", description: "Bias term" }
-                ],
-                variables: [
-                    { key: "m", symbol: "m", name: "Slope", min: -5, max: 5, step: 0.1, default: 1, decimals: 1 },
-                    { key: "x", symbol: "x", name: "Input", min: -10, max: 10, step: 1, default: 5, decimals: 0 },
-                    { key: "b", symbol: "b", name: "Intercept", min: -5, max: 5, step: 0.1, default: 0, decimals: 1 }
-                ],
-                calculate: (vals, get) => get("m", 1) * get("x", 5) + get("b", 0),
-                insights: [
-                    "Slope (m) determines the direction and steepness.",
-                    "Intercept (b) moves the line up or down.",
-                    "Residuals are the vertical distances from points to the line."
-                ]
-            }
-        ]
-    },
-    "LogisticRegression": {
-        title: "Logistic Regression: Binary Classification",
-        content: `
-            <p><strong>Logistic Regression</strong> predicts the probability that an input belongs to a certain class. It uses the Sigmoid function to squash linear output between 0 and 1.</p>
-            <div class="equation">P(y=1|x) = σ(mx + b)</div>
-        `,
-        interactiveFormulas: [
-            {
-                name: "Probability",
-                components: [
-                    { symbol: "P", key: "prob", name: "Probability", description: "Class 1 probability" },
-                    { symbol: " = 1 / (1 + e^-(", key: "prefix", name: "Sigmoid", description: "Squashing function" },
-                    { symbol: "m*x + b", key: "linear", name: "Linear Part", description: "Weighted sum" },
-                    { symbol: "))", key: "suffix", name: "End", description: "" }
-                ],
-                variables: [
-                    { key: "m", symbol: "m", name: "Slope", min: -5, max: 5, step: 0.1, default: 2, decimals: 1 },
-                    { key: "x", symbol: "x", name: "Input", min: -5, max: 5, step: 0.1, default: 1, decimals: 1 },
-                    { key: "b", symbol: "b", name: "Intercept", min: -5, max: 5, step: 0.1, default: -1, decimals: 1 }
-                ],
-                calculate: (vals, get) => {
-                    const z = get("m", 2) * get("x", 1) + get("b", -1);
-                    return 1 / (1 + Math.exp(-z));
-                },
-                insights: [
-                    "Output is always between 0 and 1.",
-                    "Decision boundary is where P = 0.5 (z = 0).",
-                    "Used heavily as the output layer of neural networks."
-                ]
-            }
-        ]
-    },
     "SVM": {
         title: "SVM: Support Vector Machines",
         content: `
@@ -114,6 +53,32 @@ export const MATH_TOPICS = {
                     "Gini = 0 means a node is perfectly pure (all one class).",
                     "Gini = 0.5 (for 2 classes) is maximum impurity.",
                     "Trees are prone to overfitting without 'pruning'."
+                ]
+            }
+        ]
+    },
+    "RandomForest": {
+        title: "Random Forests: Ensemble Learning",
+        content: `
+            <p><strong>Random Forests</strong> combine multiple Decision Trees to reduce overfitting and improve accuracy. This is a technique called <strong>Bagging</strong> (Bootstrap Aggregating).</p>
+        `,
+        visualizer: "RandomForest",
+        interactiveFormulas: [
+            {
+                name: "Ensemble Prediction",
+                components: [
+                    { symbol: "Vote", key: "vote", name: "Tree Votes", description: "Average or majority" },
+                    { symbol: " = Σ(t_i) / n", key: "formula", name: "Formula", description: "Aggregate predictions" }
+                ],
+                variables: [
+                    { key: "numTrees", symbol: "N", name: "Number of Trees", min: 1, max: 100, step: 1, default: 10, decimals: 0 },
+                    { key: "featureSubset", symbol: "m", name: "Feature Subset %", min: 10, max: 100, step: 10, default: 50, decimals: 0 }
+                ],
+                calculate: (vals, get) => get("numTrees", 10),
+                insights: [
+                    "More trees reduce variance (overfitting) without increasing bias.",
+                    "Random subsets of features force trees to be diverse.",
+                    "The final prediction is typically a majority vote (classification) or average (regression)."
                 ]
             }
         ]
@@ -2531,6 +2496,7 @@ export const MATH_TOPICS = {
             <div class="equation">W = W₀ + ΔW = W₀ + B * A</div>
             <p>A (d×r) and B (r×d) are much smaller than W₀ (d×d) when the rank <strong>r</strong> is small (e.g., 8 vs 4096).</p>
         `,
+        visualizer: "LoRA",
         interactiveFormulas: [
             {
                 name: "LoRA Parameter Savings",
