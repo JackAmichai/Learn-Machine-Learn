@@ -141,11 +141,12 @@ export const MATH_TOPICS = {
  }
  ]
  },
- "KNN": {
- title: "KNN: K-Nearest Neighbors",
- content: `
- <p><strong>KNN</strong> classifies a point based on the majority class of its 'k' closest neighbors. It's a 'lazy learner' (no training phase).</p>
- `,
+"KNN": {
+  title: "KNN: K-Nearest Neighbors",
+  content: `
+  <p><strong>KNN</strong> classifies a point based on the majority class of its 'k' closest neighbors. It's a 'lazy learner' (no training phase).</p>
+  `,
+  visualizer: "KNN",
  interactiveFormulas: [
  {
  name: "Euclidean Distance",
@@ -166,12 +167,13 @@ export const MATH_TOPICS = {
  }
  ]
  },
- "PCA": {
- title: "PCA: Principal Component Analysis",
- content: `
- <p><strong>PCA</strong> reduces data dimensions while preserving as much variance as possible. It finds new axes (Principal Components) that are orthogonal.</p>
- `,
- interactiveFormulas: [
+"PCA": {
+  title: "PCA: Principal Component Analysis",
+  content: `
+  <p><strong>PCA</strong> reduces data dimensions while preserving as much variance as possible. It finds new axes (Principal Components) that are orthogonal.</p>
+  `,
+  visualizer: "PCA",
+  interactiveFormulas: [
  {
  name: "Explained Variance",
  components: [
@@ -197,38 +199,18 @@ export const MATH_TOPICS = {
  }
  ]
  },
- "Loss": {
- title: "Loss Functions: Measuring Error",
- content: `
- <p>The <strong>Loss Function</strong> converts model mistakes into a single number we can minimize. Lower loss means better predictions.</p>
-
- <h4>Mean Squared Error (MSE)</h4>
- <p>Classic regression loss. Squaring the difference punishes large mistakes strongly.</p>
- <div class="equation">
- MSE = (1 / n) * sum (y - y_hat)^2
- </div>
-
- <h4>Binary Cross-Entropy</h4>
- <p>Common for two-class classification (like vision mode). Uses logarithms to punish confident wrong answers.</p>
- <div class="equation">
- Loss = - [ y * log(p) + (1 - y) * log(1 - p) ]
- </div>
-
- <h4>Weighted Cross-Entropy</h4>
- <p>Useful when classes are imbalanced (e.g., rare faults in hardware). You can up-weight important classes.</p>
- <div class="equation">
- Loss = - [ w_pos * y * log(p) + w_neg * (1 - y) * log(1 - p) ]
- </div>
-
- <h4>Huber Loss</h4>
- <p>A robust loss function for regression. It's quadratic for small errors and linear for large ones, making it less sensitive to outliers than MSE.</p>
-
- <h4>Hinge Loss</h4>
- <p>Used primarily for SVMs. It provides a margin for classification, only penalizing points that are on the wrong side of the margin or too close to it.</p>
- <div class="equation">
- Loss = max(0, 1 - y * ŷ)
- </div>
- `,
+"Loss": {
+  title: "Loss Functions: Measuring Error",
+  content: `
+  <p>The <strong>Loss Function</strong> converts model mistakes into a single number we can minimize. Lower loss means better predictions.</p>
+ 
+  <h4>Mean Squared Error (MSE)</h4>
+  <p>Classic regression loss. Squaring the difference punishes large mistakes strongly.</p>
+  <div class="equation">
+  MSE = (1 / n) * sum (y - y_hat)^2
+  </div>
+  `,
+  visualizer: "Loss",
  interactiveFormulas: [
  {
  name: "Huber Loss",
@@ -476,23 +458,15 @@ export const MATH_TOPICS = {
  "Helps networks converge without oscillation." 
  ]
  }
- ]
- },
- "Activation": {
- title: "Activation Functions = Signal Shapers",
- content: `
- <p>Activations transform summed inputs before passing them onward. They introduce non-linearity so the network can learn complex patterns and logic gates.</p>
-
- <h4>Sigmoid</h4>
- <p>Maps any input to 0-1. Mimics a smooth switch. Used for probabilities and in logistic regression.</p>
-
- <h4>ReLU</h4>
- <p>Outputs max(0, x). Fast, simple, and works well in practice. Similar to diode behavior familiar in circuits.</p>
-
- <h4>Tanh</h4>
- <p>Outputs -1 to 1. Great for zero-centered data. Common in recurrent networks modeling signals.</p>
- `,
- interactiveFormulas: [
+  ]
+  },
+  "Activation": {
+  title: "Activation Functions = Signal Shapers",
+   content: `
+   <p>Activations transform summed inputs before passing them onward. They introduce non-linearity so the network can learn complex patterns and logic gates.</p>
+  `,
+   visualizer: "Activation",
+   interactiveFormulas: [
  {
  name: "Sigmoid",
  parts: [
@@ -631,18 +605,13 @@ export const MATH_TOPICS = {
  }
  ]
  },
- "Optimizer": {
- title: "Optimizers: Strategies for Weight Updates",
- content: `
- <p>Optimizers decide how gradients adjust weights. Different strategies balance speed, stability, and memory.</p>
-
- <h4>SGD</h4>
- <p>Stochastic Gradient Descent applies raw gradients with optional momentum.</p>
-
- <h4>Adam</h4>
- <p>Adaptive Moment Estimation keeps running averages of gradients (m) and squared gradients (v). Very popular in deep learning.</p>
- `,
- interactiveFormulas: [
+   "Optimizer": {
+   title: "Optimizers: Strategies for Weight Updates",
+   content: `
+   <p>Optimizers decide how gradients adjust weights. Different strategies balance speed, stability, and memory.</p>
+   `,
+   visualizer: "Optimizer",
+   interactiveFormulas: [
  {
  name: "SGD with Momentum",
  parts: [
@@ -832,13 +801,14 @@ export const MATH_TOPICS = {
  }
  ]
  },
- "Gradient": {
- title: "Gradients: Directions for Learning",
- content: `
- <p>A <strong>Gradient</strong> is a vector of partial derivatives telling us which way the loss increases. The negative gradient points downhill.</p>
- <p>In calculus terms, it is like measuring slope along each axis. In engineering, think of it as sensitivity analysis.</p>
- `,
- interactiveFormulas: [
+"Gradient": {
+  title: "Gradients: Directions for Learning",
+  content: `
+  <p>A <strong>Gradient</strong> is a vector of partial derivatives telling us which way the loss increases. The negative gradient points downhill.</p>
+  <p>In calculus terms, it is like measuring slope along each axis. In engineering, think of it as sensitivity analysis.</p>
+  `,
+  visualizer: "GradientDescent",
+  interactiveFormulas: [
  {
  name: "Gradient Magnitude",
  parts: [
@@ -1509,21 +1479,13 @@ export const MATH_TOPICS = {
  }
  ]
  },
- "GAN": {
- title: "Generative Adversarial Networks",
- content: `
- <p>A <strong>GAN</strong> has two networks competing: a <strong>Generator</strong> that creates fake images, and a <strong>Discriminator</strong> that tries to distinguish real from fake.</p>
- 
- <h4>Generator</h4>
- <p>Takes random noise and produces images. Learns to fool the discriminator.</p>
- 
- <h4>Discriminator</h4>
- <p>Binary classifier - real vs fake. Gets fooled when generator improves.</p>
- 
- <h4>Minimax Game</h4>
- <p>Generator wants to minimize discriminator accuracy. Discriminator wants to maximize it.</p>
- `,
- interactiveFormulas: [
+"GAN": {
+   title: "Generative Adversarial Networks",
+   content: `
+   <p>A <strong>GAN</strong> has two networks competing: a <strong>Generator</strong> that creates fake images, and a <strong>Discriminator</strong> that tries to distinguish real from fake.</p>
+   `,
+   visualizer: "GAN",
+   interactiveFormulas: [
  {
  name: "Generator Loss",
  parts: [
@@ -1634,21 +1596,13 @@ export const MATH_TOPICS = {
  }
  ]
  },
- "Pooling": {
- title: "Pooling: Spatial Downsampling",
- content: `
- <p><strong>Pooling</strong> reduces spatial dimensions while retaining important information. Essential for vision networks.</p>
- 
- <h4>Max Pooling</h4>
- <p>Takes the maximum value in each window. Preserves the strongest features. Most common.</p>
- 
- <h4>Average Pooling</h4>
- <p>Takes the average of each window. Smoother, preserves background information.</p>
- 
- <h4>Global Pooling</h4>
- <p>Pools over entire feature map to get a single value per channel. Often replaces FC layers.</p>
- `,
- interactiveFormulas: [
+"Pooling": {
+   title: "Pooling: Spatial Downsampling",
+   content: `
+   <p><strong>Pooling</strong> reduces spatial dimensions while retaining important information. Essential for vision networks.</p>
+   `,
+   visualizer: "Pooling",
+   interactiveFormulas: [
  {
  name: "Output Size Calculator",
  parts: [
@@ -2235,18 +2189,13 @@ export const MATH_TOPICS = {
  }
  ]
  },
- "MDP": {
- title: "MDP: Markov Decision Processes",
- content: `
- <p><strong>MDPs</strong> provide a mathematical framework for modeling decision making in situations where outcomes are partly random and partly under the control of a decision maker.</p>
- <h4>The Tuple (S, A, P, R, γ)</h4>
- <p>• <strong>S</strong>: State space (where you are)<br/>
- • <strong>A</strong>: Action space (what you can do)<br/>
- • <strong>P</strong>: Transition probability (where you go)<br/>
- • <strong>R</strong>: Reward function (what you get)<br/>
- • <strong>γ</strong>: Discount factor (how much you value future rewards)</p>
- `,
- interactiveFormulas: [
+"MDP": {
+   title: "MDP: Markov Decision Processes",
+   content: `
+   <p><strong>MDPs</strong> provide a mathematical framework for modeling decision making in situations where outcomes are partly random and partly under the control of a decision maker.</p>
+   `,
+   visualizer: "MDP",
+   interactiveFormulas: [
  {
  name: "Discounted Return",
  components: [
@@ -2307,15 +2256,13 @@ export const MATH_TOPICS = {
  }
  ]
  },
- "DeepQN": {
- title: "Deep Q-Networks (DQN): Scaling RL",
- content: `
- <p><strong>DQN</strong> uses a deep neural network to approximate the Q-value function. This allows RL to scale to complex environments like Atari games.</p>
- <h4>Innovations</h4>
- <p>• <strong>Experience Replay</strong>: Store and sample transitions to break correlation.<br/>
- • <strong>Target Network</strong>: Use a separate, slowly-updating network to stabilize training.</p>
- `,
- interactiveFormulas: [
+"DeepQN": {
+   title: "Deep Q-Networks (DQN): Scaling RL",
+   content: `
+   <p><strong>DQN</strong> uses a deep neural network to approximate the Q-value function. This allows RL to scale to complex environments like Atari games.</p>
+   `,
+   visualizer: "DeepQN",
+   interactiveFormulas: [
  {
  name: "DQN Loss",
  components: [
@@ -2362,13 +2309,12 @@ export const MATH_TOPICS = {
  }
  ]
  },
- "PPO": {
- title: "PPO: Proximal Policy Optimization",
- content: `
- <p><strong>PPO</strong> is a state-of-the-art RL algorithm that stabilizes training by clipping policy updates.</p>
- <h4>Clipping Mechanism</h4>
- <p>PPO prevents the policy from changing too much in a single step, ensuring stable convergence.</p>
- `,
+"PPO": {
+  title: "PPO: Proximal Policy Optimization",
+  content: `
+  <p><strong>PPO</strong> is a state-of-the-art RL algorithm that stabilizes training by clipping policy updates.</p>
+  `,
+  visualizer: "PPO",
  interactiveFormulas: [
  {
  name: "PPO Clipped Objective",
@@ -2592,21 +2538,13 @@ export const MATH_TOPICS = {
  }
  ]
  },
- "Diffusion": {
- title: "Diffusion Models: Iterative Denoising",
- content: `
- <p><strong>Diffusion models</strong> generate images by iteratively denoising. Start with noise, gradually clean up!</p>
- 
- <h4>Forward Process</h4>
- <p>Add noise to image over T steps. Eventually becomes pure Gaussian noise.</p>
- 
- <h4>Reverse Process</h4>
- <p>Neural network learns to reverse: denoise from step t to t-1. This is generation!</p>
- 
- <h4>Why Diffusion Works</h4>
- <p>Implicitly learns the data distribution. Stable training. Amazing quality (DALL-E, Stable Diffusion).</p>
- `,
- interactiveFormulas: [
+"Diffusion": {
+   title: "Diffusion Models: Iterative Denoising",
+   content: `
+   <p><strong>Diffusion models</strong> generate images by iteratively denoising. Start with noise, gradually clean up!</p>
+   `,
+   visualizer: "Diffusion",
+   interactiveFormulas: [
  {
  name: "Noise Schedule (Linear)",
  components: [
@@ -3596,24 +3534,13 @@ export const MATH_TOPICS = {
  }
  ]
  },
- "LinearRegression": {
- title: "Linear Regression: The First ML Algorithm",
- content: `
- <p><strong>Linear Regression</strong> fits a straight line through data to predict continuous values. It's the simplest ML model and the foundation of everything else.</p>
- 
- <h4>The Model</h4>
- <p>Prediction = slope × input + intercept. In higher dimensions: y = Wx + b. The goal: minimize the distance between predictions and true values.</p>
- <div class="equation">
- ŷ = w₁x₁ + w₂x₂ + ... + b
- </div>
- 
- <h4>Training via Gradient Descent</h4>
- <p>Compute ∂Loss/∂w for each weight. Update weights in the opposite direction of the gradient. Repeat until convergence.</p>
- 
- <h4>R² Score</h4>
- <p>Measures how much variance the model explains. R²=1 is perfect. R²=0 means no better than predicting the mean.</p>
- `,
- interactiveFormulas: [
+"LinearRegression": {
+   title: "Linear Regression: The First ML Algorithm",
+   content: `
+   <p><strong>Linear Regression</strong> fits a straight line through data to predict continuous values. It's the simplest ML model and the foundation of everything else.</p>
+   `,
+   visualizer: "LinearRegression",
+   interactiveFormulas: [
  {
  name: "Simple Linear Prediction",
  parts: [
@@ -3662,24 +3589,13 @@ export const MATH_TOPICS = {
  }
  ]
  },
- "LogisticRegression": {
- title: "Logistic Regression: From Lines to Probabilities",
- content: `
- <p><strong>Logistic Regression</strong> takes a linear model and squeezes the output through a sigmoid, converting it to a probability between 0 and 1.</p>
- 
- <h4>Log-Odds (Logit)</h4>
- <p>The raw linear score z = Wx + b is called the logit. The sigmoid maps it to probability: P = 1/(1+e^(-z)).</p>
- <div class="equation">
- P(y=1|x) = σ(w₁x₁ + w₂x₂ + b) = 1 / (1 + e^(-z))
- </div>
- 
- <h4>Decision Boundary</h4>
- <p>The threshold where P = 0.5 (z = 0). Adjusting the threshold trades precision for recall.</p>
- 
- <h4>Why Not Linear Regression?</h4>
- <p>Linear regression can predict values outside [0,1]. Logistic regression ensures valid probabilities and uses cross-entropy loss, not MSE.</p>
- `,
- interactiveFormulas: [
+"LogisticRegression": {
+   title: "Logistic Regression: From Lines to Probabilities",
+   content: `
+   <p><strong>Logistic Regression</strong> takes a linear model and squeezes the output through a sigmoid, converting it to a probability between 0 and 1.</p>
+   `,
+   visualizer: "LogisticRegression",
+   interactiveFormulas: [
  {
  name: "Sigmoid Decision",
  parts: [
@@ -3801,24 +3717,13 @@ export const MATH_TOPICS = {
  }
  ]
  },
- "RNN": {
- title: "Recurrent Neural Networks: Memory in Sequences",
- content: `
- <p><strong>RNNs</strong> process sequences by maintaining a hidden state that acts as memory, updated at each time step.</p>
- 
- <h4>Hidden State Update</h4>
- <p>At each time step t, the hidden state combines the previous state with the new input:</p>
- <div class="equation">
- h_t = tanh(W_hh × h_{t-1} + W_xh × x_t + b)
- </div>
- 
- <h4>Sequence Processing</h4>
- <p>The same weights W are reused at every step — this is weight sharing. The network "unfolds" across time steps.</p>
- 
- <h4>The Vanishing Gradient Problem</h4>
- <p>During backpropagation through time (BPTT), gradients are multiplied by W at each step. If |W| < 1, gradients vanish exponentially. If |W| > 1, they explode.</p>
- `,
- interactiveFormulas: [
+"RNN": {
+   title: "Recurrent Neural Networks: Memory in Sequences",
+   content: `
+   <p><strong>RNNs</strong> process sequences by maintaining a hidden state that acts as memory, updated at each time step.</p>
+   `,
+   visualizer: "RNN",
+   interactiveFormulas: [
  {
  name: "Hidden State Update",
  parts: [
@@ -3872,24 +3777,13 @@ export const MATH_TOPICS = {
  }
  ]
  },
- "LSTM": {
- title: "LSTM: Long Short-Term Memory",
- content: `
- <p><strong>LSTM</strong> solves the vanishing gradient problem with three gates that control information flow through a cell state.</p>
- 
- <h4>Forget Gate</h4>
- <p>Decides what information to discard from the cell state. σ(W_f · [h_{t-1}, x_t] + b_f). Output near 0 = forget, near 1 = remember.</p>
- 
- <h4>Input Gate</h4>
- <p>Decides what new information to store. Two parts: σ(W_i) decides which values to update, tanh(W_c) creates candidate values.</p>
- 
- <h4>Output Gate</h4>
- <p>Decides what to output from the cell state. σ(W_o) filters the cell, producing the new hidden state.</p>
- 
- <h4>Cell State: The Highway</h4>
- <p>The cell state runs through the entire chain with only minor linear interactions — gradients flow freely! This is the key innovation.</p>
- `,
- interactiveFormulas: [
+"LSTM": {
+   title: "LSTM: Long Short-Term Memory",
+   content: `
+   <p><strong>LSTM</strong> solves the vanishing gradient problem with three gates that control information flow through a cell state.</p>
+   `,
+   visualizer: "LSTM",
+   interactiveFormulas: [
  {
  name: "Forget Gate",
  parts: [
