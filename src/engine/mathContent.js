@@ -1916,6 +1916,7 @@ export const MATH_TOPICS = {
             <h4>Inception / GoogLeNet (2014)</h4>
             <p>Uses 'Inception modules' that apply different filter sizes (1x1, 3x3, 5x5) in parallel at the same layer. Efficient and powerful.</p>
         `,
+        visualizer: "CNN",
         interactiveFormulas: [
             {
                 name: "Parameter Count Comparison",
@@ -2395,6 +2396,7 @@ export const MATH_TOPICS = {
             <h4>Why Transformers?</h4>
             <p>Parallelizable on GPU. Captures long-range dependencies. Scales beautifully with data and compute.</p>
         `,
+        visualizer: "Transformer",
         interactiveFormulas: [
             {
                 name: "Attention Weights",
