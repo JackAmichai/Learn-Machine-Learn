@@ -654,24 +654,27 @@ export function LandingPage() {
 
  /* PIONEERS SECTION */
  .pioneers-container {
- display: flex;
- flex-direction: column;
- gap: 40px;
- align-items: center;
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+ gap: 28px;
+ align-items: stretch;
+ max-width: 1100px;
+ margin: 0 auto;
  }
  .pioneer-card {
- width: 100%;
- max-width: 800px;
  background: rgba(0, 0, 0, 0.4);
  border: 1px solid var(--glass-border);
- border-radius: 16px;
+ border-radius: 20px;
  padding: 24px;
  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
- transition: transform 0.3s ease;
+ transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+ display: flex;
+ flex-direction: column;
  }
  .pioneer-card:hover {
- transform: translateY(-5px);
- border-color: rgba(255, 255, 255, 0.1);
+ transform: translateY(-6px);
+ border-color: rgba(0, 242, 255, 0.25);
+ box-shadow: 0 16px 48px rgba(0, 242, 255, 0.15), 0 10px 30px rgba(0,0,0,0.4);
  }
  .pioneer-card img {
  width: 100%;

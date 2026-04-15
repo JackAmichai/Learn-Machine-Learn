@@ -3,12 +3,21 @@ import { MATH_TOPICS } from '../engine/mathContent';
 import { VisualizerRegistry } from './math/VisualizerRegistry';
 import { PersonalizationContext } from '../contexts/PersonalizationContext';
 import { getTopicPresentation } from '../engine/personalizationEngine';
+import { getWikiUrl } from '../data/wikipediaLinks';
 
-export function MathModal({ topic, onClose }) {
+export function MathModal({ topic, onClose, onComplete }) {
  const data = MATH_TOPICS[topic];
  const [activeFormula, setActiveFormula] = useState(null);
  const [sliderValues, setSliderValues] = useState({});
  const { profile } = useContext(PersonalizationContext);
+ const completedTopics = profile?.completedTopics || [];
+ const isCompleted = completedTopics.includes(topic);
+ const wikiUrl = getWikiUrl(topic);
+
+ const handleGotIt = () => {
+ if (onComplete) onComplete(topic);
+ onClose();
+ };
 
  if (!data) return null;
 
@@ -48,9 +57,17 @@ export function MathModal({ topic, onClose }) {
  >
  <div className="math-modal-content" onClick={e => e.stopPropagation()}>
  <div className="math-header">
+ <div className="math-header-title">
  <h2 id="math-modal-title">{data.title}</h2>
- <button 
- className="close-btn" 
+ {isCompleted && (
+ <span className="completed-pill" aria-label="Completed">
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+ Completed
+ </span>
+ )}
+ </div>
+ <button
+ className="close-btn"
  onClick={onClose}
  aria-label="Close modal"
  >×</button>
@@ -117,7 +134,36 @@ export function MathModal({ topic, onClose }) {
  )}
 
  <div className="math-footer">
- <button onClick={onClose}>Got it!</button>
+ {wikiUrl && (
+ <a
+ className="wiki-btn"
+ href={wikiUrl}
+ target="_blank"
+ rel="noopener noreferrer"
+ aria-label={`Learn more about ${data.title} on Wikipedia`}
+ >
+ <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+ <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+ <polyline points="15 3 21 3 21 9"></polyline>
+ <line x1="10" y1="14" x2="21" y2="3"></line>
+ </svg>
+ Learn more on Wikipedia
+ </a>
+ )}
+ <button
+ className={`got-it-btn ${isCompleted ? 'is-completed' : ''}`}
+ onClick={handleGotIt}
+ aria-label={isCompleted ? 'Already completed — close' : 'Mark as completed'}
+ >
+ {isCompleted ? (
+ <>
+ <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+ Completed
+ </>
+ ) : (
+ <>Got it!</>
+ )}
+ </button>
  </div>
  </div>
 
@@ -153,14 +199,34 @@ export function MathModal({ topic, onClose }) {
  display: flex;
  justify-content: space-between;
  align-items: center;
+ gap: 16px;
  margin-bottom: 20px;
  border-bottom: 1px solid var(--glass-border);
- padding-bottom: 10px;
+ padding-bottom: 12px;
+ }
+ .math-header-title {
+ display: flex;
+ align-items: center;
+ gap: 12px;
+ flex-wrap: wrap;
  }
  .math-header h2 {
  margin: 0;
  color: var(--accent-primary);
  font-family: var(--font-main);
+ }
+ .completed-pill {
+ display: inline-flex;
+ align-items: center;
+ gap: 6px;
+ padding: 4px 10px;
+ border-radius: 999px;
+ font-size: 12px;
+ font-weight: 700;
+ letter-spacing: 0.3px;
+ background: rgba(0, 255, 157, 0.12);
+ color: #00ff9d;
+ border: 1px solid rgba(0, 255, 157, 0.35);
  }
  .close-btn {
  background: none;
@@ -168,6 +234,14 @@ export function MathModal({ topic, onClose }) {
  color: var(--text-secondary);
  font-size: 28px;
  cursor: pointer;
+ line-height: 1;
+ padding: 4px 8px;
+ border-radius: 8px;
+ transition: all 0.2s;
+ }
+ .close-btn:hover {
+ background: rgba(255,255,255,0.06);
+ color: var(--text-primary);
  }
 
  /* Complexity badge */
@@ -304,18 +378,61 @@ export function MathModal({ topic, onClose }) {
  
  .math-footer {
  margin-top: 30px;
- text-align: right;
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ gap: 12px;
+ flex-wrap: wrap;
+ padding-top: 20px;
+ border-top: 1px solid var(--glass-border);
  }
- .math-footer button {
- background: var(--accent-primary);
+ .wiki-btn {
+ display: inline-flex;
+ align-items: center;
+ gap: 8px;
+ padding: 10px 18px;
+ border-radius: 10px;
+ background: rgba(255, 255, 255, 0.04);
+ border: 1px solid rgba(255, 255, 255, 0.12);
+ color: var(--text-primary);
+ font-size: 14px;
+ font-weight: 500;
+ text-decoration: none;
+ transition: all 0.2s;
+ }
+ .wiki-btn:hover {
+ border-color: var(--accent-primary);
+ color: var(--accent-primary);
+ background: rgba(0, 242, 255, 0.06);
+ transform: translateY(-1px);
+ }
+ .got-it-btn {
+ display: inline-flex;
+ align-items: center;
+ gap: 8px;
+ background: linear-gradient(135deg, var(--accent-primary), #00c8d4);
  color: black;
- font-weight: bold;
- padding: 10px 24px;
- border-radius: 8px;
- transition: transform 0.1s;
+ font-weight: 700;
+ padding: 12px 26px;
+ border: none;
+ border-radius: 10px;
+ cursor: pointer;
+ font-size: 14px;
+ font-family: inherit;
+ box-shadow: 0 4px 18px rgba(0, 242, 255, 0.25);
+ transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
  }
- .math-footer button:hover {
- transform: scale(1.05);
+ .got-it-btn:hover {
+ transform: translateY(-2px) scale(1.02);
+ box-shadow: 0 8px 24px rgba(0, 242, 255, 0.38);
+ }
+ .got-it-btn.is-completed {
+ background: linear-gradient(135deg, #00ff9d, #00b873);
+ box-shadow: 0 4px 18px rgba(0, 255, 157, 0.3);
+ color: #001a0f;
+ }
+ .got-it-btn.is-completed:hover {
+ box-shadow: 0 8px 24px rgba(0, 255, 157, 0.45);
  }
  `}</style>
  </div>

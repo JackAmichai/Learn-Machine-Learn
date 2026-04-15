@@ -72,8 +72,14 @@ export function PersonalizedDashboard() {
  Resources
  </Link>
  <ThemeToggle />
- <button className="dash-reset-btn" onClick={() => { resetProfile(); navigate('/'); }} title="Reset profile">
- 
+ <button
+ className="dash-reset-btn"
+ onClick={() => { resetProfile(); navigate('/'); }}
+ title="Clear your profile and choose a new path"
+ aria-label="Restart learning path"
+ >
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/><path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"/></svg>
+ <span>Restart</span>
  </button>
  </div>
  </header>
@@ -162,9 +168,14 @@ export function PersonalizedDashboard() {
  className={`topic-card ${isCompleted ? 'completed' : ''}`}
  onClick={() => handleTopicClick(topicKey)}
  id={`topic-${topicKey.replace(/\s+/g, '-')}`}
+ aria-label={isCompleted ? `${topicData.title.split(':')[0]} (completed)` : topicData.title.split(':')[0]}
  >
+ {isCompleted && (
+ <span className="topic-done" aria-hidden="true">
+ <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+ </span>
+ )}
  <span className="topic-title">{topicData.title.split(':')[0]}</span>
- {isCompleted && <span className="topic-done"></span>}
  </button>
  );
  })}
@@ -280,18 +291,24 @@ export function PersonalizedDashboard() {
  box-shadow: 0 4px 24px rgba(0, 242, 255, 0.35);
  }
  .dash-reset-btn {
+ display: inline-flex;
+ align-items: center;
+ gap: 6px;
  background: rgba(255, 255, 255, 0.04);
  border: 1px solid rgba(255, 255, 255, 0.08);
  border-radius: 10px;
- font-size: 16px;
+ font-size: 13px;
+ font-weight: 500;
+ color: var(--text-secondary);
  cursor: pointer;
- padding: 8px 12px;
- transition: all 0.2s;
- min-height: auto;
- min-width: auto;
+ padding: 10px 14px;
+ transition: all 0.25s;
+ font-family: inherit;
  }
  .dash-reset-btn:hover {
- border-color: var(--accent-danger);
+ border-color: var(--accent-danger, #ff0055);
+ color: var(--accent-danger, #ff0055);
+ background: rgba(255, 0, 85, 0.06);
  }
 
  /* Sections */
@@ -497,12 +514,26 @@ export function PersonalizedDashboard() {
  transform: translateY(-1px);
  }
  .topic-card.completed {
- border-color: var(--accent-success);
- background: rgba(0, 255, 157, 0.05);
+ border-color: var(--accent-success, #00ff9d);
+ background: linear-gradient(135deg, rgba(0, 255, 157, 0.14), rgba(0, 255, 157, 0.05));
+ color: #baffd6;
+ box-shadow: inset 0 0 0 1px rgba(0, 255, 157, 0.15), 0 0 12px rgba(0, 255, 157, 0.08);
+ }
+ .topic-card.completed:hover {
+ border-color: var(--accent-success, #00ff9d);
+ background: linear-gradient(135deg, rgba(0, 255, 157, 0.2), rgba(0, 255, 157, 0.08));
+ box-shadow: 0 0 18px rgba(0, 255, 157, 0.25);
  }
  .topic-done {
- color: var(--accent-success);
- font-weight: 700;
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ width: 18px;
+ height: 18px;
+ border-radius: 50%;
+ background: var(--accent-success, #00ff9d);
+ color: #001a0f;
+ flex-shrink: 0;
  }
 
  /* Stats bar */

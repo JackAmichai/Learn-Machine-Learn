@@ -3,8 +3,39 @@ export const MATH_TOPICS = {
  title: "SVM: Support Vector Machines",
  content: `
  <p><strong>SVM</strong> finds the hyperplane that best separates two classes with the <strong>maximum margin</strong>. It's robust to outliers and works well in high dimensions.</p>
+
+ <h4>Intuition</h4>
+ <p>Imagine drawing a line between two groups of points. Many lines separate them — SVM picks the one that has the widest empty "street" on either side. The points touching the curb are the <em>support vectors</em>; move any other point and the line doesn't budge.</p>
+
  <h4>The Kernel Trick</h4>
- <p>SVMs can use kernels (like RBF) to project data into higher dimensions where it becomes linearly separable!</p>
+ <p>SVMs can use kernels (like RBF, polynomial, or sigmoid) to implicitly project data into higher dimensions where it becomes linearly separable — without ever computing the projection explicitly. This is why SVMs handled nonlinear problems elegantly long before deep learning.</p>
+
+<h4>The History of SVMs</h4>
+  <p><strong>1963</strong>: Vladimir Vapnik and Alexey Chervonenkis introduce the <em>Generalization Bound</em> — statistical learning theory foundation.<br/>
+  <strong>1964</strong>: They develop the <em>Maximal Margin Classifier</em> — the geometric foundation of SVMs.<br/>
+  <strong>1992</strong>: Vapnik implements the first working SVM at Bell Labs with the kernel trick.<br/>
+  <strong>1995</strong>: Corinna Cortes and Vapnik publish <em>Soft Margin SVMs</em> — allows overlap between classes.<br/>
+  <strong>1998</strong>: John Platt releases <em>SMO</em> (Sequential Minimal Optimization) — makes SVMs scalable.<br/>
+  <strong>2000s</strong>: SVMs win every major ML benchmark — Until 2012 when deep learning surpassed them on ImageNet.<br/>
+  <strong>Legacy</strong>: SVMs introduced the kernel trick, structural risk minimization, and the margin concept — all foundational to modern ML.</p>
+
+ <h4>When to Use</h4>
+ <p>• Small-to-medium datasets (a few thousand rows) with clear margins<br/>
+ • High-dimensional data where features &gt; samples (genomics, text)<br/>
+ • Binary classification where interpretability of the decision boundary matters</p>
+
+ <h4>When Not to Use</h4>
+ <p>• Very large datasets (training scales poorly, O(n²) to O(n³))<br/>
+ • When you need calibrated probability estimates (use logistic regression)<br/>
+ • Noisy / overlapping classes — soft-margin helps but is not magic</p>
+
+ <h4>Common Pitfalls</h4>
+ <p>• <strong>Feature scaling is mandatory</strong> — SVM is sensitive to feature magnitude; always standardize inputs.<br/>
+ • Wrong kernel choice: RBF is a safe default, but linear is faster on high-dim text.<br/>
+ • The <em>C</em> hyperparameter trades margin width against misclassification — tune it with cross-validation.</p>
+
+ <h4>Real-World Uses</h4>
+ <p>Spam filtering, handwritten digit recognition, protein classification, face detection (pre-deep-learning), and many Kaggle wins on tabular data.</p>
  `,
  visualizer: "SVM",
  interactiveFormulas: [
@@ -29,9 +60,36 @@ export const MATH_TOPICS = {
  "DecisionTree": {
  title: "Decision Trees: If-Then Reasoning",
  content: `
- <p><strong>Decision Trees</strong> split data based on feature values to maximize 'purity' (homogeneity) in the resulting subsets.</p>
+ <p><strong>Decision Trees</strong> split data based on feature values to maximize 'purity' (homogeneity) in the resulting subsets — producing a flowchart of yes/no questions that ends in a prediction.</p>
+
+ <h4>Intuition</h4>
+ <p>Think of how a doctor diagnoses: "Fever? Yes. Cough? Yes. Shortness of breath? Yes → possible pneumonia." A tree learns that sequence of questions automatically, choosing at each step the question that most cleanly separates the remaining cases.</p>
+
  <h4>Splitting Criteria</h4>
- <p>Common metrics are <strong>Gini Impurity</strong> and <strong>Information Gain</strong> (Entropy).</p>
+ <p>Common metrics are <strong>Gini Impurity</strong> and <strong>Information Gain</strong> (based on <em>Entropy</em>). Both measure disorder — a perfect split sends all one class left and all the other class right.</p>
+
+<h4>History of Decision Trees</h4>
+  <p><strong>1963</strong>: Morgan and Sonquist introduce <em>AID</em> (Automatic Interaction Detector) — first decision tree for survey analysis.<br/>
+  <strong>1980</strong>: J. Ross Quinlan begins work on <em>ID3</em> (Iterative Dichotomiser 3).<br/>
+  <strong>1986</strong>: Quinlan publishes <em>ID3</em> — uses entropy and information gain.<br/>
+  <strong>1993</strong>: Quinlan releases <em>C4.5</em> — improves ID3 with numeric attributes, pruning, and missing values.<br/>
+  <strong>1984</strong>: Leo Breiman et al. publish <em>CART</em> (Classification and Regression Trees) — uses Gini impurity, full Bayesian interpretation.<br/>
+  <strong>2014</strong>: Tianqi Chen introduces <em>XGBoost</em> — gradient boosted trees, dominates Kaggle.<br/>
+  <strong>2017</strong>: Microsoft releases <em>LightGBM</em> — faster gradient boosted trees with histogram binning.<br/>
+  <strong>Why Survived</strong>: Trees are interpretable, handle mixed data types, and ensemble methods (boosting) achieve state-of-the-art accuracy.</p>
+
+ <h4>Strengths</h4>
+ <p>• Zero feature scaling required — splits are based on order, not magnitude.<br/>
+ • Native handling of mixed numeric and categorical features.<br/>
+ • Fully interpretable — you can print the tree and read the rules.</p>
+
+ <h4>Common Pitfalls</h4>
+ <p>• Trees overfit hard: a deep unpruned tree can memorize noise. Always set <code>max_depth</code> or use pruning.<br/>
+ • Instability: small data changes can produce very different trees → use ensembles like Random Forests.<br/>
+ • Biased toward features with many unique values (use permutation importance to check).</p>
+
+ <h4>Real-World Uses</h4>
+ <p>Credit scoring, medical triage, customer-churn rules engines, and as the weak learners inside Random Forests and Gradient Boosting (XGBoost, LightGBM) — which still win the majority of tabular-data Kaggle competitions.</p>
  `,
  visualizer: "Tree",
  interactiveFormulas: [
@@ -2387,14 +2445,23 @@ export const MATH_TOPICS = {
  content: `
  <p><strong>Transformers</strong> use self-attention to process sequences. No recurrence, no convolution - just attention!</p>
  
- <h4>Self-Attention</h4>
- <p>Each position attends to all positions. Compute query, key, value matrices. Attention = softmax(QK^T / sqrt(d))V.</p>
- 
- <h4>Multi-Head Attention</h4>
- <p>Multiple attention heads in parallel. Each learns different relationships (syntax, semantics, positions).</p>
- 
- <h4>Why Transformers?</h4>
- <p>Parallelizable on GPU. Captures long-range dependencies. Scales beautifully with data and compute.</p>
+<h4>Self-Attention</h4>
+  <p>Each position attends to all positions. Compute query, key, value matrices. Attention = softmax(QK^T / sqrt(d))V.</p>
+  
+  <h4>Multi-Head Attention</h4>
+  <p>Multiple attention heads in parallel. Each learns different relationships (syntax, semantics, positions).</p>
+  
+  <h4>The History of Attention and Transformers</h4>
+  <p><strong>2014</strong>: Dzmitry Bahdanau et al. introduce <em>Additive Attention</em> for neural machine translation — enables aligning source and target.<br/>
+  <strong>2015</strong>: Minh-Thang Luong et al. propose <em>Multiplicative (Dot-Product) Attention</em> — more efficient than additive.<br/>
+  <strong>2016</strong>: Oxford's <em>Attention is All You Need</em> builds on these but: self-attention (no recurrence!) + multi-head + positional encoding.<br/>
+  <strong>2016</strong>: Google Brain, University of Toronto, and Element AI submit the paper — rejected from ICLR, then accepted!<br/>
+  <strong>Key Innovation</strong>: Replaces RNN's sequential processing with parallel self-attention — each position attends to ALL positions directly.<br/>
+  <strong>Original Authors</strong>: Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan Gomez, Lukasz Kaiser, Illia Polosukhin — 8 co-authors, all from Google.<br/>
+  <strong>Impact</strong>: BERT, GPT, T5, ViT, RAG, Claude, ChatGPT — all built on Transformers. 95%+ of modern LLMs are decoder-only Transformers.</p>
+  
+  <h4>Why Transformers?</h4>
+  <p>Parallelizable on GPU. Captures long-range dependencies. Scales beautifully with data and compute.</p>
  `,
  visualizer: "Transformer",
  interactiveFormulas: [
@@ -2718,40 +2785,135 @@ export const MATH_TOPICS = {
  }
  ]
  },
- "LearningPath": {
- title: "Recommended Learning Path",
- content: `
- <p>A structured path from beginner to advanced computer vision engineer:</p>
- 
- <h4>Phase 1: Foundations (Weeks 1-4)</h4>
- <p>• Neural Networks: Learn forward/backward propagation, gradients<br/>
- • Linear Algebra: Vectors, matrices, dot products<br/>
- • Python & NumPy basics<br/>
- • Build your first neural network from scratch</p>
- 
- <h4>Phase 2: Core ML (Weeks 5-8)</h4>
- <p>• Supervised vs Unsupervised learning<br/>
- • CNNs: Convolution, pooling, architecture patterns<br/>
- • Train CNNs on MNIST, CIFAR-10<br/>
- • Overfitting, regularization, dropout</p>
- 
- <h4>Phase 3: Deep Vision (Weeks 9-12)</h4>
- <p>• Modern architectures: ResNet, EfficientNet<br/>
- • Object detection: YOLO, Faster R-CNN<br/>
- • Semantic segmentation: U-Net, DeepLab<br/>
- • Transfer learning & fine-tuning</p>
- 
- <h4>Phase 4: Advanced Topics (Weeks 13-16)</h4>
- <p>• Vision Transformers (ViT)<br/>
- • Self-supervised: CLIP, contrastive learning<br/>
- • Diffusion models basics<br/>
- • Model deployment & optimization</p>
- 
- <h4>Free Resources</h4>
- <p>• Fast.ai - Practical deep learning<br/>
- • CS231n (Stanford) - Deep learning for CV<br/>
- • 3Blue1Brown - Linear algebra visualizations<br/>
- • Learn Machine Learn - Interactive playground!</p>
+"LearningPath": {
+  title: "How Concepts Build On Each Other: The ML Concept Map",
+  content: `
+  <p>Machine learning concepts form a dependency tree. Here's how each builds on previous ones:</p>
+  
+  <h4>🚀 Phase 1: Mathematical Foundations</h4>
+  <p><strong>Linear Regression</strong> → <strong>Logistic Regression</strong> → <strong>Softmax</strong><br/>
+  <em>Builds basic prediction from lines to probabilities.</em></p>
+  
+  <p><strong>Vectors & Matrices</strong> → <strong>Dot Product</strong> → <strong>Matrix Multiplication</strong><br/>
+  <em>Enables computing with batches of data.</em></p>
+  
+  <p><strong>Gradient</strong> → <strong>Backpropagation</strong> → <strong>Optimizer</strong><br/>
+  <em>How networks learn: gradient tells direction, backprop distributes it, optimizer chooses step size.</em></p>
+  
+  <p><strong>Loss</strong> → <strong>Epoch</strong> → <strong>Learning Rate</strong><br/>
+  <em>The training loop: measure error, update repeatedly, adjust step size.</em></p>
+  
+  <h4>🔗 Phase 2: Core Architectures (Connections)</h4>
+  <p><strong>Hidden Layer</strong> → <strong>Activation</strong> → <strong>Layer</strong><br/>
+  <em>Stacking neurons with non-linearities creates networks.</em></p>
+  
+  <p><strong>Convolution</strong> → <strong>Pooling</strong> → <strong>Padding</strong> → <strong>VisionArchitecture</strong><br/>
+  <em>Local patterns → spatial reduction → handling edges → complete vision networks.</em></p>
+  
+  <p><strong>RNN</strong> → <strong>LSTM</strong> → <strong>Transformer</strong><br/>
+  <em>Sequences → long-term memory → self-attention (parallel processing!).</em></p>
+  
+  <p><strong>Tensors</strong> → <strong>Jacobian</strong> → <strong>Hessian</strong><br/>
+  <em>Multi-dimensional data → first derivatives → second derivatives (curvature).</em></p>
+  
+  <h4>🎯 Phase 3: Training Techniques (Who Built On What)</h4>
+  <p><strong>Regularization</strong> → <strong>Dropout</strong> → <strong>BatchNorm</strong><br/>
+  <em>Original: L1/L2 (1996). Dropout (2014). BatchNorm (2015). — all prevent overfitting.</em></p>
+  
+  <p><strong>SkipConnection</strong> → <strong>ResNet</strong> → <strong>VisionTransformer</strong><br/>
+  <em>Highway connections (1998). ResNet (2015). ViT adapts attention to images (2020).</em></p>
+  
+  <p><strong>Optimizer</strong> → <strong>Adam</strong> → <strong>AdamW</strong><br/>
+  <em>SGD (1952). Adam (2014). AdamW decouples weight decay (2019).</em></p>
+  
+  <h4>🧠 Phase 4: Advanced Techniques (Built By Whom)</h4>
+  <p><strong>Decision Tree</strong> → <strong>Random Forest</strong> → <strong>Gradient Boosting</strong><br/>
+  <em>Quinlan (1986). Breiman (2001). Chen (2014, XGBoost).</em></p>
+  
+  <p><strong>GAN</strong> → <strong>WGAN</strong> → <strong>Diffusion</strong><br/>
+  <em>Goodfellow (2014). Arjovsky (2017). Sohl-Dickman (2020).</em></p>
+  
+  <p><strong>Autoencoder</strong> → <strong>VAE</strong> → <strong>Stable Diffusion</strong><br/>
+  <em>Baldi (1987). Kingma & Welling (2014). Rombach (2022).</em></p>
+  
+  <p><strong>Self-Supervised</strong> → <strong>Contrastive Learning</strong> → <strong>CLIP</strong><br/>
+  <em>SimCLR (2020). MoCo (2019). Radford (2021).</em></p>
+  
+  <p><strong>RNN</strong> → <strong>Attention</strong> → <strong>Transformer</strong> → <strong>LLM</strong><br/>
+  <em>Elman (1990). Bahdanau (2014). Vaswani (2017). Radford (2018, GPT).</em></p>
+  
+  <p><strong>Transformer</strong> → <strong>BERT</strong> → <strong>GPT</strong> → <strong>RLHF</strong><br/>
+  <em>Devlin (2018). Radford (2018). Christiano (2022, from RL).</em></p>
+  
+  <h4>📅 Timeline: When Each Was Invented</h4>
+  <p><strong>1957</strong>: Perceptron — Rosenblatt<br/>
+  <strong>1962</strong>: Perceptron convergence — Rosenblatt<br/>
+  <strong>1974</strong>: Backpropagation — Werbos (ignored until 1986)<br/>
+  <strong>1986</strong>: Backprop revived — Rumelhart, Hinton, Williams<br/>
+  <strong>1989</strong>: LeNet — LeCun<br/>
+  <strong>1995</strong>: SVM soft margins — Cortes & Vapnik<br/>
+  <strong>1997</strong>: LSTM — Hochreiter & Schmidhuber<br/>
+  <strong>2001</strong>: Random Forest — Breiman<br/>
+  <strong>2012</strong>: AlexNet — Krizhevsky, Sutskever, Hinton<br/>
+  <strong>2014</strong>: Adam — Kingma & Ba; GAN — Goodfellow<br/>
+  <strong>2015</strong>: ResNet — He; BatchNorm — Ioffe & Szegedy<br/>
+  <strong>2017</strong>: Transformer — Vaswani et al.<br/>
+  <strong>2020</strong>: GPT-3 — Radford et al.; ViT — Dosovitskiy et al.<br/>
+  <strong>2022</strong>: Stable Diffusion — Rombach et al.</p>
+  
+  <h4>🔥 Who Influenced Who</h4>
+  <p><strong>Rosenblatt (1957)</strong> → <strong>Widrow (1960)</strong> → <strong>Werbos (1974)</strong> → <strong>Rumelhart (1986)</strong> → <strong>Hinton (2012)</strong><br/>
+  <em>The backpropagation lineage.</em></p>
+  
+  <p><strong>Fukushima (1980)</strong> → <strong>LeCun (1989)</strong> → <strong>Krizhevsky (2012)</strong> → <strong>He (2015)</strong><br/>
+  <em>The CNN lineage.</em></p>
+  
+  <p><strong>Elman (1990)</strong> → <strong>Hochreiter (1997)</strong> → <strong>Vaswani (2017)</strong><br/>
+  <em>The sequence processing lineage.</em></p>
+  
+  <h4>✅ How to Use This Path</h4>
+  <p>1. <strong>Start with Linear Regression</strong> — understand prediction from data<br/>
+  2. <strong>Add a layer (Hidden Layer)</strong> — understand non-linearity<br/>
+  3. <strong>Add backprop</strong> — understand learning<br/>
+  4. <strong>Add convolution</strong> — understand local patterns<br/>
+  5. <strong>Add skip connections</strong> — enable depth<br/>
+  6. <strong>Add attention</strong> — enable parallel processing<br/>
+  7. <strong>Add transformer</strong> — combine everything!</p>
+  
+  <h4>Recommended Learning Path</h4>
+  <p>A structured path from beginner to advanced:</p>
+  
+  <h4>Phase 1: Foundations (Weeks 1-4)</h4>
+  <p>• Linear Regression → Logistic Regression → Softmax<br/>
+  • Vectors & Matrices → Dot Product → Matrix Multiplication<br/>
+  • Gradient → Backpropagation → Optimizer (Adam)<br/>
+  • Python & NumPy basics<br/>
+  �� Build your first neural network from scratch</p>
+  
+  <h4>Phase 2: Core ML (Weeks 5-8)</h4>
+  <p>• Supervised vs Unsupervised vs SemiSupervised<br/>
+  • CNNs: Convolution → Pooling → Padding → VisionArchitecture<br/>
+  • Train CNNs on MNIST, CIFAR-10<br/>
+  • Regularization → Dropout → BatchNorm</p>
+  
+  <h4>Phase 3: Deep Architectures (Weeks 9-12)</h4>
+  <p>• RNN → LSTM → Transformer<br/>
+  • SkipConnection → ResNet → VisionTransformer<br/>
+  • GAN → Diffusion → Stable Diffusion<br/>
+  • Transfer learning & fine-tuning</p>
+  
+  <h4>Phase 4: LLMs & Advanced (Weeks 13-16)</h4>
+  <p>• Transformer → BERT → GPT<br/>
+  • Self-Supervised → CLIP → RAG<br/>
+  • LoRA → Quantization → Distillation<br/>
+  • Agent → Tool Use → ReAct</p>
+  
+  <h4>Free Resources</h4>
+  <p>• Fast.ai - Practical deep learning<br/>
+  • CS231n (Stanford) - Deep learning for CV<br/>
+  • CS224n (Stanford) - NLP with deep learning<br/>
+  • 3Blue1Brown - Linear algebra visualizations<br/>
+  • Learn Machine Learn - Interactive playground!</p>
  `,
  interactiveFormulas: [
  {
@@ -3918,10 +4080,92 @@ export const MATH_TOPICS = {
  }
  ]
  },
- "ActivationAdvanced": {
- title: "Advanced Activations: Beyond ReLU",
- content: `
- <p>Modern networks use activation functions that address ReLU's shortcomings — dead neurons, non-smooth gradients, and unbounded outputs.</p>
+"MLHistory": {
+  title: "A Brief History of Machine Learning",
+  content: `
+  <p>Machine learning has evolved through decades of research. Understanding this history clarifies why certain techniques exist and who developed them.</p>
+  
+  <h4>The Foundations (1950s-1980s)</h4>
+  <p><strong>1950</strong>: Alan Turing proposes the "Turing Test" in "Computing Machinery and Intelligence" — can machines think?<br/>
+  <strong>1957</strong>: Frank Rosenblatt creates the <em>Perceptron</em> at Cornell. The first artificial neuron! It learns from data using a simple rule.<br/>
+  <strong>1960s</strong>: Widrow and Hoff develop <em>ADALINE</em> (Adaptive Linear Element) — uses the delta rule (precursor to backpropagation).<br/>
+  <strong>1967</strong>: Cover and Hart prove the Nearest Neighbor algorithm's theoretical foundations.<br/>
+  <strong>1974</strong>: Paul Werbos proves backpropagation can train multi-layer networks in his PhD thesis — initially overlooked!</p>
+  
+  <h4>The AI Winter (1980s)</h4>
+  <p><strong>1980</strong>: Kunihiko Fukushima introduces <em>Neocognitron</em> — the first convolutional network for handwritten digit recognition.<br/>
+  <strong>1986</strong>: David Rumelhart, Geoffrey Hinton, and Ronald Williams revive backpropagation in Nature — "Learning Representations by Back-propagating Errors".<br/>
+  <strong>1986</strong>: J. Ross Quinlan publishes <em>C4.5</em> — decision trees become mainstream.<br/>
+  <strong>1989</strong>: Yann LeCun applies backprop to LeNet for handwritten ZIP code recognition.</p>
+  
+  <h4>The Statistical Learning Era (1990s-2000s)</h4>
+  <p><strong>1990</strong>: Lawrence Rabiner publishes the classic tutorial on <em>Hidden Markov Models</em> for speech recognition.<br/>
+  <strong>1992</strong>: Vladimir Vapnik introduces the <em>Support Vector Machine</em> — the kernel trick enables nonlinear classification.<br/>
+  <strong>1995</strong>: Cortes and Vapnik publish <em>Soft Margin SVMs</em> — practical SVMs with slack variables.<br/>
+  <strong>1997</strong>: Sepp Hochreiter and Jürgen Schmidhuber introduce <em>LSTM</em> — solves vanishing gradient in RNNs.<br/>
+  <strong>2001</strong>: Leo Breiman publishes <em>Random Forests</em> — ensemble of decision trees, robust to overfitting.<br/>
+  <strong>2001</strong>: Yoav Freund and Robert Schapire win the Gödel Prize for <em>AdaBoost</em> — adaptive boosting algorithm.<br/>
+  <strong>2006</strong>: Geoffrey Hinton introduces <em>Deep Belief Networks</em> — pretraining enables effective deep learning.</p>
+  
+  <h4>The Deep Learning Revolution (2010s)</h4>
+  <p><strong>2012</strong>: Alex Krizhevský, Ilya Sutskever, and Geoffrey Hinton win ImageNet with <em>AlexNet</em> — 60M params, deep CNNs are back!<br/>
+  <strong>Key Insight</strong>: GPUs (NVIDIA CUDA) made training deep networks 10-20x faster. Hinton's group had been waiting for this.<br/>
+  <strong>2013</strong>: Diederik Kingma and Jimmy Ba introduce <em>Adam</em> — adaptive moment estimation, the most popular optimizer.<br/>
+  <strong>2014</strong>: Ian Goodfellow introduces <em>GANs</em> — generator/discriminator game, state-of-the-art generation.<br/>
+  <strong>2015</strong>: Kaiming He et al. publish <em>ResNet</em> — skip connections enable training 152-layer networks.<br/>
+  <strong>2015</strong>: Sergey Ioffe and Christian Szegedy introduce <em>BatchNorm</em> — normalizes layer inputs, faster training.<br/>
+  <strong>2016</strong>: AlphaGo beats Lee Sedol (18 world titles) — DeepMind combines deep reinforcement learning + Monte Carlo tree search.<br/>
+  <strong>2017</strong>: Ashish Vaswani et al. publish <em>Attention Is All You Need</em> — Transformers change everything.<br/>
+  <strong>2018</strong>: Jacob Devlin et al. introduce <em>BERT</em> — bidirectional Transformers, new NLP baseline.</p>
+  
+  <h4>The Foundation Model Era (2020s)</h4>
+  <p><strong>2020</strong>: Alec Radford et al. publish <em>GPT-3</em> — 175B parameters, emergent abilities from scale.<br/>
+  <strong>2020</strong>: Tero et al. introduce <em>Neural Radiance Fields (NeRF)</em> — novel view synthesis from images.<br/>
+  <strong>2021</strong>: Alex Dosovitskiy et al. introduce <em>ViT</em> — Transformers for images, needs more data than CNNs.<br/>
+  <strong>2022</strong>: Stability AI releases <em>Stable Diffusion</em> — open weights, community explodes.<br/>
+  <strong>2023</strong>: Llama and Mistral show small models can be powerful with good fine-tuning.<br/>
+  <strong>2024</strong>: OpenAI o1 and DeepSeek R1 show reasoning emerges with test-time compute.<br/>
+  <strong>2025</strong>: Claude 3, Gemini Ultra, GPT-4o — any-to-any multimodal models.</p>
+  
+  <h4>Key Lessons from History</h4>
+  <p>• <strong>Hardware matters:</strong> GPUs enabled deep nets; TPUs further accelerated Transformers.<br/>
+  • <strong>Scale helps:</strong> More data + compute = emergent capabilities (GPT-3, ViT).<br/>
+  • <strong>Architecture evolution:</strong> CNN→RNN→Transformer is driven by parallelization needs.<br/>
+  • <strong>Theory meets practice:</strong> SVM theory existed in 1960s but became practical in 1990s.<br/>
+  • <strong>Open weights accelerate progress:</strong> ImageNet, Llama, Stable Diffusion democratized AI.</p>
+  `,
+  interactiveFormulas: [
+  {
+    name: "Training Time Comparison (AlexNet vs Modern)",
+    parts: [
+      { symbol: "speedup", key: "speed", name: "GPU Speedup", description: "Time saved by modern hardware" },
+      { symbol: " = (GPU_2012 / GPU_2024) × (opt_2024 / opt_2012)", key: "formula", name: "Formula", description: "Hardware × software gains" }
+    ],
+    variables: [
+      { key: "gpu2012", symbol: "GPU_2012", name: "AlexNet Time", min: 1, max: 14, step: 1, default: 6, decimals: 0 },
+      { key: "gpu2024", symbol: "GPU_2024", name: "Modern Time", min: 0.001, max: 0.5, step: 0.001, default: 0.02, decimals: 3 },
+      { key: "opt2012", symbol: "opt_2012", name: "Old Optimizer", min: 0.5, max: 2, step: 0.1, default: 1, decimals: 1 },
+      { key: "opt2024", symbol: "opt_2024", name: "Adam/AdamW", min: 1, max: 5, step: 0.1, default: 2, decimals: 1 }
+    ],
+    calculate: (vals, get) => {
+      const g12 = get("gpu2012", 6);
+      const g24 = get("gpu2024", 0.02);
+      const o12 = get("opt2012", 1);
+      const o24 = get("opt2024", 2);
+      return ((g12 / g24) * (o24 / o12)).toFixed(0) + "x faster";
+    },
+    insights: [
+      "Modern GPUs (A100, H100) are 300x faster than K20x used for AlexNet.",
+      "Adam converges 2-3x faster than vanilla SGD.",
+      "Combined: ~3000x speedup enables training that took weeks in days."
+    ]
+  }
+  ]
+  },
+  "ActivationAdvanced": {
+  title: "Advanced Activations: Beyond ReLU",
+  content: `
+  <p>Modern networks use activation functions that address ReLU's shortcomings — dead neurons, non-smooth gradients, and unbounded outputs.</p>
  
  <h4>Leaky ReLU</h4>
  <p>Instead of zeroing negatives, allows a small slope α (typically 0.01). Prevents dead neurons.</p>

@@ -11,6 +11,8 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { ToastProvider } from './contexts/ToastContext';
 import { ToastStack } from './components/ToastStack';
 import { PersonalizationProvider } from './contexts/PersonalizationContext';
+import { HomeNav } from './components/HomeNav';
+import { Chatbot } from './components/Chatbot';
 
 function App() {
   return (
@@ -27,6 +29,8 @@ function App() {
                   <Route path="/quizzes" element={<QuizPage />} />
                   <Route path="/resources" element={<GoogleResources />} />
                 </Routes>
+                <HomeNav />
+                <Chatbot />
               </Router>
               <ToastStack />
             </MathProvider>
