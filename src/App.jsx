@@ -4,6 +4,7 @@ import { Home } from './pages/Home';
 import { PersonalizedDashboard } from './pages/PersonalizedDashboard';
 import { QuizPage } from './pages/QuizPage';
 import { GoogleResources } from './pages/GoogleResources';
+import { LookingForward } from './pages/LookingForward';
 
 import { ThemeProvider } from './contexts/ThemeContext';
 import { MathProvider } from './contexts/MathContext';
@@ -30,6 +31,7 @@ function App() {
                   <Route path="/dashboard" element={<PersonalizedDashboard />} />
                   <Route path="/quizzes" element={<QuizPage />} />
                   <Route path="/resources" element={<GoogleResources />} />
+                  <Route path="/looking-forward" element={<LookingForward />} />
                 </Routes>
                 <HomeNav />
                 <Chatbot />

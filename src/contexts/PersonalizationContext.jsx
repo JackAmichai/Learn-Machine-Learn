@@ -1,6 +1,7 @@
-import { createContext, useState, useEffect, useCallback, useMemo } from 'react';
+import { createContext, useState, useCallback, useMemo } from 'react';
 import { loadProfile, saveProfile, DEFAULT_PROFILE } from '../engine/personalizationEngine';
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const PersonalizationContext = createContext({
   profile: null,
   setProfile: () => {},
@@ -9,17 +10,8 @@ export const PersonalizationContext = createContext({
 });
 
 export function PersonalizationProvider({ children }) {
-  const [profile, setProfileState] = useState(null);
-  const [loaded, setLoaded] = useState(false);
-
-  // Load profile from localStorage on mount
-  useEffect(() => {
-    const stored = loadProfile();
-    if (stored) {
-      setProfileState(stored);
-    }
-    setLoaded(true);
-  }, []);
+  const [profile, setProfileState] = useState(() => loadProfile());
+  const [loaded] = useState(true);
 
   const setProfile = useCallback((newProfile) => {
     const merged = { ...DEFAULT_PROFILE, ...newProfile, createdAt: newProfile.createdAt || Date.now() };

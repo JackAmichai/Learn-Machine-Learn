@@ -4,8 +4,6 @@ export default function PPOVisualizer() {
   const [clip, setClip] = useState(0.2);
   const [epoch, setEpoch] = useState(3);
   
-  const clipRatio = Math.max(0, Math.min(1, (1 - clip) * 1.5));
-  
   return (
     <div className="ppo-visualizer">
       <div className="viz-container">

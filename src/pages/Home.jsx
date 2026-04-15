@@ -181,6 +181,9 @@ export function Home() {
             <Link to="/resources" className="btn-nav">
               Resources
             </Link>
+            <Link to="/looking-forward" className="btn-nav">
+              Future
+            </Link>
             <button className="btn-shortcuts" onClick={() => setShowShortcuts(true)} aria-label="Show keyboard shortcuts">
               ⌨️
             </button>

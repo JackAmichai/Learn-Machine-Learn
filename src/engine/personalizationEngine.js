@@ -40,31 +40,31 @@ const TOPIC_CATEGORIES = {
  label: 'Foundations',
  icon: '',
  description: 'Core building blocks of neural networks',
- topics: ['Loss', 'Activation', 'ActivationAdvanced', 'Hidden Layer', 'Nodes', 'Layer', 'Gradient', 'Backpropagation', 'Epoch', 'Learning Rate'],
+ topics: ['FoundationsIntro', 'Loss', 'Activation', 'ActivationAdvanced', 'Hidden Layer', 'Nodes', 'Layer', 'Gradient', 'Backpropagation', 'Epoch', 'Learning Rate'],
  },
  math: {
  label: 'Math Foundations',
  icon: '',
  description: 'The mathematical backbone',
- topics: ['Vectors & Matrices', 'Dot Product', 'Matrix Multiplication', 'Tensors', 'Jacobian', 'Hessian', 'BayesTheorem', 'KLDivergence', 'Signal Processing'],
+ topics: ['MathIntro', 'Vectors & Matrices', 'Dot Product', 'Matrix Multiplication', 'Tensors', 'Jacobian', 'Hessian', 'BayesTheorem', 'KLDivergence', 'Signal Processing'],
  },
  classical: {
  label: 'Classical ML',
  icon: '️',
  description: 'Statistical models before deep learning',
- topics: ['LinearRegression', 'LogisticRegression', 'SVM', 'DecisionTree', 'RandomForest', 'KNN', 'NaiveBayes', 'KMeans', 'DBSCAN', 'PCA', 'TSNE', 'UMAP'],
+ topics: ['ClassicalMLIntro', 'LinearRegression', 'LogisticRegression', 'SVM', 'DecisionTree', 'RandomForest', 'KNN', 'NaiveBayes', 'KMeans', 'DBSCAN', 'PCA', 'TSNE', 'UMAP'],
  },
  coreML: {
  label: 'Deep Learning Core',
  icon: '️',
  description: 'Essential neural network techniques',
- topics: ['Optimizer', 'Softmax', 'Regularization', 'L1L2', 'BatchNorm', 'LayerNorm', 'Dropout', 'EarlyStopping', 'CrossValidation', 'DataAugmentation', 'Classification Metrics'],
+ topics: ['CoreDLIntro', 'Optimizer', 'Softmax', 'Regularization', 'L1L2', 'BatchNorm', 'LayerNorm', 'Dropout', 'EarlyStopping', 'CrossValidation', 'DataAugmentation', 'Classification Metrics'],
  },
  vision: {
  label: 'Computer Vision',
  icon: '️',
  description: 'How machines understand images',
- topics: ['Convolution', 'Pooling', 'Padding', 'SkipConnection', 'VisionArchitecture', 'Inception', 'ObjectDetection', 'AnchorBoxes', 'IoU', 'Segmentation'],
+ topics: ['VisionIntro', 'Convolution', 'Pooling', 'Padding', 'SkipConnection', 'VisionArchitecture', 'Inception', 'ObjectDetection', 'AnchorBoxes', 'IoU', 'Segmentation'],
  },
  rl: {
  label: 'Reinforcement Learning',
@@ -82,7 +82,7 @@ const TOPIC_CATEGORIES = {
  label: 'Modern AI',
  icon: '',
  description: 'Cutting-edge architectures & models',
- topics: ['RNN', 'LSTM', 'Transformer', 'VisionTransformer', 'LoRA', 'Diffusion', 'CLIP', 'StableDiffusion', 'LLM', 'RAG', 'Multimodal'],
+ topics: ['ModernAIIntro', 'RNN', 'LSTM', 'Transformer', 'VisionTransformer', 'LoRA', 'Diffusion', 'CLIP', 'StableDiffusion', 'LLM', 'RAG', 'Multimodal'],
  },
  advanced: {
  label: 'Advanced Frontier',
@@ -162,7 +162,7 @@ export function getRecommendedTopics(profile) {
 /**
  * Returns presentation config for a specific topic.
  */
-export function getTopicPresentation(profile, topicKey) {
+export function getTopicPresentation(profile) {
  const { emphasis, ageGroup } = profile;
 
  // Determine complexity level
@@ -296,6 +296,7 @@ export function loadProfile() {
  * Mark a topic as completed.
  */
 export function markTopicComplete(topicKey) {
+  // eslint-disable-next-line no-unused-vars
  const profile = loadProfile();
  if (!profile) return;
  if (!profile.completedTopics) profile.completedTopics = [];

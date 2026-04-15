@@ -9,16 +9,18 @@ export default function RandomForestVisualizer({ values }) {
   const trees = useMemo(() => {
     // We cap visualization at ~50 trees so DOM doesn't get overloaded, but display the actual number
     const renderCount = Math.min(numTrees, 50);
+    const seed = 12345;
+    const pseudoRandom = (i) => {
+      const x = Math.sin(seed + i * 9999) * 10000;
+      return x - Math.floor(x);
+    };
     return Array.from({ length: renderCount }).map((_, i) => {
-      // Simulate each tree predicting 1 or 0 based on random chance
-      // With more trees, the average converges. We'll bias it to 1.
-      const prediction = Math.random() > 0.4 ? 1 : 0; 
+      const prediction = pseudoRandom(i) > 0.4 ? 1 : 0; 
       return { id: i, prediction };
     });
   }, [numTrees]);
 
   const class1Votes = trees.filter(t => t.prediction === 1).length;
-  const class0Votes = trees.length - class1Votes;
   
   // Scale the stats to the real numTrees vs rendered trees
   const ratio = numTrees / trees.length;

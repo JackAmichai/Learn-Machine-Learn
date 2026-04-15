@@ -192,11 +192,11 @@ export function Controls(props) {
                                         <div key={idx} className="layer-item">
                                             <span className="layer-label">{isInput ? 'Input' : isOutput ? 'Output' : `Hidden ${idx}`}</span>
                                             <div className="node-control">
-                                                {isHidden && <button onClick={() => updateNodeCount(idx, -1)}>-</button>}
+                                                {isHidden && <button onClick={() => updateNodeCount(idx, -1)} aria-label={`Decrease neurons in layer ${idx}`}>-</button>}
                                                 <span className="node-count">{nodes}</span>
-                                                {isHidden && <button onClick={() => updateNodeCount(idx, 1)}>+</button>}
+                                                {isHidden && <button onClick={() => updateNodeCount(idx, 1)} aria-label={`Increase neurons in layer ${idx}`}>+</button>}
                                             </div>
-                                            {isHidden && <button className="btn-del" onClick={() => removeLayer(idx)}>×</button>}
+                                            {isHidden && <button className="btn-del" onClick={() => removeLayer(idx)} aria-label={`Remove layer ${idx}`}>×</button>}
                                             {isHidden && (
                                                 <div className="layer-advanced">
                                                     <div className="pill-group">

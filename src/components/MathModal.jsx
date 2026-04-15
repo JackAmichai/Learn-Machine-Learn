@@ -4,6 +4,7 @@ import { VisualizerRegistry } from './math/VisualizerRegistry';
 import { PersonalizationContext } from '../contexts/PersonalizationContext';
 import { getTopicPresentation } from '../engine/personalizationEngine';
 import { getWikiUrl } from '../data/wikipediaLinks';
+import { getNotebookLMLink } from '../data/notebookLMLinks';
 
 export function MathModal({ topic, onClose, onComplete }) {
  const data = MATH_TOPICS[topic];
@@ -13,6 +14,7 @@ export function MathModal({ topic, onClose, onComplete }) {
  const completedTopics = profile?.completedTopics || [];
  const isCompleted = completedTopics.includes(topic);
  const wikiUrl = getWikiUrl(topic);
+ const notebookUrl = getNotebookLMLink(topic);
 
  const handleGotIt = () => {
  if (onComplete) onComplete(topic);
@@ -84,12 +86,28 @@ export function MathModal({ topic, onClose, onComplete }) {
 
  <div className={`math-body ${!presentation.showMath ? 'visual-only' : ''}`} dangerouslySetInnerHTML={{ __html: data.content }} />
 
- {/* Custom Visualizer Section */}
- {Visualizer && (
- <div className="custom-visualizer">
- <Visualizer values={sliderValues} />
- </div>
- )}
+  {/* Custom Visualizer Section */}
+  {Visualizer && (
+  <div className="custom-visualizer">
+  <Visualizer values={sliderValues} />
+  </div>
+  )}
+
+  {/* Solved Section - What this concept addresses */}
+  {data.solved && (
+  <div className="lesson-section solved-section">
+    <h4>✅ What This Solved</h4>
+    <div dangerouslySetInnerHTML={{ __html: data.solved }} />
+  </div>
+  )}
+
+  {/* Shortcomings Section */}
+  {data.shortcomings && (
+  <div className="lesson-section shortcomings-section">
+    <h4>⚠️ Current Shortcomings</h4>
+    <div dangerouslySetInnerHTML={{ __html: data.shortcomings }} />
+  </div>
+  )}
 
  {/* Interactive Formula Explorer — shown based on persona */}
  {presentation.showInteractiveFormulas && interactiveFormulas.length > 0 && (
@@ -147,7 +165,22 @@ export function MathModal({ topic, onClose, onComplete }) {
  <polyline points="15 3 21 3 21 9"></polyline>
  <line x1="10" y1="14" x2="21" y2="3"></line>
  </svg>
- Learn more on Wikipedia
+ Wikipedia
+ </a>
+ )}
+ {notebookUrl && (
+ <a
+ className="notebook-btn"
+ href={notebookUrl}
+ target="_blank"
+ rel="noopener noreferrer"
+ aria-label={`See summary of ${data.title} in NotebookLM`}
+ >
+ <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+ <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+ <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+ </svg>
+ Summary
  </a>
  )}
  <button
@@ -158,7 +191,7 @@ export function MathModal({ topic, onClose, onComplete }) {
  {isCompleted ? (
  <>
  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
- Completed
+ Done
  </>
  ) : (
  <>Got it!</>
@@ -370,13 +403,54 @@ export function MathModal({ topic, onClose, onComplete }) {
  color: var(--accent-primary);
  font-size: 16px;
  }
- .explorer-desc {
- font-size: 13px;
- color: var(--text-secondary);
- margin-bottom: 20px;
- }
- 
- .math-footer {
+  .explorer-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  }
+  
+  /* Solved & Shortcomings Sections */
+  .lesson-section {
+  margin-top: 20px;
+  padding: 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.6;
+  }
+  .lesson-section h4 {
+  margin: 0 0 12px 0;
+  font-size: 15px;
+  }
+  .lesson-section ul {
+  margin: 0;
+  padding-left: 20px;
+  }
+  .lesson-section li {
+  margin-bottom: 6px;
+  color: var(--text-secondary);
+  }
+  .solved-section {
+  background: rgba(52, 211, 153, 0.08);
+  border: 1px solid rgba(52, 211, 153, 0.25);
+  }
+  .solved-section h4 {
+  color: #34d399;
+  }
+  .solved-section li {
+  color: #a7f3d0;
+  }
+  .shortcomings-section {
+  background: rgba(251, 146, 60, 0.08);
+  border: 1px solid rgba(251, 146, 60, 0.25);
+  }
+  .shortcomings-section h4 {
+  color: #fb923c;
+  }
+  .shortcomings-section li {
+  color: #fed7aa;
+  }
+  
+  .math-footer {
  margin-top: 30px;
  display: flex;
  align-items: center;
@@ -386,7 +460,7 @@ export function MathModal({ topic, onClose, onComplete }) {
  padding-top: 20px;
  border-top: 1px solid var(--glass-border);
  }
- .wiki-btn {
+ .wiki-btn, .notebook-btn {
  display: inline-flex;
  align-items: center;
  gap: 8px;
@@ -400,11 +474,19 @@ export function MathModal({ topic, onClose, onComplete }) {
  text-decoration: none;
  transition: all 0.2s;
  }
- .wiki-btn:hover {
+ .wiki-btn:hover, .notebook-btn:hover {
  border-color: var(--accent-primary);
  color: var(--accent-primary);
  background: rgba(0, 242, 255, 0.06);
  transform: translateY(-1px);
+ }
+ .notebook-btn {
+ border-color: rgba(112, 0, 255, 0.2);
+ }
+ .notebook-btn:hover {
+ border-color: var(--accent-secondary);
+ color: var(--accent-secondary);
+ background: rgba(112, 0, 255, 0.06);
  }
  .got-it-btn {
  display: inline-flex;

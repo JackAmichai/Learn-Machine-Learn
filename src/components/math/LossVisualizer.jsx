@@ -5,7 +5,6 @@ export default function LossVisualizer() {
   const [actual, setActual] = useState(5);
   
   const mse = Math.pow(predicted - actual, 2);
-  const mae = Math.abs(predicted - actual);
   
   return (
     <div className="loss-visualizer">

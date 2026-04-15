@@ -1,5 +1,205 @@
 export const MATH_TOPICS = {
- "SVM": {
+ "FoundationsIntro": {
+ title: "Foundations: The Building Blocks",
+ content: `
+ <p>Welcome to the core of Neural Networks! In this section, we'll explore the fundamental components that make "learning" possible. Understanding these is crucial before diving into more complex architectures.</p>
+ 
+ <h4>The Roadmap</h4>
+ <ul>
+  <li><strong>Nodes & Layers</strong>: How we structure the network to mimic biological neurons.</li>
+  <li><strong>Activation Functions</strong>: The "switches" that determine if a signal is important.</li>
+  <li><strong>Loss Functions</strong>: How we measure exactly how "wrong" our model is.</li>
+  <li><strong>Gradients & Backpropagation</strong>: The mathematical engine that tells every weight how to change to improve.</li>
+ </ul>
+
+ <h4>How They Connect</h4>
+  <p>Imagine a waterfall of information. Data flows into <strong>Nodes</strong>, gets shaped by <strong>Activations</strong>, and produces a guess. We compare that guess to the truth using a <strong>Loss Function</strong>. Then, we use <strong>Gradients</strong> to work backwards (<strong>Backpropagation</strong>) and tune the <strong>Weights</strong> so the loss is smaller next time. This cycle repeats for many <strong>Epochs</strong> until the model is smart.</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Universal function approximation</strong>: Neural networks can learn to approximate any continuous function</li>
+  <li><strong>Automatic feature learning</strong>: Instead of hand-engineering features, networks learn them from data</li>
+  <li><strong>Scalability</strong>: Networks improve with more data and compute — unlike traditional ML which plateaus</li>
+  <li><strong>End-to-end learning</strong>: Single differentiable pipeline from input to output</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Black box nature</strong>: Hard to interpret why the network made a specific decision</li>
+  <li><strong>Data hunger</strong>: Need massive labeled datasets to train well</li>
+  <li><strong>Computationally expensive</strong>: Requires GPUs, lots of memory and energy</li>
+  <li><strong>Vanishing gradients</strong>: Deep networks struggle to train as gradients can become tiny</li>
+  </ul>
+  `,
+  visualizer: "NeuralNetwork",
+  },
+  "MathIntro": {
+ title: "Math Foundations: The Language of AI",
+ content: `
+ <p>Don't let the equations intimidate you! Machine Learning is built on a few key mathematical pillars: Linear Algebra, Calculus, and Probability. In this section, we'll make them intuitive.</p>
+
+ <h4>The Roadmap</h4>
+ <ul>
+  <li><strong>Vectors & Matrices</strong>: The grids of numbers that represent everything from images to weights.</li>
+  <li><strong>Dot Product</strong>: A "similarity meter" that calculates how much two signals align.</li>
+  <li><strong>Tensors</strong>: Generalizing numbers to 3D, 4D, and beyond (essential for video and batches).</li>
+  <li><strong>Jacobians & Hessians</strong>: Tools from Calculus that help us navigate the complex landscape of "Loss".</li>
+ </ul>
+
+ <h4>Why It Matters</h4>
+  <p>Calculus tells us <em>which way</em> to move (Direction), while Linear Algebra handles the <em>huge scale</em> of modern data. Together, they allow us to process millions of pixels or words simultaneously.</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Foundation for all ML</strong>: Every algorithm — from regression to transformers — is built on linear algebra and calculus</li>
+  <li><strong>Efficient computation</strong>: Matrix operations enable processing millions of parameters in parallel</li>
+  <li><strong>Gradient-based optimization</strong>: Calculus provides the tools to minimize loss functions</li>
+  <li><strong>Probability theory</strong>: Enables uncertainty quantification and Bayesian methods</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Intimidating notation</strong>: Mathematical notation can be barriers to entry</li>
+  <li><strong>Abstract concepts</strong>: Jacobian, Hessian, and tensor operations are hard to visualize</li>
+  <li><strong>Scale challenges</strong>: Naive implementations don't scale; need optimized libraries</li>
+  <li><strong>Can be overkill</strong>: Deep learning often works without explicit math knowledge</li>
+  </ul>
+  `,
+  },
+  "ClassicalMLIntro": {
+ title: "Classical ML: Statistical Wisdom",
+ content: `
+ <p>Before deep learning took over, "Classical" Machine Learning provided robust tools for data analysis. These methods are still widely used because they are fast, interpretable, and work great on smaller datasets.</p>
+
+ <h4>The Roadmap</h4>
+ <ul>
+  <li><strong>Linear & Logistic Regression</strong>: The foundation of prediction and classification.</li>
+  <li><strong>SVM (Support Vector Machines)</strong>: Finding the perfect "boundary" between classes.</li>
+  <li><strong>Decision Trees & Random Forests</strong>: Making decisions using a flowchart-like logic.</li>
+  <li><strong>PCA</strong>: Simplifying complex data by finding the most important patterns.</li>
+ </ul>
+
+ <h4>How They Connect</h4>
+  <p>While Neural Networks are like a brain, Classical ML models are like specialized tools. <strong>SVM</strong> is a master at finding boundaries, <strong>Random Forests</strong> are great at handling messy data, and <strong>KNN</strong> uses simple "neighbor" logic. Understanding these gives you a toolbox for any data problem.</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Interpretability</strong>: Most classical methods produce explainable models</li>
+  <li><strong>Small data friendly</strong>: Work well with thousands, not millions, of samples</li>
+  <li><strong>Fast training and inference</strong>: No GPUs needed; runs in seconds</li>
+  <li><strong>Strong baselines</strong>: Often hard to beat on structured/tabular data</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Feature engineering required</strong>: Don't learn features automatically; need good features</li>
+  <li><strong>Limited expressiveness</strong>: Can't capture complex patterns without explicit engineering</li>
+  <li><strong>Plateau with more data</strong>: Performance saturates; deep learning continues improving</li>
+  <li><strong>Bottleneck for complex tasks</strong>: Image, text, speech need specialized deep learning</li>
+  </ul>
+  `,
+  },
+  "CoreDLIntro": {
+  title: "Deep Learning Core: Training Techniques",
+  content: `
+  <p>Moving beyond basic neurons, we need sophisticated techniques to train huge networks efficiently. This section covers the "engineering" of deep learning.</p>
+
+  <h4>The Roadmap</h4>
+  <ul>
+   <li><strong>Optimizers (like Adam)</strong>: Smarter ways to update weights than simple descent.</li>
+   <li><strong>Regularization (L1/L2, Dropout)</strong>: Techniques to stop the model from "memorizing" (overfitting).</li>
+   <li><strong>Normalization (BatchNorm)</strong>: Keeping signals stable as they flow through deep layers.</li>
+   <li><strong>Classification Metrics</strong>: Better ways to measure success than just "Accuracy".</li>
+  </ul>
+
+  <h4>The Synergy</h4>
+  <p>A deep network is like a race car. The <strong>Optimizer</strong> is the engine, <strong>Regularization</strong> is the safety gear, and <strong>Normalization</strong> is the suspension that keeps the ride smooth. Without these, deep networks often fail to learn anything useful.</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Stable training</strong>: Enables training networks with 100+ layers</li>
+  <li><strong>Faster convergence</strong>: Adaptive optimizers don't require manual learning rate tuning</li>
+  <li><strong>Generalization</strong>: Regularization prevents memorization and improves test performance</li>
+  <li><strong>Better metrics</strong>: Precision, recall, F1 provide nuanced performance understanding</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Hyperparameter complexity</strong>: Adding techniques adds more hyperparameters to tune</li>
+  <li><strong>Training instability</strong>: Without these, deep networks often fail to converge</li>
+  <li><strong>Computational overhead</strong>: BatchNorm adds inference cost; dropout halves effective capacity during training</li>
+  <li><strong>Not always necessary</strong>: Modern transformers and ResNets may not need all techniques</li>
+  </ul>
+  `,
+  },
+  "VisionIntro": {
+ title: "Computer Vision: Teaching Machines to See",
+ content: `
+ <p>How does a computer see a cat in a grid of numbers? <strong>Convolutional Neural Networks (CNNs)</strong> are the answer. They use spatial patterns to recognize shapes, edges, and objects.</p>
+
+ <h4>The Roadmap</h4>
+ <ul>
+  <li><strong>Convolution</strong>: Sliding "filters" to detect features like vertical lines or corners.</li>
+  <li><strong>Pooling & Padding</strong>: Managing image size and keeping important details.</li>
+  <li><strong>Skip Connections</strong>: The trick that allowed us to build 100+ layer networks (ResNets).</li>
+  <li><strong>GANs</strong>: Competition between networks that results in "creating" new images.</li>
+ </ul>
+
+ <h4>The Hierarchy</h4>
+  <p>Vision networks are hierarchical. The first layers see <em>lines</em>, the middle layers see <em>shapes</em> (eyes, ears), and the final layers see <em>objects</em> (cats, cars). It's very similar to how the human visual cortex works!</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Hierarchical feature learning</strong>: Automatically learns edges → shapes → objects without manual feature engineering</li>
+  <li><strong>Translation invariance</strong>: Can recognize objects regardless of position in image</li>
+  <li><strong>Efficient parameter sharing</strong>: Same filters applied across entire image — far fewer parameters than fully connected layers</li>
+  <li><strong>State-of-the-art accuracy</strong>: Achieves superhuman accuracy on image classification</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Limited receptive field</strong>: CNNs struggle with global context; need many layers to "see" far</li>
+  <li><strong>Not rotation invariant</strong>: Must use data augmentation to learn rotated versions</li>
+  <li><strong>Memory intensive</strong>: Large images require significant GPU memory</li>
+  <li><strong>Replaced by ViT</strong>: Vision Transformers now often outperform CNNs on large datasets</li>
+  </ul>
+  `,
+  visualizer: "CNN",
+  },
+  "ModernAIIntro": {
+  title: "Modern AI: Transformers & Beyond",
+  content: `
+  <p>We are currently in the era of <strong>Generative AI</strong>. This section covers the architectures powering ChatGPT, Midjourney, and more.</p>
+
+ <h4>The Roadmap</h4>
+ <ul>
+  <li><strong>Transformers</strong>: The "Attention" mechanism that revolutionized how machines process sequences.</li>
+  <li><strong>Diffusion Models</strong>: The math behind generating hyper-realistic images from noise.</li>
+  <li><strong>LLMs & LoRA</strong>: How we scale these models and fine-tune them for specific tasks.</li>
+ </ul>
+
+ <h4>The Big Shift</h4>
+  <p>Modern AI moved from <em>predicting</em> to <em>creating</em>. By using "Self-Attention", models can understand context over huge distances (like a whole book), allowing for the deep reasoning we see in today's AI agents.</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Generative capability</strong>: Can create text, images, audio that weren't in training data</li>
+  <li><strong>Long-range dependencies</strong>: Attention captures relationships across entire sequences</li>
+  <li><strong>Few-shot learning</strong>: Can follow instructions without fine-tuning</li>
+  <li><strong>Multimodal integration</strong>: Can combine text, image, and audio understanding</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Hallucinations</strong>: Generate plausible but factually incorrect content</li>
+  <li><strong>Enormous compute</strong>: GPT-4 and similar models require massive GPU clusters</li>
+  <li><strong>Token limits</strong>: Context windows are limited; can't process infinite text</li>
+  <li><strong>Environmental impact</strong>: Training consumes enormous energy</li>
+  </ul>
+  `,
+  visualizer: "Transformer",
+  },
+  "SVM": {
  title: "SVM: Support Vector Machines",
  content: `
  <p><strong>SVM</strong> finds the hyperplane that best separates two classes with the <strong>maximum margin</strong>. It's robust to outliers and works well in high dimensions.</p>
@@ -35,9 +235,25 @@ export const MATH_TOPICS = {
  • The <em>C</em> hyperparameter trades margin width against misclassification — tune it with cross-validation.</p>
 
  <h4>Real-World Uses</h4>
- <p>Spam filtering, handwritten digit recognition, protein classification, face detection (pre-deep-learning), and many Kaggle wins on tabular data.</p>
- `,
- visualizer: "SVM",
+  <p>Spam filtering, handwritten digit recognition, protein classification, face detection (pre-deep-learning), and many Kaggle wins on tabular data.</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Linear separability</strong>: SVMs can find perfect boundaries when data is linearly separable in some dimension</li>
+  <li><strong>High-dimensional data</strong>: Works well when features > samples (genomics, text classification)</li>
+  <li><strong>Interpretability</strong>: Support vectors clearly show which points matter most for the decision boundary</li>
+  <li><strong>Kernel trick</strong>: Solves non-linear problems without explicit feature engineering</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Scaling issues</strong>: Training is O(n²) to O(n³) — cannot handle millions of samples</li>
+  <li><strong>Kernel selection</strong>: Choosing wrong kernel (RBF vs linear) hurts performance significantly</li>
+  <li><strong>No probability output</strong>: Only gives class labels, not probabilities (without Platt scaling)</li>
+  <li><strong>Sensitive to scaling</strong>: Features must be normalized, or SVM fails</li>
+  </ul>
+  `,
+  visualizer: "SVM",
  interactiveFormulas: [
  {
  name: "Margin Size",
@@ -89,9 +305,25 @@ export const MATH_TOPICS = {
  • Biased toward features with many unique values (use permutation importance to check).</p>
 
  <h4>Real-World Uses</h4>
- <p>Credit scoring, medical triage, customer-churn rules engines, and as the weak learners inside Random Forests and Gradient Boosting (XGBoost, LightGBM) — which still win the majority of tabular-data Kaggle competitions.</p>
- `,
- visualizer: "Tree",
+  <p>Credit scoring, medical triage, customer-churn rules engines, and as the weak learners inside Random Forests and Gradient Boosting (XGBoost, LightGBM) — which still win the majority of tabular-data Kaggle competitions.</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Interpretability</strong>: Can print and read the tree — no black box</li>
+  <li><strong>Mixed data types</strong>: Handles both numeric and categorical without one-hot encoding</li>
+  <li><strong>No feature scaling needed</strong>: Splits depend on order, not magnitude</li>
+  <li><strong>Non-linear relationships</strong>: Can capture complex patterns without explicit feature engineering</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Overfitting</strong>: Deep trees memorize noise; need max_depth or pruning</li>
+  <li><strong>Instability</strong>: Small data changes produce very different trees</li>
+  <li><strong>Biased to features with many unique values</strong>: Can miss important features with few values</li>
+  <li><strong>Greedy algorithm</strong>: Makes locally optimal splits that may not be globally optimal</li>
+  </ul>
+  `,
+  visualizer: "Tree",
  interactiveFormulas: [
  {
  name: "Gini Impurity",
@@ -139,14 +371,46 @@ export const MATH_TOPICS = {
  "The final prediction is typically a majority vote (classification) or average (regression)."
  ]
  }
- ]
- },
-"KNN": {
-  title: "KNN: K-Nearest Neighbors",
-  content: `
-  <p><strong>KNN</strong> classifies a point based on the majority class of its 'k' closest neighbors. It's a 'lazy learner' (no training phase).</p>
+  ],
+  solved: `
+  <ul>
+  <li><strong>Reduced variance</strong>: Averaging many trees reduces overfitting compared to single tree</li>
+  <li><strong>Feature importance</strong>: Built-in importance scores show which features matter most</li>
+  <li><strong>Handles missing values</strong>: Can handle missing data without imputation</li>
+  <li><strong>Robust to outliers</strong>: Individual tree errors are averaged out</li>
+  </ul>
   `,
-  visualizer: "KNN",
+  shortcomings: `
+  <ul>
+  <li><strong>Memory intensive</strong>: Must store all trees; can be large on disk</li>
+  <li><strong>Slower inference</strong>: Must run all trees for each prediction</li>
+  <li><strong>Less interpretable</strong>: Can't print the whole forest like a single tree</li>
+  <li><strong>Not always best</strong>: Gradient boosting often outperforms on structured data</li>
+  </ul>
+  `,
+  },
+   "KNN": {
+   title: "KNN: K-Nearest Neighbors",
+   content: `
+   <p><strong>KNN</strong> classifies a point based on the majority class of its 'k' closest neighbors. It's a 'lazy learner' (no training phase).</p>
+   `,
+   solved: `
+   <ul>
+   <li><strong>No training phase</strong>: KNN is simple — just stores data, makes predictions on-the-fly</li>
+   <li><strong>Intuitive</strong>: "Tell me who your friends are, I'll tell you who you are"</li>
+   <li><strong>No model assumptions</strong>: Works for any data distribution</li>
+   <li><strong>Adaptable</strong>: Can easily add new training data without retraining</li>
+   </ul>
+   `,
+   shortcomings: `
+   <ul>
+   <li><strong>Slow prediction</strong>: Must compute distances to ALL training points for each prediction</li>
+   <li><strong>Curse of dimensionality</strong>: Distances become meaningless in high dimensions</li>
+   <li><strong>Feature scaling required</strong>: Without normalization, features with larger ranges dominate</li>
+   <li><strong>Sensitive to k</strong>: Small k = noise sensitive, large k = smooth but may miss patterns</li>
+   </ul>
+   `,
+   visualizer: "KNN",
  interactiveFormulas: [
  {
  name: "Euclidean Distance",
@@ -167,12 +431,28 @@ export const MATH_TOPICS = {
  }
  ]
  },
-"PCA": {
-  title: "PCA: Principal Component Analysis",
-  content: `
-  <p><strong>PCA</strong> reduces data dimensions while preserving as much variance as possible. It finds new axes (Principal Components) that are orthogonal.</p>
-  `,
-  visualizer: "PCA",
+  "PCA": {
+   title: "PCA: Principal Component Analysis",
+   content: `
+   <p><strong>PCA</strong> reduces data dimensions while preserving as much variance as possible. It finds new axes (Principal Components) that are orthogonal.</p>
+   `,
+   solved: `
+   <ul>
+   <li><strong>Dimensionality reduction</strong>: Reduces hundreds of features to just a few principal components</li>
+   <li><strong>Noise reduction</strong>: Minor components often contain noise; dropping them denoises data</li>
+   <li><strong>Visualization</strong>: Makes high-dimensional data viewable in 2D/3D</li>
+   <li><strong>Decorrelation</strong>: Principal components are uncorrelated — solves multicollinearity</li>
+   </ul>
+   `,
+   shortcomings: `
+   <ul>
+   <li><strong>Linear only</strong>: Only finds linear relationships; misses non-linear patterns</li>
+   <li><strong>Interpretability loss</strong>: Principal components are abstract combinations, not original features</li>
+   <li><strong>Assumes Gaussian</strong>: Optimal for normally distributed data</li>
+   <li><strong>Information loss</strong>: Reducing dimensions always loses some information</li>
+   </ul>
+   `,
+   visualizer: "PCA",
   interactiveFormulas: [
  {
  name: "Explained Variance",
@@ -207,10 +487,26 @@ export const MATH_TOPICS = {
   <h4>Mean Squared Error (MSE)</h4>
   <p>Classic regression loss. Squaring the difference punishes large mistakes strongly.</p>
   <div class="equation">
-  MSE = (1 / n) * sum (y - y_hat)^2
-  </div>
-  `,
-  visualizer: "Loss",
+   MSE = (1 / n) * sum (y - y_hat)^2
+   </div>
+   `,
+   solved: `
+   <ul>
+   <li><strong>Optimization target</strong>: Provides a differentiable signal for gradient descent</li>
+   <li><strong>Single metric</strong>: Reduces complex prediction errors to one number</li>
+   <li><strong>Differentiable</strong>: MSE has a clean gradient, making optimization straightforward</li>
+   <li><strong>Quantifies error magnitude</strong>: Squares penalize large errors more than small ones</li>
+   </ul>
+   `,
+   shortcomings: `
+   <ul>
+   <li><strong>Outlier sensitivity</strong>: MSE squares large errors heavily — outliers dominate the loss</li>
+   <li><strong>No probability interpretation</strong>: Doesn't give calibrated probabilities like cross-entropy</li>
+   <li><strong>Scale-dependent</strong>: MSE value depends on target scale — hard to compare across tasks</li>
+   <li><strong>Non-robust</strong>: A few bad predictions can make the whole loss huge</li>
+   </ul>
+   `,
+   visualizer: "Loss",
  interactiveFormulas: [
  {
  name: "Huber Loss",
@@ -330,15 +626,31 @@ export const MATH_TOPICS = {
  }
  ]
  },
- "Epoch": {
- title: "Epoch, Batch, and Iterations",
- content: `
- <p>An <strong>Epoch</strong> is one full sweep through the training data. Inside each epoch, we chop data into batches so gradients fit in memory.</p>
- <div class="equation">
- Updates = Epochs * (Data Size / Batch Size)
- </div>
- <p>Think of it like re-reading your notes. Each epoch reinforces the pattern but too many can lead to memorization (overfitting).</p>
- `,
+  "Epoch": {
+  title: "Epoch, Batch, and Iterations",
+  content: `
+  <p>An <strong>Epoch</strong> is one full sweep through the training data. Inside each epoch, we chop data into batches so gradients fit in memory.</p>
+  <div class="equation">
+  Updates = Epochs * (Data Size / Batch Size)
+  </div>
+  <p>Think of it like re-reading your notes. Each epoch reinforces the pattern but too many can lead to memorization (overfitting).</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Memory efficiency</strong>: Batches fit in GPU memory vs entire dataset</li>
+  <li><strong>Noisy gradients</strong>: Small batches provide regularization effect</li>
+  <li><strong>Faster convergence</strong>: More weight updates per epoch with small batches</li>
+  <li><strong>Training control</strong>: Epochs let us track progress and apply early stopping</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Batch size trade-off</strong>: Small = noisy gradients, large = slower convergence</li>
+  <li><strong>Overfitting risk</strong>: Too many epochs = memorized training data</li>
+  <li><li><strong>Inconsistent epoch times</strong>: Variable batch counts slow training</strong></li>
+  <li><strong>Hard to determine optimal epochs</strong>: Requires validation or early stopping</li>
+  </ul>
+  `,
  interactiveFormulas: [
  {
  name: "Training Update Counter",
@@ -394,15 +706,31 @@ export const MATH_TOPICS = {
  }
  ]
  },
- "Learning Rate": {
- title: "Learning Rate and Schedules",
- content: `
- <p>The <strong>Learning Rate</strong> controls the size of weight updates. Too high and the system oscillates, too low and training crawls.</p>
- <p>Engineers often apply schedules so the network takes big steps early and fine-steps later.</p>
- <div class="equation">
- w_new = w_old - lr * gradient
- </div>
- `,
+  "Learning Rate": {
+  title: "Learning Rate and Schedules",
+  content: `
+  <p>The <strong>Learning Rate</strong> controls the size of weight updates. Too high and the system oscillates, too low and training crawls.</p>
+  <p>Engineers often apply schedules so the network takes big steps early and fine-steps later.</p>
+  <div class="equation">
+  w_new = w_old - lr * gradient
+  </div>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Controls convergence speed</strong>: Proper LR enables fast training</li>
+  <li><strong>Learning rate schedules</strong>: Decay helps find better optima</li>
+  <li><strong>Adaptive methods</strong>: Adam, RMSprop auto-tune LR per parameter</li>
+  <li><strong>Prevents divergence</strong>: Keeps weight updates from exploding</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Sensitive hyperparameter</strong>: Wrong LR breaks training entirely</li>
+  <li><strong>Needs schedule</strong>: Static LR rarely works for full training</li>
+  <li><strong>May get stuck</strong>: Can converge to poor local minima</li>
+  <li><strong>Differs per architecture</strong>: What works for CNNs may fail for RNNs</li>
+  </ul>
+  `,
  interactiveFormulas: [
  {
  name: "Instant Weight Update",
@@ -461,10 +789,26 @@ export const MATH_TOPICS = {
   ]
   },
   "Activation": {
-  title: "Activation Functions = Signal Shapers",
-   content: `
-   <p>Activations transform summed inputs before passing them onward. They introduce non-linearity so the network can learn complex patterns and logic gates.</p>
-  `,
+   title: "Activation Functions = Signal Shapers",
+    content: `
+    <p>Activations transform summed inputs before passing them onward. They introduce non-linearity so the network can learn complex patterns and logic gates.</p>
+   `,
+   solved: `
+   <ul>
+   <li><strong>Non-linearity</strong>: Without activations, network is just linear regression</li>
+   <li><strong>Gradient flow</strong>: Activations like ReLU help gradients propagate</li>
+   <li><strong>Representational power</strong>: Enable networks to approximate any function</li>
+   <li><strong>Sparse activation</strong>: ReLU's zero outputs create efficient representations</li>
+   </ul>
+   `,
+   shortcomings: `
+   <ul>
+   <li><strong>Vanishing gradients</strong>: Sigmoid/tanh squash gradients to near-zero</li>
+   <li><strong>Dead neurons</strong>: ReLU neurons can permanently output zero</li>
+   <li><strong>Not zero-centered</strong>: Sigmoid outputs all positive, causing optimization issues</li>
+   <li><strong>Exploding outputs</strong>: Unbounded activations can cause numerical instability</li>
+   </ul>
+   `,
    visualizer: "Activation",
    interactiveFormulas: [
  {
@@ -605,12 +949,28 @@ export const MATH_TOPICS = {
  }
  ]
  },
-   "Optimizer": {
-   title: "Optimizers: Strategies for Weight Updates",
-   content: `
-   <p>Optimizers decide how gradients adjust weights. Different strategies balance speed, stability, and memory.</p>
-   `,
-   visualizer: "Optimizer",
+  "Optimizer": {
+    title: "Optimizers: Strategies for Weight Updates",
+    content: `
+    <p>Optimizers decide how gradients adjust weights. Different strategies balance speed, stability, and memory.</p>
+    `,
+    solved: `
+    <ul>
+    <li><strong>Faster convergence</strong>: Adam adapts learning rate per parameter</li>
+    <li><strong>Navigation of landscapes</strong>: Momentum helps escape local minima</li>
+    <li><strong>Numerical stability</strong>: Adaptive methods prevent exploding gradients</li>
+    <li><strong>Less tuning</strong>: Adam works well out-of-box across many problems</li>
+    </ul>
+    `,
+    shortcomings: `
+    <ul>
+    <li><strong>Extra memory</strong>: Adam stores two momentum terms per parameter</li>
+    <li><strong>Generalization gap</strong>: Sometimes SGD generalizes better than Adam</li>
+    <li><strong>Can fail</strong>: Adaptive methods may not converge on some loss landscapes</li>
+    <li><strong>Hyperparameters</strong>: Beta values still need tuning</li>
+    </ul>
+    `,
+    visualizer: "Optimizer",
    interactiveFormulas: [
  {
  name: "SGD with Momentum",
@@ -711,10 +1071,26 @@ export const MATH_TOPICS = {
  content: `
  <p>Each neuron gathers weighted inputs, adds a bias, and applies an activation. It is analogous to a weighted operational amplifier with a non-linear output stage.</p>
  <div class="equation">
- output = activation( sum(weight_i * input_i) + bias )
- </div>
- `,
- interactiveFormulas: [
+  output = activation( sum(weight_i * input_i) + bias )
+  </div>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Universal computation</strong>: Single neuron can implement AND, OR, NOT gates</li>
+  <li><strong>Weighted sum</strong>: Learns to weight inputs by importance</li>
+  <li><strong>Bias term</strong>: Allows shifting the activation threshold</li>
+  <li><strong>Non-linear activation</strong>: Enables complex pattern learning</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Limited representation</strong>: Single neuron can only solve linearly separable problems</li>
+  <li><strong>Dead neurons</strong>: Can output zero forever if initial weights are wrong</li>
+  <li><strong>Gradient vanishing</strong>: Strong activations saturate and stop learning</li>
+  <li><strong>No memory</strong>: Each forward pass is independent</li>
+  </ul>
+  `,
+  interactiveFormulas: [
  {
  name: "Neuron with ReLU",
  parts: [
@@ -772,10 +1148,26 @@ export const MATH_TOPICS = {
  content: `
  <p>Each layer has weights (connections) and biases. The parameter count tells you the memory cost and overfitting risk.</p>
  <div class="equation">
- params = inputs * outputs + outputs
- </div>
- `,
- interactiveFormulas: [
+  params = inputs * outputs + outputs
+  </div>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Hierarchical representation</strong>: Each layer transforms input to more abstract features</li>
+  <li><strong>Parameter efficiency</strong>: Shared weights across inputs reduce total parameters</li>
+  <li><strong>Expressiveness</strong>: More layers = more complex functions can be approximated</li>
+  <li><strong>Memory estimation</strong>: Parameter count helps plan GPU memory needs</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Quadratic growth</strong>: Dense layers grow quadratically with width</li>
+  <li><strong>Overfitting risk</strong>: Too many parameters relative to data causes overfitting</li>
+  <li><strong>Computational cost</strong>: More parameters = more compute for forward/backward pass</li>
+  <li><strong>Gradient degradation</strong>: Very deep networks suffer from vanishing gradients</li>
+  </ul>
+  `,
+  interactiveFormulas: [
  {
  name: "Dense Layer Parameters",
  parts: [
@@ -802,12 +1194,28 @@ export const MATH_TOPICS = {
  ]
  },
 "Gradient": {
-  title: "Gradients: Directions for Learning",
-  content: `
-  <p>A <strong>Gradient</strong> is a vector of partial derivatives telling us which way the loss increases. The negative gradient points downhill.</p>
-  <p>In calculus terms, it is like measuring slope along each axis. In engineering, think of it as sensitivity analysis.</p>
-  `,
-  visualizer: "GradientDescent",
+   title: "Gradients: Directions for Learning",
+   content: `
+   <p>A <strong>Gradient</strong> is a vector of partial derivatives telling us which way the loss increases. The negative gradient points downhill.</p>
+   <p>In calculus terms, it is like measuring slope along each axis. In engineering, think of it as sensitivity analysis.</p>
+   `,
+   solved: `
+   <ul>
+   <li><strong>Direction for improvement</strong>: Tells us which direction reduces loss</li>
+   <li><strong>Learning signal</strong>: Magnitude tells us how important each weight is</li>
+   <li><strong>Backpropagation</strong>: Chain rule allows gradients to flow from output to input</li>
+   <li><strong>Optimization foundation</strong>: All gradient-based learning relies on this</li>
+   </ul>
+   `,
+   shortcomings: `
+   <ul>
+   <li><strong>Vanishing gradients</strong>: Can become tiny in deep networks, stopping learning</li>
+   <li><strong>Exploding gradients</strong>: Can become huge, causing numerical instability</li>
+   <li><strong>Local minima</strong>: Can get stuck in suboptimal solutions</li>
+   <li><strong>Saddle points</strong>: Flat regions can fool optimizers into thinking they've converged</li>
+   </ul>
+   `,
+   visualizer: "GradientDescent",
   interactiveFormulas: [
  {
  name: "Gradient Magnitude",
@@ -840,9 +1248,25 @@ export const MATH_TOPICS = {
  <div class="equation">
  delta_l = (W_{l+1}^T * delta_{l+1}) * activation'(z_l)
  </div>
- <p>This lets every weight know how it should change to decrease the loss.</p>
- `,
- interactiveFormulas: [
+<p>This lets every weight know how it should change to decrease the loss.</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Efficient gradient computation</strong>: Chain rule avoids redundant calculations</li>
+  <li><li><strong>Credits every weight</strong>: Each parameter knows its contribution to error</li></li>
+  <li><strong>Scalable to deep networks</strong>: Works for any depth network</li>
+  <li><strong>Foundation of deep learning</strong>: Enables training networks with millions of parameters</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Requires differentiable operations</strong>: Can't use non-differentiable functions</li>
+  <li><strong>Gradient storage</strong>: Must store activations for backward pass</li>
+  <li><strong>Vanishing signal</strong>: Error signal weakens as it propagates back</li>
+  <li><strong>Not interpretable</strong>: Hard to understand what learned features mean</li>
+  </ul>
+  `,
+  interactiveFormulas: [
  {
  name: "Layer Delta",
  parts: [
@@ -876,9 +1300,25 @@ export const MATH_TOPICS = {
  <div class="equation">
  softmax(z_i) = exp(z_i) / sum_j exp(z_j)
  </div>
- <p>Subtracting the max logit improves numerical stability (avoid overflow).</p>
- `,
- interactiveFormulas: [
+<p>Subtracting the max logit improves numerical stability (avoid overflow).</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Probability output</strong>: Converts logits to probabilities that sum to 1</li>
+  <li><strong>Multi-class handling</strong>: Naturally handles any number of classes</li>
+  <li><strong>Gradient from probabilities</strong>: Works with cross-entropy loss for easy training</li>
+  <li><strong>Winner-takes-all behavior</strong>: Higher logits get much higher probabilities</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Expands differences</strong>: Small logit differences become large probability differences</li>
+  <li><strong>Not suitable for multi-label</strong>: Requires mutually exclusive classes</li>
+  <li><strong>Numerical instability</strong>: Exp can overflow without logit subtraction trick</li>
+  <li><strong>Requires cross-entropy</strong>: Best results come from pairing with log loss</li>
+  </ul>
+  `,
+  interactiveFormulas: [
  {
  name: "Softmax Probabilities",
  parts: [
@@ -918,9 +1358,25 @@ export const MATH_TOPICS = {
  <p>Encourages sparse weights (many zeros). Useful for feature selection.</p>
 
  <h4>L2 (Ridge)</h4>
- <p>Penalizes large weights smoothly. Keeps signals small, similar to resistor networks limiting current.</p>
- `,
- interactiveFormulas: [
+  <p>Penalizes large weights smoothly. Keeps signals small, similar to resistor networks limiting current.</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Prevents overfitting</strong>: Penalizes large weights, limiting model complexity</li>
+  <li><strong>Better generalization</strong>: Models with smaller weights generalize to unseen data</li>
+  <li><strong>Condition number improvement</strong>: L2 makes optimization landscape better behaved</li>
+  <li><strong>Feature selection</strong>: L1 can identify important features by zeroing others</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Hyperparameter tuning</strong>: Lambda requires cross-validation to find optimal value</li>
+  <li><strong>Not a silver bullet</strong>: Can underfit if regularization is too strong</li>
+  <li><strong>Doesn't help with bad data</strong>: No amount of regularization fixes noisy labels</li>
+  <li><strong>L1 non-differentiable</strong>: Requires special handling at zero</li>
+  </ul>
+  `,
+  interactiveFormulas: [
  {
  name: "L1 Penalty",
  parts: [
@@ -977,9 +1433,25 @@ export const MATH_TOPICS = {
  title: "Convolution: Sliding Dot Products",
  content: `
  <p>Convolution layers slide a small filter (kernel) across the input. Each position multiplies overlapping values and sums them.</p>
- <p>In vision mode, think of kernels detecting edges or corners. In EE, it is similar to FIR filters.</p>
- `,
- interactiveFormulas: [
+  <p>In vision mode, think of kernels detecting edges or corners. In EE, it is similar to FIR filters.</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Parameter sharing</strong>: Same filter weights applied across entire image</li>
+  <li><strong>Translation invariance</strong>: Detects features regardless of position</li>
+  <li><strong>Hierarchical features</strong>: Learns edges → shapes → objects automatically</li>
+  <li><strong>Memory efficiency</strong>: Fewer parameters than fully connected layers</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Limited receptive field</strong>: Small kernels only see local patterns</li>
+  <li><strong>Requires many layers</strong>: Need depth to capture global context</li>
+  <li><li><strong>Not rotation invariant</strong>: Must augment data to learn rotated features</strong></li>
+  <li><strong>Loses location info</strong>: Pooling discards precise position</li>
+  </ul>
+  `,
+  interactiveFormulas: [
  {
  name: "3x3 Filter Dot Product",
  parts: [
@@ -1351,10 +1823,26 @@ export const MATH_TOPICS = {
  <div class="equation">
  Precision = TP / (TP + FP)
  </div>
- <div class="equation">
- Recall = TP / (TP + FN)
- </div>
- `,
+<div class="equation">
+Recall = TP / (TP + FN)
+  </div>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Beyond accuracy</strong>: Reveals true performance on imbalanced data</li>
+  <li><strong>Precision vs Recall trade-off</strong>: Can tune for specific needs</li>
+  <li><strong>Single metric</strong>: F1 combines precision and recall</li>
+  <li><strong>Confusion matrix insight</strong>: Shows exactly where model fails</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Conflicting metrics</strong>: Can't optimize both simultaneously</li>
+  <li><strong>Choice depends on domain</strong>: Medical needs recall, spam needs precision</li>
+  <li><strong>Binary only</strong>: Multi-class requires averaging strategies</li>
+  <li><strong>Can be gamed</strong>: May not reflect real-world performance</li>
+  </ul>
+  `,
  interactiveFormulas: [
  {
  name: "Accuracy Calculator",
@@ -1426,9 +1914,25 @@ export const MATH_TOPICS = {
  <p>Reconstructs the original input from the compressed representation. Mirrors the encoder.</p>
  
  <h4>Latent Space</h4>
- <p>The compressed representation where interesting things happen - interpolation, denoising.</p>
- `,
- interactiveFormulas: [
+<p>The compressed representation where interesting things happen - interpolation, denoising.</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Unsupervised learning</strong>: Learns representations without labels</li>
+  <li><strong>Dimensionality reduction</strong>: Compresses data while preserving structure</li>
+  <li><strong>Feature learning</strong>: Encoder learns meaningful features automatically</li>
+  <li><strong>Generation capability</strong>: Decoder can generate new samples from latent space</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Information loss</strong>: Reconstruction is never perfect</li>
+  <li><strong>Linear bottlenecks</strong>: Standard autoencoders can't capture complex distributions</li>
+  <li><strong>Blurry reconstructions</strong>: MSE loss leads to averaged, blurry outputs</li>
+  <li><strong>No guarantee of useful latent space</strong>: Needs VAE or other variants for structured generation</li>
+  </ul>
+  `,
+  interactiveFormulas: [
  {
  name: "Compression Ratio",
  parts: [
@@ -1482,9 +1986,25 @@ export const MATH_TOPICS = {
 "GAN": {
    title: "Generative Adversarial Networks",
    content: `
-   <p>A <strong>GAN</strong> has two networks competing: a <strong>Generator</strong> that creates fake images, and a <strong>Discriminator</strong> that tries to distinguish real from fake.</p>
-   `,
-   visualizer: "GAN",
+<p>A <strong>GAN</strong> has two networks competing: a <strong>Generator</strong> that creates fake images, and a <strong>Discriminator</strong> that tries to distinguish real from fake.</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>High-quality generation</strong>: Produces sharp, realistic images</li>
+  <li><strong>No explicit density estimation</strong>: Learns to sample from distribution implicitly</li>
+  <li><strong>Adversarial training</strong>: Discriminator provides learned loss signal</li>
+  <li><strong>Versatile applications</strong>: Style transfer, image-to-image, super resolution</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Mode collapse</strong>: Generator may produce limited variety</li>
+  <li><strong>Training instability</strong>: GANs are notoriously hard to train</li>
+  <li><li><strong>No diversity guarantee</strong>: Can fail to capture full distribution</strong></li>
+  <li><strong>No inference model</strong>: Can't easily estimate probability of given sample</li>
+  </ul>
+  `,
+  visualizer: "GAN",
    interactiveFormulas: [
  {
  name: "Generator Loss",
@@ -1599,9 +2119,25 @@ export const MATH_TOPICS = {
 "Pooling": {
    title: "Pooling: Spatial Downsampling",
    content: `
-   <p><strong>Pooling</strong> reduces spatial dimensions while retaining important information. Essential for vision networks.</p>
-   `,
-   visualizer: "Pooling",
+<p><strong>Pooling</strong> reduces spatial dimensions while retaining important information. Essential for vision networks.</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Downsampling</strong>: Reduces spatial size, enabling deeper networks</li>
+  <li><strong>Translation invariance</strong>: Small shifts don't change pooled output</li>
+  <li><strong>Computational efficiency</strong>: Fewer parameters and computations downstream</li>
+  <li><strong>Prevents overfitting</strong>: Aggregate statistics are more robust than single values</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Information loss</strong>: Precise location information is discarded</li>
+  <li><strong>Fixed window</strong>: May miss important features that span pooled regions</li>
+  <li><strong>No learnable parameters</strong>: Doesn't adapt to the data</li>
+  <li><strong>Replaced by strided convolutions</strong>: Modern architectures often use strided conv instead</li>
+  </ul>
+  `,
+  visualizer: "Pooling",
    interactiveFormulas: [
  {
  name: "Output Size Calculator",
@@ -1664,9 +2200,25 @@ export const MATH_TOPICS = {
  <p>Output size matches input. Corners get more weight (multiple filters pass through).</p>
  
  <h4>Common Values</h4>
- <p>Padding 1 for 3x3 kernels, padding 2 for 5x5 kernels - keeps spatial dims stable.</p>
- `,
- interactiveFormulas: [
+<p>Padding 1 for 3x3 kernels, padding 2 for 5x5 kernels - keeps spatial dims stable.</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Preserves spatial size</strong>: Keeps input/output dimensions same with "same" padding</li>
+  <li><strong>Processes edges equally</strong>: All pixels get equal number of filter applications</li>
+  <li><strong>Enables deeper networks</strong>: Without padding, spatial dims shrink to zero quickly</li>
+  <li><strong>Extracts edge features</strong>: Edge information is processed, not discarded</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Added computation</strong>: Padding adds pixels to process</li>
+  <li><strong>Artificial data</strong>: Zero-padding creates potentially meaningless values</li>
+  <li><strong>Hyperparameter choice</strong>: Must choose valid vs same padding</li>
+  <li><strong>Can dilute signal</strong>: Too much padding may dilute important central features</li>
+  </ul>
+  `,
+  interactiveFormulas: [
  {
  name: "Same Padding Calculator",
  parts: [
@@ -1726,9 +2278,25 @@ export const MATH_TOPICS = {
  <p>Use running statistics learned during training (not batch statistics).</p>
  
  <h4>Why It Helps</h4>
- <p>Reduces internal covariate shift. Allows higher learning rates. Acts as regularizer.</p>
- `,
- interactiveFormulas: [
+<p>Reduces internal covariate shift. Allows higher learning rates. Acts as regularizer.</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Stable training</strong>: Normalizes inputs to each layer, reducing internal covariate shift</li>
+  <li><strong>Higher learning rates</strong>: Enables faster convergence without divergence</li>
+  <li><strong>Regularization effect</strong>: Batch statistics add noise, reducing overfitting</li>
+  <li><strong>Reduces dependency on initialization</strong>: Less sensitive to weight initialization</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Batch size constraints</strong>: Requires reasonably large batch sizes</li>
+  <li><li><strong>Not for RNNs</strong>: Doesn't work well with variable-length sequences</strong></li>
+  <li><strong>Training vs inference difference</strong>: Uses running stats at inference, which can differ</li>
+  <li><strong>Can hurt performance</strong>: Sometimes hurts generalization in some architectures</li>
+  </ul>
+  `,
+  interactiveFormulas: [
  {
  name: "BatchNorm Forward",
  parts: [
@@ -1793,9 +2361,25 @@ export const MATH_TOPICS = {
  <p>All neurons active, but outputs scaled by (1-p) to match expected training activation.</p>
  
  <h4>Why It Works</h4>
- <p>Creates ensemble of many networks. Prevents co-adaptation of neurons.</p>
- `,
- interactiveFormulas: [
+<p>Creates ensemble of many networks. Prevents co-adaptation of neurons.</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Effective regularization</strong>: Randomly dropping neurons prevents overfitting</li>
+  <li><strong>Ensemble effect</strong>: Creates implicit ensemble of many sub-networks</li>
+  <li><strong>Prevents co-adaptation</strong>: Neurons learn more robust features</li>
+  <li><strong>Simple to implement</strong>: Just a few lines of code</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Can slow convergence</strong>: Needs more epochs to train effectively</li>
+  <li><strong>Not ideal for small networks</strong>: Can leave insufficient neurons to learn</li>
+  <li><strong>Hyperparameter tuning</strong>: Dropout rate must be chosen carefully</li>
+  <li><strong>Less used now</strong>: Modern architectures often use other regularization</li>
+  </ul>
+  `,
+  interactiveFormulas: [
  {
  name: "Dropout Scaling",
  parts: [
@@ -1856,9 +2440,24 @@ export const MATH_TOPICS = {
  <p>Gradient can flow directly through the addition operation - no vanishing gradient!</p>
  
  <h4>Common Types</h4>
- <p>1x1 convolutions for channel matching. Projection when dimensions change.</p>
- `,
- interactiveFormulas: [
+<p>1x1 convolutions for channel matching. Projection when dimensions change.</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Enables very deep networks</strong>: Allows training 100+ layer networks (ResNet)</li>
+  <li><strong>Gradient highway</strong>: Direct path for gradients to flow backward</li>
+  <li><strong>Easier optimization</strong>: Network can learn identity mapping if needed</li>
+  <li><strong>Better convergence</strong>: Deeper networks train faster with skips</li>
+  </ul>
+  `,
+  shortcomings: `
+  <li><strong>Added parameters</strong>: Skip connection may need 1x1 conv for dimension matching</li>
+  <li><strong>Memory cost</strong>: Must store skip tensor until addition</li>
+  <li><strong>Not always beneficial</strong>: May not help for shallow networks</li>
+  <li><strong>Can hurt representation</strong>: Adding identity may limit learned capacity</li>
+  </ul>
+  `,
+  interactiveFormulas: [
  {
  name: "Residual Output",
  parts: [
@@ -2192,9 +2791,25 @@ export const MATH_TOPICS = {
 "MDP": {
    title: "MDP: Markov Decision Processes",
    content: `
-   <p><strong>MDPs</strong> provide a mathematical framework for modeling decision making in situations where outcomes are partly random and partly under the control of a decision maker.</p>
-   `,
-   visualizer: "MDP",
+<p><strong>MDPs</strong> provide a mathematical framework for modeling decision making in situations where outcomes are partly random and partly under the control of a decision maker.</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Formal framework</strong>: Provides mathematical foundation for RL</li>
+  <li><strong>Solves sequential decisions</strong>: Models delayed rewards and actions</li>
+  <li><strong>Optimal policy learning</strong>: Enables finding best actions for long-term goals</li>
+  <li><strong>Real-world applicability</strong>: Models robotics, games, economics</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Assumes full observability</strong>: In practice, states may be partially observable</li>
+  <li><strong>Curse of dimensionality</strong>: State space explosion makes solving hard</li>
+  <li><strong>May not match reality</strong>: Assumes stationary dynamics, which rarely holds</li>
+  <li><strong>No function approximation</strong>: Basic MDP needs explicit state tables</li>
+  </ul>
+  `,
+  visualizer: "MDP",
    interactiveFormulas: [
  {
  name: "Discounted Return",
@@ -2222,10 +2837,26 @@ export const MATH_TOPICS = {
  "QLearning": {
  title: "Q-Learning: Learning from Trial and Error",
  content: `
- <p><strong>Q-Learning</strong> is a model-free RL algorithm. It learns the quality (Q-value) of an action in a given state.</p>
- <div class="equation">Q(s,a) = Q(s,a) + α[R + γ max Q(s',a') - Q(s,a)]</div>
- `,
- visualizer: "GridWorld",
+<p><strong>Q-Learning</strong> is a model-free RL algorithm. It learns the quality (Q-value) of an action in a given state.</p>
+  <div class="equation">Q(s,a) = Q(s,a) + α[R + γ max Q(s',a') - Q(s,a)]</div>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Model-free</strong>: Doesn't need environment model</li>
+  <li><strong>Off-policy</strong>: Can learn from other policies' experiences</li>
+  <li><strong>Converges to optimal</strong>: With enough exploration, finds optimal policy</li>
+  <li><strong>Simple implementation</strong>: Table-based is straightforward</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>State space explosion</strong>: Can't handle large state spaces</li>
+  <li><li><strong>Tabular limitation</strong>: Can't generalize to unseen states</strong></li>
+  <li><strong>Slow convergence</strong>: Requires extensive exploration</li>
+  <li><strong>Overestimation</strong>: Max can cause overestimation of Q-values</li>
+  </ul>
+  `,
+  visualizer: "GridWorld",
  interactiveFormulas: [
  {
  name: "Temporal Difference (TD) Update",
@@ -2259,9 +2890,25 @@ export const MATH_TOPICS = {
 "DeepQN": {
    title: "Deep Q-Networks (DQN): Scaling RL",
    content: `
-   <p><strong>DQN</strong> uses a deep neural network to approximate the Q-value function. This allows RL to scale to complex environments like Atari games.</p>
-   `,
-   visualizer: "DeepQN",
+<p><strong>DQN</strong> uses a deep neural network to approximate the Q-value function. This allows RL to scale to complex environments like Atari games.</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Scalable to high dimensions</strong>: Handles pixel inputs from games</li>
+  <li><strong>Experience replay</strong>: Breaks correlation in training data</li>
+  <li><strong>Target network</strong>: Stabilizes training</li>
+  <li><strong>Breakthrough results</strong>: Human-level performance on Atari</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Overestimation bias</strong>: Tends to overestimate Q-values</li>
+  <li><strong>Only discrete actions</strong>: Doesn't handle continuous control</li>
+  <li><strong>Large sample needs</li>: Requires millions of frames</li>
+  <li><strong>Not stable</strong>: Training can be volatile</li>
+  </ul>
+  `,
+  visualizer: "DeepQN",
    interactiveFormulas: [
  {
  name: "DQN Loss",
@@ -2314,6 +2961,22 @@ export const MATH_TOPICS = {
   content: `
   <p><strong>PPO</strong> is a state-of-the-art RL algorithm that stabilizes training by clipping policy updates.</p>
   `,
+  solved: `
+  <ul>
+  <li><strong>Stable training</strong>: Clipping prevents destructive large updates</li>
+  <li><strong>Sample efficient</strong>: Reuses experience multiple times</li>
+  <li><strong>Simple implementation</strong>: Much simpler than trust region methods</li>
+  <li><strong>State-of-the-art</strong>: Dominates continuous control tasks</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Hyperparameter sensitive</strong>: Clip threshold affects performance</li>
+  <li><strong>Shared entropy bonus</strong>: Needs auxiliary entropy term for exploration</li>
+  <li><li><strong>May not explore enough</strong>: Can get stuck in local optima</strong></li>
+  <li><strong>Performance ceiling</strong>: Sometimes outperformed by more specialized algorithms</li>
+  </ul>
+  `,
   visualizer: "PPO",
  interactiveFormulas: [
  {
@@ -2354,9 +3017,25 @@ export const MATH_TOPICS = {
  <p>BERT: mask some tokens, predict them from context. ImageGPT: mask pixels, predict from neighbors.</p>
  
  <h4>Why It Matters</h4>
- <p>Pretrain on unlabeled data (millions of images!), then fine-tune on small labeled set. Transfer learning!</p>
- `,
- interactiveFormulas: [
+<p>Pretrain on unlabeled data (millions of images!), then fine-tune on small labeled set. Transfer learning!</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Unlabeled data utilization</strong>: Uses vast amounts of unannotated data</li>
+  <li><strong>Transfer learning</strong>: Pretrained representations transfer across tasks</li>
+  <li><strong>Foundation of modern NLP</strong>: BERT, GPT pre-trained this way</li>
+  <li><strong>No manual labeling</strong>: Reduces biggest ML bottleneck</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Proxy task design</strong>: Needs clever task that transfers to target</li>
+  <li><li><strong>Compute intensive</strong>: Requires large batch sizes and training time</strong></li>
+  <li><strong>Not always transferable</strong>: May not transfer across domains</li>
+  <li><strong>Negative sampling</strong>: Contrastive learning needs careful negatives</li>
+  </ul>
+  `,
+  interactiveFormulas: [
  {
  name: "InfoNCE Contrastive Loss",
  components: [
@@ -2402,14 +3081,26 @@ export const MATH_TOPICS = {
   <strong>2015</strong>: Minh-Thang Luong et al. propose <em>Multiplicative (Dot-Product) Attention</em> — more efficient than additive.<br/>
   <strong>2016</strong>: Oxford's <em>Attention is All You Need</em> builds on these but: self-attention (no recurrence!) + multi-head + positional encoding.<br/>
   <strong>2016</strong>: Google Brain, University of Toronto, and Element AI submit the paper — rejected from ICLR, then accepted!<br/>
-  <strong>Key Innovation</strong>: Replaces RNN's sequential processing with parallel self-attention — each position attends to ALL positions directly.<br/>
-  <strong>Original Authors</strong>: Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan Gomez, Lukasz Kaiser, Illia Polosukhin — 8 co-authors, all from Google.<br/>
-  <strong>Impact</strong>: BERT, GPT, T5, ViT, RAG, Claude, ChatGPT — all built on Transformers. 95%+ of modern LLMs are decoder-only Transformers.</p>
-  
-  <h4>Why Transformers?</h4>
-  <p>Parallelizable on GPU. Captures long-range dependencies. Scales beautifully with data and compute.</p>
- `,
- visualizer: "Transformer",
+<strong>Key Innovation</strong>: Replaces RNN's sequential processing with parallel self-attention — each position attends to ALL positions directly.<br/>
+  <strong>Original Authors</strong>: Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan Gomez, Lukasz Kaiser, Illia Polosukhin — 8 co-authors, all from Google.</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Parallel processing</strong>: No sequential computation - GPU/TPU friendly</li>
+  <li><strong>Long-range dependencies</strong>: Attention captures relationships across entire sequence</li>
+  <li><strong>State-of-the-art</strong>: Dominates NLP, now vision, audio, and multimodal tasks</li>
+  <li><strong>Interpretable attention</strong>: Can visualize what model focuses on</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Quadratic complexity</strong>: O(n²) attention on sequence length</li>
+  <li><strong>Memory intensive</strong>: Stores all attention matrices</li>
+  <li><strong>No inherent position understanding</strong>: Needs positional encoding</li>
+  <li><strong>Expensive for long sequences</strong>: GPT-4 has token limits due to this</li>
+  </ul>
+  `,
+  visualizer: "Transformer",
  interactiveFormulas: [
  {
  name: "Attention Weights",
@@ -2476,9 +3167,25 @@ export const MATH_TOPICS = {
  <p>Add positional information so transformer knows patch order.</p>
  
  <h4>CLS Token</h4>
- <p>Extra [CLS] token at start learns image-level representation for classification.</p>
- `,
- interactiveFormulas: [
+<p>Extra [CLS] token at start learns image-level representation for classification.</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Simpler than CNNs</strong>: No convolutions, just linear projections</li>
+  <li><strong>Scales well</strong>: Benefits from large datasets more than CNNs</li>
+  <li><strong>Global attention</strong>: Sees entire image at once, not local receptive field</li>
+  <li><strong>SOTA results</strong>: Outperforms CNNs on large datasets</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Needs more data</strong>: ViT needs millions of images, CNNs work with thousands</li>
+  <li><strong>Computationally heavy</strong>: O(n²) attention on many patches</li>
+  <li><strong>No inductive bias</strong>: CNNs have built-in translation invariance</li>
+  <li><strong>Fine-tuning sensitivity</strong>: Harder to fine-tune than CNNs</li>
+  </ul>
+  `,
+  interactiveFormulas: [
  {
  name: "Patch Count Calculator",
  components: [
@@ -2509,9 +3216,25 @@ export const MATH_TOPICS = {
  content: `
  <p><strong>LoRA</strong> fine-tunes large models by only training small, low-rank matrices. This allows fine-tuning an LLM on consumer hardware.</p>
  <div class="equation">W = W₀ + ΔW = W₀ + B * A</div>
- <p>A (d×r) and B (r×d) are much smaller than W₀ (d×d) when the rank <strong>r</strong> is small (e.g., 8 vs 4096).</p>
- `,
- visualizer: "LoRA",
+<p>A (d×r) and B (r×d) are much smaller than W₀ (d×d) when the rank <strong>r</strong> is small (e.g., 8 vs 4096).</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Parameter efficient</strong>: Fine-tune with 1-2% of original parameters</li>
+  <li><strong>Fast adaptation</strong>: Switch between tasks by changing LoRA weights</li>
+  <li><strong>No latency overhead</strong>: Can merge weights for inference</li>
+  <li><strong>Consumer hardware</strong>: Train large models on single GPU</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Added complexity</strong>: Must manage adapter weights separately</li>
+  <li><strong>May underperform full fine-tuning</strong>: In some cases, full fine-tuning is better</li>
+  <li><strong>Inference overhead</strong>: Without merging, adds compute per layer</li>
+  <li><strong>Not universal</strong>: Doesn't work equally well for all model architectures</li>
+  </ul>
+  `,
+  visualizer: "LoRA",
  interactiveFormulas: [
  {
  name: "LoRA Parameter Savings",
@@ -2659,9 +3382,25 @@ export const MATH_TOPICS = {
  content: `
  <p><strong>Anchor boxes</strong> are predefined bounding boxes with different aspect ratios and scales. Instead of predicting boxes from scratch, the network predicts offsets from these anchors.</p>
  <div class="equation">x = x_anchor + offset_x * w_anchor</div>
- <p>This provides a useful prior for the model, helping it handle objects of varying sizes and shapes (e.g., tall pedestrians vs. wide cars).</p>
- `,
- interactiveFormulas: [
+<p>This provides a useful prior for the model, helping it handle objects of varying sizes and shapes (e.g., tall pedestrians vs. wide cars).</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Provides priors</strong>: Reduces search space for object detection</li>
+  <li><strong>Handles variation</strong>: Multiple aspect ratios cover different object shapes</li>
+  <li><strong>Enables one-stage detectors</strong>: YOLO, SSD use anchors for speed</li>
+  <li><strong>Reduces learning difficulty</strong>: Predicting offsets easier than absolute boxes</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Manual design</strong>: Anchors must be chosen, may not match data</li>
+  <li><strong>Many negative anchors</strong>: Most anchors have no object → class imbalance</li>
+  <li><strong>Hyperparameter sensitive</strong>: Anchor sizes affect performance significantly</li>
+  <li><strong>Not end-to-end</strong>: Fixed priors limit flexibility</li>
+  </ul>
+  `,
+  interactiveFormulas: [
  {
  name: "Box Decoding",
  components: [
@@ -2693,9 +3432,25 @@ export const MATH_TOPICS = {
  <p>Distinguish separate objects of same class. Mask R-CNN.</p>
  
  <h4>Panoptic Segmentation</h4>
- <p>Both semantic + instance. Thing (countable) vs Stuff (background).</p>
- `,
- interactiveFormulas: [
+<p>Both semantic + instance. Thing (countable) vs Stuff (background).</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Pixel-level understanding</strong>: Knows exactly where each object is</li>
+  <li><strong>Autonomous driving</strong>: Essential for path planning</li>
+  <li><strong>Medical imaging</strong>: Segment tumors, organs precisely</li>
+  <li><strong>Multiple levels</strong>: Semantic, instance, panoptic cover different needs</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Computationally expensive</strong>: Per-pixel classification is slow</li>
+  <li><strong>Boundary accuracy</strong>: Often struggles with thin structures</li>
+  <li><strong>Class imbalance</strong>: Background pixels dominate</li>
+  <li><strong>Limited by resolution</strong>: Small objects get missed</li>
+  </ul>
+  `,
+  interactiveFormulas: [
  {
  name: "Upsampling (Transposed Conv)",
  components: [
@@ -3086,9 +3841,25 @@ export const MATH_TOPICS = {
  • Context length: How many tokens remembered</p>
  
  <h4>Emergent Abilities</h4>
- <p>Big enough models show reasoning, coding, translation without explicit training!</p>
- `,
- interactiveFormulas: [
+<p>Big enough models show reasoning, coding, translation without explicit training!</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Massive knowledge</strong>: Contains world knowledge from training data</li>
+  <li><strong>Few-shot learning</strong>: Can follow instructions without fine-tuning</li>
+  <li><strong>Versatile capabilities</strong>: Writing, coding, reasoning all in one model</li>
+  <li><strong>Emergent abilities</strong>: Large enough models spontaneously develop new skills</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Hallucinations</strong>: Generate confident but incorrect information</li>
+  <li><strong>Limited context</strong>: Can't remember infinitely long conversations</li>
+  <li><strong>Enormous compute</li>: Training costs millions of dollars</li>
+  <li><strong>Not deterministic</strong>: Same prompt can produce different outputs</li>
+  </ul>
+  `,
+  interactiveFormulas: [
  {
  name: "Token Generation Probability",
  components: [
@@ -3365,8 +4136,24 @@ export const MATH_TOPICS = {
  • INT4: 4-bit (8x smaller!)</p>
  
  <h4>Why It Matters</h4>
- <p>Run LLMs on phones, embedded devices. 4-bit can fit 70B model in 35GB!</p>
- `,
+<p>Run LLMs on phones, embedded devices. 4-bit can fit 70B model in 35GB!</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Memory reduction</strong>: 4x smaller models fit in limited RAM</li>
+  <li><strong>Faster inference</strong>: Integer ops are faster than float</li>
+  <li><strong>Edge deployment</strong>: Enables LLMs on phones, IoT devices</li>
+  <li><strong>Minimal accuracy loss</strong>: Often < 1% accuracy drop</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Accuracy loss</strong>: Aggressive quantization hurts performance</li>
+  <li><strong>Hardware support</strong>: Not all devices support int8/4 efficiently</li>
+  <li><strong>Complicated calibration</strong>: PTQ needs representative dataset</li>
+  <li><strong>Irreversible</strong>: Can't recover original precision</li>
+  </ul>
+  `,
  interactiveFormulas: [
  {
  name: "Memory Savings Calculator",
@@ -3537,9 +4324,25 @@ export const MATH_TOPICS = {
 "LinearRegression": {
    title: "Linear Regression: The First ML Algorithm",
    content: `
-   <p><strong>Linear Regression</strong> fits a straight line through data to predict continuous values. It's the simplest ML model and the foundation of everything else.</p>
-   `,
-   visualizer: "LinearRegression",
+<p><strong>Linear Regression</strong> fits a straight line through data to predict continuous values. It's the simplest ML model and the foundation of everything else.</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Interpretable</strong>: Clear slope and intercept coefficients</li>
+  <li><strong>Foundation of ML</strong>: All other models build on these concepts</li>
+  <li><strong>Fast and efficient</strong>: Analytical solution (closed-form)</li>
+  <li><strong>Benchmark</strong>: Often compare other models against linear baseline</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Linear only</strong>: Can't capture non-linear relationships</li>
+  <li><strong>Outlier sensitive</strong>: MSE loss is heavily affected by outliers</li>
+  <li><strong>Feature engineering</strong>: Need manual interaction terms for polynomials</li>
+  <li><strong>Underfits complex data</strong>: Too simple for most real-world problems</li>
+  </ul>
+  `,
+  visualizer: "LinearRegression",
    interactiveFormulas: [
  {
  name: "Simple Linear Prediction",
@@ -3592,9 +4395,25 @@ export const MATH_TOPICS = {
 "LogisticRegression": {
    title: "Logistic Regression: From Lines to Probabilities",
    content: `
-   <p><strong>Logistic Regression</strong> takes a linear model and squeezes the output through a sigmoid, converting it to a probability between 0 and 1.</p>
-   `,
-   visualizer: "LogisticRegression",
+<p><strong>Logistic Regression</strong> takes a linear model and squeezes the output through a sigmoid, converting it to a probability between 0 and 1.</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Probability output</strong>: Gives probabilities, not just class predictions</li>
+  <li><strong>Interpretable coefficients</strong>: Odds ratios have clear meaning</li>
+  <li><strong>Decision boundary</strong>: Linear but effective for many problems</li>
+  <li><strong>Foundation for neural networks</strong>: Same as single-neuron network</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Linear boundary</strong>: Can't separate non-linearly separable data</li>
+  <li><strong>Binary only (natively)</strong>: Needs one-vs-rest for multi-class</li>
+  <li><strong>Assumes feature independence</strong>: Doesn't capture feature interactions</li>
+  <li><strong>Outperforms often by trees</strong>: For complex data, ensemble methods beat it</li>
+  </ul>
+  `,
+  visualizer: "LogisticRegression",
    interactiveFormulas: [
  {
  name: "Sigmoid Decision",
@@ -3720,9 +4539,25 @@ export const MATH_TOPICS = {
 "RNN": {
    title: "Recurrent Neural Networks: Memory in Sequences",
    content: `
-   <p><strong>RNNs</strong> process sequences by maintaining a hidden state that acts as memory, updated at each time step.</p>
-   `,
-   visualizer: "RNN",
+<p><strong>RNNs</strong> process sequences by maintaining a hidden state that acts as memory, updated at each time step.</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Variable-length input</strong>: Handles sequences of any length</li>
+  <li><strong>Shared weights</strong>: Same function applied at every timestep</li>
+  <li><strong>Theoretical memory</strong>: Can in theory remember arbitrary long dependencies</li>
+  <li><strong>Sequence modeling foundation</strong>: Basis for more advanced RNNs</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Vanishing gradients</strong>: Can't learn long-term dependencies</li>
+  <li><strong>Sequential computation</strong>: Can't parallelize across time steps</li>
+  <li><strong>Exploding gradients</strong>: Unstable training on long sequences</li>
+  <li><strong>Slow training</strong>: Sequential nature limits hardware utilization</li>
+  </ul>
+  `,
+  visualizer: "RNN",
    interactiveFormulas: [
  {
  name: "Hidden State Update",
@@ -3780,9 +4615,25 @@ export const MATH_TOPICS = {
 "LSTM": {
    title: "LSTM: Long Short-Term Memory",
    content: `
-   <p><strong>LSTM</strong> solves the vanishing gradient problem with three gates that control information flow through a cell state.</p>
-   `,
-   visualizer: "LSTM",
+<p><strong>LSTM</strong> solves the vanishing gradient problem with three gates that control information flow through a cell state.</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Long-term dependencies</strong>: Can remember info for thousands of steps</li>
+  <li><strong>Vanishing gradient solved</strong>: Cell state provides gradient highway</li>
+  <li><strong>Selective memory</strong>: Gates decide what to keep, forget, output</li>
+  <li><strong>Proven effectiveness</strong>: Powers many NLP breakthroughs</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Complex architecture</strong>: More gates = harder to interpret</li>
+  <li><strong>Computationally heavy</strong>: 4x more operations than simple RNN</li>
+  <li><strong>Still sequential</strong>: Can't parallelize like transformers</li>
+  <li><strong>Outperformed by transformers</strong>: For most NLP, attention is better</li>
+  </ul>
+  `,
+  visualizer: "LSTM",
    interactiveFormulas: [
  {
  name: "Forget Gate",
@@ -3855,9 +4706,25 @@ export const MATH_TOPICS = {
  <h4>Where It's Used</h4>
  <p>• <strong>VAEs:</strong> KL term forces latent space toward a standard normal.<br/>
  • <strong>RLHF:</strong> KL penalty prevents the fine-tuned model from drifting too far from the base model.<br/>
- • <strong>Distillation:</strong> Measures how well the student matches the teacher's soft predictions.</p>
- `,
- interactiveFormulas: [
+• <strong>Distillation:</strong> Measures how well the student matches the teacher's soft predictions.</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Unified loss function</strong>: Combines multiple objectives into one</li>
+  <li><strong>Latent space regularization</strong>: VAEs use KL to get structured representations</li>
+  <li><strong>Guided generation</strong>: RLHF uses KL to prevent model drift</li>
+  <li><strong>Information theory foundation</strong>: Provides principled way to compare distributions</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Asymmetric</strong>: D_KL(P||Q) ≠ D_KL(Q||P) — must choose direction carefully</li>
+  <li><li><strong>Can be infinite</strong>: If Q(x) = 0 where P(x) > 0, KL explodes</strong></li>
+  <li><strong>Hard to optimize</strong>: Can be unstable when distributions don't overlap</li>
+  <li><strong>Scale sensitivity</strong>: Value depends on how probabilities are represented</li>
+  </ul>
+  `,
+  interactiveFormulas: [
  {
  name: "KL for Two Bernoulli Distributions",
  parts: [
@@ -3925,9 +4792,25 @@ export const MATH_TOPICS = {
  <p>Compute ∂output/∂input to find which input features (pixels) most affect the prediction. Bright regions = important inputs.</p>
  
  <h4>Why It Matters</h4>
- <p>A doctor needs to know WHY the model flagged a scan. A bank must explain WHY a loan was denied. Trust requires transparency.</p>
- `,
- interactiveFormulas: [
+<p>A doctor needs to know WHY the model flagged a scan. A bank must explain WHY a loan was denied. Trust requires transparency.</p>
+  `,
+  solved: `
+  <ul>
+  <li><strong>Builds trust</strong>: Users accept predictions when they understand why</li>
+  <li><strong>Debugging tool</strong>: Finds models relying on spurious features</li>
+  <li><strong>Regulatory compliance</strong>: GDPR, medical devices require explanations</li>
+  <li><strong>Feature discovery</strong>: Reveals which inputs matter most</li>
+  </ul>
+  `,
+  shortcomings: `
+  <ul>
+  <li><strong>Computationally expensive</strong>: SHAP requires many model evaluations</li>
+  <li><strong>May be misleading</strong>: Local explanations may not reflect global behavior</li>
+  <li><strong>Hard to verify</strong>: Can't always confirm explanations are correct</li>
+  <li><strong>Trade-off with accuracy</strong>: Interpretable models often less accurate</li>
+  </ul>
+  `,
+  interactiveFormulas: [
  {
  name: "Feature Importance (Simplified SHAP)",
  parts: [

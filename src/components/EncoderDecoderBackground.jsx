@@ -10,11 +10,10 @@ export function EncoderDecoderBackground() {
     let width = canvas.width = window.innerWidth;
     let height = canvas.height = window.innerHeight;
 
-    // Define Encoder-Decoder Network Topology
-    // We represent a feed-forward autoencoder layered struct
-    const layerCounts = [12, 8, 4, 2, 4, 8, 12];
+    // Define Network Topology (Encoder-Decoder)
+    const layerCounts = [14, 10, 6, 3, 6, 10, 14];
     const nodes = [];
-    const margins = { x: 100, y: 100 };
+    const margins = { x: 80, y: 100 };
     
     function initNetwork() {
       nodes.length = 0;
@@ -25,7 +24,6 @@ export function EncoderDecoderBackground() {
         const count = layerCounts[l];
         const x = margins.x + l * xStep;
         
-        // Distribute nodes vertically
         const ySpaceAvailable = height - margins.y * 2;
         const yStep = count > 1 ? ySpaceAvailable / (count - 1) : 0;
         const yStart = count > 1 ? margins.y : height / 2;
@@ -35,7 +33,9 @@ export function EncoderDecoderBackground() {
             x,
             y: yStart + i * yStep,
             layer: l,
-            id: `${l}-${i}`
+            id: `${l}-${i}`,
+            pulseOffset: Math.random() * Math.PI * 2,
+            size: 2 + Math.random() * 2
           });
         }
       }
@@ -49,17 +49,16 @@ export function EncoderDecoderBackground() {
       initNetwork();
     });
 
-    // Pulses (data signals)
     const pulses = [];
+    const particles = [];
     
     function spawnPulse() {
-      if (Math.random() > 0.05) return;
+      if (Math.random() > 0.08) return;
       
       const layer0Nodes = nodes.filter(n => n.layer === 0);
       if(layer0Nodes.length === 0) return;
       const startNode = layer0Nodes[Math.floor(Math.random() * layer0Nodes.length)];
       
-      // Target a random node in layer 1
       const layer1Nodes = nodes.filter(n => n.layer === 1);
       const targetNode = layer1Nodes[Math.floor(Math.random() * layer1Nodes.length)];
 
@@ -72,26 +71,62 @@ export function EncoderDecoderBackground() {
         targetX: targetNode.x,
         targetY: targetNode.y,
         progress: 0,
-        speed: 0.01 + Math.random() * 0.02
+        speed: 0.008 + Math.random() * 0.015,
+        type: Math.random() > 0.2 ? 'data' : 'sparkle'
+      });
+    }
+
+    function spawnParticle() {
+      if (particles.length > 100) return;
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5,
+        size: Math.random() * 2,
+        opacity: Math.random() * 0.5
       });
     }
 
     let animationFrameId;
+    let time = 0;
 
     function render() {
-      ctx.fillStyle = '#050A10'; // Deep professional dark background
+      time += 0.01;
+      
+      // Gradient background for professional feel
+      const bgGrad = ctx.createRadialGradient(width/2, height/2, 0, width/2, height/2, width);
+      bgGrad.addColorStop(0, '#0a0a15');
+      bgGrad.addColorStop(1, '#050508');
+      ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, width, height);
       
-      // Draw edges
-      ctx.strokeStyle = 'rgba(0, 242, 255, 0.05)';
+      // Ambient particles
+      spawnParticle();
+      particles.forEach((p, i) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0 || p.x > width || p.y < 0 || p.y > height) {
+          particles.splice(i, 1);
+          return;
+        }
+        ctx.fillStyle = `rgba(0, 242, 255, ${p.opacity})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Draw connections with glow
       ctx.lineWidth = 1;
-      
       for (let l = 0; l < layerCounts.length - 1; l++) {
          const currentLayer = nodes.filter(n => n.layer === l);
          const nextLayer = nodes.filter(n => n.layer === l + 1);
          
          currentLayer.forEach(cNode => {
            nextLayer.forEach(nNode => {
+             const dist = Math.sqrt((cNode.x - nNode.x)**2 + (cNode.y - nNode.y)**2);
+             const opacity = Math.max(0.02, 0.1 - (dist / 1000));
+             ctx.strokeStyle = `rgba(0, 242, 255, ${opacity})`;
              ctx.beginPath();
              ctx.moveTo(cNode.x, cNode.y);
              ctx.lineTo(nNode.x, nNode.y);
@@ -102,19 +137,22 @@ export function EncoderDecoderBackground() {
 
       // Draw nodes
       nodes.forEach(node => {
+        const pulse = Math.sin(time + node.pulseOffset) * 0.5 + 0.5;
         ctx.beginPath();
-        // Latent space (bottleneck) gets special coloring
-        if (node.layer === 3) {
-          ctx.fillStyle = 'rgba(255, 85, 85, 0.8)';
-          ctx.shadowColor = 'rgba(255, 85, 85, 1)';
-          ctx.shadowBlur = 10;
+        
+        if (node.layer === 3) { // Bottleneck
+          ctx.fillStyle = `rgba(255, 85, 85, ${0.4 + pulse * 0.4})`;
+          ctx.shadowColor = 'rgba(255, 85, 85, 0.8)';
+          ctx.shadowBlur = 5 + pulse * 10;
         } else {
-          ctx.fillStyle = 'rgba(0, 242, 255, 0.5)';
-          ctx.shadowBlur = 0;
+          ctx.fillStyle = `rgba(0, 242, 255, ${0.2 + pulse * 0.3})`;
+          ctx.shadowBlur = 2 + pulse * 4;
+          ctx.shadowColor = 'rgba(0, 242, 255, 0.5)';
         }
-        ctx.arc(node.x, node.y, 3, 0, Math.PI * 2);
+        
+        ctx.arc(node.x, node.y, node.size + pulse, 0, Math.PI * 2);
         ctx.fill();
-        ctx.shadowBlur = 0; // reset
+        ctx.shadowBlur = 0;
       });
 
       // Update and draw pulses
@@ -145,17 +183,18 @@ export function EncoderDecoderBackground() {
         const currY = p.startY + (p.targetY - p.startY) * p.progress;
 
         ctx.beginPath();
-        // Color based on whether it's encoding or decoding
-        if(p.currentLayer < 3) {
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-          ctx.shadowColor = 'rgba(255, 255, 255, 1)';
+        if (p.type === 'sparkle') {
+          ctx.fillStyle = '#fff';
+          ctx.shadowColor = '#fff';
+          ctx.shadowBlur = 10;
+          ctx.arc(currX, currY, 3, 0, Math.PI * 2);
         } else {
-          ctx.fillStyle = 'rgba(0, 242, 255, 0.8)';
-          ctx.shadowColor = 'rgba(0, 242, 255, 1)';
+          const color = p.currentLayer < 3 ? 'rgba(0, 242, 255, 0.9)' : 'rgba(112, 0, 255, 0.9)';
+          ctx.fillStyle = color;
+          ctx.shadowColor = color;
+          ctx.shadowBlur = 6;
+          ctx.arc(currX, currY, 2, 0, Math.PI * 2);
         }
-        
-        ctx.shadowBlur = 5;
-        ctx.arc(currX, currY, 2, 0, Math.PI * 2);
         ctx.fill();
         ctx.shadowBlur = 0;
       }
@@ -174,6 +213,7 @@ export function EncoderDecoderBackground() {
   return (
     <canvas 
       ref={canvasRef} 
+      className="bg-canvas"
       style={{
         position: 'fixed',
         top: 0,

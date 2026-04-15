@@ -297,7 +297,7 @@ export function LandingPage() {
  align-items: center;
  justify-content: center;
  overflow: hidden;
- background: linear-gradient(135deg, #0a0a0f 0%, #1a1030 40%, #0f1a2e 100%);
+ background: radial-gradient(circle at center, rgba(10, 10, 21, 0.4) 0%, rgba(5, 5, 8, 0.8) 100%);
  }
 
  .hero-content {
@@ -306,6 +306,8 @@ export function LandingPage() {
  text-align: center;
  max-width: 720px;
  padding: 40px 24px;
+ backdrop-filter: blur(4px);
+ border-radius: 30px;
  }
 
  .hero-badge {

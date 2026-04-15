@@ -66,6 +66,7 @@ export function QuizPage() {
                 </div>
                 <div className="header-actions">
                     <Link to="/playground" className="btn-nav">Playground</Link>
+                    <Link to="/looking-forward" className="btn-nav">Future</Link>
                     <ThemeToggle />
                 </div>
             </header>

@@ -1,40 +1,44 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 
 export default function SVMVisualizer({ values }) {
- // Use wnorm from the interactive formula slider, default to 2
- const wnorm = values.wnorm || 2;
- const marginWidth = (2 / wnorm) * 20; // scale up for visualization
+  // Use wnorm from the interactive formula slider, default to 2
+  const wnorm = values.wnorm || 2;
+  const marginWidth = (2 / wnorm) * 20; // scale up for visualization
 
- const [kernelTrick, setKernelTrick] = useState(false);
- const [points, setPoints] = useState([]);
+  const [kernelTrick, setKernelTrick] = useState(false);
 
- // Initialize a non-linear dataset (a circle of points surrounded by a ring)
- useEffect(() => {
- const pts = [];
- // Class 1: inner cluster
- for (let i = 0; i < 20; i++) {
- const radius = Math.random() * 20;
- const angle = Math.random() * Math.PI * 2;
- pts.push({
- id: `c1_${i}`,
- x: Math.cos(angle) * radius,
- y: Math.sin(angle) * radius,
- cls: 1
- });
- }
- // Class -1: outer ring
- for (let i = 0; i < 25; i++) {
- const radius = 40 + Math.random() * 20;
- const angle = Math.random() * Math.PI * 2;
- pts.push({
- id: `c2_${i}`,
- x: Math.cos(angle) * radius,
- y: Math.sin(angle) * radius,
- cls: -1
- });
- }
- setPoints(pts);
- }, []);
+  // Initialize a non-linear dataset (a circle of points surrounded by a ring)
+  const points = useMemo(() => {
+    const pts = [];
+    const seed = 12345;
+    const pseudoRandom = (i) => {
+      const x = Math.sin(seed + i * 9999) * 10000;
+      return x - Math.floor(x);
+    };
+    // Class 1: inner cluster
+    for (let i = 0; i < 20; i++) {
+      const radius = pseudoRandom(i) * 20;
+      const angle = pseudoRandom(i + 100) * Math.PI * 2;
+      pts.push({
+        id: `c1_${i}`,
+        x: Math.cos(angle) * radius,
+        y: Math.sin(angle) * radius,
+        cls: 1
+      });
+    }
+    // Class -1: outer ring
+    for (let i = 0; i < 25; i++) {
+      const radius = 40 + pseudoRandom(i + 200) * 20;
+      const angle = pseudoRandom(i + 300) * Math.PI * 2;
+      pts.push({
+        id: `c2_${i}`,
+        x: Math.cos(angle) * radius,
+        y: Math.sin(angle) * radius,
+        cls: -1
+      });
+    }
+    return pts;
+  }, []);
 
  // Map 2D -> 3D via Radial Basis Function (RBF) / Polynomial to separate the concentric circles
  const mappedPoints = useMemo(() => {

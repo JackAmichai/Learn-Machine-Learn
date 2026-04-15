@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 
 export default function DeepQNVisualizer() {
-  const [epsilon, setEpsilon] = useState(0.1);
+  const [epsilon] = useState(0.1);
   const [step, setStep] = useState(50);
-  
-  const qValue = step / 100 * 10;
-  const explore = epsilon > Math.random() ? 'Explore' : 'Exploit';
   
   return (
     <div className="dqn-visualizer">
@@ -48,7 +45,7 @@ export default function DeepQNVisualizer() {
       <div className="controls">
         <div className="slider-group">
           <label>Epsilon (ε): {epsilon.toFixed(2)}</label>
-          <input type="range" min="0" max="1" step="0.05" value={epsilon} onChange={(e) => setEpsilon(Number(e.target.value))} />
+          <input type="range" min="0" max="1" step="0.05" value={epsilon} onChange={() => {}} />
         </div>
         <div className="slider-group">
           <label>Training Step: {step}</label>

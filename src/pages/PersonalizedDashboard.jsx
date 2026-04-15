@@ -68,9 +68,12 @@ export function PersonalizedDashboard() {
  <Link to="/quizzes" className="dash-nav-btn" id="dash-go-quizzes">
  Quizzes
  </Link>
- <Link to="/resources" className="dash-nav-btn" id="dash-go-resources">
- Resources
- </Link>
+  <Link to="/resources" className="dash-nav-btn" id="dash-go-resources">
+  Resources
+  </Link>
+  <Link to="/looking-forward" className="dash-nav-btn">
+  Looking Forward
+  </Link>
  <ThemeToggle />
  <button
  className="dash-reset-btn"
@@ -161,21 +164,23 @@ export function PersonalizedDashboard() {
  {cat.topics.map((topicKey) => {
  const topicData = MATH_TOPICS[topicKey];
  const isCompleted = completedTopics.includes(topicKey);
+ const isIntro = topicKey.endsWith('Intro');
  if (!topicData) return null;
  return (
  <button
  key={topicKey}
- className={`topic-card ${isCompleted ? 'completed' : ''}`}
+ className={`topic-card ${isCompleted ? 'completed' : ''} ${isIntro ? 'intro' : ''}`}
  onClick={() => handleTopicClick(topicKey)}
  id={`topic-${topicKey.replace(/\s+/g, '-')}`}
  aria-label={isCompleted ? `${topicData.title.split(':')[0]} (completed)` : topicData.title.split(':')[0]}
  >
- {isCompleted && (
+ {isCompleted && !isIntro && (
  <span className="topic-done" aria-hidden="true">
  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
  </span>
  )}
- <span className="topic-title">{topicData.title.split(':')[0]}</span>
+ {isIntro && <span className="topic-intro-icon"></span>}
+ <span className="topic-title">{isIntro ? 'Start Here' : topicData.title.split(':')[0]}</span>
  </button>
  );
  })}
@@ -523,6 +528,27 @@ export function PersonalizedDashboard() {
  border-color: var(--accent-success, #00ff9d);
  background: linear-gradient(135deg, rgba(0, 255, 157, 0.2), rgba(0, 255, 157, 0.08));
  box-shadow: 0 0 18px rgba(0, 255, 157, 0.25);
+ }
+ .topic-card.intro {
+ background: linear-gradient(135deg, var(--accent-primary), rgba(0, 242, 255, 0.1));
+ color: #000;
+ font-weight: 700;
+ border: none;
+ box-shadow: 0 4px 14px rgba(0, 242, 255, 0.25);
+ }
+ .topic-card.intro:hover {
+ transform: translateY(-2px) scale(1.05);
+ box-shadow: 0 6px 20px rgba(0, 242, 255, 0.4);
+ }
+ .topic-intro-icon::before {
+ content: '';
+ display: inline-block;
+ width: 0;
+ height: 0;
+ border-top: 5px solid transparent;
+ border-bottom: 5px solid transparent;
+ border-left: 8px solid #000;
+ margin-right: 8px;
  }
  .topic-done {
  display: inline-flex;

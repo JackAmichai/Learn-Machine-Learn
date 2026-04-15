@@ -11,10 +11,15 @@ export default function TreeVisualizer({ values }) {
   const class2Count = numItems - class1Count;
 
   // Generate an array representing the sample mix
+  const seed = 12345;
+  const pseudoRandom = (i) => {
+    const x = Math.sin(seed + i * 9999) * 10000;
+    return x - Math.floor(x);
+  };
   const mix = [
     ...Array(class1Count).fill(1),
     ...Array(class2Count).fill(2)
-  ].sort((a, b) => Math.random() - 0.5); // shuffle for display
+  ].sort((_, i) => pseudoRandom(i) - 0.5); // shuffle for display
 
   // Calculate box sizes based on impurity
   // If pure, color is solid. If impure, color is mixed.

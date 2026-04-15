@@ -44,8 +44,8 @@ function TimelineVisualizer() {
 function NeuralVisualizer() {
   const [in1, setIn1] = useState(1);
   const [in2, setIn2] = useState(0);
-  const [w1, setW1] = useState(0.8);
-  const [w2, setW2] = useState(-0.5);
+  const [w1] = useState(0.8);
+  const [w2] = useState(-0.5);
   const [bias, setBias] = useState(0.1);
   
   const hidden = in1*w1 + in2*w2 + bias;
@@ -116,11 +116,11 @@ function ConvVisualizer() {
 
 // 4. RNN - Sequence processing
 function RNNVisualizer() {
-  const [seq, setSeq] = useState([1,0,1,0]);
+  const [seq] = useState([1,0,1,0]);
   const [step, setStep] = useState(0);
   const tokens = ['The','cat','sat','on'];
   
-  const hidden = seq.slice(0,step+1).reduce((a,v,i) => a + v * 0.8, 0);
+  /* hidden unused */
   
   return (
     <div className="viz-container">
@@ -140,7 +140,7 @@ function RNNVisualizer() {
 
 // 5. LSTM - Long short-term memory
 function LSTMVisualizer() {
-  const [input, setInput] = useState(1);
+  const [input] = useState(1);
   const [prevState, setPrevState] = useState(0.8);
   const [forgetGate, setForgetGate] = useState(0.9);
   const [inputGate, setInputGate] = useState(0.3);
@@ -269,7 +269,7 @@ function VAEVisualizer() {
   const [zMean, setZMean] = useState(0);
   const [zStd, setZStd] = useState(1);
   
-  const sample = zMean + zStd * (Math.random() * 2 - 1);
+  /* sample unused */
   
   return (
     <div className="viz-container">
@@ -325,7 +325,7 @@ function DiffusionVisualizer() {
 function GradientVisualizer() {
   const [lr, setLr] = useState(0.1);
   const [grad, setGrad] = useState(-2);
-  const [w, setW] = useState(2);
+  const [w] = useState(2);
   
   const newW = w - lr * grad;
   
@@ -350,9 +350,9 @@ function GradientVisualizer() {
 // 12. Q-Learning - RL
 function QLearningVisualizer() {
   const [state, setState] = useState(1);
-  const [action, setAction] = useState(0);
-  const [reward, setReward] = useState(1);
-  const [nextQ, setNextQ] = useState(0.8);
+  const [action] = useState(0);
+  const [reward] = useState(1);
+  const [nextQ] = useState(0.8);
   
   const gamma = 0.9;
   const td = reward + gamma * nextQ - 0.5;
@@ -482,6 +482,7 @@ export function GoogleResources() {
         <header className="main-header">
           <div><h1>ML <span>Interactive Lessons</span></h1><p>15 visualizers — one for each major concept</p></div>
           <Link to="/dashboard" className="btn-nav">Back</Link>
+          <Link to="/looking-forward" className="btn-nav">Future</Link>
         </header>
 
         <div className="lesson-tabs">

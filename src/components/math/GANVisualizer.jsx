@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
 export default function GANVisualizer() {
-  const [phase, setPhase] = useState('training');
   const [epoch, setEpoch] = useState(50);
   
   const progress = epoch / 100;

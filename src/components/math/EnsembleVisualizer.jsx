@@ -110,13 +110,3 @@ export default function EnsembleVisualizer() {
     </div>
   );
 }
-
-const styles = `
-  .ensemble-visualizer {
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid var(--glass-border);
-    border-radius: 12px;
-    padding: 16px;
-    margin: 16px 0;
-  }
-`;

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 export default function PoolingVisualizer() {
   const [type, setType] = useState('max');
-  const [size, setSize] = useState(2);
+  const [size] = useState(2);
   
   const data = [
     [1, 5, 3, 2],
