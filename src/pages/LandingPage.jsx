@@ -4,6 +4,8 @@ import { NeuralNetworkHero } from '../components/NeuralNetworkHero';
 import { Questionnaire } from '../components/Questionnaire';
 import { PersonalizationContext } from '../contexts/PersonalizationContext';
 import { ThemeToggle } from '../components/ThemeToggle';
+import MLPeople from '../../Pics/ML people animation.png';
+import MathPeople from '../../Pics/Math people animation.png';
 
 const FEATURES = [
   {
@@ -244,6 +246,23 @@ export function LandingPage() {
             <span>Begin Your Personalized Journey</span>
             <span className="cta-arrow">→</span>
           </button>
+        </div>
+      </section>
+
+      {/* PIONEERS SECTION */}
+      <section className="pioneers-section" ref={addSectionRef}>
+        <div className="section-inner">
+          <h2 className="section-title" style={{ marginBottom: "40px" }}>The Pioneers of AI</h2>
+          <div className="pioneers-container">
+             <div className="pioneer-card">
+               <img src={MLPeople} alt="Machine Learning Pioneers" />
+               <p>The visionaries of Computer Science and Machine Learning</p>
+             </div>
+             <div className="pioneer-card">
+               <img src={MathPeople} alt="Mathematics Pioneers" />
+               <p>The foundational Mathematicians who built the theory</p>
+             </div>
+          </div>
         </div>
       </section>
 
@@ -631,6 +650,41 @@ export function LandingPage() {
           color: var(--text-secondary);
           font-size: 14px;
           border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* PIONEERS SECTION */
+        .pioneers-container {
+          display: flex;
+          flex-direction: column;
+          gap: 40px;
+          align-items: center;
+        }
+        .pioneer-card {
+          width: 100%;
+          max-width: 800px;
+          background: rgba(0, 0, 0, 0.4);
+          border: 1px solid var(--glass-border);
+          border-radius: 16px;
+          padding: 24px;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+          transition: transform 0.3s ease;
+        }
+        .pioneer-card:hover {
+          transform: translateY(-5px);
+          border-color: rgba(255, 255, 255, 0.1);
+        }
+        .pioneer-card img {
+          width: 100%;
+          height: auto;
+          border-radius: 8px;
+          margin-bottom: 20px;
+        }
+        .pioneer-card p {
+          text-align: center;
+          font-size: 16px;
+          color: var(--text-secondary);
+          margin: 0;
+          font-style: italic;
         }
 
         /* Reduce motion */
