@@ -84,6 +84,8 @@ export function OutputPlot({ model, data, modelVersion }) {
                 ref={canvasRef}
                 width={400}
                 height={400}
+                role="img"
+                aria-label="Model decision boundary and data points visualization"
                 style={{
                     width: '100%',
                     height: '100%',
