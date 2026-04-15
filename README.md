@@ -1,6 +1,6 @@
 # Learn Machine Learn 🧠
 
-An interactive neural network visualization and training tool built with React and TensorFlow.js. Perfect for CS/EE students learning machine learning fundamentals.
+An interactive neural network visualization and training tool built with React and TensorFlow.js. Perfect for CS/EE students learning machine learning fundamentals - from basics to cutting-edge computer vision!
 
 ## Features
 
@@ -12,8 +12,14 @@ An interactive neural network visualization and training tool built with React a
   - Loss Functions & Optimizers (SGD, Adam, RMSprop)
   - Regularization (L1, L2, Dropout)
   - Signal Processing & Convolution
+  - **NEW: Vision Topics**: Pooling, Padding, BatchNorm, Skip Connections
+  - **NEW: Learning Paradigms**: Supervised, Unsupervised, Semi-Supervised, Self-Supervised
+  - **NEW: Modern Architectures**: Transformers, Vision Transformer (ViT), Diffusion Models
+  - **NEW: Advanced Topics**: CLIP, Stable Diffusion, SAM, LLMs, RAG, Agents
+  - **NEW: MLOps**: Quantization, Distillation, MoE
 - **Guided Tour**: Step-by-step onboarding for new users
 - **Interactive Tooltips**: Hover or focus on terms to learn definitions
+- **16-Week Learning Path**: Structured curriculum from basics to advanced computer vision
 
 ## Getting Started
 
@@ -83,6 +89,43 @@ This project follows WCAG AA guidelines:
 - **TensorFlow.js** - In-browser machine learning
 - **Vitest** - Unit testing framework
 - **ESLint 9** - Code linting
+
+## Learning Path
+
+A 16-week structured curriculum for mastering computer vision and modern ML:
+
+### Phase 1: Foundations (Weeks 1-4)
+- Neural Networks, Linear Algebra, Python basics
+- Build your first neural network from scratch
+
+### Phase 2: Core ML (Weeks 5-8)
+- Supervised vs Unsupervised learning
+- CNNs: Convolution, pooling, architectures
+- Train on MNIST, CIFAR-10
+
+### Phase 3: Deep Vision (Weeks 9-12)
+- ResNet, EfficientNet
+- Object Detection: YOLO, R-CNN
+- Semantic Segmentation: U-Net, DeepLab
+
+### Phase 4: Advanced Topics (Weeks 13-16)
+- Vision Transformers (ViT)
+- Self-supervised: CLIP, contrastive learning
+- Diffusion models, Model optimization
+
+## Recent Additions (v2.0)
+
+| Category | Topics Added |
+|----------|-------------|
+| **Vision Basics** | Pooling, Padding, BatchNorm, Dropout, Skip Connections |
+| **Learning Paradigms** | Supervised, Unsupervised, Semi-Supervised, Self-Supervised |
+| **Transformers** | Attention, Multi-head, Vision Transformer (ViT) |
+| **Generative** | Diffusion Models, Stable Diffusion, GAN |
+| **Multimodal** | CLIP, BLIP-2, GPT-4V, Multimodal Learning |
+| **Modern CV** | Object Detection (YOLO, R-CNN), Segmentation (U-Net, SAM) |
+| **LLM & Agents** | LLMs, RAG, AI Agents, Tool Use |
+| **MLOps** | Quantization, Knowledge Distillation, Mixture of Experts |
+| **Cutting Edge** | NeRF, Sora, Reasoning Models, Open Weights |
 
 ## Project Structure
 

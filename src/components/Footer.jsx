@@ -4,16 +4,24 @@ export function Footer() {
   return (
     <footer className="app-footer">
       <div className="footer-content">
-        <span className="footer-label">Latest Popular Article:</span>
+        <span className="footer-label">Learning Resources:</span>
         <a
-          href="http://jalammar.github.io/illustrated-transformer/"
+          href="https://jalammar.github.io/illustrated-transformer/"
           target="_blank"
           rel="noopener noreferrer"
           className="footer-link"
         >
-          The Illustrated Transformer
+          Transformer
         </a>
-        <span className="footer-desc">- A visual guide to neural network machine translation.</span>
+        <a
+          href="https://learnmachinelearn.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="footer-link"
+        >
+          ViT & Vision
+        </a>
+        <span className="footer-desc">| Interactive ML Playground</span>
       </div>
       <style>{`
         .app-footer {
@@ -41,10 +49,14 @@ export function Footer() {
           text-decoration: none;
           font-weight: bold;
           transition: color 0.2s;
+          padding: 2px 8px;
+          border-radius: 4px;
+          background: rgba(0, 242, 255, 0.1);
         }
         .footer-link:hover {
           color: var(--accent-secondary);
           text-decoration: underline;
+          background: rgba(0, 242, 255, 0.2);
         }
         .footer-desc {
           opacity: 0.8;

@@ -82,8 +82,8 @@ export function GoogleResources() {
             <p>Curated learning materials from Google Developers</p>
           </div>
           <div className="header-actions">
-            <Link to="/" className="btn-nav">
-              Back to Home
+            <Link to="/dashboard" className="btn-nav">
+              Back to Dashboard
             </Link>
           </div>
         </header>

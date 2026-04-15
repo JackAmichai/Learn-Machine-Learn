@@ -49,8 +49,8 @@ export function QuizPage() {
           <p>Test your knowledge of Machine Learning concepts</p>
         </div>
         <div className="header-actions">
-           <Link to="/" className="btn-nav">
-             Back to Visualizer
+           <Link to="/playground" className="btn-nav">
+             Back to Playground
            </Link>
            <ThemeToggle />
         </div>
@@ -91,7 +91,7 @@ export function QuizPage() {
 
               <div className="result-actions">
                 <button className="btn-restart" onClick={restartQuiz}>Try Again</button>
-                <Link to="/" className="btn-home">Return to Visualizer</Link>
+                <Link to="/playground" className="btn-home">Return to Playground</Link>
               </div>
             </div>
           </div>

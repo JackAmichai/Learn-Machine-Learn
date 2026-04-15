@@ -1,12 +1,24 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { MATH_TOPICS } from '../engine/mathContent';
+import { VisualizerRegistry } from './math/VisualizerRegistry';
+import { PersonalizationContext } from '../contexts/PersonalizationContext';
+import { getTopicPresentation } from '../engine/personalizationEngine';
 
 export function MathModal({ topic, onClose }) {
     const data = MATH_TOPICS[topic];
     const [activeFormula, setActiveFormula] = useState(null);
     const [sliderValues, setSliderValues] = useState({});
+    const { profile } = useContext(PersonalizationContext);
 
     if (!data) return null;
+
+    // Get persona-based presentation config
+    const presentation = profile
+        ? getTopicPresentation(profile, topic)
+        : { showMath: true, showVisual: true, complexity: 'standard', showInteractiveFormulas: true, highlightInsights: true };
+
+    // Get the visualizer if one exists for this topic
+    const Visualizer = data.visualizer ? VisualizerRegistry[data.visualizer] : null;
 
     const handleFormulaPartHover = (partKey) => {
         setActiveFormula(partKey);
@@ -44,10 +56,26 @@ export function MathModal({ topic, onClose }) {
                     >×</button>
                 </div>
 
-                <div className="math-body" dangerouslySetInnerHTML={{ __html: data.content }} />
+                {/* Persona complexity badge */}
+                {profile && (
+                    <div className={`complexity-badge complexity-${presentation.complexity}`}>
+                        {presentation.complexity === 'simple' && '🎨 Simplified View'}
+                        {presentation.complexity === 'standard' && '📖 Standard View'}
+                        {presentation.complexity === 'advanced' && '🔬 Advanced View'}
+                    </div>
+                )}
 
-                {/* Interactive Formula Explorer */}
-                {interactiveFormulas.length > 0 && (
+                <div className={`math-body ${!presentation.showMath ? 'visual-only' : ''}`} dangerouslySetInnerHTML={{ __html: data.content }} />
+
+                {/* Custom Visualizer Section */}
+                {Visualizer && (
+                    <div className="custom-visualizer">
+                        <Visualizer values={sliderValues} />
+                    </div>
+                )}
+
+                {/* Interactive Formula Explorer — shown based on persona */}
+                {presentation.showInteractiveFormulas && interactiveFormulas.length > 0 && (
                     <div className="formula-explorer">
                         <h3>🧪 Interactive Formula Explorer</h3>
                         <p className="explorer-desc">Adjust the values below to see how each part affects the output:</p>
@@ -62,6 +90,29 @@ export function MathModal({ topic, onClose }) {
                                 onPartHover={handleFormulaPartHover}
                             />
                         ))}
+                    </div>
+                )}
+
+                {/* Visual-only mode: show insights without formulas */}
+                {!presentation.showInteractiveFormulas && interactiveFormulas.length > 0 && (
+                    <div className="visual-insights-panel">
+                        <h3>💡 Key Takeaways</h3>
+                        <p className="insights-desc">Here are the most important things to understand:</p>
+                        {interactiveFormulas.map((formula, idx) => (
+                            <div key={idx} className="visual-insight-card">
+                                <h4>{formula.name}</h4>
+                                {formula.insights && (
+                                    <ul>
+                                        {formula.insights.map((insight, i) => (
+                                            <li key={i}>{insight}</li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+                        ))}
+                        <p className="formula-note">
+                            Want to explore the interactive math? Update your preference to <strong>Math</strong> or <strong>Hybrid</strong> in your profile.
+                        </p>
                     </div>
                 )}
 
@@ -91,7 +142,7 @@ export function MathModal({ topic, onClose }) {
                 border: 1px solid var(--accent-secondary);
                 box-shadow: 0 0 30px rgba(112, 0, 255, 0.3);
                 width: 700px;
-                max-width: 90%;
+                max-width: 95%;
                 max-height: 90vh;
                 overflow-y: auto;
                 border-radius: 16px;
@@ -118,14 +169,59 @@ export function MathModal({ topic, onClose }) {
                 font-size: 28px;
                 cursor: pointer;
             }
+
+            /* Complexity badge */
+            .complexity-badge {
+                display: inline-block;
+                padding: 4px 12px;
+                border-radius: 999px;
+                font-size: 12px;
+                font-weight: 600;
+                margin-bottom: 16px;
+            }
+            .complexity-simple {
+                background: rgba(255, 200, 50, 0.15);
+                color: #ffc832;
+                border: 1px solid rgba(255, 200, 50, 0.3);
+            }
+            .complexity-standard {
+                background: rgba(0, 242, 255, 0.1);
+                color: var(--accent-primary);
+                border: 1px solid rgba(0, 242, 255, 0.2);
+            }
+            .complexity-advanced {
+                background: rgba(112, 0, 255, 0.15);
+                color: var(--accent-secondary);
+                border: 1px solid rgba(112, 0, 255, 0.3);
+            }
+
             .math-body {
                 line-height: 1.6;
                 font-size: 15px;
+            }
+            /* Visual-only mode: hide equation blocks */
+            .math-body.visual-only .equation {
+                display: none;
             }
             .math-body h4 {
                 color: var(--accent-secondary);
                 margin-top: 20px;
                 margin-bottom: 10px;
+            }
+            .custom-visualizer {
+                margin: 20px 0;
+                padding: 15px;
+                background: rgba(0, 0, 0, 0.3);
+                border: 1px solid var(--glass-border);
+                border-radius: 12px;
+            }
+            .math-viz-placeholder {
+                text-align: center;
+                color: var(--text-secondary);
+            }
+            .math-viz-placeholder h4 {
+                color: var(--accent-primary);
+                margin-top: 0;
             }
             .equation {
                 background: rgba(0,0,0,0.3);
@@ -138,6 +234,53 @@ export function MathModal({ topic, onClose }) {
                 margin: 15px 0;
                 color: #fff;
                 border-left: 3px solid var(--accent-primary);
+            }
+
+            /* Visual-only insights panel */
+            .visual-insights-panel {
+                margin-top: 20px;
+                padding: 20px;
+                background: rgba(255, 200, 50, 0.05);
+                border: 1px solid rgba(255, 200, 50, 0.2);
+                border-radius: 12px;
+            }
+            .visual-insights-panel h3 {
+                margin: 0 0 10px 0;
+                color: #ffc832;
+                font-size: 16px;
+            }
+            .insights-desc {
+                font-size: 13px;
+                color: var(--text-secondary);
+                margin-bottom: 16px;
+            }
+            .visual-insight-card {
+                background: rgba(0, 0, 0, 0.2);
+                border-radius: 8px;
+                padding: 12px 16px;
+                margin-bottom: 12px;
+            }
+            .visual-insight-card h4 {
+                margin: 0 0 8px 0;
+                color: var(--accent-primary);
+                font-size: 14px;
+            }
+            .visual-insight-card ul {
+                margin: 0;
+                padding-left: 18px;
+                font-size: 13px;
+                color: var(--text-secondary);
+            }
+            .visual-insight-card li {
+                margin-bottom: 4px;
+                line-height: 1.4;
+            }
+            .formula-note {
+                margin-top: 16px;
+                font-size: 12px;
+                color: var(--text-secondary);
+                font-style: italic;
+                text-align: center;
             }
             
             /* Formula Explorer */
@@ -195,13 +338,16 @@ function FormulaPlayground({ formula, sliderValues, onSliderChange, activeFormul
     };
 
     const result = calculateResult();
+    
+    const parts = formula.parts || formula.components || formula.points || [];
+    const variables = formula.variables || [];
 
     return (
         <div className="formula-playground">
             <div className="formula-display">
                 <span className="formula-name">{formula.name}:</span>
                 <div className="formula-parts">
-                    {formula.parts.map((part, idx) => (
+                    {parts.map((part, idx) => (
                         <span 
                             key={idx}
                             className={`formula-part ${activeFormula === part.key ? 'active' : ''}`}
@@ -222,7 +368,7 @@ function FormulaPlayground({ formula, sliderValues, onSliderChange, activeFormul
             </div>
 
             <div className="formula-controls">
-                {formula.variables.map((variable, idx) => (
+                {variables.map((variable, idx) => (
                     <div key={idx} className="control-row">
                         <label 
                             className={activeFormula === variable.key ? 'highlight' : ''}

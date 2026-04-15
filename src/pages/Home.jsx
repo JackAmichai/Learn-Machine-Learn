@@ -171,6 +171,9 @@ export function Home() {
             <p>Interactive Neural Network Playground</p>
           </div>
           <div className="header-actions">
+            <Link to="/dashboard" className="btn-nav">
+              Dashboard
+            </Link>
             <Link to="/quizzes" className="btn-nav">
               Quizzes
             </Link>

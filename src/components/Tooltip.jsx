@@ -21,10 +21,39 @@ const DICTIONARY = {
     "CNN": "Convolutional neural network using shared kernels and local receptive fields. Excels at spatial signals and image pipelines.",
     "RNN": "Recurrent neural network that reuses hidden state across time. Useful for sequences, control loops, and language models.",
 
+    // Classical ML
+    "LinearRegression": "Predicting a continuous value by fitting a straight line to the data points. The simplest regression model.",
+    "LogisticRegression": "Predicting the probability of a binary outcome (0 or 1) using the sigmoid function on a linear combination of features.",
+    "SVM": "Support Vector Machine - finds the hyperplane that separates classes with the maximum margin for robustness.",
+    "DecisionTree": "Model that splits data into subsets based on feature values, forming a tree structure for intuitive decision making.",
+    "RandomForest": "Ensemble of decision trees trained on different data subsets and features to improve accuracy and prevent overfitting.",
+    "KNN": "K-Nearest Neighbors - classifies a point based on the majority class of its 'k' closest neighbors in the feature space.",
+    "NaiveBayes": "Simple probabilistic classifier based on Bayes' Theorem, assuming features are independent of each other.",
+    "KMeans": "Unsupervised clustering algorithm that partitions data into 'k' clusters by minimizing distance to centroids.",
+    "DBSCAN": "Density-based clustering that finds core points and their neighbors, effective for clusters of arbitrary shapes.",
+    "PCA": "Principal Component Analysis - reduces dimensionality by projecting data onto axes that capture the most variance.",
+    "TSNE": "Nonlinear dimensionality reduction for visualizing high-dimensional data in 2D or 3D clusters.",
+    "UMAP": "Modern alternative to t-SNE that is faster and often preserves more global data structure.",
+
     // Optimizers and Gradients
     "Optimizer": "Algorithm that turns gradients into parameter updates. SGD, Momentum, and Adam trade off speed, stability, and memory.",
+    "AdamW": "Modern variant of Adam that decouples weight decay from the gradient update, improving generalization.",
+    "L-BFGS": "Second-order optimization algorithm that uses an approximation of the Hessian to take smarter steps.",
     "Gradient": "Vector of partial derivatives indicating how sensitive loss is to each weight. Negative gradient points toward improvement.",
     "Backpropagation": "Reverse-mode automatic differentiation applying the chain rule layer by layer to compute gradients efficiently.",
+
+    // Reinforcement Learning
+    "MDP": "Markov Decision Process - mathematical framework for modeling decision making where outcomes are partly random.",
+    "QLearning": "Off-policy RL algorithm that learns the quality of actions (Q-values) through trial and error.",
+    "DeepQN": "DQN - uses deep neural networks to approximate Q-values, allowing RL to handle high-dimensional states like images.",
+    "PolicyGradient": "Class of RL algorithms that directly optimize the agent's policy (action probabilities) via gradient ascent.",
+    "PPO": "Proximal Policy Optimization - state-of-the-art RL algorithm that stabilizes training via clipped updates.",
+
+    // Math & Advanced Foundations
+    "Jacobian": "Matrix of all first-order partial derivatives. Describes how a vector-valued function changes with its inputs.",
+    "Hessian": "Matrix of second-order partial derivatives. Describes the local curvature of a function's landscape.",
+    "BayesTheorem": "Mathematical formula for updating the probability of a hypothesis as more evidence becomes available.",
+    "LoRA": "Low-Rank Adaptation - fine-tuning method that trains small, low-rank matrices instead of the entire model.",
 
     // Activations
     "Activation": "Non-linear transfer function (ReLU, sigmoid, tanh, etc.) that lets networks model complex decision boundaries.",
@@ -70,7 +99,46 @@ const DICTIONARY = {
 
     // Advanced Concepts
     "Dropout": "Regularization technique where randomly selected neurons are ignored during training to prevent overfitting.",
-    "Bias-Variance Tradeoff": "The balance between a model that is too simple (high bias, underfits) and too complex (high variance, overfits)."
+    "Bias-Variance Tradeoff": "The balance between a model that is too simple (high bias, underfits) and too complex (high variance, overfits).",
+
+    // Vision Basics
+    "Pooling": "Downsampling operation that reduces spatial dimensions while retaining important features. Max pooling takes maximum, average pooling takes mean.",
+    "Padding": "Border of pixels added around input to control output size. 'Same' padding keeps dimensions equal, 'Valid' allows shrinking.",
+    "BatchNorm": "Normalizes layer inputs using batch statistics. Stabilizes training, allows higher learning rates, acts as regularizer.",
+    "Skip Connection": "Identity mapping that bypasses layers, enabling gradient flow in very deep networks (ResNet innovation).",
+    "Vision Architecture": "CNN designs like LeNet, AlexNet, VGG, ResNet that revolutionized image recognition.",
+    "Autoencoder": "Network that compresses data to latent space and reconstructs it. Useful for compression, denoising, anomaly detection.",
+    "GAN": "Generative Adversarial Network with Generator (creates fakes) and Discriminator (distinguishes real from fake) in a minimax game.",
+    "L1L2": "L1 (MAE) is robust to outliers; L2 (MSE) penalizes large errors heavily. Choose based on your data distribution.",
+
+    // Learning Paradigms
+    "Supervised Learning": "Learning from labeled data (input-output pairs). The model learns to map inputs to correct outputs.",
+    "Unsupervised Learning": "Finding patterns in data without labels. Clustering, PCA, autoencoders are unsupervised methods.",
+    "Semi-Supervised": "Using both labeled and unlabeled data. Powerful when labels are expensive to obtain.",
+    "Self-Supervised": "Creating labels from the data itself (e.g., predicting masked pixels). Contrastive learning is a key technique.",
+
+    // Transformers & Modern
+    "Transformer": "Architecture using self-attention to process sequences in parallel. Powers GPT, BERT, and modern LLMs.",
+    "Vision Transformer": "Applying transformer architecture to images by treating patches as tokens. ViT rivals CNNs at scale.",
+    "Diffusion Model": "Generative model that iteratively denoises random noise to create images. Powers Stable Diffusion, DALL-E.",
+    "CLIP": "Model that learns to match images with text, enabling zero-shot classification from natural language.",
+    "Stable Diffusion": "Latent diffusion model that generates images from text. Efficient enough to run on consumer GPUs.",
+    "SAM": "Segment Anything Model - promptable segmentation that works on any object type without training.",
+    "LLM": "Large Language Model - transformer trained on massive text. GPT, Claude, Llama are examples.",
+
+    // Object Detection & Segmentation
+    "Object Detection": "Finding and localizing all objects in an image with bounding boxes. YOLO, R-CNN are popular methods.",
+    "Segmentation": "Pixel-level classification. Semantic (class per pixel), Instance (distinguish objects), Panoptic (both).",
+    "IoU": "Intersection over Union - measures overlap between predicted and ground truth boxes. 0.5+ is typical detection threshold.",
+
+    // RAG & Agents
+    "RAG": "Retrieval-Augmented Generation - combines LLM with external knowledge base for up-to-date, grounded answers.",
+    "AI Agent": "LLM that can plan, use tools, and take actions. Not just text generation but real task completion.",
+
+    // MLOps
+    "Quantization": "Reducing model precision (e.g., 32-bit to 8-bit) to make models smaller and faster.",
+    "Distillation": "Training a small model to mimic a large model's behavior, preserving performance in a smaller package.",
+    "MoE": "Mixture of Experts - activates only a subset of parameters per input, enabling massive models efficiently."
 };
 
 export function Tooltip({ word, overrideText }) {

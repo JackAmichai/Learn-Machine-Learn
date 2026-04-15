@@ -17,6 +17,7 @@
   --glass-bg: rgba(255, 255, 255, 0.05);
 
   --font-main: 'Inter', system-ui, sans-serif;
+  --font-heading: 'Outfit', var(--font-main);
   --radius-md: 12px;
   --radius-lg: 20px;
 }
@@ -44,7 +45,7 @@ body {
   font-family: var(--font-main);
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  overflow: hidden;
+  overflow: auto;
   transition: background-color 0.3s, color 0.3s;
 }
 

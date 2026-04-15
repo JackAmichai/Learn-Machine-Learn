@@ -162,8 +162,8 @@ A comprehensive roadmap of 100 planned features and enhancements for the neural 
 | # | Feature | Description | Priority |
 |---|---------|-------------|----------|
 | 91 | **Autoencoder Mode** | Train autoencoders with reconstruction visualization | Medium |
-| 92 | **VAE Support** | Variational autoencoder with latent space exploration | Low |
-| 93 | **GAN Playground** | Train simple GANs with generator/discriminator views | Low |
+| 92 | **VAE Support** | Variational autoencoder with latent space exploration | Medium |
+| 93 | **GAN Playground** | Train simple GANs with generator/discriminator views | Medium |
 | 94 | **Reinforcement Learning** | Simple grid world RL environment with Q-learning | Low |
 | 95 | **Transfer Learning** | Load pre-trained MobileNet features for vision tasks | High |
 | 96 | **Ensemble Methods** | Train multiple models and combine predictions | Medium |
@@ -171,6 +171,35 @@ A comprehensive roadmap of 100 planned features and enhancements for the neural 
 | 98 | **Model Pruning** | Prune small weights and show compression ratio | Low |
 | 99 | **Quantization** | INT8 quantization with accuracy comparison | Low |
 | 100 | **Federated Learning Demo** | Simulate federated learning across virtual clients | Low |
+
+---
+
+## 🎓 New Topics Added (v2.0)
+
+| Topic | Description |
+|-------|-------------|
+| **Pip2Pip (Autoencoder)** | Pixel-to-pixel networks, compression, reconstruction |
+| **GAN** | Generative adversarial networks, generator vs discriminator |
+| **L1L2 Loss** | Mean Absolute Error vs Mean Squared Error comparison |
+| **Pooling** | Max pooling, average pooling, receptive field growth |
+| **Padding** | Same/valid padding, output dimension calculation |
+| **BatchNorm** | Batch normalization, running statistics |
+| **Dropout** | Regularization by random silencing |
+| **Skip Connection** | Residual connections, gradient highways |
+| **Vision Architecture** | LeNet, AlexNet, VGG, ResNet comparison |
+| **Supervised Learning** | Classification, regression, training process |
+| **Unsupervised Learning** | Clustering, PCA, generative models |
+| **Semi-Supervised** | Self-training, label propagation |
+| **Self-Supervised** | Contrastive learning, masked prediction |
+| **Transformer** | Self-attention, multi-head, scaled dot-product |
+| **Vision Transformer** | ViT patches, position embeddings |
+| **Diffusion Models** | Forward/reverse process, noise schedules |
+| **CLIP** | Zero-shot image classification |
+| **Object Detection** | IoU, mAP, YOLO vs R-CNN |
+| **Segmentation** | Semantic, instance, panoptic segmentation |
+| **Stable Diffusion** | Latent diffusion, CFG guidance |
+| **SAM** | Segment Anything Model, promptable segmentation |
+| **Learning Path** | 16-week structured curriculum |
 
 ---
 
