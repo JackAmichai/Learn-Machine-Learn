@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { quizzes } from '../data/quizData';
 import { QuizCard } from '../components/QuizCard';
 import { ThemeToggle } from '../components/ThemeToggle';
-import { BuyMeCoffee } from '../components/BuyMeCoffee';
+import { AccessibilityPanel } from '../components/AccessibilityPanel';
 import { Footer } from '../components/Footer';
 
 const CATEGORIES = [
@@ -136,7 +136,6 @@ export function QuizPage() {
             </main>
 
             <Footer />
-            <BuyMeCoffee />
 
             <style>{`
                 .quiz-page {

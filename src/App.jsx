@@ -13,6 +13,8 @@ import { ToastStack } from './components/ToastStack';
 import { PersonalizationProvider } from './contexts/PersonalizationContext';
 import { HomeNav } from './components/HomeNav';
 import { Chatbot } from './components/Chatbot';
+import { BuyMeCoffee } from './components/BuyMeCoffee';
+import { AccessibilityPanel } from './components/AccessibilityPanel';
 
 function App() {
   return (
@@ -31,6 +33,8 @@ function App() {
                 </Routes>
                 <HomeNav />
                 <Chatbot />
+                <BuyMeCoffee />
+                <AccessibilityPanel />
               </Router>
               <ToastStack />
             </MathProvider>

@@ -10,6 +10,7 @@ import { StatsPanel } from '../components/StatsPanel';
 import { TourGuide } from '../components/TourGuide';
 import { useTheme } from '../hooks/useTheme';
 import { ThemeToggle } from '../components/ThemeToggle';
+import { AccessibilityPanel } from '../components/AccessibilityPanel';
 import { useToast } from '../hooks/useToast';
 import { BuyMeCoffee } from '../components/BuyMeCoffee';
 import { Footer } from '../components/Footer';
@@ -188,6 +189,7 @@ export function Home() {
               {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
             </button>
             <ThemeToggle />
+            <AccessibilityPanel />
           </div>
         </header>
 
@@ -275,9 +277,8 @@ export function Home() {
           )}
         </div>
         <Footer />
-      </main>
 
-      <BuyMeCoffee />
+      </main>
 
       <style>{`
         .vision-container {
@@ -307,6 +308,7 @@ export function Home() {
             display: flex;
             align-items: center;
             gap: 15px;
+            position: relative;
         }
         .btn-nav {
             text-decoration: none;
