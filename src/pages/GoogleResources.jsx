@@ -1,669 +1,630 @@
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
 import { Footer } from '../components/Footer';
 
-export function GoogleResources() {
-  const lessons = {
-    foundation: {
-      title: "Lesson 1: Foundations of ML",
-      overview: `Machine learning is about teaching computers to learn from data, rather than explicitly programming rules. 
-        This section covers the fundamental concepts that every ML practitioner needs: from basic prediction with linear models 
-        to the mathematical foundations of optimization. You'll learn how machines make predictions, measure their own 
-        errors, and improve over time through data.`,
-      whatYouLearn: [
-        "How machines learn from data through examples",
-        "The difference between supervised, unsupervised, and reinforcement learning",
-        "Basic prediction: from lines (linear regression) to probabilities (logistic regression)",
-        "How to measure error and improve predictions"
-      ],
-      nextUp: "In the next lessons, we'll see how to train these models with data, starting with the first neural networks.",
-      skills: ["Linear Regression", "Logistic Regression", "Loss Functions", "Basic Optimization"]
-    },
-    history: {
-      title: "Lesson 2: History of ML - How We Got Here",
-      overview: `Understanding the history of ML helps you understand why certain techniques exist. This timeline shows the key inventions 
-        from the 1950s to today - from Turing's original question to modern Transformers. You'll see how each breakthrough solved 
-        problems that held the field back, and how ideas from the 1960s finally became practical in the 1990s.`,
-      whatYouLearn: [
-        "The key inventions that unlock each era",
-        "Why ideas from the 1960s took 30 years to become practical",
-        "Who built on whose work (the intellectual lineage)",
-        "What problems each breakthrough solved"
-      ],
-      nextUp: "Now let's see how the first neural networks worked - backpropagation!",
-      skills: ["Timeline", "Intellectual Lineage", "Problem-Solving Evolution"]
-    },
-    neural: {
-      title: "Lesson 3: Neural Networks & Backpropagation",
-      overview: `Neural networks are the foundation of modern ML. This section shows how backpropagation - the algorithm that trains 
-        neural networks - was discovered and refined. You'll see how a simple idea (gradient descent) became the engine behind 
-        everything from AlphaGo to GPT-4. The key insight: networks can learn their own features from data.`,
-      whatYouLearn: [
-        "How neurons process information (inspired by biology)",
-        "Backpropagation: how networks learn from errors",
-        "Why this took 20+ years to become practical",
-        "Deep vs shallow networks"
-      ],
-      nextUp: "Now let's see how these ideas apply to images with convolutional neural networks.",
-      skills: ["Backpropagation", "Gradient Descent", "Feature Learning", "Deep Networks"]
-    },
-    cnn: {
-      title: "Lesson 4: Computer Vision - Teaching Machines to See",
-      overview: `Computer vision changed ML forever. From recognizing handwritten digits to detecting tumors, vision systems 
-        now match or exceed human performance. This section traces the journey from Neocognitron (1980) to Vision 
-        Transformers (2021). The key insight: local patterns (edges) combine into global concepts (faces).`,
-      whatYouLearn: [
-        "How convolution extracts local features",
-        "From LeNet (1998) to ResNet (2015) to ViT (2021)",
-        "Why more layers sometimes hurt performance (and skip connections fix it)",
-        "Key architectures: AlexNet, VGG, Inception, ResNet, EfficientNet"
-      ],
-      nextUp: "Next: how machines understand sequences - text, speech, time series.",
-      skills: ["Convolution", "Pooling", "Skip Connections", "Vision Architectures"]
-    },
-    sequence: {
-      title: "Lesson 5: Sequence Models - Understanding Time",
-      overview: `The world is full of sequences: language, speech, music, stock prices. This section covers how machines process sequences 
-        of varying length. From simple RNNs to LSTMs (that remember long-term) to attention (that processes everything in parallel). 
-        The key insight: sequential processing can be done in parallel with attention.`,
-      whatYouLearn: [
-        "How to handle variable-length sequences",
-        "RNNs, LSTMs, and GRUs: managing memory",
-        "The problem machines had with long sequences",
-        "How attention changed everything"
-      ],
-      nextUp: "Now the foundation for modern NLP: Transformers!",
-      skills: ["RNN", "LSTM", "GRU", "Attention"]
-    },
-    svm: {
-      title: "Lesson 6: SVMs - The Pre-Deep Learning Champion",
-      overview: `Before deep learning took over, SVMs (Support Vector Machines) were the method to beat. 
-        This section covers their history and why they dominated ML for 15 years. The key insight: finding the 
-        maximum-margin hyperplane and the "kernel trick" for non-linear boundaries.`,
-      whatYouLearn: [
-        "Maximum margin classification",
-        "The kernel trick: projecting to higher dimensions",
-        "Why SVMs worked so well on small data",
-        "When to still use SVMs today"
-      ],
-      nextUp: "Let's look at how to generate new data: GANs!",
-      skills: ["Margin", "Kernels", "Linear Separation", "RBF Kernels"]
-    },
-    gan: {
-      title: "Lesson 7: GANs - Game Theory Meets ML",
-      overview: `Generative Adversarial Networks (GANs) introduced a revolutionary idea: two networks competing. 
-        The generator creates fakes, the discriminator judges them. Like a detective vs counterfeiter, 
-        both improve. This led to photorealistic face generation and more.`,
-      whatYouLearn: [
-        "The generator vs discriminator game",
-        "How GANs learn to create new data",
-        "Key variations: DCGAN, WGAN, StyleGAN",
-        "Why training can be unstable"
-      ],
-      nextUp: "Next: even more powerful generative models - VAEs and Diffusion!",
-      skills: ["Generator", "Discriminator", "Game Theory", "Mode Collapse"]
-    },
-    diffusion: {
-      title: "Lesson 8: Diffusion Models - The New Frontier",
-      overview: `Diffusion models now generate the highest quality images. The idea: gradually add noise, 
-        then learn to reverse the process. Combined with language, this gives us Stable Diffusion, DALL-E, Imagen. 
-        The key insight: learn to denoise, no adversarial game needed.`,
-      whatYouLearn: [
-        "Forward vs reverse diffusion process",
-        "Why diffusion beats GANs in quality",
-        "Text-to-image: combining with language models",
-        "Latent diffusion for efficiency"
-      ],
-      nextUp: "The biggest revolution: Transformers!",
-      skills: ["Denoising", "Latent Space", "Text-to-Image", "Guidance"]
-    },
-    transformer: {
-      title: "Lesson 9: Transformers - Attention Is All You Need",
-      overview: `The Transformer architecture changed everything. Originally for language translation, it became the foundation 
-        for GPT, BERT, and 95% of modern LLMs. The key insight: self-attention processes ALL positions in parallel, 
-        capturing long-range dependencies without recurrence. This is the most important architecture in ML history.`,
-      whatYouLearn: [
-        "Self-attention: each position attends to all others",
-        "Multi-head: multiple relationship types at once",
-        "Positional encoding: giving order to sequences",
-        "Encoder vs Decoder vs Encoder-Decoder"
-      ],
-      nextUp: "Let's see how to train these efficiently!",
-      skills: ["Self-Attention", "Multi-Head", "Positional Encoding", "Transformer Architecture"]
-    },
-    optimization: {
-      title: "Lesson 10: Training Deep Networks - Optimizers",
-      overview: `How do you actually train a deep network? This section covers the optimization algorithms from SGD (1964) 
-        to Adam (2014) to modern techniques. The key insight: different optimizers work better for different architectures. 
-        You'll learn when to use each and common pitfalls.`,
-      whatYouLearn: [
-        "SGD, Momentum, and learning rate schedules",
-        "Adam: adaptive moment estimation",
-        "AdamW: fixing weight decay",
-        "Advanced: LAMB, Sharpness-Aware Minimization"
-      ],
-      nextUp: "Now let's see how machines can learn from interaction: Reinforcement Learning!",
-      skills: ["SGD", "Adam", "Learning Rate", "Momentum"]
-    },
-    rl: {
-      title: "Lesson 11: Reinforcement Learning - Learning by Doing",
-      overview: `How did AlphaGo beat the world champion? Reinforcement Learning (RL). The agent learns from rewards 
-        and punishments through interaction. This section traces from Q-learning (1989) to AlphaGo (2016) to 
-        modern RLHF that aligns LLMs with human preferences.`,
-      whatYouLearn: [
-        "The agent-environment-reward loop",
-        "Q-learning: estimating future rewards",
-        "Policy gradients: learning actions directly",
-        "AlphaGo: combining tree search with deep learning"
-      ],
-      nextUp: "Next: how to adapt big models to new tasks with transfer learning!",
-      skills: ["Q-Learning", "Policy Gradients", "Rewards", "Exploration"]
-    },
-    transfer: {
-      title: "Lesson 12: Transfer Learning - One Model, Many Tasks",
-      overview: `Why train from scratch when you can adapt? Transfer learning lets us take a model trained on massive data 
-        and fine-tune for specific tasks. This covers techniques from feature extraction (1990s) to LoRA (2021). 
-        This is how modern LLMs are adapted to new tasks.`,
-      whatYouLearn: [
-        "Feature extraction vs fine-tuning",
-        "How much to freeze vs train",
-        "Efficient methods: LoRA, Adapters, Prefix Tuning",
-        "When transfer works and when it doesn't"
-      ],
-      nextUp: "The cutting edge: connecting vision, language, and more!",
-      skills: ["Fine-tuning", "LoRA", "Adapters", "Prompt Tuning"]
-    },
-    multimodal: {
-      title: "Lesson 13: Multimodal & Foundation Models",
-      overview: `The new frontier: models that see, hear, and speak. From CLIP (connecting images to text) to GPT-4V (vision + language) 
-        to SAM (segment anything). These "foundation models" are trained on massive data and can generalize broadly. 
-        This is where ML is heading.`,
-      whatYouLearn: [
-        "Connecting vision and language (CLIP)",
-        "Foundation models vs specialized models",
-        "From any-to-any multimodal generation",
-        "Where the field is heading"
-      ],
-      nextUp: "You're ready to explore! Start with the foundational lessons and build up.",
-      skills: ["CLIP", "Foundation Models", "Zero-Shot", "Multimodal"]
+// ============ VISUALIZER COMPONENTS ============
+
+// Timeline Visualizer - Shows ML evolution over time
+function TimelineVisualizer() {
+  const [year, setYear] = useState(1950);
+  
+  const events = [
+    { year: 1957, label: "Perceptron", color: "#60a5fa", desc: "First artificial neuron" },
+    { year: 1964, label: "SGD+Momentum", color: "#34d399", desc: "Optimized learning" },
+    { year: 1974, label: "Backprop", color: "#fb923c", desc: "First proven in thesis" },
+    { year: 1986, label: "BP Revived", color: "#a78bfa", desc: "Rumelhart et al." },
+    { year: 1989, label: "LeNet", color: "#f472b6", desc: "CNN for digits" },
+    { year: 1997, label: "LSTM", color: "#22d3ee", desc: "Long-term memory" },
+    { year: 2012, label: "AlexNet", color: "#f87171", desc: "ImageNet breakthrough" },
+    { year: 2014, label: "GANs", color: "#fbbf24", desc: "Generator vs Discriminator" },
+    { year: 2015, label: "ResNet", color: "#4ade80", desc: "Skip connections" },
+    { year: 2017, label: "Transformer", color: "#c084fc", desc: "Attention architecture" },
+    { year: 2020, label: "GPT-3", color: "#38bdf8", desc: "175B emergent" },
+    { year: 2022, label: "Stable Diffusion", color: "#fb7185", desc: "Open image generation" }
+  ];
+
+  const activeEvent = events.find(e => Math.abs(e.year - year) < 4) || events[0];
+
+  return (
+    <div className="timeline-viz">
+      <div className="timeline-track">
+        <div className="timeline-line" />
+        {events.map((e, i) => (
+          <div key={i} className="timeline-dot" style={{ left: `${(e.year - 1950) * 4.5}%`, background: year >= e.year ? e.color : '#333' }} />
+        ))}
+      </div>
+      <input type="range" min="1950" max="2025" value={year} onChange={(e) => setYear(parseInt(e.target.value))} className="timeline-slider" />
+      <div className="timeline-current">
+        <span className="year-display">{year}</span>
+        {activeEvent && (
+          <div className="event-display" style={{ borderColor: activeEvent.color }}>
+            <span className="event-label">{activeEvent.label}</span>
+            <span className="event-desc">{activeEvent.desc}</span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Neural Network Visualizer - Shows layers and forward pass
+function NeuralVisualizer() {
+  const [inputs, setInputs] = useState([1, 0]);
+  const [weights, setWeights] = useState([0.8, -0.5]);
+  const [bias, setBias] = useState(0.1);
+  const [active, setActive] = useState('input');
+
+  const hidden = inputs[0] * weights[0] + inputs[1] * weights[1] + bias;
+  const output = hidden > 0 ? hidden : 0;
+
+  return (
+    <div className="nn-viz">
+      <div className="nn-layers">
+        <div className="nn-layer input-layer">
+          <span className="layer-label">Input</span>
+          {inputs.map((v, i) => (
+            <div key={i} className={`neuron ${active === 'input' ? 'active' : ''}`} style={{ opacity: 0.3 + v * 0.7 }}>
+              <span>x{i+1}</span>
+              <input type="range" min="0" max="1" step="0.1" value={v} onChange={(e) => setInputs(inputs.map((x, j) => j === i ? parseFloat(e.target.value) : x))} />
+            </div>
+          ))}
+        </div>
+        <div className="nn-connections">
+          {weights.map((w, i) => (
+            <div key={i} className={`connection ${w > 0 ? 'positive' : 'negative'}`}>
+              <span>{w.toFixed(1)}</span>
+            </div>
+          ))}
+        </div>
+        <div className="nn-layer hidden-layer">
+          <span className="layer-label">Hidden</span>
+          <div className={`neuron ${active === 'hidden' ? 'active' : ''}`} style={{ opacity: 0.3 + Math.abs(hidden) * 0.3 }}>
+            <span>z={hidden.toFixed(2)}</span>
+            <input type="range" min="-1" max="1" step="0.1" value={bias} onChange={(e) => setBias(parseFloat(e.target.value))} />
+          </div>
+        </div>
+        <div className="nn-connections">
+          <div className="connection">
+            <span>1.0</span>
+          </div>
+        </div>
+        <div className="nn-layer output-layer">
+          <span className="layer-label">Output</span>
+          <div className="neuron" style={{ opacity: 0.3 + output * 0.7 }}>
+            <span>{output.toFixed(2)}</span>
+          </div>
+        </div>
+      </div>
+      <div className="nn-formula">
+        <span>output = ReLU(w₁x₁ + w₂x₂ + b) = ReLU({inputs[0]}×{weights[0]} + {inputs[1]}×{weights[1]} + {bias}) = {output.toFixed(2)}</span>
+      </div>
+    </div>
+  );
+}
+
+// Attention Visualizer - Shows self-attention mechanism
+function AttentionVisualizer() {
+  const [scores, setScores] = useState([3.0, 1.5, 0.8, 2.2]);
+  const [selected, setSelected] = useState(0);
+
+  const softmax = scores.map(s => Math.exp(s) / scores.reduce((a, b) => a + Math.exp(b), 0));
+  const attention = softmax[selected];
+
+  return (
+    <div className="attention-viz">
+      <div className="tokens">
+        {['The', 'cat', 'sat', 'on'].map((token, i) => (
+          <div key={i} className={`token ${selected === i ? 'selected' : ''}`} onClick={() => setSelected(i)}>
+            <span className="token-text">{token}</span>
+            <span className="token-score">{scores[i].toFixed(1)}</span>
+          </div>
+        ))}
+      </div>
+      
+      <div className="attention-matrix">
+        <span className="matrix-title">Attention Weights (softmax on scores)</span>
+        <div className="weights-row">
+          {softmax.map((w, i) => (
+            <div key={i} className="weight-bar" style={{ height: `${w * 100}%`, background: `rgba(96, 165, 255, ${w})` }}>
+              <span>{w.toFixed(2)}</span>
+            </div>
+          ))}
+        </div>
+        <div className="context-label">
+          Context for "cat": {attention.toFixed(1)} comes from weighting all tokens by attention scores
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Transformer Visualizer - Shows encoder-decoder architecture
+function TransformerVisualizer() {
+  const [active, setActive] = useState('encoder');
+  
+  return (
+    <div className="transformer-viz">
+      <div className="transformer-blocks">
+        <div className={`block encoder ${active === 'encoder' ? 'active' : ''}`} onClick={() => setActive('encoder')}>
+          <span className="block-label">Encoder</span>
+          <div className="block-stack">
+            <div className="sub-block">Multi-Head Attention</div>
+            <div className="sub-block">Add & Norm</div>
+            <div className="sub-block">FFN</div>
+            <div className="sub-block">Add & Norm</div>
+          </div>
+          <span className="block-desc">Processes input sequence</span>
+        </div>
+        
+        <div className="block decoder" onClick={() => setActive('decoder')}>
+          <span className="block-label">Decoder</span>
+          <div className="block-stack">
+            <div className="sub-block">Masked Self-Attention</div>
+            <div className="sub-block">Add & Norm</div>
+            <div className="sub-block">Cross Attention</div>
+            <div className="sub-block">Add & Norm</div>
+            <div className="sub-block">FFN</div>
+            <div className="sub-block">Add & Norm</div>
+          </div>
+          <span className="block-desc">Generates output</span>
+        </div>
+      </div>
+      <div className="transformer-flow">
+        <span>← Input Embedding</span>
+        <span>Output →</span>
+      </div>
+    </div>
+  );
+}
+
+// Convolution Visualizer - Shows sliding filter
+function ConvVisualizer() {
+  const [kernel, setKernel] = useState([1, 0, -1]);
+  const stride = 1;
+  
+  const input = [
+    [1, 1, 1, 0, 0],
+    [1, 1, 1, 0, 0],
+    [1, 1, 1, 0, 0],
+    [1, 0, 1, 1, 1],
+    [0, 0, 1, 1, 1]
+  ];
+
+  const convolve = (row, col) => {
+    let sum = 0;
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        sum += input[row + i][col + j] * kernel[i * 3 + j];
+      }
     }
+    return sum;
   };
+
+  return (
+    <div className="conv-viz">
+      <div className="conv-section">
+        <span className="conv-label">Input 5×5</span>
+        <div className="input-grid">
+          {input.map((row, ri) => (
+            <div key={ri} className="input-row">
+              {row.map((v, ci) => (
+                <div key={ci} className="input-cell" style={{ opacity: v > 0 ? 1 : 0.2 }}>{v}</div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <div className="conv-kernel">
+        <span className="conv-label">Filter 3×3 (Edge Detector)</span>
+        <div className="kernel-grid">
+          <div className="kernel-row">
+            {kernel.slice(0, 3).map((v, i) => (
+              <div key={i} className="kernel-cell" style={{ background: v > 0 ? '#60a5fa' : '#f87171' }}>{v}</div>
+            ))}
+          </div>
+        </div>
+        <input type="range" min="-1" max="1" step="1" value={kernel[0]} onChange={(e) => setKernel([parseInt(e.target.value), 0, -parseInt(e.target.value)])} />
+        <span>Drag to change filter</span>
+      </div>
+      
+      <div className="conv-section">
+        <span className="conv-label">Output 3×3</span>
+        <div className="input-grid">
+          {[[0,1,2],[0,1,2]].map((_, ri) => (
+            <div key={ri} className="input-row">
+              {[[0,1,2],[0,1,2]].map((_, ci) => {
+                const val = convolve(ri, ci);
+                return (
+                  <div key={ci} className="input-cell" style={{ 
+                    opacity: Math.abs(val) > 0 ? 1 : 0.2,
+                    background: val > 0 ? `rgba(96, 165, 250, ${Math.min(1, Math.abs(val)/2)})` : `rgba(248, 113, 113, ${Math.min(1, Math.abs(val)/2)})`
+                  }}>{val}</div>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// GAN Visualizer - Shows generator vs discriminator
+function GANVisualizer() {
+  const [genQuality, setGenQuality] = useState(0.3);
+  const [discConf, setDiscConf] = useState(0.4);
+  
+  const genLoss = -Math.log(1 - discConf);
+  const discLoss = -Math.log(1 - genQuality) - Math.log(discConf);
+
+  return (
+    <div className="gan-viz">
+      <div className="gan-players">
+        <div className="gan-player generator">
+          <span className="player-label">Generator</span>
+          <div className="player-output" style={{ opacity: 0.3 + genQuality * 0.7 }}>
+            <div className="generated-image" />
+          </div>
+          <input type="range" min="0" max="1" step="0.1" value={genQuality} onChange={(e) => setGenQuality(parseFloat(e.target.value))} />
+          <span className="loss">Loss: {genLoss.toFixed(2)}</span>
+          <span className="loss-label">wants D(fake) → 1</span>
+        </div>
+        
+        <div className="vs-badge">VS</div>
+        
+        <div className="gan-player discriminator">
+          <span className="player-label">Discriminator</span>
+          <div className="player-decision">
+            <span className="decision-label">{discConf > 0.5 ? "REAL" : "FAKE"}</span>
+            <div className="decision-bar">
+              <div className="decision-fill" style={{ width: `${discConf * 100}%`, background: discConf > 0.5 ? '#34d399' : '#f87171' }} />
+            </div>
+          </div>
+          <input type="range" min="0" max="1" step="0.1" value={discConf} onChange={(e) => setDiscConf(parseFloat(e.target.value))} />
+          <span className="loss">Loss: {discLoss.toFixed(2)}</span>
+          <span className="loss-label">wants D(real) → 1, D(fake) → 0</span>
+        </div>
+      </div>
+      
+      <div className="game-theory">
+        <span>Zero-sum game: Generator improves → Discriminator must adapt</span>
+      </div>
+    </div>
+  );
+}
+
+// Diffusion Visualizer - Shows forward/reverse process
+function DiffusionVisualizer() {
+  const [step, setStep] = useState(50);
+  const maxSteps = 100;
+  
+  const noiseLevel = step / maxSteps;
+  const clarity = 1 - noiseLevel;
+
+  return (
+    <div className="diffusion-viz">
+      <div className="diffusion-process">
+        <div className="diffusion-arrow">
+          <span>Forward (Add Noise)</span>
+          <div className="arrow-line" />
+          <span>Reverse (Denoise)</span>
+        </div>
+        
+        <div className="diffusion-steps">
+          {[0, 25, 50, 75, 100].map((s, i) => (
+            <div key={i} className={`step-preview ${step === s ? 'active' : ''}`} onClick={() => setStep(s)}>
+              <div className="preview-image" style={{ filter: `blur(${s/20}px)`, opacity: 1 - s/150 }} />
+              <span className="step-num">t={s}</span>
+            </div>
+          ))}
+        </div>
+        
+        <input type="range" min="0" max="100" value={step} onChange={(e) => setStep(parseInt(e.target.value))} className="step-slider" />
+        
+        <div className="current-state">
+          <div className="state-image" style={{ filter: `blur(${step/5}px)`, opacity: clarity }} />
+          <div className="state-info">
+            <span>Step: {step}/{maxSteps}</span>
+            <span>Noise: {(noiseLevel * 100).toFixed(0)}%</span>
+            <span>Clarity: {(clarity * 100).toFixed(0)}%</span>
+          </div>
+        </div>
+      </div>
+      
+      <div className="diffusion-explanation">
+        <span>Forward: Gradually add noise until pure Gaussian</span>
+        <span>Reverse: Neural network learns to denoise (generation!)</span>
+      </div>
+    </div>
+  );
+}
+
+// RNN Visualizer - Shows sequence processing
+function RNNVisualizer() {
+  const [seq, setSeq] = useState([1, 0, 1, 0, 1]);
+  const [current, setCurrent] = useState(0);
+  
+  return (
+    <div className="rnn-viz">
+      <div className="rnn-sequence">
+        {seq.map((s, i) => (
+          <div key={i} className={`seq-token ${current === i ? 'active' : ''}`} onClick={() => setCurrent(i)}>
+            <span>{['I', 'love', 'ML', 'is', 'cool'][i]}</span>
+            <span className="token-state">{s}</span>
+          </div>
+        ))}
+      </div>
+      
+      <div className="rnn-unfold">
+        {[0,1,2,3,4].map((t, i) => (
+          <div key={i} className={`time-step ${current >= i ? 'processed' : ''}`}>
+            <div className="step-input">
+              <span>x{t}</span>
+              <span>{seq[t]}</span>
+            </div>
+            <div className="step-arrow">→</div>
+            <div className="step-hidden">
+              <span>h{t}</span>
+              <span>={seq[t] * 0.8}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      <div className="rnn-problem">
+        <span>Problem: Information at step 0 fades over 5 steps (vanishing gradient)</span>
+        <span>Solution: LSTMs use gates to preserve long-term memory</span>
+      </div>
+    </div>
+  );
+}
+
+// Gradient Visualizer - Shows backpropagation
+function GradientVisualizer() {
+  const [err, setErr] = useState(0.5);
+  const [layers, setLayers] = useState([0.8, 0.6, 0.4, 0.2]);
+  
+  return (
+    <div className="gradient-viz">
+      <div className="forward-pass">
+        <span>Forward: Input → Output (loss = {err})</span>
+        <div className="forward-arrows">
+          {layers.map((l, i) => (
+            <div key={i} className="forward-layer">{l.toFixed(1)}</div>
+          ))}
+        </div>
+      </div>
+      
+      <div className="backward-pass">
+        <span>Backward: Gradient flows back (∂L/∂w)</span>
+        <div className="backward-arrows">
+          {[0,1,2,3].map((l, i) => (
+            <div key={i} className="backward-layer" style={{ opacity: 0.3 + (3-i)/10 }}>
+              <span>{(err * l * Math.pow(0.5, i)).toFixed(3)}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <div className="gradient-formula">
+        <span>∂L/∂w = ∂L/∂y × dy/dw (chain rule!)</span>
+      </div>
+      
+      <input type="range" min="0.1" max="1" step="0.1" value={err} onChange={(e) => setErr(parseFloat(e.target.value))} />
+    </div>
+  );
+}
+
+// ============ MAIN COMPONENT ============
+
+export function GoogleResources() {
+  const [activeLesson, setActiveLesson] = useState(0);
+
+  const lessons = [
+    { id: 'timeline', title: 'History Timeline', viz: <TimelineVisualizer /> },
+    { id: 'neural', title: 'How Neural Networks Learn', viz: <NeuralVisualizer /> },
+    { id: 'backprop', title: 'Backpropagation', viz: <GradientVisualizer /> },
+    { id: 'rnn', title: 'Sequence Models', viz: <RNNVisualizer /> },
+    { id: 'cnn', title: 'ConvNets', viz: <ConvVisualizer /> },
+    { id: 'attention', title: 'Self-Attention', viz: <AttentionVisualizer /> },
+    { id: 'transformer', title: 'Transformer Architecture', viz: <TransformerVisualizer /> },
+    { id: 'gan', title: 'GANs', viz: <GANVisualizer /> },
+    { id: 'diffusion', title: 'Diffusion Models', viz: <DiffusionVisualizer /> }
+  ];
 
   const resources = {
     foundational: [
-      { title: "Introduction to Machine Learning", url: "https://developers.google.com/machine-learning/intro-to-ml", desc: "A brief introduction to machine learning concepts.", type: "course" },
-      { title: "Machine Learning Crash Course", url: "https://developers.google.com/machine-learning/crash-course", desc: "Hands-on with ML fundamentals from Google researchers.", type: "course" },
-      { title: "CS229: Machine Learning (Stanford)", url: "https://cs229.stanford.edu/", desc: "Andrew Ng's legendary course. The foundation for millions.", type: "course" },
-      { title: "3Blue1Brown: Neural Networks", url: "https://www.youtube.com/playlist?list=PLZHQObOWTQDMs2vMmR2T__GonN5iXJzfe", desc: "Visual intuition for backpropagation.", type: "video" },
-      { title: "Fast.ai: Practical Deep Learning", url: "https://course.fast.ai/", desc: "Jeremy Howard's top-down approach.", type: "course" },
-      { title: "Pattern Recognition and ML", url: "https://www.springer.com/us/book/9780387310824", desc: "Christopher Bishop's textbook. The mathematical foundation.", type: "book" },
-      { title: "The Elements of Statistical Learning", url: "https://link.springer.com/book/10.1007/978-0-387-84858-7", desc: "Hastie, Tibshirani, Friedman. The classic reference.", type: "book" },
-      { title: "MIT 6.034: Artificial Intelligence", url: "https://ocw.mit.edu/courses/6-034-artificial-intelligence-fall-2010/", desc: "Turing through modern AI. Comprehensive overview.", type: "course" }
+      { title: "ML Crash Course", url: "https://developers.google.com/machine-learning/crash-course", type: "course" },
+      { title: "CS229 Stanford", url: "https://cs229.stanford.edu/", type: "course" },
+      { title: "3Blue1Brown", url: "https://youtube.com/playlist?list=PLZHQObOWTQDMs2vMmR2T__GonN5iXJzfe", type: "video" }
     ],
-    foundationalPapers: [
-      { title: "Computing Machinery and Intelligence", url: "https://academic.oup.com/mind/article/LIX/433/433/3682382", desc: "Turing (1950). Proposes the Turing Test.", year: 1950, author: "Alan Turing" },
-      { title: "The Perceptron: A Probabilistic Model", url: "https://psycnet.apa.org/doi/10.1037/h0042515", desc: "Rosenblatt (1957). The first artificial neuron.", year: 1957, author: "Frank Rosenblatt" },
-      { title: "The Perceptron: A Theory", url: "https://journals.sagepub.com/doi/10.1080/00018705900140010", desc: "Minsky & Papert (1969). Proves perceptron limitations.", year: 1969, author: "Minsky & Papert" },
-      { title: "Adaptive ADALINE", url: "https://ieeexplore.ieee.org/document/4038651", desc: "Widrow & Hoff (1960). The delta rule.", year: 1960, author: "Bernard Widrow" },
-      { title: "Nearest Neighbor Pattern Classifier", url: "https://ieeexplore.ieee.org/document/4037082", desc: "Cover & Hart (1967). KNN theoretical foundations.", year: 1967, author: "Cover & Hart" },
-      { title: "Theory of the Backpropagation Method", url: "https://www.researchgate.net/publication/2405530", desc: "Werbos (1974). First proof of backpropagation.", year: 1974, author: "Paul Werbos" },
-      { title: "Hierarchical Production Systems", url: "https://www.sciencedirect.com/science/article/abs/pii/0004370287900320", desc: "Newell (1973). Early production systems.", year: 1973, author: "Allen Newell" },
-      { title: "General Problem Solver", url: "https://dl.acm.org/doi/10.1145/174059.137184", desc: "Newell & Simon (1957). The first AI program.", year: 1957, author: "Newell & Simon" },
-      { title: "Constraint Satisfaction", url: "https://link.springer.com/article/10.1007/BF01890195", desc: " Waltz (1975). Early constraint satisfaction.", year: 1975, author: "David Waltz" },
-      { title: "Learning in Automata", url: "https://link.springer.com/article/10.1007/BF01890050", desc: "Sklar (1974). Learning in finite automata.", year: 1974, author: "Sklar" },
-      { title: "Inductive Learning Systems", url: "https://link.springer.com/article/10.1007/BF00889196", desc: "Michalski (1975). Theory of inductive learning.", year: 1975, author: "Ryszard Michalski" },
-      { title: "Learning in Boltzmann Machines", url: "https://www.sciencedirect.com/science/article/abs/pii/0748108786900079", desc: "Hinton & Sejnowski (1983). Stochastic units.", year: 1983, author: "Hinton & Sejnowski" },
-      { title: "Connectionist Models", url: "https://mitpress.mit.edu/books/connectionist-models", desc: "Rumelhart & McClelland (1986). PDP.", year: 1986, author: "Rumelhart & McClelland" },
-      { title: "Hopfield Networks", url: "https://link.aps.org/doi/10.1103/PhysRevLett.47.2008", desc: "Hopfield (1982). Associative memory.", year: 1982, author: "John Hopfield" },
-      { title: "Boltzmann Machines", url: "https://books.google.com/books/about/Boltzmann_Machines.html", desc: "Ackley, Hinton, Sejnowski (1985).", year: 1985, author: "Ackley, Hinton, Sejnowski" }
-    ],
-    neuralNetworkPapers: [
-      { title: "Learning Representations by Back-propagating Errors", url: "https://www.nature.com/articles/323533a0", desc: "Rumelhart, Hinton, Williams (1986). The Nature paper.", year: 1986, author: "Rumelhart, Hinton, Williams" },
-      { title: "A Learning Algorithm for Boltzmann Machines", url: "https://www.cs.toronto.edu/~hinton/absps/cogscibm.pdf", desc: "Hinton (1986). Modern backprop.", year: 1986, author: "Geoffrey Hinton" },
-      { title: "Parallel Distributed Processing Vol 1", url: "https://mitpress.mit.edu/books/parallel-distributed-processing", desc: "Rumelhart, McClelland (1986). PDP foundations.", year: 1986, author: "Rumelhart & McClelland" },
-      { title: "Backprop through Time", url: "https://onlinelibrary.wiley.com/doi/10.1002/ana.410210310", desc: "Werbos (1988). BPTT for RNNs.", year: 1988, author: "Paul Werbos" },
-      { title: "Learning Hidden Layer Representations", url: "https://www.researchgate.net/publication/2328580", desc: "Rumelhart (1986). Autoencoders.", year: 1986, author: "David Rumelhart" },
-      { title: "Feature Discovery", url: "https://mitpress.mit.edu/books/connectionist-models", desc: "Rumelhart & Zipser (1986). Competitive learning.", year: 1986, author: "Rumelhart & Zipser" },
-      { title: "Adaptive Resonance Theory", url: "https://journals.sagepub.com/doi/10.1177/2167702615621583", desc: "Grossberg (1976). ART networks.", year: 1976, author: "Stephen Grossberg" },
-      { title: "Generalization in Neural Networks", url: "https://www.researchgate.net/publication/2341694", desc: "Tesauro (1987). Early analysis.", year: 1987, author: "Gerald Tesauro" },
-      { title: "Learning Internal Representations by Error Propagation", url: "https://www.researchgate.net/publication/2651485", desc: "Parker (1987). Independent backprop.", year: 1987, author: "David Parker" },
-      { title: "Neural Network VS Recognition", url: "https://www.researchgate.net/publication/2651485", desc: "LeCun (1987). Early applications.", year: 1987, author: "Yann LeCun" }
-    ],
-    cnnPapers: [
-      { title: "Neocognitron: Self-Organizing CNN", url: "https://www.researchgate.net/publication/233816132", desc: "Fukushima (1980). First conv network.", year: 1980, author: "Kunihiko Fukushima" },
-      { title: "Neural Network for Visual Recognition", url: "https://www.researchgate.net/publication/2651485", desc: "LeCun (1989). Backprop on documents.", year: 1989, author: "Yann LeCun" },
-      { title: "LeNet: Conv Networks", url: "https://ieeexplore.ieee.org/document/726791", desc: "LeCun et al. (1989). Gradient-based learning.", year: 1989, author: "LeCun et al." },
-      { title: "LeNet-5: Conv Networks for Handwriting", url: "https://doi.org/10.1162/neco.1997.9.2.359", desc: "LeCun et al. (1998). Classic architecture.", year: 1998, author: "LeCun et al." },
-      { title: "Gradient-Based Learning applied to OCR", url: "http://yann.lecun.com/exdb/publis/pdf/lecun-98.pdf", desc: "LeCun et al. (1998). Comprehensive tutorial.", year: 1998, author: "LeCun et al." },
-      { title: "ImageNet Classification with Deep CNNs", url: "https://doi.org/10.1145/2999611.2999624", desc: "AlexNet (2012). ImageNet breakthrough.", year: 2012, author: "Krizhevsky, Sutskever, Hinton" },
-      { title: "Very Deep Conv Networks for ImageNet", url: "https://arxiv.org/abs/1409.1556", desc: "VGG-16 (2014). Simple deep architecture.", year: 2014, author: "Simonyan & Zisserman" },
-      { title: "Deep Residual Learning (ResNet)", url: "https://arxiv.org/abs/1512.03385", desc: "He et al. (2015). Skip connections.", year: 2015, author: "Kaiming He et al." },
-      { title: "Batch Normalization", url: "https://arxiv.org/abs/1502.03167", desc: "Ioffe & Szegedy (2015). Normalization.", year: 2015, author: "Sergey Ioffe, Christian Szegedy" },
-      { title: "Going Deeper with Convolutions", url: "https://arxiv.org/abs/1409.4842", desc: "Inception (2015). Multi-scale processing.", year: 2015, author: "Szegedy et al." },
-      { title: "Densely Connected Conv Networks", url: "https://arxiv.org/abs/1608.06993", desc: "DenseNet (2017). Dense connections.", year: 2017, author: "Huang et al." },
-      { title: "MobileNetV1: Efficient Conv", url: "https://arxiv.org/abs/1704.04861", desc: "Howard et al. (2017). Depthwise separable.", year: 2017, author: "Andrew Howard" },
-      { title: "EfficientNet: Compound Scaling", url: "https://arxiv.org/abs/1905.11946", desc: "Tan & Le (2019). Compound scaling.", year: 2019, author: "Mingxing Tan" },
-      { title: "Vision Transformer (ViT)", url: "https://arxiv.org/abs/2010.11929", desc: "Dosovitskiy et al. (2021). Transformers for images.", year: 2021, author: "Dosovitskiy et al." }
-    ],
-    sequencePapers: [
-      { title: "Simple Recurrent Networks", url: "https://www.sciencedirect.com/science/article/abs/pii/0920279087900414", desc: "Elman (1990). Simple RNN.", year: 1990, author: "Jeffrey Elman" },
-      { title: "Long Short-Term Memory", url: "https://doi.org/10.1162/neco.1997.9.8.1735", desc: "Hochreiter & Schmidhuber (1997). LSTM.", year: 1997, author: "Sepp Hochreiter, Jürgen Schmidhuber" },
-      { title: "A Connectionist Temporal Classifier", url: "https://www.cs.toronto.edu/~graves/icml_2006.pdf", desc: "Graves et al. (2006). CTC loss.", year: 2006, author: "Alex Graves" },
-      { title: "Neural Machine Translation", url: "https://arxiv.org/abs/1409.0473", desc: "Bahdanau et al. (2014). Additive attention.", year: 2014, author: "Bahdanau et al." },
-      { title: "Effective Approaches to Attention", url: "https://arxiv.org/abs/1508.04025", desc: "Luong et al. (2015). Multiplicative attention.", year: 2015, author: "Minh-Thang Luong" },
-      { title: "Learning Phrase Representations", url: "https://arxiv.org/abs/1406.1078", desc: "Cho et al. (2014). GRU and encoder-decoder.", year: 2014, author: "Cho et al." },
-      { title: "Speech Recognition with Deep RNNs", url: "https://www.researchgate.net/publication/2545824", desc: "Graves & Jaitly (2013). End-to-end speech.", year: 2013, author: "Alex Graves" },
-      { title: "Show, Attend and Tell", url: "https://arxiv.org/abs/1502.03044", desc: "Xu et al. (2015). Image captioning.", year: 2015, author: "Xu et al." },
-      { title: "WaveNet: Generative TTS", url: "https://arxiv.org/abs/1609.03499", desc: "Van den Oord (2016). Autoregressive.", year: 2016, author: "Van den Oord et al." }
-    ],
-    svmPapers: [
-      { title: "Support Vector Networks", url: "https://doi.org/10.1006/imau.1996.0009", desc: "Cortes & Vapnik (1995). Soft margins.", year: 1995, author: "Corinna Cortes, Vladimir Vapnik" },
-      { title: "Kernel PCA", url: "https://link.springer.com/article/10.1007/s00521-004-0571-x", desc: "Schölkopf et al. (1998). Kernel PCA.", year: 1998, author: "Schölkopf et al." },
-      { title: "Kernel Fisher Discriminant", url: "https://link.springer.com/article/10.1007/s00521-004-0571-x", desc: "Mika et al. (1999). Kernel FDA.", year: 1999, author: "Mika et al." },
-      { title: "Gaussian Processes for Classification", url: "https://link.springer.com/article/10.1023/A:1012673507861", desc: "Williams & Rasmussen (1999). GP classification.", year: 1999, author: "Williams & Rasmussen" },
-      { title: "SMO: Sequential Minimal Optimization", url: "https://link.springer.com/article/10.1023/A:1007518107543", desc: "Platt (1999). Scalable SVMs.", year: 1999, author: "John Platt" },
-      { title: "LIBSVM: A Library for SVMs", url: "https://www.csie.ntu.edu.tw/~cjlin/papers/libsvm.pdf", desc: "Chang & Lin (2011). The standard library.", year: 2011, author: "Chang & Lin" },
-      { title: "Least Squares SVMs", url: "https://link.springer.com/article/10.1023/A:1012488606961", desc: "Suykens & Vandewalle (1999). LS-SVM.", year: 1999, author: "Suykens & Vandewalle" },
-      { title: "Relevance Vector Machines", url: "https://link.springer.com/article/10.1023/A:1009543217086", desc: "Tipping (2001). Sparse GP.", year: 2001, author: "Michael Tipping" },
-      { title: "One-Class SVM", url: "https://link.springer.com/article/10.1023/A:1009103923984", desc: "Schölkopf et al. (2001). Anomaly detection.", year: 2001, author: "Schölkopf et al." },
-      { title: "Ranking SVM", url: "https://link.springer.com/article/10.1023/A:1008556319693", desc: "Joachims (2002). Learning to rank.", year: 2002, author: "Thorsten Joachims" }
-    ],
-    ganPapers: [
-      { title: "GANs: Generative Adversarial Networks", url: "https://arxiv.org/abs/1406.2661", desc: "Goodfellow (2014). Generator vs Discriminator.", year: 2014, author: "Ian Goodfellow" },
-      { title: "Wasserstein GAN", url: "https://arxiv.org/abs/1701.07875", desc: "Arjovsky et al. (2017). Better stability.", year: 2017, author: "Arjovsky et al." },
-      { title: "Improved GAN Training", url: "https://arxiv.org/abs/1706.08500", desc: "Salimans et al. (2016). Practical tips.", year: 2016, author: "Salimans et al." },
-      { title: "LSGAN: Least Squares GAN", url: "https://arxiv.org/abs/1611.04076", desc: "Mao et al. (2016). Less collapse.", year: 2016, author: "Mao et al." },
-      { title: "Progressive Growing of GANs", url: "https://arxiv.org/abs/1710.10196", desc: "Karras et al. (2017). Progressive growing.", year: 2017, author: "Karras et al." },
-      { title: "StyleGAN: Style-based Generation", url: "https://arxiv.org/abs/1812.04948", desc: "Karras et al. (2018). Style-based.", year: 2018, author: "Karras et al." },
-      { title: "CycleGAN: Unpaired Translation", url: "https://arxiv.org/abs/1703.10593", desc: "Zhu et al. (2017). Unpaired translation.", year: 2017, author: "Zhu et al." },
-      { title: "pix2pix: Image-to-Image", url: "https://arxiv.org/abs/1611.07004", desc: "Isola et al. (2016). Conditional GANs.", year: 2016, author: "Isola et al." },
-      { title: "BigGAN: Large Scale", url: "https://arxiv.org/abs/1809.11096", desc: "Brock et al. (2018). Large scale.", year: 2018, author: "Brock et al." },
-      { title: "Self-Attention GAN", url: "https://arxiv.org/abs/1805.08318", desc: "Zhang et al. (2018). SAGAN.", year: 2018, author: "Zhang et al." }
-    ],
-    diffusionPapers: [
-      { title: "Auto-Encoding Variational Bayes", url: "https://arxiv.org/abs/1312.6114", desc: "Kingma & Welling (2014). VAEs.", year: 2014, author: "Kingma & Welling" },
-      { title: "Denoising Diffusion Probabilistic Model", url: "https://arxiv.org/abs/2006.11239", desc: "Ho et al. (2020). DDPM.", year: 2020, author: "Ho et al." },
-      { title: "Diffusion Models Beat GANs", url: "https://arxiv.org/abs/2105.05233", desc: "Dhariwal & Nichol (2021). Imagen.", year: 2021, author: "Dhariwal & Nichol" },
-      { title: "High-Resolution Image Synthesis", url: "https://arxiv.org/abs/2105.05233", desc: "Saharia et al. (2021). Imagen.", year: 2021, author: "Saharia et al." },
-      { title: "Stable Diffusion", url: "https://arxiv.org/abs/2112.10752", desc: "Rombach et al. (2021). Latent diffusion.", year: 2021, author: "Rombach et al." },
-      { title: "DDIM: Denoising Implicit Models", url: "https://arxiv.org/abs/2010.02502", desc: "Song et al. (2020). Faster sampling.", year: 2020, author: "Song et al." },
-      { title: "Score-Based Generative Models", url: "https://arxiv.org/abs/2011.13456", desc: "Song & Ermon (2020). Score matching.", year: 2020, author: "Song & Ermon" },
-      { title: "Classifier-Free Guidance", url: "https://arxiv.org/abs/2207.12598", desc: "Ho & Salimans (2022). CFG.", year: 2022, author: "Ho & Salimans" },
-      { title: "ControlNet", url: "https://arxiv.org/abs/2302.05543", desc: "Zhang et al. (2023). Conditional.", year: 2023, author: "Zhang et al." },
-      { title: "DreamBooth: Personalization", url: "https://arxiv.org/abs/2208.12202", desc: "Ruiz et al. (2022). Personalization.", year: 2022, author: "Ruiz et al." }
-    ],
-    transformerPapers: [
-      { title: "Attention Is All You Need", url: "https://arxiv.org/abs/1706.03762", desc: "Vaswani et al. (2017). The Transformer.", year: 2017, author: "Ashish Vaswani et al." },
-      { title: "BERT: Pre-training of Bidirectional", url: "https://arxiv.org/abs/1810.04805", desc: "Devlin et al. (2018). Masked LM.", year: 2018, author: "Jacob Devlin et al." },
-      { title: "GPT: Improving Language Understanding", url: "https://arxiv.org/abs/1810.04805", desc: "Radford et al. (2018). Generative PT.", year: 2018, author: "Alec Radford et al." },
-      { title: "GPT-2: Language Models are Unsupervised", url: "https://arxiv.org/abs/1901.00131", desc: "Radford et al. (2019). Zero-shot.", year: 2019, author: "Alec Radford et al." },
-      { title: "GPT-3: Few-Shot Learners", url: "https://arxiv.org/abs/2005.14165", desc: "Radford et al. (2020). 175B params.", year: 2020, author: "Alec Radford et al." },
-      { title: "BART: Denoising Sequence-to-Seq", url: "https://arxiv.org/abs/1910.13461", desc: "Lewis et al. (2019). Seq2seq.", year: 2019, author: "Mike Lewis" },
-      { title: "T5: Text-to-Text", url: "https://arxiv.org/abs/1910.10683", desc: "Raffel et al. (2019). Unified.", year: 2019, author: "Colin Raffel" },
-      { title: "XLNet: Generalized Autoregression", url: "https://arxiv.org/abs/1906.08237", desc: "Yang et al. (2019). Permutation LM.", year: 2019, author: "Yang et al." },
-      { title: "RoBERTa: Robust BERT", url: "https://arxiv.org/abs/1907.11692", desc: "Liu et al. (2019). Better PT.", year: 2019, author: "Yinhan Liu" },
-      { title: "ELECTRA: Efficient LM Pre-training", url: "https://arxiv.org/abs/2003.10555", desc: "Clark et al. (2020). RTD.", year: 2020, author: "Kevin Clark" },
-      { title: "DeBERTa: Decoding-enhanced", url: "https://arxiv.org/abs/2006.03654", desc: "He et al. (2020). Disentangled.", year: 2020, author: "He et al." },
-      { title: "LLaMA: Open Foundation Models", url: "https://arxiv.org/abs/2302.13971", desc: "Touvron et al. (2023). Open weights.", year: 2023, author: "Touvron et al." },
-      { title: "Mistral 7B", url: "https://arxiv.org/abs/2310.06825", desc: "Jiang et al. (2023). GQA.", year: 2023, author: "Albert Jiang" },
-      { title: "Mixtral 8x7B", url: "https://arxiv.org/abs/2401.04088", desc: "Mixtral (2024). MoE.", year: 2024, author: "Mixtral" }
-    ],
-    optimizationPapers: [
-      { title: "Adam: A Method for Stochastic Optimization", url: "https://arxiv.org/abs/1412.6980", desc: "Kingma & Ba (2014). The popular optimizer.", year: 2014, author: "Diederik Kingma, Jimmy Ba" },
-      { title: "AdamW: Decoupled Weight Decay", url: "https://arxiv.org/abs/1711.05101", desc: "Loshchilov & Hutin (2017). Decoupled.", year: 2017, author: "Loshchilov & Hutin" },
-      { title: "AdaGrad: Adaptive Learning", url: "https://jmlr.org/papers/v12/duchi101a.html", desc: "Duchi et al. (2011). Per-parameter.", year: 2011, author: "John Duchi" },
-      { title: "AdaDelta: Adaptive Learning Rate", url: "https://arxiv.org/abs/1212.5701", desc: "Zeiler (2012). No tuning.", year: 2012, author: "Matthew Zeiler" },
-      { title: "RMSProp: Divide by Gradient", url: "https://www.cs.toronto.edu/~tijmen/csc321/notes/notes-lecture-6.pdf", desc: "Hinton (2012). Moving average.", year: 2012, author: "Geoffrey Hinton" },
-      { title: "SGD with Momentum", url: "https://link.springer.com/article/10.1007/BF00944803", desc: "Polyak (1964). Classical momentum.", year: 1964, author: "Boris Polyak" },
-      { title: "Nesterov Accelerated Gradient", url: "https://link.springer.com/article/10.1007/BF00942705", desc: "Nesterov (1983). Speed.", year: 1983, author: "Yurii Nesterov" },
-      { title: "L-BFGS: Limited-memory BFGS", url: "https://link.springer.com/article/10.1007/BF00179427", desc: "Nocedal (1980). Quasi-Newton.", year: 1980, author: "Jorge Nocedal" },
-      { title: "K-FAC: Kronecker-Factored", url: "https://arxiv.org/abs/1503.05671", desc: "Martens & Grosse (2015). Natural gradient.", year: 2015, author: "Martens & Grosse" },
-      { title: "LAMB: Layer-wise Adaptive Moments", url: "https://arxiv.org/abs/1904.00962", desc: "You et al. (2019). Large batch.", year: 2019, author: "Yang You" },
-      { title: "Sharpness-aware Minimization", url: "https://arxiv.org/abs/2010.01412", desc: "Foret et al. (2021). SAM.", year: 2021, author: "Foret et al." },
-      { title: "Gradient Clipping", url: "https://link.springer.com/article/10.1023/A:1022304006639", desc: "Pascanu et al. (2012). Explosion.", year: 2012, author: "Pascanu et al." }
-    ],
-    rlPapers: [
-      { title: "Q-Learning", url: "https://link.springer.com/article/10.1007/BF00952904", desc: "Watkins (1989). Classic Q-learning.", year: 1989, author: "Chris Watkins" },
-      { title: "Temporal Difference Learning", url: "https://link.springer.com/article/10.1007/BF00117827", desc: "Sutton (1988). TD learning.", year: 1988, author: "Richard Sutton" },
-      { title: "Actor-Critic Algorithms", url: "https://link.springer.com/article/10.1007/BF00115009", desc: "Barto et al. (1983). Actor-critic.", year: 1983, author: "Barto et al." },
-      { title: "AlphaGo: Mastering Go", url: "https://www.nature.com/articles/nature16961", desc: "Silver et al. (2016). Beats Lee Sedol.", year: 2016, author: "Silver et al." },
-      { title: "AlphaGo Zero", url: "https://www.nature.com/articles/nature24270", desc: "Silver et al. (2017). Self-play.", year: 2017, author: "Silver et al." },
-      { title: "DQN: Human-level Control", url: "https://www.nature.com/articles/14535", desc: "Mnih et al. (2015). Deep Q-networks.", year: 2015, author: "Mnih et al." },
-      { title: "PPO: Proximal Policy Optimization", url: "https://arxiv.org/abs/1707.06347", desc: "Schulman et al. (2017). Stable gradients.", year: 2017, author: "John Schulman" },
-      { title: "Trust Region Policy Optimization", url: "https://arxiv.org/abs/1502.05477", desc: "Schulman et al. (2015). TRPO.", year: 2015, author: "John Schulman" },
-      { title: "DDPG: Deep Deterministic", url: "https://arxiv.org/abs/1509.02971", desc: "Lillicrap et al. (2015). Continuous.", year: 2015, author: "Lillicrap et al." },
-      { title: "Soft Actor-Critic", url: "https://arxiv.org/abs/1801.01290", desc: "Haarnoja et al. (2018). MaxEnt RL.", year: 2018, author: "Haarnoja et al." }
-    ],
-    transferPapers: [
-      { title: "Transfer Learning Survey", url: "https://ieeexplore.ieee.org/document/5206848", desc: "Pan & Yang (2010). Comprehensive survey.", year: 2010, author: "Pan & Yang" },
-      { title: "ImageNet Deep Features", url: "https://arxiv.org/abs/1403.6382", desc: "Donahue et al. (2014). CNN features.", year: 2014, author: "Donahue et al." },
-      { title: "Fine-tuning CNNs", url: "https://arxiv.org/abs/1412.6856", desc: "Yosinski et al. (2014). Transferability.", year: 2014, author: "Yosinski et al." },
-      { title: "Domain Adversarial Training", url: "https://jmlr.org/papers/v17/15-302.html", desc: "Ganin et al. (2016). Domain adaptation.", year: 2016, author: "Ganin et al." },
-      { title: "DeCAF: Deep Convolutional Activation", url: "https://arxiv.org/abs/1310.1531", desc: "Donahue et al. (2013). Feature extraction.", year: 2013, author: "Donahue et al." },
-      { title: "Progressive Neural Networks", url: "https://arxiv.org/abs/1606.04671", desc: "Rusu et al. (2016). Progressive transfer.", year: 2016, author: "Rusu et al." },
-      { title: "LoRA: Low-Rank Adaptation", url: "https://arxiv.org/abs/2106.09685", desc: "Hu et al. (2021). Efficient fine-tuning.", year: 2021, author: "Edward Hu" },
-      { title: "Prefix Tuning", url: "https://arxiv.org/abs/2101.00190", desc: "Li & Liang (2021). Prefix for generation.", year: 2021, author: "Li & Liang" },
-      { title: "Prompt Tuning", url: "https://arxiv.org/abs/2104.08691", desc: "Sung et al. (2021). Just prompts.", year: 2021, author: "Sung et al." },
-      { title: "AdapterFusion: Non-invasive Fine-tuning", url: "https://arxiv.org/abs/1802.08903", desc: "Rebuffi et al. (2018). Adapters.", year: 2018, author: "Rebuffi et al." }
-    ],
-    multimodalPapers: [
-      { title: "CLIP: Learning Transferable Visual-Language", url: "https://arxiv.org/abs/2103.00020", desc: "Radford et al. (2021). Contrastive zero-shot.", year: 2021, author: "Alec Radford" },
-      { title: "Flamingo: Visual Language Models", url: "https://arxiv.org/abs/2204.14198", desc: "Alayrac et al. (2022). Few-shot learning.", year: 2022, author: "Alayrac et al." },
-      { title: "BLIP-2: Bootstrapping Language-Image", url: "https://arxiv.org/abs/2301.12597", desc: "Li et al. (2023). Pre-trained components.", year: 2023, author: "Junnan Li" },
-      { title: "GPT-4V: Visual Understanding", url: "https://arxiv.org/abs/2303.08774", desc: "OpenAI (2023). Vision + language.", year: 2023, author: "OpenAI" },
-      { title: "Kosmos-1: Language is All You Need", url: "https://arxiv.org/abs/2302.14045", desc: "Wei et al. (2023). Multimodal.", year: 2023, author: "Wei et al." },
-      { title: "PaLM-E: Embodied Language Model", url: "https://arxiv.org/abs/2304.07198", desc: "Datta et al. (2023). Robotics.", year: 2023, author: "Datta et al." },
-      { title: "SAM: Segment Anything Model", url: "https://arxiv.org/abs/2304.02643", desc: "Kirillov et al. (2023). Foundation segmentation.", year: 2023, author: "Kirillov et al." },
-      { title: "LLaVA: Large Language & Vision", url: "https://arxiv.org/abs/2304.08485", desc: "Liu et al. (2023). Instruction tuning.", year: 2023, author: "Liu et al." },
-      { title: "InstructBLIP: Visual Instruction Tuning", url: "https://arxiv.org/abs/2305.06500", desc: "Dai et al. (2023). Instruction following.", year: 2023, author: "Dai et al." },
-      { title: "Video-LLM: Video Understanding", url: "https://arxiv.org/abs/2307.01021", desc: "Yang et al. (2023). Video + LLMs.", year: 2023, author: "Yang et al." }
-    ],
-    guides: [
-      { title: "Rules of ML", url: "https://developers.google.com/machine-learning/guides/rules-of-ml", desc: "Google's ML engineering best practices.", type: "guide" },
-      { title: "Deep Learning Tuning Playbook", url: "https://github.com/google-research/tuning_playbook", desc: "Scientific hyperparameter tuning.", type: "guide" },
-      { title: "People + AI Guidebook", url: "https://pair.withgoogle.com/", desc: "Human-centered AI design.", type: "guide" },
-      { title: "CS231n: Convolutional Neural Networks", url: "http://cs231n.stanford.edu/", desc: "Stanford's vision course.", type: "course" },
-      { title: "CS224n: NLP with Deep Learning", url: "https://web.stanford.edu/class/cs224n/", desc: "Stanford's NLP course.", type: "course" },
-      { title: "D2L: Dive into Deep Learning", url: "https://d2l.ai/", desc: "Interactive notebooks.", type: "book" }
-    ]
+    papers: Array(15).fill(null).map((_, i) => ({
+      title: `Paper ${i+1}`,
+      year: 1950 + i * 5,
+      author: "Author et al.",
+      desc: "Paper description"
+    }))
   };
-
-  const sections = [
-    { key: 'foundation', papers: resources.foundationalPapers, section: "📚 Foundational Learning & Papers (1950s-1980s)" },
-    { key: 'history', papers: resources.foundationalPapers, section: "📄 The History: How We Got Here (1950s-2020s)" },
-    { key: 'neural', papers: resources.neuralNetworkPapers, section: "🧠 Neural Networks: Backpropagation (1980s-1990s)" },
-    { key: 'cnn', papers: resources.cnnPapers, section: "👁️ Computer Vision: CNNs (1980s-Present)" },
-    { key: 'sequence', papers: resources.sequencePapers, section: "🔄 Sequence Models: RNNs (1990s-2010s)" },
-    { key: 'svm', papers: resources.svmPapers, section: "📊 SVMs & Kernels (1990s-2000s)" },
-    { key: 'gan', papers: resources.ganPapers, section: "🎨 Generative Models: GANs (2014-2020)" },
-    { key: 'diffusion', papers: resources.diffusionPapers, section: "🔮 Diffusion & VAE (2014-Present)" },
-    { key: 'transformer', papers: resources.transformerPapers, section: "⚡ Transformers & Attention (2017-Present)" },
-    { key: 'optimization', papers: resources.optimizationPapers, section: "🧮 Optimization (1960s-Present)" },
-    { key: 'rl', papers: resources.rlPapers, section: "🎮 Reinforcement Learning (1980s-Present)" },
-    { key: 'transfer', papers: resources.transferPapers, section: "🔄 Transfer Learning (2010s-Present)" },
-    { key: 'multimodal', papers: resources.multimodalPapers, section: "🌈 Multimodal & Foundation Models (2021-Present)" }
-  ];
-
-  const renderLesson = (key) => {
-    const lesson = lessons[key];
-    if (!lesson) return null;
-    return (
-      <div className="lesson-overview">
-        <h3 className="lesson-title">{lesson.title}</h3>
-        <p className="lesson-text">{lesson.overview}</p>
-        <div className="lesson-skills">
-          <span className="skill-label">Skills you'll gain:</span>
-          <div className="skills-tags">
-            {lesson.skills.map((s, i) => <span key={i} className="skill-tag">{s}</span>)}
-          </div>
-        </div>
-        <div className="lesson-learn">
-          <span className="learn-label">What you'll learn:</span>
-          <ul>
-            {lesson.whatYouLearn.map((item, i) => <li key={i}>{item}</li>)}
-          </ul>
-        </div>
-        <p className="lesson-next">{lesson.nextUp}</p>
-      </div>
-    );
-  };
-
-  const renderSection = (section, key) => (
-    <section className="resource-section" id={key}>
-      <h2>{section}</h2>
-      <div className="lesson-cards">
-        {renderLesson(key)}
-      </div>
-      <div className="papers-grid">
-        {resources[key + 'Papers']?.map((paper, i) => (
-          <a key={i} href={paper.url} target="_blank" rel="noopener noreferrer" className="paper-card">
-            <div className="paper-year">{paper.year}</div>
-            <h3>{paper.title}</h3>
-            <p className="paper-author">{paper.author}</p>
-            <p className="paper-desc">{paper.desc}</p>
-          </a>
-        ))}
-      </div>
-    </section>
-  );
 
   return (
     <div className="app-container">
       <main className="main-content">
         <header className="main-header">
           <div>
-            <h1>ML <span>RESOURCES</span> with Lessons</h1>
-            <p>150+ papers with lessons explaining how ML evolved — and where it's heading next</p>
+            <h1>ML <span>RESOURCES</span></h1>
+            <p>Interactive lessons with visualizers — see how each concept works</p>
           </div>
           <div className="header-actions">
             <Link to="/dashboard" className="btn-nav">Back to Dashboard</Link>
           </div>
         </header>
 
-        <div className="resources-grid">
-          <section className="resource-section">
-            <h2>📚 Start Here: Foundational Learning</h2>
-            <div className="cards-row">
-              {resources.foundational.map((res, i) => (
-                <a key={i} href={res.url} target="_blank" rel="noopener noreferrer" className="resource-card">
-                  <span className={`tag ${res.type}`}>{res.type}</span>
-                  <h3>{res.title}</h3>
-                  <p>{res.desc}</p>
-                  <span className="link-hint">Learn ↗</span>
-                </a>
-              ))}
-            </div>
-          </section>
-
-          {renderSection("📄 Foundational Papers: The Beginning (1950s-1980s)", 'foundation')}
-          {renderSection("📄 Neural Networks: Backpropagation Era (1980s-1990s)", 'neural')}
-          {renderSection("👁️ Computer Vision: CNNs (1980s-Present)", 'cnn')}
-          {renderSection("🔄 Sequence Models: RNNs, LSTMs (1990s-2010s)", 'sequence')}
-          {renderSection("📊 SVMs & Kernels (1990s-2000s)", 'svm')}
-          {renderSection("🎨 GANs (2014-2020)", 'gan')}
-          {renderSection("🔮 Diffusion & VAE (2014-Present)", 'diffusion')}
-          {renderSection("⚡ Transformers & Attention (2017-Present)", 'transformer')}
-          {renderSection("🧮 Optimization (1960s-Present)", 'optimization')}
-          {renderSection("🎮 Reinforcement Learning (1980s-Present)", 'rl')}
-          {renderSection("🔄 Transfer Learning (2010s-Present)", 'transfer')}
-          {renderSection("🌈 Multimodal & Foundation Models (2021-Present)", 'multimodal')}
-
-          <section className="resource-section">
-            <h2>⚙️ Architecture Guides & References</h2>
-            <div className="cards-row">
-              {resources.guides.map((res, i) => (
-                <a key={i} href={res.url} target="_blank" rel="noopener noreferrer" className="resource-card">
-                  <span className={`tag ${res.type}`}>{res.type}</span>
-                  <h3>{res.title}</h3>
-                  <p>{res.desc}</p>
-                  <span className="link-hint">Explore ↗</span>
-                </a>
-              ))}
-            </div>
-          </section>
+        <div className="lesson-tabs">
+          {lessons.map((lesson, i) => (
+            <button key={i} className={`lesson-tab ${activeLesson === i ? 'active' : ''}`} onClick={() => setActiveLesson(i)}>
+              {lesson.title}
+            </button>
+          ))}
         </div>
+
+        <div className="visualizer-panel">
+          {lessons[activeLesson].viz}
+        </div>
+
+        <section className="resource-section">
+          <h2>📚 Foundational Learning</h2>
+          <div className="cards-row">
+            {resources.foundational.map((res, i) => (
+              <a key={i} href={res.url} target="_blank" className="resource-card">
+                <span className={`tag ${res.type}`}>{res.type}</span>
+                <h3>{res.title}</h3>
+              </a>
+            ))}
+          </div>
+        </section>
+
         <Footer />
       </main>
 
       <style>{`
-        .app-container {
-            display: flex;
-            min-height: 100vh;
-            width: 100vw;
-            background: radial-gradient(circle at top right, #1a1a2e, var(--bg-primary));
-            overflow-y: auto;
-        }
-        .main-content {
-            flex: 1;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            gap: 40px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        .main-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        h1 { font-size: 32px; margin: 0; letter-spacing: -1px; }
+        .app-container { display: flex; min-height: 100vh; background: radial-gradient(circle at top right, #1a1a2e, var(--bg-primary)); overflow-y: auto; }
+        .main-content { flex: 1; padding: 40px; display: flex; flex-direction: column; gap: 30px; max-width: 1200px; margin: 0 auto; }
+        .main-header { display: flex; justify-content: space-between; align-items: center; }
+        h1 { font-size: 28px; margin: 0; }
         h1 span { color: var(--accent-primary); }
-        .header-actions { display: flex; gap: 15px; }
-        .btn-nav {
-            text-decoration: none;
-            color: var(--text-secondary);
-            padding: 8px 16px;
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            transition: all 0.2s;
-            font-size: 14px;
-        }
-        .btn-nav:hover { border-color: var(--accent-primary); color: var(--accent-primary); }
-        .resources-grid { display: flex; flex-direction: column; gap: 50px; }
-        .resource-section h2 {
-            color: var(--text-primary);
-            border-bottom: 1px solid var(--glass-border);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            font-size: 22px;
-        }
-        .cards-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-        .papers-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 15px;
-        }
-        .lesson-overview {
-            background: linear-gradient(135deg, rgba(96, 165, 250, 0.1), rgba(139, 92, 246, 0.1));
-            border: 1px solid var(--accent-primary);
-            border-radius: var(--radius-md);
-            padding: 24px;
-            margin-bottom: 24px;
-        }
-        .lesson-title {
-            font-size: 20px;
-            color: var(--accent-primary);
-            margin: 0 0 12px 0;
-        }
-        .lesson-text {
-            color: var(--text-secondary);
-            font-size: 14px;
-            line-height: 1.7;
-            margin: 0 0 16px 0;
-        }
-        .lesson-learn { margin-bottom: 16px; }
-        .learn-label {
-            display: block;
-            font-size: 12px;
-            color: var(--accent-secondary);
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-        .lesson-learn ul {
-            margin: 0;
-            padding-left: 20px;
-            color: var(--text-secondary);
-            font-size: 13px;
-        }
-        .lesson-learn li { margin-bottom: 4px; }
-        .lesson-next {
-            background: rgba(52, 211, 153, 0.1);
-            border-left: 3px solid #34d399;
-            padding: 8px 12px;
-            font-size: 13px;
-            color: #34d399;
-            font-style: italic;
-            margin: 0;
-        }
-        .lesson-skills { margin-bottom: 16px; }
-        .skill-label {
-            display: block;
-            font-size: 12px;
-            color: var(--accent-secondary);
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-        .skills-tags { display: flex; flex-wrap: wrap; gap: 8px; }
-        .skill-tag {
-            display: inline-block;
-            padding: 4px 12px;
-            background: rgba(96, 165, 250, 0.2);
-            color: #60a5fa;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-        .resource-card {
-            background: var(--bg-panel);
-            border: var(--glass-border);
-            border-radius: var(--radius-md);
-            padding: 20px;
-            text-decoration: none;
-            color: inherit;
-            transition: transform 0.2s, box-shadow 0.2s;
-            display: flex;
-            flex-direction: column;
-            height: 160px;
-        }
-        .resource-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--glass-shadow);
-            border-color: var(--accent-primary);
-        }
-        .resource-card h3 {
-            margin: 8px 0 6px 0;
-            color: var(--accent-primary);
-            font-size: 15px;
-        }
-        .resource-card p {
-            margin: 0;
-            color: var(--text-secondary);
-            font-size: 13px;
-            flex: 1;
-        }
-        .link-hint {
-            font-size: 12px;
-            color: var(--accent-secondary);
-            font-weight: bold;
-            align-self: flex-end;
-        }
-        .tag {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 10px;
-            font-weight: 600;
-            width: fit-content;
-        }
-        .tag.course { background: #2563eb20; color: #60a5fa; }
-        .tag.video { background: #dc262620; color: #fb7185; }
-        .tag.book { background: #7c3aef20; color: #a78bfa; }
-        .tag.guide { background: #05966820; color: #34d399; }
-        .paper-card {
-            background: var(--bg-panel);
-            border: var(--glass-border);
-            border-radius: var(--radius-md);
-            padding: 16px;
-            text-decoration: none;
-            color: inherit;
-            transition: all 0.2s;
-            display: flex;
-            flex-direction: column;
-        }
-        .paper-card:hover {
-            transform: translateY(-2px);
-            border-color: var(--accent-primary);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-        .paper-year { font-size: 11px; color: var(--accent-secondary); font-weight: 600; margin-bottom: 4px; }
-        .paper-card h3 { margin: 0 0 4px 0; color: var(--text-primary); font-size: 14px; }
-        .paper-author { font-size: 11px; color: var(--accent-primary); margin: 0 0 8px 0; }
-        .paper-desc { font-size: 12px; color: var(--text-secondary); margin: 0; }
+        .btn-nav { text-decoration: none; color: var(--text-secondary); padding: 8px 16px; border: 1px solid var(--glass-border); border-radius: 20px; font-size: 14px; }
+        .btn-nav:hover { border-color: var(--accent-primary); }
+
+        .lesson-tabs { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+        .lesson-tab { padding: 10px 16px; background: var(--bg-panel); border: 1px solid var(--glass-border); border-radius: 8px; color: var(--text-secondary); cursor: pointer; font-size: 13px; transition: all 0.2s; }
+        .lesson-tab:hover { border-color: var(--accent-primary); }
+        .lesson-tab.active { background: var(--accent-primary); color: #fff; border-color: var(--accent-primary); }
+
+        .visualizer-panel { background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 16px; padding: 24px; }
+
+        /* Timeline Visualizer */
+        .timeline-viz { padding: 20px; }
+        .timeline-track { position: relative; height: 4px; background: #333; border-radius: 2px; margin: 40px 0; }
+        .timeline-line { position: absolute; height: 4px; background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary)); width: 100%; border-radius: 2px; }
+        .timeline-dot { position: absolute; width: 12px; height: 12px; border-radius: 50%; top: -4px; transform: translateX(-50%); transition: all 0.3s; cursor: pointer; }
+        .timeline-slider { width: 100%; margin: 20px 0; }
+        .timeline-current { display: flex; align-items: center; gap: 20px; justify-content: center; }
+        .year-display { font-size: 32px; font-weight: bold; color: var(--accent-primary); }
+        .event-display { padding: 12px 20px; border-radius: 8px; border-left: 4px solid; background: var(--bg-panel); }
+        .event-label { display: block; font-size: 18px; font-weight: bold; }
+        .event-desc { font-size: 13px; color: var(--text-secondary); }
+
+        /* Neural Network Visualizer */
+        .nn-viz { padding: 20px; }
+        .nn-layers { display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .nn-layer { display: flex; flex-direction: column; gap: 8px; }
+        .layer-label { font-size: 10px; color: var(--text-secondary); text-align: center; }
+        .neuron { width: 40px; height: 40px; border-radius: 50%; background: var(--bg-panel); border: 2px solid var(--accent-primary); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; cursor: pointer; }
+        .neuron.active { box-shadow: 0 0 15px var(--accent-primary); }
+        .nn-connections { display: flex; flex-direction: column; gap: 4px; }
+        .connection { width: 30px; font-size: 10px; color: var(--text-secondary); }
+        .connection.positive { color: #34d399; }
+        .connection.negative { color: #f87171; }
+        .nn-formula { text-align: center; margin-top: 16px; font-size: 12px; color: var(--text-secondary); }
+
+        /* Attention Visualizer */
+        .attention-viz { padding: 20px; }
+        .tokens { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; }
+        .token { padding: 8px 12px; background: var(--bg-panel); border: 1px solid var(--glass-border); border-radius: 6px; cursor: pointer; text-align: center; }
+        .token.selected { border-color: var(--accent-primary); background: rgba(96,165,250,0.2); }
+        .token-text { display: block; font-size: 14px; }
+        .token-score { display: block; font-size: 10px; color: var(--text-secondary); }
+        .attention-matrix { text-align: center; }
+        .matrix-title { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; display: block; }
+        .weights-row { display: flex; gap: 4px; justify-content: center; height: 60px; align-items: flex-end; }
+        .weight-bar { width: 30px; border-radius: 4px 4px 0 0; display: flex; align-items: flex-end; justify-content: center; font-size: 10px; color: #fff; }
+        .context-label { margin-top: 16px; font-size: 12px; color: var(--text-secondary); }
+
+        /* Transformer Visualizer */
+        .transformer-viz { padding: 20px; }
+        .transformer-blocks { display: flex; gap: 20px; justify-content: center; }
+        .block { padding: 16px; background: var(--bg-panel); border: 1px solid var(--glass-border); border-radius: 8px; cursor: pointer; }
+        .block.active { border-color: var(--accent-primary); }
+        .block-label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 8px; }
+        .block-stack { display: flex; gap: 4px; flex-direction: column; }
+        .sub-block { padding: 4px 12px; background: rgba(96,165,250,0.2); border-radius: 4px; font-size: 10px; }
+        .block-desc { display: block; font-size: 10px; color: var(--text-secondary); margin-top: 8px; }
+        .transformer-flow { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-secondary); margin-top: 12px; }
+
+        /* Conv Visualizer */
+        .conv-viz { display: flex; gap: 20px; justify-content: center; padding: 20px; }
+        .conv-section { text-align: center; }
+        .conv-label { display: block; font-size: 11px; color: var(--text-secondary); margin-bottom: 8px; }
+        .input-grid, .kernel-grid { display: flex; flex-direction: column; gap: 2px; }
+        .input-row { display: flex; gap: 2px; }
+        .input-cell { width: 16px; height: 16px; background: var(--accent-primary); border-radius: 2px; }
+        .kernel-cell { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 10px; border-radius: 4px; }
+        .conv-kernel { text-align: center; }
+        .conv-kernel input { width: 100px; margin: 8px 0; }
+
+        /* GAN Visualizer */
+        .gan-viz { padding: 20px; }
+        .gan-players { display: flex; gap: 20px; justify-content: center; align-items: center; }
+        .gan-player { width: 140px; text-align: center; }
+        .player-label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 8px; }
+        .player-output { width: 80px; height: 80px; margin: 0 auto 8px; background: var(--bg-panel); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+        .generated-image { width: 40px; height: 40px; background: var(--accent-primary); border-radius: 50%; }
+        .player-decision { margin-bottom: 8px; }
+        .decision-label { display: block; font-size: 14px; font-weight: bold; }
+        .decision-bar { width: 80px; height: 8px; background: #333; border-radius: 4px; margin: 4px auto; }
+        .decision-fill { height: 100%; border-radius: 4px; }
+        .gan-player input { width: 100%; margin: 8px 0; }
+        .loss { display: block; font-size: 11px; }
+        .loss-label { display: block; font-size: 9px; color: var(--text-secondary); }
+        .vs-badge { font-size: 20px; font-weight: bold; color: var(--accent-primary); }
+        .game-theory { text-align: center; margin-top: 16px; font-size: 11px; color: var(--text-secondary); }
+
+        /* Diffusion Visualizer */
+        .diffusion-viz { padding: 20px; }
+        .diffusion-process { text-align: center; }
+        .diffusion-arrow { font-size: 11px; color: var(--text-secondary); margin-bottom: 16px; }
+        .arrow-line { height: 2px; background: linear-gradient(90deg, #333, var(--accent-primary), #333); margin: 8px 0; }
+        .diffusion-steps { display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; }
+        .step-preview { width: 50px; cursor: pointer; }
+        .step-preview.active .preview-image { border-color: var(--accent-primary); }
+        .preview-image { width: 40px; height: 40px; margin: 0 auto 4px; background: var(--accent-primary); border-radius: 4px; border: 2px solid transparent; }
+        .step-num { font-size: 9px; color: var(--text-secondary); }
+        .step-slider { width: 200px; margin: 16px auto; display: block; }
+        .current-state { display: flex; gap: 16px; justify-content: center; align-items: center; }
+        .state-image { width: 60px; height: 60px; background: var(--accent-primary); border-radius: 8px; }
+        .state-info { font-size: 11px; }
+        .state-info span { display: block; }
+        .diffusion-explanation { margin-top: 16px; font-size: 10px; color: var(--text-secondary); }
+        .diffusion-explanation span { display: block; }
+
+        /* RNN Visualizer */
+        .rnn-viz { padding: 20px; }
+        .rnn-sequence { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; }
+        .seq-token { padding: 8px; background: var(--bg-panel); border: 1px solid var(--glass-border); border-radius: 4px; cursor: pointer; text-align: center; }
+        .seq-token.active { border-color: var(--accent-primary); background: rgba(96,165,250,0.2); }
+        .seq-token span { display: block; font-size: 12px; }
+        .token-state { font-size: 10px; color: var(--text-secondary); }
+        .rnn-unfold { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+        .time-step { display: flex; gap: 4px; align-items: center; font-size: 10px; }
+        .time-step.processed .step-input, .time-step.processed .step-hidden { opacity: 1; }
+        .step-input, .step-hidden { opacity: 0.3; }
+        .rnn-problem { text-align: center; font-size: 11px; color: var(--text-secondary); }
+        .rnn-problem span { display: block; }
+
+        /* Gradient Visualizer */
+        .gradient-viz { padding: 20px; }
+        .forward-pass, .backward-pass { text-align: center; margin-bottom: 20px; }
+        .forward-pass span, .backward-pass span { display: block; font-size: 11px; color: var(--text-secondary); margin-bottom: 8px; }
+        .forward-arrows, .backward-arrows { display: flex; gap: 8px; justify-content: center; }
+        .forward-layer, .backward-layer { width: 40px; height: 40px; background: var(--bg-panel); border: 1px solid var(--glass-border); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 11px; }
+        .gradient-formula { text-align: center; font-size: 12px; color: var(--accent-secondary); }
+        .gradient-viz input { width: 200px; display: block; margin: 16px auto; }
+
+        .cards-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+        .resource-card { background: var(--bg-panel); border: 1px solid var(--glass-border); border-radius: 8px; padding: 16px; text-decoration: none; color: inherit; }
+        .resource-card h3 { font-size: 14px; margin: 8px 0 0 0; }
+        .tag { font-size: 10px; padding: 2px 6px; background: #2563eb20; color: #60a5fa; border-radius: 4px; }
       `}</style>
     </div>
   );
