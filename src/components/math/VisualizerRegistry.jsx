@@ -34,6 +34,14 @@ import JacobianVisualizer from './JacobianVisualizer';
 import HessianVisualizer from './HessianVisualizer';
 import BayesTheoremVisualizer from './BayesTheoremVisualizer';
 import KLDivergenceVisualizer from './KLDivergenceVisualizer';
+import RegularizationVisualizer from './RegularizationVisualizer';
+import SkipConnectionVisualizer from './SkipConnectionVisualizer';
+import ObjectDetectionVisualizer from './ObjectDetectionVisualizer';
+import TSNEVisualizer from './TSNEVisualizer';
+import CLIPVisualizer from './CLIPVisualizer';
+import EmbeddingVisualizer from './EmbeddingVisualizer';
+import MetricVisualizer from './MetricVisualizer';
+import RLVisualizer from './RLVisualizer';
 
 export const VisualizerRegistry = {
   SVM: SVMVisualizer,
@@ -71,4 +79,12 @@ export const VisualizerRegistry = {
   Hessian: HessianVisualizer,
   BayesTheorem: BayesTheoremVisualizer,
   KLDivergence: KLDivergenceVisualizer,
+  Regularization: RegularizationVisualizer,
+  SkipConnection: SkipConnectionVisualizer,
+  ObjectDetection: ObjectDetectionVisualizer,
+  TSNE: TSNEVisualizer,
+  CLIP: CLIPVisualizer,
+  Embedding: EmbeddingVisualizer,
+  Metric: MetricVisualizer,
+  RL: RLVisualizer,
 };

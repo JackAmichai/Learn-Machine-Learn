@@ -1411,9 +1411,10 @@ export const MATH_TOPICS = {
  }
  ]
  },
- "Regularization": {
- title: "Regularization: Guard Against Overfitting",
- content: `
+"Regularization": {
+  title: "Regularization: Guard Against Overfitting",
+  visualizer: "Regularization",
+  content: `
  <p>Regularization adds a penalty to large weights so the model generalizes better.</p>
 
  <h4>L1 (Lasso)</h4>
@@ -1883,9 +1884,9 @@ export const MATH_TOPICS = {
  }
  ]
  },
- "Classification Metrics": {
-    visualizer: "Loss",
- title: "Classification Metrics: Measuring Success",
+"Classification Metrics": {
+     visualizer: "Metric",
+  title: "Classification Metrics: Measuring Success",
  content: `
  <p><strong>Accuracy</strong> is just the start. To truly understand a classifier's performance, especially on imbalanced data, we need <strong>Precision</strong>, <strong>Recall</strong>, and the <strong>F1 Score</strong>.</p>
  <div class="equation">
@@ -2504,9 +2505,10 @@ Recall = TP / (TP + FN)
  }
  ]
  },
- "SkipConnection": {
- title: "Skip Connections: Gradient Highways",
- content: `
+"SkipConnection": {
+  title: "Skip Connections: Gradient Highways",
+  visualizer: "SkipConnection",
+  content: `
  <p><strong>Skip connections</strong> (residual connections) add the input of a layer to its output. Enables training very deep networks.</p>
  
  <h4>Residual Block</h4>
@@ -3383,9 +3385,9 @@ Recall = TP / (TP + FN)
  }
  ]
  },
- "CLIP": {
-    visualizer: "Transformer",
- title: "CLIP: Connecting Images and Text",
+"CLIP": {
+     visualizer: "CLIP",
+  title: "CLIP: Connecting Images and Text",
  content: `
  <p><strong>CLIP</strong> learns to match images with text descriptions. Zero-shot classifier from natural language!</p>
  
@@ -3428,9 +3430,10 @@ Recall = TP / (TP + FN)
  }
  ]
  },
- "ObjectDetection": {
- title: "Object Detection: Finding and Locating Objects",
- content: `
+"ObjectDetection": {
+  title: "Object Detection: Finding and Locating Objects",
+  visualizer: "ObjectDetection",
+  content: `
  <p><strong>Object detection</strong> finds all objects in an image and draws bounding boxes around them.</p>
  
  <h4>Two-Stage Detectors</h4>
@@ -3767,9 +3770,10 @@ Recall = TP / (TP + FN)
  }
  ]
  },
- "TSNE": {
- title: "t-SNE: Visualizing High-Dim Data",
- content: `
+"TSNE": {
+  title: "t-SNE: Visualizing High-Dim Data",
+  visualizer: "TSNE",
+  content: `
  <p><strong>t-SNE</strong> (t-distributed Stochastic Neighbor Embedding) is a nonlinear dimensionality reduction technique well-suited for embedding high-dimensional data for visualization in a low-dimensional space of two or three dimensions.</p>
  `,
  interactiveFormulas: [

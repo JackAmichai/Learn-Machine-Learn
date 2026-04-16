@@ -304,10 +304,11 @@ export function MathModal({ topic, onClose, onComplete }) {
  border: 1px solid rgba(112, 0, 255, 0.3);
  }
 
- .math-body {
- line-height: 1.6;
- font-size: 15px;
- }
+  .math-body {
+  line-height: 1.6;
+  font-size: 15px;
+  overflow: hidden;
+  }
  /* Visual-only mode: hide equation blocks */
  .math-body.visual-only .equation {
  display: none;
@@ -317,13 +318,15 @@ export function MathModal({ topic, onClose, onComplete }) {
  margin-top: 20px;
  margin-bottom: 10px;
  }
- .custom-visualizer {
- margin: 20px 0;
- padding: 15px;
- background: rgba(0, 0, 0, 0.3);
- border: 1px solid var(--glass-border);
- border-radius: 12px;
- }
+  .custom-visualizer {
+  margin: 20px 0;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  max-height: 400px;
+  overflow-y: auto;
+  }
  .math-viz-placeholder {
  text-align: center;
  color: var(--text-secondary);
@@ -392,14 +395,15 @@ export function MathModal({ topic, onClose, onComplete }) {
  text-align: center;
  }
  
- /* Formula Explorer */
- .formula-explorer {
- margin-top: 30px;
- padding: 20px;
- background: rgba(0, 242, 255, 0.05);
- border: 1px solid var(--accent-primary);
- border-radius: 12px;
- }
+  /* Formula Explorer */
+  .formula-explorer {
+  margin-top: 30px;
+  padding: 20px;
+  background: rgba(0, 242, 255, 0.05);
+  border: 1px solid var(--accent-primary);
+  border-radius: 12px;
+  overflow: hidden;
+  }
  .formula-explorer h3 {
  margin: 0 0 10px 0;
  color: var(--accent-primary);
@@ -761,12 +765,13 @@ function FormulaPlayground({ formula, sliderValues, onSliderChange, activeFormul
  )}
 
  <style>{`
- .formula-playground {
- background: rgba(0, 0, 0, 0.3);
- border-radius: 10px;
- padding: 20px;
- margin-bottom: 20px;
- }
+  .formula-playground {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  }
  .formula-display {
  text-align: center;
  margin-bottom: 20px;
