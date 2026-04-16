@@ -1,6 +1,7 @@
 
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
+import { describe, test, expect } from 'vitest';
 import { GoogleResources } from './GoogleResources';
 
 describe('GoogleResources Page', () => {
