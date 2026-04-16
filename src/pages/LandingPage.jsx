@@ -4,6 +4,9 @@ import { EncoderDecoderBackground } from '../components/EncoderDecoderBackground
 import { Questionnaire } from '../components/Questionnaire';
 import { PersonalizationContext } from '../contexts/PersonalizationContext';
 import { ThemeToggle } from '../components/ThemeToggle';
+import { Footer } from '../components/Footer';
+import { BuyMeCoffee } from '../components/BuyMeCoffee';
+import { LandingHeroVisuals } from '../components/LandingHeroVisuals';
 import MLPeople from '../../Pics/ML people animation.png';
 import MathPeople from '../../Pics/Math people animation.png';
 
@@ -149,6 +152,9 @@ export function LandingPage() {
  </div>
  </section>
 
+ {/* HERO VISUALS — actual ML architectures */}
+ <LandingHeroVisuals />
+
  {/* FEATURES SECTION */}
  <section className="features-section" ref={addSectionRef}>
  <div className="section-inner">
@@ -217,6 +223,47 @@ export function LandingPage() {
  </div>
  </section>
 
+ {/* RESOURCE / EXPLORE PROMO */}
+ <section className="explore-section" ref={addSectionRef}>
+ <div className="section-inner">
+ <div className="explore-grid">
+ <div className="explore-card explore-card-resources">
+ <div className="explore-tag">200+ Resources</div>
+ <h3>The ML Resource Library</h3>
+ <p>
+ A handpicked index of seminal papers, the best books, free courses, and the
+ tools real practitioners reach for. Filter by level, topic, and free-only.
+ </p>
+ <button className="explore-cta" onClick={() => navigate('/resources')}>
+ Open the Library <span className="cta-arrow">→</span>
+ </button>
+ </div>
+ <div className="explore-card explore-card-lessons">
+ <div className="explore-tag">Step-by-step</div>
+ <h3>Interactive Lessons</h3>
+ <p>
+ Guided modules that walk you from "what is a neuron?" to building a transformer,
+ with live visualisations after every concept.
+ </p>
+ <button className="explore-cta" onClick={() => navigate('/lessons')}>
+ Start a Lesson <span className="cta-arrow">→</span>
+ </button>
+ </div>
+ <div className="explore-card explore-card-forward">
+ <div className="explore-tag">What is next</div>
+ <h3>Looking Forward</h3>
+ <p>
+ The frontier — agents, multimodal models, world models, AGI debates — and the
+ papers driving the next wave.
+ </p>
+ <button className="explore-cta" onClick={() => navigate('/looking-forward')}>
+ Explore the Frontier <span className="cta-arrow">→</span>
+ </button>
+ </div>
+ </div>
+ </div>
+ </section>
+
  {/* STATS */}
  <section className="stats-section" ref={addSectionRef}>
  <div className="section-inner">
@@ -266,10 +313,11 @@ export function LandingPage() {
  </div>
  </section>
 
- {/* FOOTER */}
- <footer className="landing-footer">
- <p>Learn Machine Learn — Open Source & Free </p>
- </footer>
+ {/* FOOTER with feedback form */}
+ <Footer />
+
+ {/* Buy me a coffee — only shown on landing page */}
+ <BuyMeCoffee />
 
  <style>{`
  .landing-page {
@@ -596,6 +644,98 @@ export function LandingPage() {
  }
  .topic-pill-icon {
  font-size: 18px;
+ }
+
+ /* EXPLORE PROMO */
+ .explore-section {
+ opacity: 0;
+ transform: translateY(40px);
+ transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+ }
+ .explore-section.visible {
+ opacity: 1;
+ transform: translateY(0);
+ }
+ .explore-grid {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+ gap: 22px;
+ }
+ .explore-card {
+ background: linear-gradient(160deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+ border: 1px solid rgba(255,255,255,0.07);
+ border-radius: 20px;
+ padding: 28px 26px;
+ display: flex;
+ flex-direction: column;
+ align-items: flex-start;
+ gap: 12px;
+ transition: transform .3s, border-color .3s, box-shadow .3s;
+ backdrop-filter: blur(6px);
+ position: relative;
+ overflow: hidden;
+ }
+ .explore-card::before {
+ content: '';
+ position: absolute;
+ inset: 0;
+ background: var(--accent-glow, transparent);
+ opacity: 0;
+ transition: opacity .4s;
+ pointer-events: none;
+ }
+ .explore-card:hover {
+ transform: translateY(-4px);
+ border-color: rgba(255,255,255,0.18);
+ box-shadow: 0 16px 40px rgba(0,0,0,0.45);
+ }
+ .explore-card:hover::before { opacity: 1; }
+ .explore-card-resources { --accent-glow: radial-gradient(ellipse at top right, rgba(0,242,255,.10), transparent 60%); }
+ .explore-card-lessons { --accent-glow: radial-gradient(ellipse at top right, rgba(0,255,157,.10), transparent 60%); }
+ .explore-card-forward { --accent-glow: radial-gradient(ellipse at top right, rgba(112,0,255,.10), transparent 60%); }
+ .explore-tag {
+ font-size: 10px;
+ letter-spacing: 1.5px;
+ text-transform: uppercase;
+ padding: 4px 10px;
+ border-radius: 999px;
+ background: rgba(255,255,255,0.06);
+ color: var(--text-secondary);
+ font-weight: 600;
+ }
+ .explore-card h3 {
+ font-family: 'Outfit', var(--font-main, inherit);
+ font-size: 22px;
+ font-weight: 700;
+ margin: 0;
+ letter-spacing: -.4px;
+ }
+ .explore-card p {
+ color: var(--text-secondary, #8a8aa0);
+ line-height: 1.55;
+ font-size: 14px;
+ margin: 0;
+ flex: 1;
+ }
+ .explore-cta {
+ display: inline-flex;
+ align-items: center;
+ gap: 8px;
+ padding: 10px 18px;
+ background: rgba(0, 242, 255, 0.08);
+ border: 1px solid rgba(0, 242, 255, 0.35);
+ color: var(--accent-primary, #00f2ff);
+ border-radius: 12px;
+ font-weight: 600;
+ cursor: pointer;
+ font-family: inherit;
+ font-size: 14px;
+ transition: all .25s;
+ margin-top: 6px;
+ }
+ .explore-cta:hover {
+ background: rgba(0, 242, 255, 0.14);
+ transform: translateX(3px);
  }
 
  /* STATS */

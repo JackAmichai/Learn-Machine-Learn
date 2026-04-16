@@ -1,107 +1,133 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-export default function MDPVisualizer() {
-  const [state, setState] = useState('s0');
-  
-  const states = {
-    s0: { name: 'Start', actions: ['→'], next: 's1', reward: 0 },
-    s1: { name: 'State 1', actions: ['↑', '→'], next: ['s2', 's1'], reward: 0 },
-    s2: { name: 'Goal', actions: [], next: null, reward: 100 }
-  };
-  
-  return (
-    <div className="mdp-visualizer">
-      <div className="viz-container">
-        <svg viewBox="0 0 200 90" width="100%" height="110">
-          <text x="100" y="12" fill="var(--text-primary)" fontSize="10" textAnchor="middle" fontWeight="bold">
-            Markov Decision Process (MDP)
-          </text>
-          
-          {/* States */}
-          {Object.entries(states).map(([key, s], i) => (
-            <g key={key}>
-              <circle cx={40 + i * 60} cy="50" r="20" 
-                      fill={state === key ? 'var(--accent-primary)' : 'var(--bg-secondary)'} 
-                      stroke={state === key ? '#fff' : 'var(--glass-border)'} strokeWidth="2" />
-              <text x={40 + i * 60} y="45" fill={state === key ? 'var(--bg-primary)' : 'var(--text-primary)'} 
-                    fontSize="8" textAnchor="middle" fontWeight="bold">{key}</text>
-              <text x={40 + i * 60} y="57" fill={state === key ? 'var(--bg-primary)' : 'var(--text-secondary)'} 
-                    fontSize="7" textAnchor="middle">{s.name}</text>
-              
-              {s.next && (
-                <line x1={60 + i * 60} y1="50" x2={80 + i * 60} y2="50" 
-                      stroke="var(--accent-secondary)" strokeWidth="2" markerEnd="url(#arrowMDP)" />
-              )}
-            </g>
-          ))}
-          
-          {/* State info */}
-          {state !== 's2' && (
-            <text x="100" y="85" fill="var(--text-secondary)" fontSize="8" textAnchor="middle">
-              Actions: {states[state].actions.join(', ')} | Reward: {states[state].reward}
-            </text>
-          )}
-          
-          <defs>
-            <marker id="arrowMDP" markerWidth="5" height="5" refX="4" refY="2.5" orient="auto">
-              <path d="M0,0 L5,2.5 L0,5" fill="var(--accent-secondary)" />
-            </marker>
-          </defs>
-        </svg>
-      </div>
-      
-      <div className="controls">
-        <div className="slider-group">
-          <label>Current State: {state}</label>
-          <input type="range" min="0" max="2" step="1" value={parseInt(state.slice(1))} 
-                 onChange={(e) => setState('s' + e.target.value)} />
+/**
+ * MDPVisualizer — visualises the discounted return G_t = R₁ + γR₂ + γ²R₃ + …
+ *
+ * Sliders map to:
+ *   r1     : R₁  (immediate reward)
+ *   r2     : R₂  (next reward)
+ *   gamma  : γ   (discount factor 0..0.99)
+ *
+ * We render an MDP-style state diagram showing s₀ → s₁ → s₂, label each
+ * transition with its reward, draw a horizontal "discounted contribution"
+ * bar for each step (R₁ vs γ·R₂ vs γ²·R₃…), and show the running total.
+ * The visual makes the geometric decay obvious — high γ keeps the future
+ * tall, low γ flattens it to almost nothing.
+ */
+export default function MDPVisualizer({ values = {} }) {
+    const r1 = values.r1 ?? 10;
+    const r2 = values.r2 ?? 5;
+    const gamma = values.gamma ?? 0.9;
+
+    // Compute discounted contributions for first 6 timesteps using r1, r2 then r2 fading.
+    const horizon = 6;
+    const rewards = [r1, r2, r2, r2, r2, r2].slice(0, horizon);
+    const contributions = rewards.map((r, i) => Math.pow(gamma, i) * r);
+    const G = contributions.reduce((a, b) => a + b, 0);
+    const reportedG = r1 + gamma * r2; // matches the formula in mathContent
+
+    const W = 360, H = 280;
+
+    return (
+        <div className="mdp-visualizer">
+            <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="280" role="img" aria-label="Discounted return visualization">
+                <defs>
+                    <marker id="mdp-arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                        <path d="M0,0 L6,3 L0,6" fill="rgba(0,242,255,0.8)" />
+                    </marker>
+                </defs>
+
+                {/* State chain */}
+                {[0, 1, 2].map(i => {
+                    const cx = 60 + i * 120;
+                    return (
+                        <g key={i}>
+                            <circle cx={cx} cy="48" r="22" fill="rgba(0,242,255,0.10)" stroke="#00f2ff" strokeWidth="1.5" />
+                            <text x={cx} y="52" fill="#fff" fontSize="13" textAnchor="middle" fontFamily="ui-monospace,monospace" fontWeight="700">s{i}</text>
+                            {i < 2 && (
+                                <>
+                                    <line x1={cx + 22} y1="48" x2={cx + 100} y2="48" stroke="rgba(0,242,255,0.7)" strokeWidth="1.5" markerEnd="url(#mdp-arr)" />
+                                    <text x={cx + 60} y="40" textAnchor="middle" fontSize="10" fill="#fb923c" fontFamily="ui-monospace,monospace">
+                                        R = {(i === 0 ? r1 : r2).toFixed(0)}
+                                    </text>
+                                </>
+                            )}
+                        </g>
+                    );
+                })}
+
+                {/* Discounted contribution bars */}
+                <text x="20" y="100" fill="rgba(255,255,255,0.6)" fontSize="11" fontFamily="ui-monospace,monospace">discounted contribution at each step:</text>
+                {contributions.map((c, i) => {
+                    const y = 116 + i * 22;
+                    const maxAbs = Math.max(...contributions.map(Math.abs), 0.01);
+                    const wPx = (Math.abs(c) / maxAbs) * 240;
+                    return (
+                        <g key={i}>
+                            <text x="20" y={y + 9} fill="rgba(255,255,255,0.55)" fontSize="10" fontFamily="ui-monospace,monospace">
+                                γ^{i}·R_{i + 1}
+                            </text>
+                            <rect x="74" y={y} width={wPx} height="14" rx="3" fill={i === 0 ? '#34d399' : '#00f2ff'} opacity={0.4 + 0.6 * (1 - i / horizon)} />
+                            <text x={84 + wPx} y={y + 11} fontSize="10" fill="#fff" fontFamily="ui-monospace,monospace">{c.toFixed(2)}</text>
+                        </g>
+                    );
+                })}
+            </svg>
+
+            <div className="mdp-readout">
+                <div className="mdp-readout-row">
+                    <span>γ</span><strong>{gamma.toFixed(2)}</strong>
+                </div>
+                <div className="mdp-readout-row">
+                    <span>G (2-step)</span><strong style={{ color: '#34d399' }}>{reportedG.toFixed(2)}</strong>
+                </div>
+                <div className="mdp-readout-row">
+                    <span>G (6-step)</span><strong>{G.toFixed(2)}</strong>
+                </div>
+            </div>
+
+            <p className="mdp-caption">
+                {gamma < 0.4
+                    ? 'Shortsighted agent — future rewards barely register.'
+                    : gamma > 0.95
+                        ? 'Farsighted agent — distant rewards still matter a lot.'
+                        : 'Balanced — present matters most, but the future still counts.'}
+            </p>
+
+            <style>{`
+                .mdp-visualizer {
+                    background: rgba(0,0,0,0.35);
+                    border: 1px solid var(--glass-border);
+                    border-radius: 12px;
+                    padding: 14px;
+                }
+                .mdp-readout {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 14px;
+                    justify-content: center;
+                    margin-top: 6px;
+                    padding: 8px 10px;
+                    background: rgba(0,0,0,0.3);
+                    border-radius: 8px;
+                    font-family: ui-monospace, monospace;
+                    font-size: 12px;
+                }
+                .mdp-readout-row { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+                .mdp-readout-row span {
+                    font-size: 10px;
+                    color: var(--text-secondary);
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                }
+                .mdp-caption {
+                    margin: 8px 0 0;
+                    font-size: 11px;
+                    color: var(--text-secondary);
+                    text-align: center;
+                    line-height: 1.55;
+                }
+            `}</style>
         </div>
-      </div>
-      
-      <p className="caption">
-        <strong>MDP</strong> has states, actions, transition probabilities, and rewards. The agent learns a policy π(s) → a to maximize expected cumulative reward.
-      </p>
-      
-      <style>{`
-        .mdp-visualizer {
-          background: rgba(0, 0, 0, 0.4);
-          border: 1px solid var(--glass-border);
-          border-radius: 12px;
-          padding: 16px;
-          margin: 16px 0;
-        }
-        .viz-container {
-          background: rgba(0, 0, 0, 0.5);
-          border-radius: 8px;
-          padding: 10px;
-          margin-bottom: 12px;
-        }
-        .controls {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-          margin-bottom: 12px;
-        }
-        .slider-group {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-        }
-        .slider-group label {
-          font-size: 11px;
-          color: var(--text-secondary);
-          min-width: 100px;
-        }
-        .slider-group input[type="range"] {
-          flex: 1;
-          accent-color: var(--accent-primary);
-        }
-        .caption {
-          font-size: 12px;
-          color: var(--text-secondary);
-          text-align: center;
-        }
-      `}</style>
-    </div>
-  );
+    );
 }

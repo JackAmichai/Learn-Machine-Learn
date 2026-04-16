@@ -3,7 +3,8 @@ import { LandingPage } from './pages/LandingPage';
 import { Home } from './pages/Home';
 import { PersonalizedDashboard } from './pages/PersonalizedDashboard';
 import { QuizPage } from './pages/QuizPage';
-import { GoogleResources } from './pages/GoogleResources';
+import { InteractiveLessons } from './pages/InteractiveLessons';
+import { ResourceLibrary } from './pages/ResourceLibrary';
 import { LookingForward } from './pages/LookingForward';
 
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -14,7 +15,6 @@ import { ToastStack } from './components/ToastStack';
 import { PersonalizationProvider } from './contexts/PersonalizationContext';
 import { HomeNav } from './components/HomeNav';
 import { Chatbot } from './components/Chatbot';
-import { BuyMeCoffee } from './components/BuyMeCoffee';
 import { AccessibilityPanel } from './components/AccessibilityPanel';
 
 function App() {
@@ -30,12 +30,12 @@ function App() {
                   <Route path="/playground" element={<Home />} />
                   <Route path="/dashboard" element={<PersonalizedDashboard />} />
                   <Route path="/quizzes" element={<QuizPage />} />
-                  <Route path="/resources" element={<GoogleResources />} />
+                  <Route path="/resources" element={<ResourceLibrary />} />
+                  <Route path="/lessons" element={<InteractiveLessons />} />
                   <Route path="/looking-forward" element={<LookingForward />} />
                 </Routes>
                 <HomeNav />
                 <Chatbot />
-                <BuyMeCoffee />
                 <AccessibilityPanel />
               </Router>
               <ToastStack />

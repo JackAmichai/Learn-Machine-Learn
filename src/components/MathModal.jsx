@@ -10,11 +10,11 @@ export function MathModal({ topic, onClose, onComplete }) {
  const data = MATH_TOPICS[topic];
  const [activeFormula, setActiveFormula] = useState(null);
  const [sliderValues, setSliderValues] = useState({});
+ const [showSummary, setShowSummary] = useState(false);
  const { profile } = useContext(PersonalizationContext);
  const completedTopics = profile?.completedTopics || [];
  const isCompleted = completedTopics.includes(topic);
  const wikiUrl = getWikiUrl(topic);
- const notebookUrl = getNotebookLMLink(topic);
 
  const handleGotIt = () => {
  if (onComplete) onComplete(topic);
@@ -25,7 +25,7 @@ export function MathModal({ topic, onClose, onComplete }) {
 
  // Get persona-based presentation config
  const presentation = profile
- ? getTopicPresentation(profile, topic)
+ ? getTopicPresentation(profile)
  : { showMath: true, showVisual: true, complexity: 'standard', showInteractiveFormulas: true, highlightInsights: true };
 
  // Get the visualizer if one exists for this topic
@@ -60,7 +60,7 @@ export function MathModal({ topic, onClose, onComplete }) {
  <div className="math-modal-content" onClick={e => e.stopPropagation()}>
  <div className="math-header">
  <div className="math-header-title">
- <h2 id="math-modal-title">{data.title}</h2>
+ <h2 id="math-modal-title">{showSummary ? `Notebook Guide: ${data.title}` : data.title}</h2>
  {isCompleted && (
  <span className="completed-pill" aria-label="Completed">
  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
@@ -76,7 +76,7 @@ export function MathModal({ topic, onClose, onComplete }) {
  </div>
 
  {/* Persona complexity badge */}
- {profile && (
+ {profile && !showSummary && (
  <div className={`complexity-badge complexity-${presentation.complexity}`}>
  {presentation.complexity === 'simple' && ' Simplified View'}
  {presentation.complexity === 'standard' && ' Standard View'}
@@ -84,6 +84,10 @@ export function MathModal({ topic, onClose, onComplete }) {
  </div>
  )}
 
+ {showSummary ? (
+ <SummaryView data={data} />
+ ) : (
+ <>
  <div className={`math-body ${!presentation.showMath ? 'visual-only' : ''}`} dangerouslySetInnerHTML={{ __html: data.content }} />
 
   {/* Custom Visualizer Section */}
@@ -150,6 +154,8 @@ export function MathModal({ topic, onClose, onComplete }) {
  </p>
  </div>
  )}
+ </>
+ )}
 
  <div className="math-footer">
  {wikiUrl && (
@@ -168,21 +174,17 @@ export function MathModal({ topic, onClose, onComplete }) {
  Wikipedia
  </a>
  )}
- {notebookUrl && (
- <a
- className="notebook-btn"
- href={notebookUrl}
- target="_blank"
- rel="noopener noreferrer"
- aria-label={`See summary of ${data.title} in NotebookLM`}
+ <button
+ className={`notebook-btn ${showSummary ? 'active' : ''}`}
+ onClick={() => setShowSummary(!showSummary)}
+ aria-label={showSummary ? "Back to lesson" : "Show summary guide"}
  >
  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
  </svg>
- Summary
- </a>
- )}
+ {showSummary ? "Lesson" : "Summary"}
+ </button>
  <button
  className={`got-it-btn ${isCompleted ? 'is-completed' : ''}`}
  onClick={handleGotIt}
@@ -519,6 +521,163 @@ export function MathModal({ topic, onClose, onComplete }) {
  `}</style>
  </div>
  );
+}
+
+function SummaryView({ data }) {
+  const takeaways = data.takeaways || [
+    "Fundamental concept in modern machine learning.",
+    "Bridges the gap between raw data and mathematical optimization.",
+    "Essential for building robust and accurate models."
+  ];
+
+  const questions = data.questions || [
+    `How does ${data.title} handle noisy data?`,
+    `What are the real-world applications of ${data.title}?`,
+    `Can you explain the mathematical intuition behind ${data.title}?`
+  ];
+
+  const handleQuestionClick = (q) => {
+    // Dispatch a custom event that Chatbot.jsx can listen for
+    const event = new CustomEvent('ask-ml-mentor', { detail: { question: q } });
+    window.dispatchEvent(event);
+  };
+
+  return (
+    <div className="notebook-guide">
+      <div className="guide-intro">
+        <div className="guide-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+          </svg>
+        </div>
+        <p>I've synthesized the key concepts from this lesson into a concise study guide. Use this to reinforce your understanding or ask me follow-up questions.</p>
+      </div>
+
+      <div className="guide-grid">
+        <div className="guide-section main-summary">
+          <h3><span className="bullet">✦</span> Executive Summary</h3>
+          <p>{data.summary || `This lesson covers the core principles of ${data.title}, exploring its theoretical foundations, practical implementation, and its role within the broader machine learning ecosystem.`}</p>
+        </div>
+
+        <div className="guide-section key-takeaways">
+          <h3><span className="bullet">✦</span> Key Takeaways</h3>
+          <ul>
+            {takeaways.map((t, i) => <li key={i}>{t}</li>)}
+          </ul>
+        </div>
+
+        <div className="guide-section suggested-questions">
+          <h3><span className="bullet">✦</span> Deep Dive Questions</h3>
+          <p className="sub-hint">Click a question to ask the ML Mentor:</p>
+          <div className="question-chips">
+            {questions.map((q, i) => (
+              <button key={i} className="q-chip" onClick={() => handleQuestionClick(q)}>
+                {q}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <style>{`
+        .notebook-guide {
+          animation: slideIn 0.3s ease-out;
+          color: var(--text-primary);
+        }
+        @keyframes slideIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .guide-intro {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          background: rgba(112, 0, 255, 0.08);
+          padding: 16px;
+          border-radius: 12px;
+          margin-bottom: 24px;
+          border-left: 4px solid var(--accent-secondary);
+        }
+        .guide-icon {
+          color: var(--accent-secondary);
+          flex-shrink: 0;
+        }
+        .guide-intro p {
+          margin: 0;
+          font-size: 14px;
+          line-height: 1.5;
+          color: var(--text-secondary);
+        }
+        .guide-grid {
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+        }
+        .guide-section {
+          background: rgba(255, 255, 255, 0.02);
+          padding: 20px;
+          border-radius: 16px;
+          border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .guide-section h3 {
+          margin: 0 0 16px 0;
+          font-size: 16px;
+          font-family: 'Outfit', sans-serif;
+          color: var(--accent-primary);
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .bullet {
+          font-size: 12px;
+          opacity: 0.8;
+        }
+        .main-summary p {
+          margin: 0;
+          line-height: 1.7;
+          font-size: 15px;
+          color: var(--text-secondary);
+        }
+        .key-takeaways ul {
+          margin: 0;
+          padding-left: 20px;
+        }
+        .key-takeaways li {
+          margin-bottom: 10px;
+          line-height: 1.5;
+          font-size: 14px;
+          color: var(--text-secondary);
+        }
+        .sub-hint {
+          font-size: 12px;
+          color: var(--text-tertiary, #666);
+          margin-bottom: 12px;
+        }
+        .question-chips {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+        .q-chip {
+          background: rgba(0, 242, 255, 0.05);
+          border: 1px solid rgba(0, 242, 255, 0.2);
+          padding: 8px 16px;
+          border-radius: 99px;
+          font-size: 13px;
+          color: var(--accent-primary);
+          cursor: pointer;
+          transition: all 0.2s;
+          text-align: left;
+        }
+        .q-chip:hover {
+          background: rgba(0, 242, 255, 0.12);
+          border-color: var(--accent-primary);
+          transform: translateY(-1px);
+        }
+      `}</style>
+    </div>
+  );
 }
 
 function FormulaPlayground({ formula, sliderValues, onSliderChange, activeFormula, onPartHover }) {

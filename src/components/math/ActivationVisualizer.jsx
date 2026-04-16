@@ -1,9 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-export default function ActivationVisualizer() {
+export default function ActivationVisualizer({ values = {} }) {
   const [func, setFunc] = useState('sigmoid');
   const [x, setX] = useState(0);
   
+  // Sync with external values if they change
+  useEffect(() => {
+    if (values.x !== undefined) setX(values.x);
+    if (values.input !== undefined) setX(values.input);
+    
+    // Auto-switch function based on common keywords
+    if (values.alpha !== undefined) setFunc('leakyrelu');
+  }, [values.x, values.input, values.alpha]);
+
   const functions = {
     sigmoid: { 
       f: (x) => 1 / (1 + Math.exp(-x)),
@@ -54,11 +63,11 @@ export default function ActivationVisualizer() {
           <path d="M 20,115 L 100,65 L 190,65" fill="none" stroke="var(--glass-border)" strokeWidth="1" strokeDasharray="3" opacity="0.5" />
           
           {/* Current point */}
-          <circle cx={100 + x * 10} cy={65 - y * 50} r="8" fill="var(--accent-primary)" stroke="#fff" strokeWidth="2" />
+          <circle cx={100 + x * 10} cy={65 - y * 50} r={values.x !== undefined ? 10 : 8} fill="var(--accent-primary)" stroke="#fff" strokeWidth="2" />
           
           {/* Value */}
-          <text x="100" y="12" fill="var(--accent-primary)" fontSize="10" textAnchor="middle">
-            f({x}) = {y.toFixed(3)}
+          <text x="100" y="25" fill="var(--accent-primary)" fontSize="12" textAnchor="middle" fontWeight="bold">
+            f({x.toFixed(1)}) = {y.toFixed(3)}
           </text>
           
           <text x="195" y="68" fill="var(--text-secondary)" fontSize="8" textAnchor="end">x</text>
@@ -78,12 +87,14 @@ export default function ActivationVisualizer() {
         ))}
       </div>
       
-      <div className="controls">
-        <div className="slider-group">
-          <label>x: {x}</label>
-          <input type="range" min="-5" max="5" step="0.1" value={x} onChange={(e) => setX(Number(e.target.value))} />
+      {values.x === undefined && values.input === undefined && (
+        <div className="controls">
+          <div className="slider-group">
+            <label>x: {x}</label>
+            <input type="range" min="-5" max="5" step="0.1" value={x} onChange={(e) => setX(Number(e.target.value))} />
+          </div>
         </div>
-      </div>
+      )}
       
       <p className="caption">
         {functions[func].desc} <strong>Range:</strong> {functions[func].range}

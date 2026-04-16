@@ -24,12 +24,33 @@ export function HomeNav() {
         navigate('/dashboard');
     };
 
+    const goTo = (path) => {
+        setOpen(false);
+        setConfirming(false);
+        navigate(path);
+    };
+
     const restartPath = () => {
         resetProfile();
         setOpen(false);
         setConfirming(false);
         navigate('/');
     };
+
+    const QUICK_LINKS = [
+        { path: '/dashboard',       label: 'Home',                desc: 'Back to your dashboard',
+          icon: <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2h-4a1 1 0 0 1-1-1v-6h-4v6a1 1 0 0 1-1 1H5a2 2 0 0 1-2-2z"/> },
+        { path: '/playground',      label: 'Playground',          desc: 'Train and tweak models live',
+          icon: <><circle cx="12" cy="12" r="9"/><path d="M9 9l6 3-6 3z"/></> },
+        { path: '/lessons',         label: 'Interactive Lessons', desc: 'Step-by-step guided modules',
+          icon: <><path d="M2 3h7a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-7a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h8z"/></> },
+        { path: '/quizzes',         label: 'Quizzes',             desc: 'Test what you learned',
+          icon: <><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/><circle cx="12" cy="12" r="10"/></> },
+        { path: '/resources',       label: 'Resource Library',    desc: 'Papers, books, courses, tools',
+          icon: <><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></> },
+        { path: '/looking-forward', label: 'Looking Forward',     desc: 'Where ML is heading next',
+          icon: <><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></> },
+    ];
 
     return (
         <>
@@ -43,13 +64,52 @@ export function HomeNav() {
             <div className={`homenav-wrap ${open ? 'open' : ''}`}>
                 {open && (
                     <div className="homenav-menu" role="menu">
-                        <button className="homenav-item" role="menuitem" onClick={goHome}>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2h-4a1 1 0 0 1-1-1v-6h-4v6a1 1 0 0 1-1 1H5a2 2 0 0 1-2-2z"/></svg>
+                        <div className="homenav-section-label">Jump to</div>
+                        {QUICK_LINKS.map(link => {
+                            const isCurrent = location.pathname === link.path;
+                            return (
+                                <button
+                                    key={link.path}
+                                    className={`homenav-item ${isCurrent ? 'is-current' : ''}`}
+                                    role="menuitem"
+                                    onClick={() => goTo(link.path)}
+                                    disabled={isCurrent}
+                                    aria-current={isCurrent ? 'page' : undefined}
+                                >
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        {link.icon}
+                                    </svg>
+                                    <div className="homenav-item-text">
+                                        <strong>{link.label}</strong>
+                                        <span>{link.desc}</span>
+                                    </div>
+                                    {isCurrent && <span className="homenav-current-pill">Current</span>}
+                                </button>
+                            );
+                        })}
+                        <div className="homenav-divider" />
+                        <div className="homenav-section-label">Tools</div>
+                        <button
+                            className="homenav-item"
+                            role="menuitem"
+                            onClick={() => {
+                                setOpen(false);
+                                setConfirming(false);
+                                window.dispatchEvent(new Event('lml:open-accessibility'));
+                            }}
+                        >
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <circle cx="12" cy="4" r="2" />
+                                <path d="M5 9h14" />
+                                <path d="M12 9v6" />
+                                <path d="M9 21l3-6 3 6" />
+                            </svg>
                             <div className="homenav-item-text">
-                                <strong>Home</strong>
-                                <span>Back to your dashboard</span>
+                                <strong>Accessibility</strong>
+                                <span>Brightness, font size, color vision</span>
                             </div>
                         </button>
+                        <div className="homenav-divider" />
                         {!confirming ? (
                             <button className="homenav-item" role="menuitem" onClick={() => setConfirming(true)}>
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/><path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"/></svg>
@@ -135,10 +195,41 @@ export function HomeNav() {
                     -webkit-backdrop-filter: blur(20px);
                     border: 1px solid rgba(255, 255, 255, 0.1);
                     border-radius: 16px;
-                    padding: 8px;
-                    min-width: 260px;
+                    padding: 10px 8px;
+                    min-width: 280px;
+                    max-height: calc(100vh - 100px);
+                    overflow-y: auto;
                     box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5);
                     animation: hnSlide 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+                .homenav-section-label {
+                    font-size: 10px;
+                    text-transform: uppercase;
+                    letter-spacing: 1.6px;
+                    color: var(--text-secondary);
+                    padding: 4px 14px 8px;
+                    font-weight: 600;
+                }
+                .homenav-divider {
+                    height: 1px;
+                    background: rgba(255,255,255,0.07);
+                    margin: 6px 8px;
+                }
+                .homenav-item.is-current {
+                    background: rgba(0, 242, 255, 0.06);
+                    cursor: default;
+                }
+                .homenav-item.is-current strong { color: var(--accent-primary); }
+                .homenav-current-pill {
+                    margin-left: auto;
+                    font-size: 9px;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                    color: var(--accent-primary);
+                    background: rgba(0, 242, 255, 0.12);
+                    padding: 3px 7px;
+                    border-radius: 999px;
+                    font-weight: 700;
                 }
                 @keyframes hnSlide {
                     from { opacity: 0; transform: translateY(8px); }

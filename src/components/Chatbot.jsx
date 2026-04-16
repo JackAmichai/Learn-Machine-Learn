@@ -16,6 +16,15 @@ const DEFAULT_MODEL = 'meta-llama/Llama-3.1-8B-Instruct';
 const TOKEN_STORAGE_KEY = 'lml_hf_token';
 const MODEL_STORAGE_KEY = 'lml_hf_model';
 
+const TEMPLATE_QUESTIONS = [
+    { icon: '👋', label: 'Tell me about the author (Jack)', prompt: 'Tell me about the author Jack — who he is, his background, and why he built Learn Machine Learn.' },
+    { icon: '🚀', label: 'Where should I start?', prompt: "I'm new here. Should I take the Fast Track (8wk), Standard (16wk), or Builder's Path (12wk)? How do I choose?" },
+    { icon: '🧠', label: 'Explain backpropagation simply', prompt: 'Explain backpropagation in simple terms, with an intuition for why it works.' },
+    { icon: '🤖', label: 'What are transformers?', prompt: 'What are transformers in machine learning and why do they matter for modern AI?' },
+    { icon: '📉', label: 'How does gradient descent work?', prompt: 'How does gradient descent work? Walk me through the intuition and the math.' },
+    { icon: '🎯', label: 'Classification vs regression', prompt: "What's the difference between classification and regression, and when do I use each?" },
+];
+
 const SYSTEM_PROMPT = `You are ML Mentor, the official tutor bot for "Learn Machine Learn" — an open-source, in-browser ML learning platform built by Jack (Yaron-Jack on GitHub).
 
 You help learners with:
@@ -75,6 +84,27 @@ export function Chatbot() {
     const activeToken = resolveToken();
     const activeModel = getStoredModel();
 
+    // Listen for external "ask" requests (e.g. from NotebookLM summary)
+    useEffect(() => {
+        const handleExternalAsk = (e) => {
+            const { question } = e.detail;
+            if (question) {
+                setOpen(true);
+                setInput(question);
+                // We need a slight delay to ensure the state updates before we trigger send
+                // Or just call the logic directly if possible. 
+                // Let's use a ref-based approach or just a timeout for simplicity in this effect.
+                setTimeout(() => {
+                    const sendBtn = document.querySelector('.chatbot-send');
+                    if (sendBtn && !sendBtn.disabled) sendBtn.click();
+                }, 300);
+            }
+        };
+
+        window.addEventListener('ask-ml-mentor', handleExternalAsk);
+        return () => window.removeEventListener('ask-ml-mentor', handleExternalAsk);
+    }, []);
+
     // Autoscroll to newest message
     useEffect(() => {
         if (listRef.current) {
@@ -89,8 +119,8 @@ export function Chatbot() {
         }
     }, [open]);
 
-    const sendMessage = useCallback(async () => {
-        const text = input.trim();
+    const sendMessage = useCallback(async (overrideText) => {
+        const text = (typeof overrideText === 'string' ? overrideText : input).trim();
         if (!text || loading) return;
 
         const token = resolveToken();
@@ -286,6 +316,26 @@ export function Chatbot() {
                                 <div className="chat-bubble">{m.content}</div>
                             </div>
                         ))}
+                        {messages.length === 1 && !loading && (
+                            <div className="chat-templates" role="group" aria-label="Suggested questions">
+                                <div className="chat-templates-label">Try asking…</div>
+                                <div className="chat-templates-list">
+                                    {TEMPLATE_QUESTIONS.map((q) => (
+                                        <button
+                                            key={q.label}
+                                            type="button"
+                                            className="chat-template-chip"
+                                            onClick={() => sendMessage(q.prompt)}
+                                            disabled={loading}
+                                            title={q.prompt}
+                                        >
+                                            <span className="chip-icon" aria-hidden="true">{q.icon}</span>
+                                            <span className="chip-label">{q.label}</span>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                         {loading && (
                             <div className="chat-msg chat-msg-assistant">
                                 <div className="chat-bubble typing">
@@ -331,7 +381,8 @@ export function Chatbot() {
                     position: fixed;
                     right: 20px;
                     bottom: 20px;
-                    z-index: 1500;
+                    /* Above BuyMeCoffee (1400) and HomeNav (1500) so the bot is never hidden */
+                    z-index: 1650;
                     display: inline-flex;
                     align-items: center;
                     gap: 10px;
@@ -359,7 +410,7 @@ export function Chatbot() {
                     position: fixed;
                     right: 20px;
                     bottom: 20px;
-                    z-index: 1600;
+                    z-index: 1680;
                     width: 380px;
                     max-width: calc(100vw - 40px);
                     height: 560px;
@@ -566,6 +617,55 @@ export function Chatbot() {
                     padding: 8px 12px;
                     margin-top: 4px;
                 }
+
+                .chat-templates {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+                    margin-top: 4px;
+                    animation: chatSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+                .chat-templates-label {
+                    font-size: 11px;
+                    font-weight: 600;
+                    letter-spacing: 1px;
+                    text-transform: uppercase;
+                    color: var(--text-secondary);
+                    padding-left: 2px;
+                }
+                .chat-templates-list {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 6px;
+                }
+                .chat-template-chip {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 10px;
+                    text-align: left;
+                    padding: 10px 12px;
+                    background: rgba(0, 242, 255, 0.06);
+                    border: 1px solid rgba(0, 242, 255, 0.18);
+                    border-radius: 12px;
+                    color: var(--text-primary);
+                    font-family: inherit;
+                    font-size: 13px;
+                    font-weight: 500;
+                    line-height: 1.4;
+                    cursor: pointer;
+                    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+                }
+                .chat-template-chip:hover:not(:disabled) {
+                    background: rgba(0, 242, 255, 0.12);
+                    border-color: rgba(0, 242, 255, 0.45);
+                    transform: translateY(-1px);
+                }
+                .chat-template-chip:disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                }
+                .chip-icon { font-size: 16px; flex-shrink: 0; }
+                .chip-label { flex: 1; }
 
                 .chatbot-input-row {
                     display: flex;

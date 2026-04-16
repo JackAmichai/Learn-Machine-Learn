@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-export default function PCAVisualizer() {
+export default function PCAVisualizer({ values = {} }) {
   const [component1, setComponent1] = useState(70);
   const [component2, setComponent2] = useState(20);
   const [component3, setComponent3] = useState(10);
   
+  // Sync with external values if they change
+  useEffect(() => {
+    if (values.lambda1 !== undefined) setComponent1(values.lambda1);
+    if (values.lambda2 !== undefined) setComponent2(values.lambda2);
+    if (values.lambda3 !== undefined) setComponent3(values.lambda3);
+  }, [values.lambda1, values.lambda2, values.lambda3]);
+
   const total = component1 + component2 + component3;
   const p1 = (component1 / total * 100).toFixed(1);
   const p2 = (component2 / total * 100).toFixed(1);
@@ -52,20 +59,22 @@ export default function PCAVisualizer() {
         </svg>
       </div>
       
-      <div className="controls">
-        <div className="slider-group">
-          <label>PC1 Variance: {component1}</label>
-          <input type="range" min="1" max="100" value={component1} onChange={(e) => setComponent1(Number(e.target.value))} />
+      {values.lambda1 === undefined && (
+        <div className="controls">
+          <div className="slider-group">
+            <label>PC1 Variance: {component1}</label>
+            <input type="range" min="1" max="100" value={component1} onChange={(e) => setComponent1(Number(e.target.value))} />
+          </div>
+          <div className="slider-group">
+            <label>PC2 Variance: {component2}</label>
+            <input type="range" min="1" max="100" value={component2} onChange={(e) => setComponent2(Number(e.target.value))} />
+          </div>
+          <div className="slider-group">
+            <label>PC3 Variance: {component3}</label>
+            <input type="range" min="1" max="100" value={component3} onChange={(e) => setComponent3(Number(e.target.value))} />
+          </div>
         </div>
-        <div className="slider-group">
-          <label>PC2 Variance: {component2}</label>
-          <input type="range" min="1" max="100" value={component2} onChange={(e) => setComponent2(Number(e.target.value))} />
-        </div>
-        <div className="slider-group">
-          <label>PC3 Variance: {component3}</label>
-          <input type="range" min="1" max="100" value={component3} onChange={(e) => setComponent3(Number(e.target.value))} />
-        </div>
-      </div>
+      )}
       
       <p className="caption">
         PCA finds orthogonal axes (principal components) that capture the most variance. The first few components usually capture 90%+ of information.

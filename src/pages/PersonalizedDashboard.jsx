@@ -9,6 +9,7 @@ import {
 } from '../engine/personalizationEngine';
 import { MATH_TOPICS } from '../engine/mathContent';
 import { ThemeToggle } from '../components/ThemeToggle';
+import { Footer } from '../components/Footer';
 import { useMath } from '../hooks/useMath';
 
 const PATHS = [
@@ -68,8 +69,11 @@ export function PersonalizedDashboard() {
  <Link to="/quizzes" className="dash-nav-btn" id="dash-go-quizzes">
  Quizzes
  </Link>
+  <Link to="/lessons" className="dash-nav-btn" id="dash-go-lessons">
+  Interactive Lessons
+  </Link>
   <Link to="/resources" className="dash-nav-btn" id="dash-go-resources">
-  Resources
+  Library
   </Link>
   <Link to="/looking-forward" className="dash-nav-btn">
   Looking Forward
@@ -205,6 +209,8 @@ export function PersonalizedDashboard() {
  <span>Path Duration</span>
  </div>
  </section>
+
+ <Footer />
 
  <style>{`
  .dashboard-page {

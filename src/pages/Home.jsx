@@ -178,8 +178,11 @@ export function Home() {
             <Link to="/quizzes" className="btn-nav">
               Quizzes
             </Link>
+            <Link to="/lessons" className="btn-nav">
+              Lessons
+            </Link>
             <Link to="/resources" className="btn-nav">
-              Resources
+              Library
             </Link>
             <Link to="/looking-forward" className="btn-nav">
               Future

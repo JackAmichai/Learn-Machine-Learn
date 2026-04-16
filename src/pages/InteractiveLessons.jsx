@@ -455,7 +455,7 @@ function TransferVisualizer() {
 
 // ============ MAIN PAGE ============
 
-export function GoogleResources() {
+export function InteractiveLessons() {
   const [selected, setSelected] = useState(0);
 
   const lessonList = [
@@ -481,8 +481,11 @@ export function GoogleResources() {
       <main className="main-content">
         <header className="main-header">
           <div><h1>ML <span>Interactive Lessons</span></h1><p>15 visualizers — one for each major concept</p></div>
-          <Link to="/dashboard" className="btn-nav">Back</Link>
-          <Link to="/looking-forward" className="btn-nav">Future</Link>
+          <div className="header-actions">
+            <Link to="/dashboard" className="btn-nav">Dashboard</Link>
+            <Link to="/resources" className="btn-nav">Library</Link>
+            <Link to="/looking-forward" className="btn-nav">Future</Link>
+          </div>
         </header>
 
         <div className="lesson-tabs">
@@ -499,7 +502,8 @@ export function GoogleResources() {
       <style>{`
         .app-container {min-height:100vh;background:radial-gradient(circle at top right,#1a1a2e,#0c0c14);padding:20px}
         .main-content {max-width:1000px;margin:0 auto}
-        .main-header {display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+        .main-header {display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+        .header-actions {display:flex;gap:8px;flex-wrap:wrap}
         h1 {font-size:24px;margin:0}
         h1 span {color:#60a5fa}
         .btn-nav {color:#888;text-decoration:none;padding:8px 16px;border:1px solid #333;border-radius:20px}

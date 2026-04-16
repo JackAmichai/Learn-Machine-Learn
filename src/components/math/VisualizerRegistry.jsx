@@ -26,6 +26,14 @@ import DeepQNVisualizer from './DeepQNVisualizer';
 import PPOVisualizer from './PPOVisualizer';
 import EnsembleVisualizer from './EnsembleVisualizer';
 import PoolingVisualizer from './PoolingVisualizer';
+import LinearAlgebraVisualizer from './LinearAlgebraVisualizer';
+import DotProductVisualizer from './DotProductVisualizer';
+import MatMulVisualizer from './MatMulVisualizer';
+import TensorVisualizer from './TensorVisualizer';
+import JacobianVisualizer from './JacobianVisualizer';
+import HessianVisualizer from './HessianVisualizer';
+import BayesTheoremVisualizer from './BayesTheoremVisualizer';
+import KLDivergenceVisualizer from './KLDivergenceVisualizer';
 
 export const VisualizerRegistry = {
   SVM: SVMVisualizer,
@@ -55,4 +63,12 @@ export const VisualizerRegistry = {
   PPO: PPOVisualizer,
   Ensemble: EnsembleVisualizer,
   Pooling: PoolingVisualizer,
+  LinearAlgebra: LinearAlgebraVisualizer,
+  DotProduct: DotProductVisualizer,
+  MatMul: MatMulVisualizer,
+  Tensor: TensorVisualizer,
+  Jacobian: JacobianVisualizer,
+  Hessian: HessianVisualizer,
+  BayesTheorem: BayesTheoremVisualizer,
+  KLDivergence: KLDivergenceVisualizer,
 };

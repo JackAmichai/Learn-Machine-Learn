@@ -1,113 +1,153 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-export default function RNNVisualizer() {
-  const [timestep, setTimestep] = useState(2);
-  const [sequence] = useState(['The', 'cat', 'sat']);
-  
-  return (
-    <div className="rnn-visualizer">
-      <div className="viz-container">
-        <svg viewBox="0 0 200 100" width="100%" height="120">
-          <text x="100" y="12" fill="var(--text-primary)" fontSize="10" textAnchor="middle" fontWeight="bold">
-            Recurrent Neural Network
-          </text>
-          
-          {/* Unrolled RNN representation */}
-          {sequence.map((word, i) => {
-            const x = 25 + i * 55;
-            return (
-              <g key={i}>
-                {/* Cell */}
-                <rect x={x} y="35" width="40" height="40" rx="8" 
-                      fill={i === timestep ? 'var(--accent-primary)' : 'var(--bg-secondary)'} 
-                      stroke={i === timestep ? '#fff' : 'var(--glass-border)'} strokeWidth="2"
-                      style={{ transition: 'all 0.3s' }} />
-                
-                {/* Word */}
-                <text x={x + 20} y="55" fill={i === timestep ? 'var(--bg-primary)' : 'var(--text-primary)'} 
-                      fontSize="9" textAnchor="middle" fontWeight="bold">
-                  {word}
-                </text>
-                
-                {/* Hidden state output */}
-                <text x={x + 20} y="32" fill={i === timestep ? 'var(--bg-primary)' : 'var(--text-secondary)'} 
-                      fontSize="7" textAnchor="middle">
-                  h{i}
-                </text>
-                
-                {/* Arrow to next */}
-                {i < sequence.length - 1 && (
-                  <line x1={x + 40} y1="55" x2={x + 55} y2="55" 
-                        stroke="var(--accent-secondary)" strokeWidth="2" markerEnd="url(#arrowRNN)" />
-                )}
-              </g>
-            );
-          })}
-          
-          <defs>
-            <marker id="arrowRNN" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-              <path d="M0,0 L6,3 L0,6" fill="var(--accent-secondary)" />
-            </marker>
-          </defs>
-          
-          {/* Hidden state feedback arrow */}
-          <path d="M 145,55 Q 160,55 160,75 Q 160,95 175,95" fill="none" 
-                stroke="var(--accent-secondary)" strokeWidth="1.5" strokeDasharray="4" />
-          <text x="165" y="85" fill="var(--accent-secondary)" fontSize="7">h→h</text>
-        </svg>
-      </div>
-      
-      <div className="controls">
-        <div className="slider-group">
-          <label>Timestep: {timestep}</label>
-          <input type="range" min="0" max={sequence.length - 1} step="1" value={timestep} onChange={(e) => setTimestep(Number(e.target.value))} />
+/**
+ * RNNVisualizer — visualises:
+ *   1. The hidden-state recurrence h_t = tanh(W_h·h_{t-1} + W_x·x_t)
+ *   2. The classic vanishing/exploding gradient: |∇| ≈ |W_h|^T
+ *
+ * Sliders we know about:
+ *   wh / h_prev / wx / xt   → hidden update formula
+ *   T / grad_T              → gradient through time
+ *
+ * We render an unrolled RNN of 8 timesteps. At every step we recompute h_t
+ * from the current h_{t-1} using the slider weights, drawing each cell with
+ * a colour proportional to |h|. Below it we draw the gradient signal as it
+ * propagates backward — its bar shrinks (vanishing) or explodes step by step.
+ */
+export default function RNNVisualizer({ values = {} }) {
+    const wh = values.wh ?? 0.8;
+    const hPrev0 = values.h_prev ?? 0.5;
+    const wx = values.wx ?? 1.2;
+    const xt = values.xt ?? 0.3;
+
+    // Optional second-formula sliders
+    const T = values.T ?? 8;
+    const gradT = values.grad_T ?? 1.0;
+
+    // Forward roll out a small sequence using the formula
+    const steps = 8;
+    let h = hPrev0;
+    const xs = [];
+    for (let t = 0; t < steps; t++) {
+        // Vary input slightly so the rollout is interesting
+        const x = xt * Math.cos(t * 0.6);
+        h = Math.tanh(wh * h + wx * x);
+        xs.push({ t, x, h });
+    }
+
+    // Gradient propagation: |g_t| = |g_T| * |W_h|^(T-t)
+    const grads = Array.from({ length: Math.max(1, Math.min(steps, T)) }, (_, t) => ({
+        t,
+        g: gradT * Math.pow(Math.abs(wh), Math.max(0, T - 1 - t)),
+    }));
+
+    const W = 360, H = 240;
+    const padX = 20;
+    const cellW = (W - padX * 2) / steps;
+    const fwdY = 60;
+    const cellSize = 28;
+
+    const valueColor = (v) => {
+        const c = Math.max(0, Math.min(1, (v + 1) / 2));
+        const r = Math.round(255 * (1 - c));
+        const b = Math.round(255 * c);
+        return `rgba(${r},120,${b},0.9)`;
+    };
+
+    const maxGrad = Math.max(...grads.map(g => g.g), 0.001);
+    const gradBarMax = 70;
+
+    return (
+        <div className="rnn-visualizer">
+            <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="240" role="img" aria-label="RNN unroll and gradient propagation">
+                <defs>
+                    <marker id="rnn-arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                        <path d="M0,0 L6,3 L0,6" fill="rgba(0,242,255,0.7)" />
+                    </marker>
+                </defs>
+
+                <text x={padX} y="22" fontSize="11" fill="rgba(255,255,255,0.65)" fontFamily="ui-monospace,monospace">forward: h_t = tanh(W_h·h_{`{t-1}`} + W_x·x_t)</text>
+
+                {xs.map(({ t, h }, i) => {
+                    const cx = padX + cellW / 2 + i * cellW;
+                    const cy = fwdY;
+                    return (
+                        <g key={`f${i}`}>
+                            <rect x={cx - cellSize / 2} y={cy - cellSize / 2} width={cellSize} height={cellSize} rx="6" fill={valueColor(h)} stroke="#fff" strokeOpacity="0.2" />
+                            <text x={cx} y={cy + 4} fill="#fff" fontSize="10" textAnchor="middle" fontFamily="ui-monospace,monospace">{h.toFixed(1)}</text>
+                            <text x={cx} y={cy - cellSize / 2 - 4} fill="rgba(255,255,255,0.5)" fontSize="9" textAnchor="middle" fontFamily="ui-monospace,monospace">h{t}</text>
+                            {i < xs.length - 1 && (
+                                <line x1={cx + cellSize / 2} y1={cy} x2={cx + cellW - cellSize / 2} y2={cy} stroke="rgba(0,242,255,0.6)" strokeWidth="1.2" markerEnd="url(#rnn-arr)" />
+                            )}
+                        </g>
+                    );
+                })}
+
+                {/* Backward gradients */}
+                <text x={padX} y="140" fontSize="11" fill="rgba(255,255,255,0.65)" fontFamily="ui-monospace,monospace">backward: |∂L/∂h_t| ≈ |∂L/∂h_T|·|W_h|^{`{T-t}`}</text>
+
+                {grads.map((g, i) => {
+                    const cx = padX + cellW / 2 + i * cellW;
+                    const ratio = g.g / maxGrad;
+                    const barH = Math.min(gradBarMax, ratio * gradBarMax);
+                    const exploded = g.g > 5;
+                    return (
+                        <g key={`b${i}`}>
+                            <rect
+                                x={cx - 8} y={170 - barH}
+                                width="16" height={barH} rx="3"
+                                fill={exploded ? '#fb923c' : 'rgba(124,58,237,0.85)'}
+                            />
+                            <text x={cx} y="186" fontSize="9" fill="rgba(255,255,255,0.55)" textAnchor="middle" fontFamily="ui-monospace,monospace">t={g.t}</text>
+                            <text x={cx} y="200" fontSize="8" fill={exploded ? '#fb923c' : 'rgba(255,255,255,0.45)'} textAnchor="middle" fontFamily="ui-monospace,monospace">{g.g < 0.001 ? '~0' : g.g.toExponential(1)}</text>
+                        </g>
+                    );
+                })}
+            </svg>
+
+            <div className="rnn-verdict">
+                {Math.abs(wh) < 0.6 && T > 6
+                    ? 'Vanishing — early-step gradient ≈ 0. The network can\'t learn long-term dependencies.'
+                    : Math.abs(wh) > 1.2 && T > 6
+                        ? 'Exploding — the gradient blows up. Need clipping or LSTM/GRU gates.'
+                        : 'Stable — gradients propagate cleanly through time.'}
+            </div>
+
+            <p className="rnn-caption">
+                The colored cells are the forward pass; the bars below are the gradient
+                strength backward in time. Move <code>W_h</code> to feel the
+                <strong> vanishing-gradient problem</strong> that motivated LSTMs.
+            </p>
+
+            <style>{`
+                .rnn-visualizer {
+                    background: rgba(0,0,0,0.35);
+                    border: 1px solid var(--glass-border);
+                    border-radius: 12px;
+                    padding: 14px;
+                }
+                .rnn-verdict {
+                    text-align: center;
+                    font-family: ui-monospace, monospace;
+                    font-size: 12px;
+                    color: var(--accent-primary);
+                    margin: 4px 0 4px;
+                }
+                .rnn-caption {
+                    margin: 6px 0 0;
+                    font-size: 11px;
+                    color: var(--text-secondary);
+                    text-align: center;
+                    line-height: 1.5;
+                }
+                .rnn-caption code {
+                    font-family: ui-monospace, monospace;
+                    background: rgba(0,242,255,0.08);
+                    padding: 1px 5px;
+                    border-radius: 3px;
+                    color: var(--accent-primary);
+                }
+            `}</style>
         </div>
-      </div>
-      
-      <p className="caption">
-        RNNs process sequences by passing hidden state (h) from one timestep to the next. Each step sees the current input AND previous hidden state.
-      </p>
-      
-      <style>{`
-        .rnn-visualizer {
-          background: rgba(0, 0, 0, 0.4);
-          border: 1px solid var(--glass-border);
-          border-radius: 12px;
-          padding: 16px;
-          margin: 16px 0;
-        }
-        .viz-container {
-          background: rgba(0, 0, 0, 0.5);
-          border-radius: 8px;
-          padding: 10px;
-          margin-bottom: 12px;
-        }
-        .controls {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-          margin-bottom: 12px;
-        }
-        .slider-group {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-        }
-        .slider-group label {
-          font-size: 11px;
-          color: var(--text-secondary);
-          min-width: 80px;
-        }
-        .slider-group input[type="range"] {
-          flex: 1;
-          accent-color: var(--accent-primary);
-        }
-        .caption {
-          font-size: 12px;
-          color: var(--text-secondary);
-          text-align: center;
-        }
-      `}</style>
-    </div>
-  );
+    );
 }

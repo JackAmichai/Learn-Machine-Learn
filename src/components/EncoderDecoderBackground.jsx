@@ -93,12 +93,27 @@ export function EncoderDecoderBackground() {
 
     function render() {
       time += 0.01;
-      
-      // Gradient background for professional feel
+
+      // Layered radial gradients for depth — gives an "atmospheric" feel
       const bgGrad = ctx.createRadialGradient(width/2, height/2, 0, width/2, height/2, width);
-      bgGrad.addColorStop(0, '#0a0a15');
-      bgGrad.addColorStop(1, '#050508');
+      bgGrad.addColorStop(0, '#0a0a18');
+      bgGrad.addColorStop(0.6, '#06060e');
+      bgGrad.addColorStop(1, '#020205');
       ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, width, height);
+
+      // Subtle teal aurora top-left
+      const aurora1 = ctx.createRadialGradient(width * 0.2, height * 0.25, 0, width * 0.2, height * 0.25, width * 0.45);
+      aurora1.addColorStop(0, 'rgba(0, 242, 255, 0.10)');
+      aurora1.addColorStop(1, 'rgba(0, 242, 255, 0)');
+      ctx.fillStyle = aurora1;
+      ctx.fillRect(0, 0, width, height);
+
+      // Magenta aurora bottom-right
+      const aurora2 = ctx.createRadialGradient(width * 0.8, height * 0.8, 0, width * 0.8, height * 0.8, width * 0.5);
+      aurora2.addColorStop(0, 'rgba(112, 0, 255, 0.10)');
+      aurora2.addColorStop(1, 'rgba(112, 0, 255, 0)');
+      ctx.fillStyle = aurora2;
       ctx.fillRect(0, 0, width, height);
       
       // Ambient particles

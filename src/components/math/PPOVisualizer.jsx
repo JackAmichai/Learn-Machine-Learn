@@ -1,103 +1,127 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-export default function PPOVisualizer() {
-  const [clip, setClip] = useState(0.2);
-  const [epoch, setEpoch] = useState(3);
-  
-  return (
-    <div className="ppo-visualizer">
-      <div className="viz-container">
-        <svg viewBox="0 0 200 100" width="100%" height="120">
-          <text x="100" y="12" fill="var(--text-primary)" fontSize="10" textAnchor="middle" fontWeight="bold">
-            PPO: Proximal Policy Optimization
-          </text>
-          
-          {/* Policy network */}
-          <rect x="30" y="35" width="50" height="30" rx="5" fill="var(--accent-primary)" />
-          <text x="55" y="52" fill="var(--bg-primary)" fontSize="8" textAnchor="middle" fontWeight="bold">Policy</text>
-          <text x="55" y="62" fill="var(--text-secondary)" fontSize="6" textAnchor="middle">π(a|s)</text>
-          
-          {/* Value network */}
-          <rect x="120" y="35" width="50" height="30" rx="5" fill="var(--accent-secondary)" />
-          <text x="145" y="52" fill="var(--bg-primary)" fontSize="8" textAnchor="middle" fontWeight="bold">Value</text>
-          <text x="145" y="62" fill="var(--text-secondary)" fontSize="6" textAnchor="middle">V(s)</text>
-          
-          {/* Clip mechanism */}
-          <rect x="70" y="30" width="60" height="40" rx="8" fill="none" stroke="var(--accent-primary)" strokeWidth="2" strokeDasharray="4" />
-          <text x="100" y="42" fill="var(--accent-primary)" fontSize="7" textAnchor="middle">Clipped Objective</text>
-          <text x="100" y="55" fill="var(--text-secondary)" fontSize="6" textAnchor="middle">ε = {clip.toFixed(2)}</text>
-          
-          {/* Arrows */}
-          <line x1="80" y1="50" x2="118" y2="50" stroke="var(--glass-border)" strokeWidth="1.5" markerEnd="url(#arrowPPO)" />
-          
-          {/* Update indicator */}
-          <rect x="40" y="75" width="120" height="6" rx="3" fill="var(--bg-secondary)" />
-          <rect x="40" y="75" width={120 * (epoch / 10)} height="6" rx="3" fill="var(--accent-primary)" />
-          <text x="100" y="90" fill="var(--text-secondary)" fontSize="7" textAnchor="middle">PPO Epochs: {epoch}</text>
-          
-          <defs>
-            <marker id="arrowPPO" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
-              <path d="M0,0 L5,2.5 L0,5" fill="var(--glass-border)" />
-            </marker>
-          </defs>
-        </svg>
-      </div>
-      
-      <div className="controls">
-        <div className="slider-group">
-          <label>Clip ε: {clip.toFixed(2)}</label>
-          <input type="range" min="0.05" max="0.5" step="0.05" value={clip} onChange={(e) => setClip(Number(e.target.value))} />
+/**
+ * PPOVisualizer — visualises PPO's clipped surrogate objective.
+ *
+ *   L = min( r·A , clip(r, 1-ε, 1+ε) · A )
+ *
+ * where r is the probability ratio π_new / π_old and A is the advantage.
+ * We draw the clip band [1-ε, 1+ε] as a shaded rectangle and place a marker
+ * at the current r. We also plot the unclipped vs clipped objective as two
+ * thin curves so the learner can see the "flat" zone where PPO refuses to
+ * reward an over-eager update.
+ */
+export default function PPOVisualizer({ values = {} }) {
+    const r = values.ratio ?? 1.2;
+    const A = values.adv ?? 2;
+    const eps = values.eps ?? 0.2;
+
+    const W = 360, H = 220;
+    const padX = 40, padY = 30;
+    const plotW = W - padX * 2;
+    const plotH = H - padY * 2 - 20;
+    const xMin = 0.5, xMax = 1.5;
+    const yMax = Math.max(Math.abs(A) * (1 + eps), 0.5);
+    const yMin = -yMax;
+    const xToPx = (x) => padX + ((x - xMin) / (xMax - xMin)) * plotW;
+    const yToPx = (y) => padY + plotH - ((y - yMin) / (yMax - yMin)) * plotH;
+
+    const sampleX = [];
+    for (let i = 0; i <= 60; i++) sampleX.push(xMin + (i / 60) * (xMax - xMin));
+
+    const unclipped = sampleX.map(x => x * A);
+    const clipped = sampleX.map(x => Math.min(Math.max(x, 1 - eps), 1 + eps) * A);
+    const ppo = sampleX.map((x, i) => Math.min(unclipped[i], clipped[i]));
+
+    const polyline = (vals) => vals.map((y, i) => `${xToPx(sampleX[i])},${yToPx(y)}`).join(' ');
+
+    const currentLoss = Math.min(r * A, Math.min(Math.max(r, 1 - eps), 1 + eps) * A);
+    const inClip = r >= 1 - eps && r <= 1 + eps;
+
+    return (
+        <div className="ppo-visualizer">
+            <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="220" role="img" aria-label="PPO clipped surrogate objective">
+                {/* Clip band */}
+                <rect
+                    x={xToPx(1 - eps)} y={padY}
+                    width={xToPx(1 + eps) - xToPx(1 - eps)} height={plotH}
+                    fill="rgba(0,242,255,0.08)" stroke="rgba(0,242,255,0.3)" strokeDasharray="3,3"
+                />
+                {/* Axes */}
+                <line x1={padX} y1={yToPx(0)} x2={padX + plotW} y2={yToPx(0)} stroke="rgba(255,255,255,0.25)" />
+                <line x1={xToPx(1)} y1={padY} x2={xToPx(1)} y2={padY + plotH} stroke="rgba(255,255,255,0.18)" strokeDasharray="2,4" />
+
+                {/* Unclipped (translucent) */}
+                <polyline points={polyline(unclipped)} fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="1" strokeDasharray="2,3" />
+                {/* PPO clipped objective */}
+                <polyline points={polyline(ppo)} fill="none" stroke="#fb923c" strokeWidth="2.5" />
+
+                {/* Current marker */}
+                <line x1={xToPx(r)} y1={yToPx(0)} x2={xToPx(r)} y2={yToPx(currentLoss)} stroke="#00f2ff" strokeWidth="1.5" />
+                <circle cx={xToPx(r)} cy={yToPx(currentLoss)} r="5" fill="#00f2ff" stroke="#fff" strokeWidth="1" />
+
+                {/* Labels */}
+                <text x={padX} y={padY - 8} fill="rgba(255,255,255,0.6)" fontSize="10" fontFamily="ui-monospace,monospace">L (clipped objective)</text>
+                <text x={W - padX} y={H - 6} fill="rgba(255,255,255,0.6)" fontSize="10" textAnchor="end" fontFamily="ui-monospace,monospace">r = π_new / π_old →</text>
+                <text x={xToPx(1 - eps)} y={padY + plotH + 14} fill="rgba(0,242,255,0.7)" fontSize="9" textAnchor="middle" fontFamily="ui-monospace,monospace">1−ε</text>
+                <text x={xToPx(1 + eps)} y={padY + plotH + 14} fill="rgba(0,242,255,0.7)" fontSize="9" textAnchor="middle" fontFamily="ui-monospace,monospace">1+ε</text>
+                <text x={xToPx(1)} y={padY + plotH + 14} fill="rgba(255,255,255,0.4)" fontSize="9" textAnchor="middle" fontFamily="ui-monospace,monospace">1</text>
+            </svg>
+
+            <div className="ppo-readout">
+                <div><strong>r</strong> = {r.toFixed(2)}</div>
+                <div><strong>A</strong> = {A.toFixed(1)}</div>
+                <div><strong>ε</strong> = {eps.toFixed(2)}</div>
+                <div className="ppo-state" style={{ color: inClip ? '#00f2ff' : '#fb923c' }}>
+                    {inClip ? 'inside clip range' : 'CLIPPED — gradient flat'}
+                </div>
+            </div>
+
+            <p className="ppo-caption">
+                When the policy update ratio leaves the band <code>[1−ε, 1+ε]</code>, the
+                objective <strong>flattens</strong>, so the gradient is zero. PPO can still
+                <em> punish</em> a worse action (it just won't <em>reward</em> a too-confident one).
+            </p>
+
+            <style>{`
+                .ppo-visualizer {
+                    background: rgba(0,0,0,0.35);
+                    border: 1px solid var(--glass-border);
+                    border-radius: 12px;
+                    padding: 14px;
+                }
+                .ppo-readout {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 12px;
+                    justify-content: center;
+                    margin: 8px 0;
+                    font-family: ui-monospace, monospace;
+                    font-size: 12px;
+                    color: var(--text-secondary);
+                }
+                .ppo-state {
+                    margin-left: auto;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                    font-size: 10.5px;
+                    font-weight: 700;
+                }
+                .ppo-caption {
+                    margin: 6px 0 0;
+                    font-size: 11px;
+                    color: var(--text-secondary);
+                    text-align: center;
+                    line-height: 1.55;
+                }
+                .ppo-caption code {
+                    font-family: ui-monospace, monospace;
+                    background: rgba(0,242,255,0.08);
+                    padding: 1px 5px;
+                    border-radius: 3px;
+                    color: var(--accent-primary);
+                }
+            `}</style>
         </div>
-        <div className="slider-group">
-          <label>Epochs: {epoch}</label>
-          <input type="range" min="1" max="10" step="1" value={epoch} onChange={(e) => setEpoch(Number(e.target.value))} />
-        </div>
-      </div>
-      
-      <p className="caption">
-        <strong>PPO</strong> clips the policy update to prevent destructive large changes. The clipped objective prevents policy from changing too much per update.
-      </p>
-      
-      <style>{`
-        .ppo-visualizer {
-          background: rgba(0, 0, 0, 0.4);
-          border: 1px solid var(--glass-border);
-          border-radius: 12px;
-          padding: 16px;
-          margin: 16px 0;
-        }
-        .viz-container {
-          background: rgba(0, 0, 0, 0.5);
-          border-radius: 8px;
-          padding: 10px;
-          margin-bottom: 12px;
-        }
-        .controls {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-          margin-bottom: 12px;
-        }
-        .slider-group {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-        }
-        .slider-group label {
-          font-size: 11px;
-          color: var(--text-secondary);
-          min-width: 80px;
-        }
-        .slider-group input[type="range"] {
-          flex: 1;
-          accent-color: var(--accent-primary);
-        }
-        .caption {
-          font-size: 12px;
-          color: var(--text-secondary);
-          text-align: center;
-        }
-      `}</style>
-    </div>
-  );
+    );
 }

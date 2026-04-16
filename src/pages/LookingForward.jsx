@@ -578,8 +578,8 @@ export function LookingForward() {
         <div className="header-actions">
           <Link to="/playground" className="btn-nav">Playground</Link>
           <Link to="/quizzes" className="btn-nav">Quizzes</Link>
-          <Link to="/resources" className="btn-nav">Resources</Link>
-          <Link to="/looking-forward" className="btn-nav">Future</Link>
+          <Link to="/lessons" className="btn-nav">Lessons</Link>
+          <Link to="/resources" className="btn-nav">Library</Link>
           <ThemeToggle />
           <AccessibilityPanel />
         </div>
