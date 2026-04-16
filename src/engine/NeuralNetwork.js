@@ -57,6 +57,26 @@ export class NeuralNetwork {
   }
 
   /**
+   * Gets connection weights as a flat Float32Array asynchronously.
+   * @param {number} layerIndex - Index of the connection layer
+   * @returns {Promise<Float32Array|null>} Weight values or null if invalid
+   */
+  async getConnectionWeightsAsync(layerIndex) {
+    if (!this.connectionLayers[layerIndex]) return null;
+    try {
+      const weights = this.connectionLayers[layerIndex].getWeights();
+      if (!weights.length) return null;
+      const kernel = weights[0];
+      // data returns a copy - do NOT dispose the original tensors
+      // as they are the layer's internal state
+      return await kernel.data();
+    } catch (e) {
+      console.error('Error fetching connection weights asynchronously:', e);
+      return null;
+    }
+  }
+
+  /**
    * Validates and sanitizes configuration.
    * @param {Object} config - Raw configuration object
    * @returns {Object} Sanitized configuration
