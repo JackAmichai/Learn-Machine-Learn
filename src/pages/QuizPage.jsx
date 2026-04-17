@@ -4,7 +4,6 @@ import { quizzes } from '../data/quizData';
 import { QuizCard } from '../components/QuizCard';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { AccessibilityPanel } from '../components/AccessibilityPanel';
-import { Footer } from '../components/Footer';
 
 const CATEGORIES = [
     { id: 'all', label: 'All', icon: '🎯' },
@@ -135,8 +134,6 @@ export function QuizPage() {
                     </div>
                 )}
             </main>
-
-            <Footer />
 
             <style>{`
                 .quiz-page {

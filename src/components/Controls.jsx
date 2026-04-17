@@ -257,8 +257,13 @@ export function Controls(props) {
 
     const fileInputRef = useRef(null);
     const [persistStatus, setPersistStatus] = useState(null);
-    const [activeCategory, setActiveCategory] = useState('basics');
     const [expandedTopic, setExpandedTopic] = useState(null); // "${cat}:${id}" or null
+
+    // activeCategory can be lifted to the parent (Home) so the main viz area
+    // can respond to tab changes. Falls back to local state if not provided.
+    const [_localCat, _setLocalCat] = useState('basics');
+    const activeCategory = props.activeCategory ?? _localCat;
+    const setActiveCategory = props.onCategoryChange ?? _setLocalCat;
 
     const renderLearningCategory = (categoryId) => {
         const cat = TOPIC_LIBRARY[categoryId];

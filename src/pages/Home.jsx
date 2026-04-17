@@ -13,8 +13,15 @@ import { ThemeToggle } from '../components/ThemeToggle';
 import { AccessibilityPanel } from '../components/AccessibilityPanel';
 import { useToast } from '../hooks/useToast';
 import { BuyMeCoffee } from '../components/BuyMeCoffee';
-import { Footer } from '../components/Footer';
-
+// Per-category interactive visualizers
+import TransformerVisualizer from '../components/math/TransformerVisualizer';
+import AttentionVisualizer from '../components/math/AttentionVisualizer';
+import GANVisualizer from '../components/math/GANVisualizer';
+import DiffusionVisualizer from '../components/math/DiffusionVisualizer';
+import GridWorldVisualizer from '../components/math/GridWorldVisualizer';
+import DeepQNVisualizer from '../components/math/DeepQNVisualizer';
+import OptimizerVisualizer from '../components/math/OptimizerVisualizer';
+import GradientDescentVisualizer from '../components/math/GradientDescentVisualizer';
 /**
  * Global keyboard shortcuts:
  * - Space: Toggle training
@@ -36,6 +43,7 @@ export function Home() {
   const [showTour, setShowTour] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState('basics');
   const containerRef = useRef(null);
   const mainContentRef = useRef(null);
   const prevPlayingRef = useRef(nn.isPlaying);
@@ -163,7 +171,7 @@ export function Home() {
         </div>
       )}
 
-      <Controls {...nn} />
+      <Controls {...nn} activeCategory={activeCategory} onCategoryChange={setActiveCategory} />
 
       <main className="main-content" id="main-content" ref={mainContentRef} tabIndex={-1}>
         <header className="main-header">
@@ -200,8 +208,8 @@ export function Home() {
         </header>
 
         <div className="viz-grid">
-          {nn.mode === 'vision' ? (
-            // VISION LAYOUT
+          {/* ── BASICS ── standard NN playground, same as before */}
+          {(activeCategory === 'basics') && (nn.mode === 'vision' ? (
             <>
               <div className="card viz-input">
                 <h2>Vision Input <span className="badge">Draw here</span></h2>
@@ -220,70 +228,167 @@ export function Home() {
                   </div>
                 </div>
               </div>
-
               <div className="card viz-net">
                 <h2>Network Activity</h2>
                 <div className="viz-inner">
                   <div className="vision-layout-row">
-                    <div style={{ flex: 1 }}>
-                      <NetworkGraph
-                        model={nn.model}
-                        structure={nn.structure}
-                        modelVersion={nn.modelVersion}
-                        deadNeurons={nn.deadNeurons}
-                      />
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <WeightHeatmap
-                        model={nn.model}
-                        modelVersion={nn.modelVersion}
-                        structure={nn.structure}
-                      />
-                    </div>
+                    <div style={{ flex: 1 }}><NetworkGraph model={nn.model} structure={nn.structure} modelVersion={nn.modelVersion} deadNeurons={nn.deadNeurons} /></div>
+                    <div style={{ flex: 1 }}><WeightHeatmap model={nn.model} modelVersion={nn.modelVersion} structure={nn.structure} /></div>
                   </div>
                 </div>
               </div>
             </>
           ) : (
-            // SIMPLE 2D LAYOUT
             <>
               <div className="card viz-net">
                 <h2>Network Architecture</h2>
                 <div className="viz-inner">
-                  <NetworkGraph
-                    model={nn.model}
-                    structure={nn.structure}
-                    modelVersion={nn.modelVersion}
-                    deadNeurons={nn.deadNeurons}
-                  />
+                  <NetworkGraph model={nn.model} structure={nn.structure} modelVersion={nn.modelVersion} deadNeurons={nn.deadNeurons} />
                 </div>
               </div>
-
               <div className="card viz-out">
                 <h2>Output Landscape</h2>
                 <div className="viz-inner">
-                  <OutputPlot
-                    model={nn.model}
-                    data={nn.data}
-                    modelVersion={nn.modelVersion}
-                  />
+                  <OutputPlot model={nn.model} data={nn.data} modelVersion={nn.modelVersion} />
                 </div>
               </div>
-
               <div className="card viz-stats">
-                <StatsPanel
-                  model={nn.model}
-                  data={nn.data}
-                  modelVersion={nn.modelVersion}
-                  epoch={nn.epoch}
-                  loss={nn.loss}
-                />
+                <StatsPanel model={nn.model} data={nn.data} modelVersion={nn.modelVersion} epoch={nn.epoch} loss={nn.loss} />
+              </div>
+            </>
+          ))}
+
+          {/* ── VISION ── draw & classify with a live CNN */}
+          {activeCategory === 'vision' && (
+            <>
+              <div className="card viz-input">
+                <h2>Draw a shape <span className="badge">Vision mode</span></h2>
+                <div className="viz-inner vision-container">
+                  <VisionCanvas
+                    onAddSample={nn.addSample}
+                    onPredict={(grid) => {
+                      const res = nn.predictSample(grid);
+                      if (res) alert(`Class A: ${(res[0]*100).toFixed(1)}%  |  Class B: ${(res[1]*100).toFixed(1)}%`);
+                    }}
+                    disabled={nn.isPlaying}
+                  />
+                  <div className="vision-stats">
+                    <p>Samples collected: {nn.customData.length}</p>
+                    <p className="tip">Collect ≥4 samples per class, then hit Train in the Basics tab.</p>
+                  </div>
+                </div>
+              </div>
+              <div className="card viz-net">
+                <h2>Network + Weight Heatmap</h2>
+                <div className="viz-inner">
+                  <div className="vision-layout-row">
+                    <div style={{ flex: 1 }}><NetworkGraph model={nn.model} structure={nn.structure} modelVersion={nn.modelVersion} deadNeurons={nn.deadNeurons} /></div>
+                    <div style={{ flex: 1 }}><WeightHeatmap model={nn.model} modelVersion={nn.modelVersion} structure={nn.structure} /></div>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* ── NLP & TEXT ── Attention heatmap + Transformer architecture */}
+          {activeCategory === 'nlp' && (
+            <>
+              <div className="card viz-cat">
+                <h2>Self-Attention Heatmap <span className="badge">Interactive</span></h2>
+                <div className="viz-inner viz-cat-inner">
+                  <div className="cat-intro">
+                    <p>Click a token to see how it attends to every other token in the sentence. Brighter = stronger attention weight.</p>
+                  </div>
+                  <AttentionVisualizer />
+                </div>
+              </div>
+              <div className="card viz-cat">
+                <h2>Scaled Dot-Product Attention</h2>
+                <div className="viz-inner viz-cat-inner">
+                  <div className="cat-intro">
+                    <p>Softmax(QKᵀ/√d) · V — adjust the query-key similarity to watch attention shift across keys.</p>
+                  </div>
+                  <TransformerVisualizer values={{}} />
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* ── GENERATIVE ── GAN adversarial game + Diffusion noise schedule */}
+          {activeCategory === 'generative' && (
+            <>
+              <div className="card viz-cat">
+                <h2>GAN — Adversarial Training <span className="badge">Interactive</span></h2>
+                <div className="viz-inner viz-cat-inner">
+                  <div className="cat-intro">
+                    <p>Generator and Discriminator play a minimax game. Nash equilibrium is reached when D outputs 0.5 for both real and fake.</p>
+                  </div>
+                  <GANVisualizer values={{}} />
+                </div>
+              </div>
+              <div className="card viz-cat">
+                <h2>Diffusion — Noise Schedule</h2>
+                <div className="viz-inner viz-cat-inner">
+                  <div className="cat-intro">
+                    <p>Visualise how β controls how fast the signal degrades across T timesteps. High β_end → faster destruction.</p>
+                  </div>
+                  <DiffusionVisualizer values={{}} />
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* ── REINFORCEMENT LEARNING ── Q-Learning grid world + DQN Bellman */}
+          {activeCategory === 'rl' && (
+            <>
+              <div className="card viz-cat">
+                <h2>Q-Learning — Grid World <span className="badge">Interactive</span></h2>
+                <div className="viz-inner viz-cat-inner">
+                  <div className="cat-intro">
+                    <p>The Bellman equation updates Q(s,a) toward the target R + γ·max Q(s',a'). Adjust α (learning rate) and γ (discount) to see how values propagate.</p>
+                  </div>
+                  <GridWorldVisualizer values={{}} />
+                </div>
+              </div>
+              <div className="card viz-cat">
+                <h2>Deep Q-Network — Bellman Target</h2>
+                <div className="viz-inner viz-cat-inner">
+                  <div className="cat-intro">
+                    <p>DQN uses a neural network to approximate Q(s,·). The network learns to minimise (T − Q)² where T = R + γ·max Q'. Watch the gap close as Q chases T.</p>
+                  </div>
+                  <DeepQNVisualizer values={{}} />
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* ── TRAINING ── Optimizer comparison + Gradient Descent on a loss curve */}
+          {activeCategory === 'training' && (
+            <>
+              <div className="card viz-cat">
+                <h2>Optimizer Comparison <span className="badge">Interactive</span></h2>
+                <div className="viz-inner viz-cat-inner">
+                  <div className="cat-intro">
+                    <p>SGD, Momentum, RMSProp and Adam on the same loss landscape. Adam converges fastest in most practical cases.</p>
+                  </div>
+                  <OptimizerVisualizer />
+                </div>
+              </div>
+              <div className="card viz-cat">
+                <h2>Gradient Descent on f(x) = x² − 4</h2>
+                <div className="viz-inner viz-cat-inner">
+                  <div className="cat-intro">
+                    <p>Step size = learning rate × gradient. Too large → overshoot; too small → slow convergence. Drag the ball and observe.</p>
+                  </div>
+                  <GradientDescentVisualizer />
+                </div>
+              </div>
+              <div className="card viz-stats">
+                <StatsPanel model={nn.model} data={nn.data} modelVersion={nn.modelVersion} epoch={nn.epoch} loss={nn.loss} />
               </div>
             </>
           )}
         </div>
-        <Footer />
-
       </main>
 
       <style>{`
