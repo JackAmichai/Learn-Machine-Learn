@@ -329,15 +329,17 @@ export function LandingHeroVisuals() {
                 </p>
 
                 <div className="hv-grid">
-                    {items.map(({ id, title, subtitle, Tile }) => (
-                        <article key={id} className="hv-card">
+                    {items.map((item) => {
+                        const Tile = item.Tile;
+                        return (
+                        <article key={item.id} className="hv-card">
                             <div className="hv-tile"><Tile /></div>
                             <div className="hv-meta">
-                                <h3>{title}</h3>
-                                <p>{subtitle}</p>
+                                <h3>{item.title}</h3>
+                                <p>{item.subtitle}</p>
                             </div>
                         </article>
-                    ))}
+                    )})}
                 </div>
             </div>
 
