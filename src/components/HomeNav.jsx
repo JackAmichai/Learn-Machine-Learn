@@ -19,11 +19,6 @@ export function HomeNav() {
     // Hide on landing page — it already has everything
     if (location.pathname === '/') return null;
 
-    const goHome = () => {
-        setOpen(false);
-        navigate('/dashboard');
-    };
-
     const goTo = (path) => {
         setOpen(false);
         setConfirming(false);
