@@ -1,0 +1,23 @@
+{
+  "name": "Learn Machine Learn",
+  "short_name": "LML",
+  "description": "Interactive machine learning course that runs in your browser. Train neural networks on your own data, explore 40+ math visualizers, and quiz yourself on real-world ML scenarios.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0a0a0f",
+  "theme_color": "#0a0a0f",
+  "lang": "en",
+  "categories": ["education", "productivity", "utilities"],
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Playground",        "short_name": "Playground", "url": "/playground" },
+    { "name": "Interactive Lessons","short_name": "Lessons",   "url": "/lessons" },
+    { "name": "Resource Library",  "short_name": "Library",    "url": "/resources" },
+    { "name": "Lab (train on your data)", "short_name": "Lab", "url": "/lab" }
+  ]
+}

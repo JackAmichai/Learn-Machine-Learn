@@ -2,16 +2,94 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Learn Machine Learning interactively — visualize neural networks, explore the math, and train models in your browser. Personalized for every learner." />
-    <meta name="theme-color" content="#0a0a0f" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0a0a0f" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f7f8fc" media="(prefers-color-scheme: light)" />
+    <meta name="color-scheme" content="dark light" />
+
+    <!-- Primary SEO -->
+    <title>Learn Machine Learn — Interactive ML, in your browser</title>
+    <meta name="description" content="The ML course that runs inside your browser. Train real neural networks on your own CSVs, walk through 40+ interactive math visualizers, and quiz yourself on real-world scenarios. Free, open-source, no sign-up." />
+    <meta name="author" content="Jack Amichai" />
+    <meta name="keywords" content="machine learning, neural networks, deep learning, transformers, diffusion models, ML tutorial, interactive ML, TensorFlow.js, learn AI, ML playground, ML visualization, gradient descent, attention, backpropagation, free ML course" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="https://learn-machine-learn.vercel.app/" />
+
+    <!-- Icons / PWA -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Learn Machine Learn" />
+    <meta property="og:title" content="Learn Machine Learn — Interactive ML, in your browser" />
+    <meta property="og:description" content="Train neural networks on your own data, walk 40+ interactive math visualizers, and quiz yourself on real ML scenarios. Free, open source, no sign-up." />
+    <meta property="og:url" content="https://learn-machine-learn.vercel.app/" />
+    <meta property="og:image" content="https://learn-machine-learn.vercel.app/og-image.svg" />
+    <meta property="og:image:type" content="image/svg+xml" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Learn Machine Learn — Interactive ML, in your browser" />
+    <meta name="twitter:description" content="Train neural networks on your own data. 40+ interactive visualizers. Free + open source." />
+    <meta name="twitter:image" content="https://learn-machine-learn.vercel.app/og-image.svg" />
+
+    <!-- Performance hints -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <title>Learn Machine Learn — Interactive ML Playground</title>
+
+    <!-- Structured data: course -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Course",
+      "name": "Learn Machine Learn",
+      "description": "An interactive, in-browser machine learning course. Visualize neural networks, train models on your own CSVs, and explore 40+ math visualizers — from gradient descent to diffusion models.",
+      "provider": {
+        "@type": "Person",
+        "name": "Jack Amichai",
+        "url": "https://github.com/JackAmichai"
+      },
+      "isAccessibleForFree": true,
+      "inLanguage": "en",
+      "educationalLevel": "Beginner to Advanced",
+      "teaches": "Neural networks, backpropagation, transformers, attention, CNNs, RNNs, LSTMs, GANs, VAEs, diffusion models, reinforcement learning, optimizers, regularization",
+      "url": "https://learn-machine-learn.vercel.app/",
+      "hasCourseInstance": {
+        "@type": "CourseInstance",
+        "courseMode": "online",
+        "courseWorkload": "PT20H"
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Learn Machine Learn",
+      "url": "https://learn-machine-learn.vercel.app/",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://learn-machine-learn.vercel.app/resources?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
   </head>
   <body>
+    <noscript>
+      <div style="padding:40px;font-family:system-ui,sans-serif;background:#0a0a0f;color:#e8e8f0;min-height:100vh;">
+        <h1 style="color:#00f2ff;">Learn Machine Learn</h1>
+        <p>This site is an interactive ML playground that runs neural networks live in your browser — it needs JavaScript enabled.</p>
+        <p>Browse the source on <a href="https://github.com/JackAmichai/Learn-Machine-Learn" style="color:#00f2ff;">GitHub</a>.</p>
+      </div>
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

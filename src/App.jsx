@@ -6,6 +6,10 @@ import { QuizPage } from './pages/QuizPage';
 import { InteractiveLessons } from './pages/InteractiveLessons';
 import { ResourceLibrary } from './pages/ResourceLibrary';
 import { LookingForward } from './pages/LookingForward';
+import { AboutPage } from './pages/About';
+import { LabPage } from './pages/Lab';
+import { NotesIndex, NotePage } from './pages/Notes';
+import { NotFound } from './pages/NotFound';
 
 import { ThemeProvider } from './contexts/ThemeContext';
 import { MathProvider } from './contexts/MathContext';
@@ -32,7 +36,12 @@ function App() {
                   <Route path="/quizzes" element={<QuizPage />} />
                   <Route path="/resources" element={<ResourceLibrary />} />
                   <Route path="/lessons" element={<InteractiveLessons />} />
+                  <Route path="/lab" element={<LabPage />} />
+                  <Route path="/notes" element={<NotesIndex />} />
+                  <Route path="/notes/:slug" element={<NotePage />} />
+                  <Route path="/about" element={<AboutPage />} />
                   <Route path="/looking-forward" element={<LookingForward />} />
+                  <Route path="*" element={<NotFound />} />
                 </Routes>
                 <HomeNav />
                 <Chatbot />

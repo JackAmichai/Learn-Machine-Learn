@@ -98,9 +98,12 @@ export function Footer() {
           <ul className="footer-links">
             <li><Link to="/dashboard">Dashboard</Link></li>
             <li><Link to="/playground">Playground</Link></li>
+            <li><Link to="/lab">Lab (train on your data)</Link></li>
             <li><Link to="/lessons">Interactive Lessons</Link></li>
             <li><Link to="/resources">Resource Library</Link></li>
             <li><Link to="/quizzes">Quizzes</Link></li>
+            <li><Link to="/notes">Notes</Link></li>
+            <li><Link to="/about">About</Link></li>
             <li><Link to="/looking-forward">Looking Forward</Link></li>
           </ul>
         </div>
@@ -222,9 +225,11 @@ export function Footer() {
 
       <div className="footer-base">
         <div className="footer-base-inner">
-          <span>© {new Date().getFullYear()} Learn Machine Learn · Built by Jack (Yaron-Jack)</span>
+          <span>© {new Date().getFullYear()} Learn Machine Learn · Built by <Link to="/about" style={{ color: 'inherit' }}>Jack Amichai</Link></span>
           <div className="footer-base-links">
-            <a href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="https://github.com/JackAmichai/Learn-Machine-Learn" target="_blank" rel="noopener noreferrer">GitHub repo</a>
+            <span className="sep">·</span>
+            <Link to="/about">About</Link>
             <span className="sep">·</span>
             <a href={mailtoFallback}>Contact</a>
           </div>
