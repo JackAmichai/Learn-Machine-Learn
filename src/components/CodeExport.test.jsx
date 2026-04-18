@@ -1,9 +1,37 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { CodeExport } from './CodeExport';
 
-describe('CodeExport Security', () => {
+describe('CodeExport', () => {
     const defaultStructure = [2, 4, 1];
+
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
+
+    it('should copy code to clipboard when copy button is clicked', async () => {
+        const mockWriteText = vi.fn().mockResolvedValue();
+        Object.assign(navigator, {
+            clipboard: {
+                writeText: mockWriteText
+            }
+        });
+
+        render(<CodeExport structure={defaultStructure} hyperparams={{ activation: 'relu', optimizer: 'adam' }} />);
+
+        // Open the modal
+        fireEvent.click(screen.getByText(/Show Code/i));
+
+        // Click copy
+        const copyButton = screen.getByRole('button', { name: /Copy code/i });
+        fireEvent.click(copyButton);
+
+        await waitFor(() => {
+            expect(mockWriteText).toHaveBeenCalled();
+            // The code should contain 'import tensorflow as tf' since it defaults to python
+            expect(mockWriteText.mock.calls[0][0]).toContain('import tensorflow as tf');
+        });
+    });
 
     it('should sanitize activation function to prevent code injection', () => {
         const maliciousHyperparams = {
