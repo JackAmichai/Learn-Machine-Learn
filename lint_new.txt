@@ -1,0 +1,584 @@
+
+> neural-visualizer@0.0.0 lint /app
+> eslint .
+
+
+/app/src/components/LandingHeroVisuals.jsx
+  332:56  error  'Tile' is defined but never used  no-unused-vars
+
+/app/src/components/MathModal.jsx
+  7:10  error  'getNotebookLMLink' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+/app/src/components/math/ActivationVisualizer.jsx
+  9:33  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+   7 |   // Sync with external values if they change
+   8 |   useEffect(() => {
+>  9 |     if (values.x !== undefined) setX(values.x);
+     |                                 ^^^^ Avoid calling setState() directly within an effect
+  10 |     if (values.input !== undefined) setX(values.input);
+  11 |
+  12 |     // Auto-switch function based on common keywords  react-hooks/set-state-in-effect
+
+/app/src/components/math/EmbeddingVisualizer.jsx
+   5:19  error  'setVectors' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  19:9   error  'analogies' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u   no-unused-vars
+
+/app/src/components/math/LossVisualizer.jsx
+  11:7  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+   9 |     // If we have 'err' (y - yhat), we can adjust predicted to be actual - err
+  10 |     if (values.err !== undefined) {
+> 11 |       setPredicted(actual - values.err);
+     |       ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  12 |     } else {
+  13 |       if (values.predicted !== undefined) setPredicted(values.predicted);
+  14 |       if (values.yhat !== undefined) setPredicted(values.yhat);  react-hooks/set-state-in-effect
+
+/app/src/components/math/MatMulVisualizer.jsx
+  59:26  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  57 |                     <div className="mm-label">A</div>
+  58 |                     <div className="mm-grid">
+> 59 |                         <Cell value={A[0][0]} highlight={focus.i === 0} color="#00f2ff" />
+     |                          ^^^^ This component is created during render
+  60 |                         <Cell value={A[0][1]} highlight={focus.i === 0} color="#00f2ff" />
+  61 |                         <Cell value={A[1][0]} highlight={focus.i === 1} color="#00f2ff" />
+  62 |                         <Cell value={A[1][1]} highlight={focus.i === 1} color="#00f2ff" />
+
+  37 |     const B = [[b11, b12], [b21, b22]];
+  38 |
+> 39 |     const Cell = ({ value, highlight, color = '#00f2ff' }) => (
+     |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 40 |         <div className="mm-cell" style={{
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 41 |             background: highlight ? `${color}22` : 'rgba(255,255,255,0.04)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 42 |             borderColor: highlight ? color : 'rgba(255,255,255,0.08)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 43 |             color: highlight ? color : 'var(--text-secondary)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 44 |             fontWeight: highlight ? 700 : 400,
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 45 |         }}>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 46 |             {typeof value === 'number' ? value.toFixed(2) : value}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 47 |         </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 48 |     );
+     | ^^^^^^ The component is created during render here
+  49 |
+  50 |     const focusedContribution =
+  51 |         A[focus.i][0] * B[0][focus.j] + A[focus.i][1] * B[1][focus.j];                                                                      react-hooks/static-components
+  60:26  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  58 |                     <div className="mm-grid">
+  59 |                         <Cell value={A[0][0]} highlight={focus.i === 0} color="#00f2ff" />
+> 60 |                         <Cell value={A[0][1]} highlight={focus.i === 0} color="#00f2ff" />
+     |                          ^^^^ This component is created during render
+  61 |                         <Cell value={A[1][0]} highlight={focus.i === 1} color="#00f2ff" />
+  62 |                         <Cell value={A[1][1]} highlight={focus.i === 1} color="#00f2ff" />
+  63 |                     </div>
+
+  37 |     const B = [[b11, b12], [b21, b22]];
+  38 |
+> 39 |     const Cell = ({ value, highlight, color = '#00f2ff' }) => (
+     |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 40 |         <div className="mm-cell" style={{
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 41 |             background: highlight ? `${color}22` : 'rgba(255,255,255,0.04)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 42 |             borderColor: highlight ? color : 'rgba(255,255,255,0.08)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 43 |             color: highlight ? color : 'var(--text-secondary)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 44 |             fontWeight: highlight ? 700 : 400,
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 45 |         }}>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 46 |             {typeof value === 'number' ? value.toFixed(2) : value}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 47 |         </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 48 |     );
+     | ^^^^^^ The component is created during render here
+  49 |
+  50 |     const focusedContribution =
+  51 |         A[focus.i][0] * B[0][focus.j] + A[focus.i][1] * B[1][focus.j];                                                                                                 react-hooks/static-components
+  61:26  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  59 |                         <Cell value={A[0][0]} highlight={focus.i === 0} color="#00f2ff" />
+  60 |                         <Cell value={A[0][1]} highlight={focus.i === 0} color="#00f2ff" />
+> 61 |                         <Cell value={A[1][0]} highlight={focus.i === 1} color="#00f2ff" />
+     |                          ^^^^ This component is created during render
+  62 |                         <Cell value={A[1][1]} highlight={focus.i === 1} color="#00f2ff" />
+  63 |                     </div>
+  64 |                 </div>
+
+  37 |     const B = [[b11, b12], [b21, b22]];
+  38 |
+> 39 |     const Cell = ({ value, highlight, color = '#00f2ff' }) => (
+     |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 40 |         <div className="mm-cell" style={{
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 41 |             background: highlight ? `${color}22` : 'rgba(255,255,255,0.04)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 42 |             borderColor: highlight ? color : 'rgba(255,255,255,0.08)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 43 |             color: highlight ? color : 'var(--text-secondary)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 44 |             fontWeight: highlight ? 700 : 400,
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 45 |         }}>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 46 |             {typeof value === 'number' ? value.toFixed(2) : value}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 47 |         </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 48 |     );
+     | ^^^^^^ The component is created during render here
+  49 |
+  50 |     const focusedContribution =
+  51 |         A[focus.i][0] * B[0][focus.j] + A[focus.i][1] * B[1][focus.j];                                                                                                                        react-hooks/static-components
+  62:26  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  60 |                         <Cell value={A[0][1]} highlight={focus.i === 0} color="#00f2ff" />
+  61 |                         <Cell value={A[1][0]} highlight={focus.i === 1} color="#00f2ff" />
+> 62 |                         <Cell value={A[1][1]} highlight={focus.i === 1} color="#00f2ff" />
+     |                          ^^^^ This component is created during render
+  63 |                     </div>
+  64 |                 </div>
+  65 |
+
+  37 |     const B = [[b11, b12], [b21, b22]];
+  38 |
+> 39 |     const Cell = ({ value, highlight, color = '#00f2ff' }) => (
+     |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 40 |         <div className="mm-cell" style={{
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 41 |             background: highlight ? `${color}22` : 'rgba(255,255,255,0.04)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 42 |             borderColor: highlight ? color : 'rgba(255,255,255,0.08)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 43 |             color: highlight ? color : 'var(--text-secondary)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 44 |             fontWeight: highlight ? 700 : 400,
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 45 |         }}>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 46 |             {typeof value === 'number' ? value.toFixed(2) : value}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 47 |         </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 48 |     );
+     | ^^^^^^ The component is created during render here
+  49 |
+  50 |     const focusedContribution =
+  51 |         A[focus.i][0] * B[0][focus.j] + A[focus.i][1] * B[1][focus.j];                                                                                                                                                                                                                   react-hooks/static-components
+  71:26  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  69 |                     <div className="mm-label">B</div>
+  70 |                     <div className="mm-grid">
+> 71 |                         <Cell value={B[0][0]} highlight={focus.j === 0} color="#ff6b8a" />
+     |                          ^^^^ This component is created during render
+  72 |                         <Cell value={B[0][1]} highlight={focus.j === 1} color="#ff6b8a" />
+  73 |                         <Cell value={B[1][0]} highlight={focus.j === 0} color="#ff6b8a" />
+  74 |                         <Cell value={B[1][1]} highlight={focus.j === 1} color="#ff6b8a" />
+
+  37 |     const B = [[b11, b12], [b21, b22]];
+  38 |
+> 39 |     const Cell = ({ value, highlight, color = '#00f2ff' }) => (
+     |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 40 |         <div className="mm-cell" style={{
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 41 |             background: highlight ? `${color}22` : 'rgba(255,255,255,0.04)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 42 |             borderColor: highlight ? color : 'rgba(255,255,255,0.08)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 43 |             color: highlight ? color : 'var(--text-secondary)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 44 |             fontWeight: highlight ? 700 : 400,
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 45 |         }}>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 46 |             {typeof value === 'number' ? value.toFixed(2) : value}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 47 |         </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 48 |     );
+     | ^^^^^^ The component is created during render here
+  49 |
+  50 |     const focusedContribution =
+  51 |         A[focus.i][0] * B[0][focus.j] + A[focus.i][1] * B[1][focus.j];                                                                      react-hooks/static-components
+  72:26  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  70 |                     <div className="mm-grid">
+  71 |                         <Cell value={B[0][0]} highlight={focus.j === 0} color="#ff6b8a" />
+> 72 |                         <Cell value={B[0][1]} highlight={focus.j === 1} color="#ff6b8a" />
+     |                          ^^^^ This component is created during render
+  73 |                         <Cell value={B[1][0]} highlight={focus.j === 0} color="#ff6b8a" />
+  74 |                         <Cell value={B[1][1]} highlight={focus.j === 1} color="#ff6b8a" />
+  75 |                     </div>
+
+  37 |     const B = [[b11, b12], [b21, b22]];
+  38 |
+> 39 |     const Cell = ({ value, highlight, color = '#00f2ff' }) => (
+     |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 40 |         <div className="mm-cell" style={{
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 41 |             background: highlight ? `${color}22` : 'rgba(255,255,255,0.04)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 42 |             borderColor: highlight ? color : 'rgba(255,255,255,0.08)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 43 |             color: highlight ? color : 'var(--text-secondary)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 44 |             fontWeight: highlight ? 700 : 400,
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 45 |         }}>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 46 |             {typeof value === 'number' ? value.toFixed(2) : value}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 47 |         </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 48 |     );
+     | ^^^^^^ The component is created during render here
+  49 |
+  50 |     const focusedContribution =
+  51 |         A[focus.i][0] * B[0][focus.j] + A[focus.i][1] * B[1][focus.j];                                                                                                 react-hooks/static-components
+  73:26  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  71 |                         <Cell value={B[0][0]} highlight={focus.j === 0} color="#ff6b8a" />
+  72 |                         <Cell value={B[0][1]} highlight={focus.j === 1} color="#ff6b8a" />
+> 73 |                         <Cell value={B[1][0]} highlight={focus.j === 0} color="#ff6b8a" />
+     |                          ^^^^ This component is created during render
+  74 |                         <Cell value={B[1][1]} highlight={focus.j === 1} color="#ff6b8a" />
+  75 |                     </div>
+  76 |                 </div>
+
+  37 |     const B = [[b11, b12], [b21, b22]];
+  38 |
+> 39 |     const Cell = ({ value, highlight, color = '#00f2ff' }) => (
+     |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 40 |         <div className="mm-cell" style={{
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 41 |             background: highlight ? `${color}22` : 'rgba(255,255,255,0.04)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 42 |             borderColor: highlight ? color : 'rgba(255,255,255,0.08)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 43 |             color: highlight ? color : 'var(--text-secondary)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 44 |             fontWeight: highlight ? 700 : 400,
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 45 |         }}>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 46 |             {typeof value === 'number' ? value.toFixed(2) : value}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 47 |         </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 48 |     );
+     | ^^^^^^ The component is created during render here
+  49 |
+  50 |     const focusedContribution =
+  51 |         A[focus.i][0] * B[0][focus.j] + A[focus.i][1] * B[1][focus.j];                                                                                                                        react-hooks/static-components
+  74:26  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  72 |                         <Cell value={B[0][1]} highlight={focus.j === 1} color="#ff6b8a" />
+  73 |                         <Cell value={B[1][0]} highlight={focus.j === 0} color="#ff6b8a" />
+> 74 |                         <Cell value={B[1][1]} highlight={focus.j === 1} color="#ff6b8a" />
+     |                          ^^^^ This component is created during render
+  75 |                     </div>
+  76 |                 </div>
+  77 |
+
+  37 |     const B = [[b11, b12], [b21, b22]];
+  38 |
+> 39 |     const Cell = ({ value, highlight, color = '#00f2ff' }) => (
+     |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 40 |         <div className="mm-cell" style={{
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 41 |             background: highlight ? `${color}22` : 'rgba(255,255,255,0.04)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 42 |             borderColor: highlight ? color : 'rgba(255,255,255,0.08)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 43 |             color: highlight ? color : 'var(--text-secondary)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 44 |             fontWeight: highlight ? 700 : 400,
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 45 |         }}>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 46 |             {typeof value === 'number' ? value.toFixed(2) : value}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 47 |         </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 48 |     );
+     | ^^^^^^ The component is created during render here
+  49 |
+  50 |     const focusedContribution =
+  51 |         A[focus.i][0] * B[0][focus.j] + A[focus.i][1] * B[1][focus.j];                                                                                                                                                                                                                   react-hooks/static-components
+  83:26  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  81 |                     <div className="mm-label">C</div>
+  82 |                     <div className="mm-grid">
+> 83 |                         <Cell value={c[0][0]} highlight={focus.i === 0 && focus.j === 0} color="#a78bfa" />
+     |                          ^^^^ This component is created during render
+  84 |                         <Cell value={c[0][1]} highlight={focus.i === 0 && focus.j === 1} color="#a78bfa" />
+  85 |                         <Cell value={c[1][0]} highlight={focus.i === 1 && focus.j === 0} color="#a78bfa" />
+  86 |                         <Cell value={c[1][1]} highlight={focus.i === 1 && focus.j === 1} color="#a78bfa" />
+
+  37 |     const B = [[b11, b12], [b21, b22]];
+  38 |
+> 39 |     const Cell = ({ value, highlight, color = '#00f2ff' }) => (
+     |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 40 |         <div className="mm-cell" style={{
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 41 |             background: highlight ? `${color}22` : 'rgba(255,255,255,0.04)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 42 |             borderColor: highlight ? color : 'rgba(255,255,255,0.08)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 43 |             color: highlight ? color : 'var(--text-secondary)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 44 |             fontWeight: highlight ? 700 : 400,
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 45 |         }}>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 46 |             {typeof value === 'number' ? value.toFixed(2) : value}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 47 |         </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 48 |     );
+     | ^^^^^^ The component is created during render here
+  49 |
+  50 |     const focusedContribution =
+  51 |         A[focus.i][0] * B[0][focus.j] + A[focus.i][1] * B[1][focus.j];  react-hooks/static-components
+  84:26  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  82 |                     <div className="mm-grid">
+  83 |                         <Cell value={c[0][0]} highlight={focus.i === 0 && focus.j === 0} color="#a78bfa" />
+> 84 |                         <Cell value={c[0][1]} highlight={focus.i === 0 && focus.j === 1} color="#a78bfa" />
+     |                          ^^^^ This component is created during render
+  85 |                         <Cell value={c[1][0]} highlight={focus.i === 1 && focus.j === 0} color="#a78bfa" />
+  86 |                         <Cell value={c[1][1]} highlight={focus.i === 1 && focus.j === 1} color="#a78bfa" />
+  87 |                     </div>
+
+  37 |     const B = [[b11, b12], [b21, b22]];
+  38 |
+> 39 |     const Cell = ({ value, highlight, color = '#00f2ff' }) => (
+     |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 40 |         <div className="mm-cell" style={{
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 41 |             background: highlight ? `${color}22` : 'rgba(255,255,255,0.04)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 42 |             borderColor: highlight ? color : 'rgba(255,255,255,0.08)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 43 |             color: highlight ? color : 'var(--text-secondary)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 44 |             fontWeight: highlight ? 700 : 400,
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 45 |         }}>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 46 |             {typeof value === 'number' ? value.toFixed(2) : value}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 47 |         </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 48 |     );
+     | ^^^^^^ The component is created during render here
+  49 |
+  50 |     const focusedContribution =
+  51 |         A[focus.i][0] * B[0][focus.j] + A[focus.i][1] * B[1][focus.j];                             react-hooks/static-components
+  85:26  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  83 |                         <Cell value={c[0][0]} highlight={focus.i === 0 && focus.j === 0} color="#a78bfa" />
+  84 |                         <Cell value={c[0][1]} highlight={focus.i === 0 && focus.j === 1} color="#a78bfa" />
+> 85 |                         <Cell value={c[1][0]} highlight={focus.i === 1 && focus.j === 0} color="#a78bfa" />
+     |                          ^^^^ This component is created during render
+  86 |                         <Cell value={c[1][1]} highlight={focus.i === 1 && focus.j === 1} color="#a78bfa" />
+  87 |                     </div>
+  88 |                 </div>
+
+  37 |     const B = [[b11, b12], [b21, b22]];
+  38 |
+> 39 |     const Cell = ({ value, highlight, color = '#00f2ff' }) => (
+     |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 40 |         <div className="mm-cell" style={{
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 41 |             background: highlight ? `${color}22` : 'rgba(255,255,255,0.04)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 42 |             borderColor: highlight ? color : 'rgba(255,255,255,0.08)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 43 |             color: highlight ? color : 'var(--text-secondary)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 44 |             fontWeight: highlight ? 700 : 400,
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 45 |         }}>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 46 |             {typeof value === 'number' ? value.toFixed(2) : value}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 47 |         </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 48 |     );
+     | ^^^^^^ The component is created during render here
+  49 |
+  50 |     const focusedContribution =
+  51 |         A[focus.i][0] * B[0][focus.j] + A[focus.i][1] * B[1][focus.j];                                                    react-hooks/static-components
+  86:26  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  84 |                         <Cell value={c[0][1]} highlight={focus.i === 0 && focus.j === 1} color="#a78bfa" />
+  85 |                         <Cell value={c[1][0]} highlight={focus.i === 1 && focus.j === 0} color="#a78bfa" />
+> 86 |                         <Cell value={c[1][1]} highlight={focus.i === 1 && focus.j === 1} color="#a78bfa" />
+     |                          ^^^^ This component is created during render
+  87 |                     </div>
+  88 |                 </div>
+  89 |             </div>
+
+  37 |     const B = [[b11, b12], [b21, b22]];
+  38 |
+> 39 |     const Cell = ({ value, highlight, color = '#00f2ff' }) => (
+     |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 40 |         <div className="mm-cell" style={{
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 41 |             background: highlight ? `${color}22` : 'rgba(255,255,255,0.04)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 42 |             borderColor: highlight ? color : 'rgba(255,255,255,0.08)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 43 |             color: highlight ? color : 'var(--text-secondary)',
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 44 |             fontWeight: highlight ? 700 : 400,
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 45 |         }}>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 46 |             {typeof value === 'number' ? value.toFixed(2) : value}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 47 |         </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 48 |     );
+     | ^^^^^^ The component is created during render here
+  49 |
+  50 |     const focusedContribution =
+  51 |         A[focus.i][0] * B[0][focus.j] + A[focus.i][1] * B[1][focus.j];                                                                                                                                             react-hooks/static-components
+
+/app/src/components/math/NeuralNetworkVisualizer.jsx
+  10:7  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+   8 |   useEffect(() => {
+   9 |     if (values.nodes !== undefined) {
+> 10 |       setLayers([layers[0], values.nodes, layers[2]]);
+     |       ^^^^^^^^^ Avoid calling setState() directly within an effect
+  11 |     }
+  12 |     if (values.hiddenNodes !== undefined) {
+  13 |       setLayers([layers[0], values.hiddenNodes, layers[2]]);  react-hooks/set-state-in-effect
+  15:6  warning  React Hook useEffect has a missing dependency: 'layers'. Either include it or remove the dependency array. You can also do a functional update 'setLayers(l => ...)' if you only need 'layers' in the 'setLayers' call                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  react-hooks/exhaustive-deps
+
+/app/src/components/math/PCAVisualizer.jsx
+  10:39  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+   8 |   // Sync with external values if they change
+   9 |   useEffect(() => {
+> 10 |     if (values.lambda1 !== undefined) setComponent1(values.lambda1);
+     |                                       ^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  11 |     if (values.lambda2 !== undefined) setComponent2(values.lambda2);
+  12 |     if (values.lambda3 !== undefined) setComponent3(values.lambda3);
+  13 |   }, [values.lambda1, values.lambda2, values.lambda3]);  react-hooks/set-state-in-effect
+
+/app/src/contexts/ProgressContext.jsx
+  111:9  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  109 |         if (initialized.current) return;
+  110 |         initialized.current = true;
+> 111 |         setState(prev => {
+      |         ^^^^^^^^ Avoid calling setState() directly within an effect
+  112 |             const today = todayStr();
+  113 |             if (prev.lastActiveDate === today) return prev;
+  114 |             const delta = daysBetween(prev.lastActiveDate, today);  react-hooks/set-state-in-effect
+
+/app/src/contexts/progressContextBase.js
+  24:1  warning  Unused eslint-disable directive (no problems were reported from 'react-refresh/only-export-components')
+
+/app/src/engine/mathContent.js
+    35:3  error  Duplicate key 'visualizer'           no-dupe-keys
+   172:3  error  Duplicate key 'visualizer'           no-dupe-keys
+   206:3  error  Duplicate key 'visualizer'           no-dupe-keys
+   292:3  error  Duplicate key 'visualizer'           no-dupe-keys
+   293:2  error  Duplicate key 'interactiveFormulas'  no-dupe-keys
+   363:3  error  Duplicate key 'visualizer'           no-dupe-keys
+   393:2  error  Duplicate key 'visualizer'           no-dupe-keys
+   452:4  error  Duplicate key 'visualizer'           no-dupe-keys
+   506:4  error  Duplicate key 'visualizer'           no-dupe-keys
+   561:4  error  Duplicate key 'visualizer'           no-dupe-keys
+   867:4  error  Duplicate key 'visualizer'           no-dupe-keys
+  1030:5  error  Duplicate key 'visualizer'           no-dupe-keys
+  1278:4  error  Duplicate key 'visualizer'           no-dupe-keys
+  2081:3  error  Duplicate key 'visualizer'           no-dupe-keys
+  2215:3  error  Duplicate key 'visualizer'           no-dupe-keys
+  2894:3  error  Duplicate key 'visualizer'           no-dupe-keys
+  2942:3  error  Duplicate key 'visualizer'           no-dupe-keys
+  2995:3  error  Duplicate key 'visualizer'           no-dupe-keys
+  3066:3  error  Duplicate key 'visualizer'           no-dupe-keys
+  3191:3  error  Duplicate key 'visualizer'           no-dupe-keys
+  3327:3  error  Duplicate key 'visualizer'           no-dupe-keys
+  4465:3  error  Duplicate key 'visualizer'           no-dupe-keys
+  4537:3  error  Duplicate key 'visualizer'           no-dupe-keys
+  4683:3  error  Duplicate key 'visualizer'           no-dupe-keys
+  4760:3  error  Duplicate key 'visualizer'           no-dupe-keys
+
+/app/src/engine/personalizationEngine.js
+  299:3  warning  Unused eslint-disable directive (no problems were reported from 'no-unused-vars')
+
+✖ 49 problems (46 errors, 3 warnings)
+  0 errors and 2 warnings potentially fixable with the `--fix` option.
+
+ ELIFECYCLE  Command failed with exit code 1.

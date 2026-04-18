@@ -7,28 +7,34 @@ export default function RLVisualizer() {
   
   const explorationRate = Math.max(0.01, epsilon * Math.exp(-episode / 100));
   
-  const generatePath = () => {
+  const path = React.useMemo(() => {
     const points = [];
     let pos = { x: 0, y: 0 };
     for (let i = 0; i <= steps; i++) {
       points.push({ ...pos });
-      const action = Math.random() < explorationRate ? 'explore' : 'exploit';
+      // To satisfy react-hooks/purity without losing functionality,
+      // we use pseudo-random logic purely based on index and parameters.
+      const pseudoRandom = (seed) => {
+        let x = Math.sin(seed++) * 10000;
+        return x - Math.floor(x);
+      };
+
+      const exploreVal = pseudoRandom(episode * 100 + i);
+      const action = exploreVal < explorationRate ? 'explore' : 'exploit';
       if (action === 'explore') {
         pos = {
-          x: pos.x + (Math.random() - 0.5) * 20,
-          y: pos.y + (Math.random() - 0.5) * 20
+          x: pos.x + (pseudoRandom(episode * 100 + i + 1) - 0.5) * 20,
+          y: pos.y + (pseudoRandom(episode * 100 + i + 2) - 0.5) * 20
         };
       } else {
         pos = {
-          x: pos.x + (Math.random() - 0.3) * 10,
+          x: pos.x + (pseudoRandom(episode * 100 + i + 3) - 0.3) * 10,
           y: pos.y - 5
         };
       }
     }
     return points;
-  };
-
-  const path = generatePath();
+  }, [steps, explorationRate, episode]);
 
   return (
     <div className="rl-visualizer">

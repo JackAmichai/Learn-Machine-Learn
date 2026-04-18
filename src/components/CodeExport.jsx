@@ -1,95 +1,17 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Tooltip } from './Tooltip';
 import { ALLOWED_ACTIVATIONS, ALLOWED_OPTIMIZERS } from '../engine/NeuralNetwork';
 
 export function CodeExport({ structure, hyperparams }) {
     const [isOpen, setIsOpen] = useState(false);
     const [lang, setLang] = useState('python'); // 'python' or 'js'
+    const [copied, setCopied] = useState(false);
+    const timeoutRef = useRef(null);
 
     const safeActivation = ALLOWED_ACTIVATIONS.includes(hyperparams.activation) ? hyperparams.activation : 'relu';
     const safeOptimizer = ALLOWED_OPTIMIZERS.includes(hyperparams.optimizer) ? hyperparams.optimizer : 'adam';
 
-    if (!isOpen) {
-        return (
-            <button className="btn-code" onClick={() => setIsOpen(true)}>
-                &lt;/&gt; Show Code <Tooltip word="Export" overrideText="View the code to build this model" />
-            </button>
-        );
-    }
-
-    const generatePython = () => {
-        let code = `import tensorflow as tf\nfrom tensorflow.keras import layers, models\n\n`;
-        code += `model = models.Sequential()\n\n`;
-
-        // Input layer implicit or explicit
-        const inputShape = structure[0];
-
-        // Hidden Layers
-        for (let i = 1; i < structure.length - 1; i++) {
-            code += `model.add(layers.Dense(${structure[i]}, activation='${safeActivation}'${i === 1 ? `, input_shape=(${inputShape},)` : ''}))\n`;
-        }
-
-        // Output Layer
-        const outputShape = structure[structure.length - 1];
-        let outAct = 'sigmoid';
-        if (outputShape > 1) outAct = 'softmax';
-        code += `model.add(layers.Dense(${outputShape}, activation='${outAct}'))\n\n`;
-
-        // Compile
-        let loss = 'mean_squared_error';
-        if (outputShape > 1) loss = 'categorical_crossentropy';
-
-        code += `model.compile(optimizer='${safeOptimizer}',\n              loss='${loss}',\n              metrics=['accuracy'])`;
-
-        return code;
-    };
-
-    const generateJS = () => {
-        let code = `const model = tf.sequential();\n\n`;
-
-        const inputShape = structure[0];
-
-        for (let i = 1; i < structure.length - 1; i++) {
-            code += `model.add(tf.layers.dense({\n  units: ${structure[i]},\n  activation: '${safeActivation}'${i === 1 ? `,\n  inputShape: [${inputShape}]` : ''}\n}));\n`;
-        }
-
-        const outputShape = structure[structure.length - 1];
-        let outAct = 'sigmoid';
-        if (outputShape > 1) outAct = 'softmax';
-
-        code += `model.add(tf.layers.dense({\n  units: ${outputShape},\n  activation: '${outAct}'\n}));\n\n`;
-
-        let loss = 'meanSquaredError';
-        if (outputShape > 1) loss = 'categoricalCrossentropy';
-
-        code += `model.compile({\n  optimizer: '${safeOptimizer}',\n  loss: '${loss}',\n  metrics: ['accuracy']\n});`;
-
-        return code;
-    };
-
-    return (
-        <div className="code-modal-overlay">
-            <div className="code-modal">
-                <div className="modal-header">
-                    <h3>Export Model Code</h3>
-                    <button className="close" onClick={() => setIsOpen(false)}>×</button>
-                </div>
-
-                <div className="lang-tabs">
-                    <button className={lang === 'python' ? 'active' : ''} onClick={() => setLang('python')}>Python (Keras)</button>
-                    <button className={lang === 'js' ? 'active' : ''} onClick={() => setLang('js')}>JavaScript (TF.js)</button>
-                </div>
-
-                <div className="code-block">
-                    <pre>
-                        {lang === 'python' ? generatePython() : generateJS()}
-                    </pre>
-                </div>
-
-                <p className="tip">Copy this code to run your model in a real environment!</p>
-            </div>
-
-            <style>{`
+    const styles = `
             .btn-code {
                 width: 100%;
                 margin-top: 20px;
@@ -180,7 +102,105 @@ export function CodeExport({ structure, hyperparams }) {
                 font-style: italic;
                 text-align: center;
             }
-        `}</style>
+        `;
+
+    if (!isOpen) {
+        return (
+            <>
+                <button className="btn-code" onClick={() => setIsOpen(true)}>
+                    &lt;/&gt; Show Code <Tooltip word="Export" overrideText="View the code to build this model" />
+                </button>
+                <style>{styles}</style>
+            </>
+        );
+    }
+
+    const generatePython = () => {
+        let code = `import tensorflow as tf\nfrom tensorflow.keras import layers, models\n\n`;
+        code += `model = models.Sequential()\n\n`;
+
+        // Input layer implicit or explicit
+        const inputShape = structure[0];
+
+        // Hidden Layers
+        for (let i = 1; i < structure.length - 1; i++) {
+            code += `model.add(layers.Dense(${structure[i]}, activation='${safeActivation}'${i === 1 ? `, input_shape=(${inputShape},)` : ''}))\n`;
+        }
+
+        // Output Layer
+        const outputShape = structure[structure.length - 1];
+        let outAct = 'sigmoid';
+        if (outputShape > 1) outAct = 'softmax';
+        code += `model.add(layers.Dense(${outputShape}, activation='${outAct}'))\n\n`;
+
+        // Compile
+        let loss = 'mean_squared_error';
+        if (outputShape > 1) loss = 'categorical_crossentropy';
+
+        code += `model.compile(optimizer='${safeOptimizer}',\n              loss='${loss}',\n              metrics=['accuracy'])`;
+
+        return code;
+    };
+
+    const generateJS = () => {
+        let code = `const model = tf.sequential();\n\n`;
+
+        const inputShape = structure[0];
+
+        for (let i = 1; i < structure.length - 1; i++) {
+            code += `model.add(tf.layers.dense({\n  units: ${structure[i]},\n  activation: '${safeActivation}'${i === 1 ? `,\n  inputShape: [${inputShape}]` : ''}\n}));\n`;
+        }
+
+        const outputShape = structure[structure.length - 1];
+        let outAct = 'sigmoid';
+        if (outputShape > 1) outAct = 'softmax';
+
+        code += `model.add(tf.layers.dense({\n  units: ${outputShape},\n  activation: '${outAct}'\n}));\n\n`;
+
+        let loss = 'meanSquaredError';
+        if (outputShape > 1) loss = 'categoricalCrossentropy';
+
+        code += `model.compile({\n  optimizer: '${safeOptimizer}',\n  loss: '${loss}',\n  metrics: ['accuracy']\n});`;
+
+        return code;
+    };
+
+    const handleCopy = () => {
+        const code = lang === 'python' ? generatePython() : generateJS();
+        navigator.clipboard.writeText(code).then(() => {
+            setCopied(true);
+            if (timeoutRef.current) clearTimeout(timeoutRef.current);
+            timeoutRef.current = setTimeout(() => setCopied(false), 2000);
+        });
+    };
+
+    return (
+        <div className="code-modal-overlay">
+            <div className="code-modal">
+                <div className="modal-header">
+                    <h3>Export Model Code</h3>
+                    <button className="close" onClick={() => setIsOpen(false)}>×</button>
+                </div>
+
+                <div className="lang-tabs">
+                    <button className={lang === 'python' ? 'active' : ''} onClick={() => setLang('python')}>Python (Keras)</button>
+                    <button className={lang === 'js' ? 'active' : ''} onClick={() => setLang('js')}>JavaScript (TF.js)</button>
+                </div>
+
+                <div className="code-block-wrapper">
+                    <button className="btn-copy" onClick={handleCopy} aria-label={copied ? "Copied!" : "Copy code"}>
+                        {copied ? 'Copied!' : 'Copy'}
+                    </button>
+                    <div className="code-block" tabIndex={0} role="region" aria-label="Generated Code">
+                        <pre>
+                            {lang === 'python' ? generatePython() : generateJS()}
+                        </pre>
+                    </div>
+                </div>
+
+                <p className="tip">Copy this code to run your model in a real environment!</p>
+            </div>
+            <style>{styles}</style>
         </div>
     );
 }

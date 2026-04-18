@@ -6,26 +6,28 @@ export default function TSNEVisualizer() {
 
   const clusterColors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#dfe6e9', '#a29bfe', '#fd79a8'];
 
-  const generateClusters = () => {
-    const clusters = [];
+  const clusters = React.useMemo(() => {
+    const pseudoRandom = (seed) => {
+        let x = Math.sin(seed++) * 10000;
+        return x - Math.floor(x);
+    };
+    const clustersArr = [];
     const numClusters = 5;
     for (let i = 0; i < numClusters; i++) {
       const points = [];
-      const centerX = Math.random() * 60 + 20;
-      const centerY = Math.random() * 60 + 20;
+      const centerX = pseudoRandom(i * 10) * 60 + 20;
+      const centerY = pseudoRandom(i * 10 + 1) * 60 + 20;
       for (let j = 0; j < 15; j++) {
         points.push({
-          x: centerX + (Math.random() - 0.5) * 15,
-          y: centerY + (Math.random() - 0.5) * 15,
+          x: centerX + (pseudoRandom(i * 100 + j * 2) - 0.5) * 15,
+          y: centerY + (pseudoRandom(i * 100 + j * 2 + 1) - 0.5) * 15,
           cluster: i
         });
       }
-      clusters.push(...points);
+      clustersArr.push(...points);
     }
-    return clusters;
-  };
-
-  const clusters = generateClusters();
+    return clustersArr;
+  }, []);
 
   const getPerplexityDescription = () => {
     if (perplexity < 10) return 'Very local focus - fine clusters';
