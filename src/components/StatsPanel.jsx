@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import * as tf from '@tensorflow/tfjs';
 import { Tooltip } from './Tooltip';
 
 /**
