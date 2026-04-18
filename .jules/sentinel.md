@@ -1,0 +1,1 @@
+Do not use DOMPurify to sanitize statically imported, trusted internal constants (like MATH_TOPICS in MathModal) as it constitutes 'security theater' and DOMPurify >=3.0.0 strips necessary MathML/SVG tags by default, breaking core functionality.
