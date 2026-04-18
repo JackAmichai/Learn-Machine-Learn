@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 
 export default function PCAVisualizer({ values = {} }) {
-  const [component1, setComponent1] = useState(70);
-  const [component2, setComponent2] = useState(20);
-  const [component3, setComponent3] = useState(10);
+  const [component1, setComponent1] = useState(values.lambda1 !== undefined ? values.lambda1 : 3.5);
+  const [component2, setComponent2] = useState(values.lambda2 !== undefined ? values.lambda2 : 1.2);
+  const [component3, setComponent3] = useState(values.lambda3 !== undefined ? values.lambda3 : 0.4);
   
   // Sync with external values if they change
   useEffect(() => {
-    if (values.lambda1 !== undefined) setComponent1(values.lambda1);
-    if (values.lambda2 !== undefined) setComponent2(values.lambda2);
-    if (values.lambda3 !== undefined) setComponent3(values.lambda3);
+    if (values.lambda1 !== undefined) setTimeout(() => setComponent1(values.lambda1), 0);
+    if (values.lambda2 !== undefined) setTimeout(() => setComponent2(values.lambda2), 0);
+    if (values.lambda3 !== undefined) setTimeout(() => setComponent3(values.lambda3), 0);
   }, [values.lambda1, values.lambda2, values.lambda3]);
 
   const total = component1 + component2 + component3;

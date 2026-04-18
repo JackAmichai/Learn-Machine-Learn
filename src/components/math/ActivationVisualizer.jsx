@@ -1,16 +1,29 @@
 import React, { useState, useEffect } from 'react';
 
 export default function ActivationVisualizer({ values = {} }) {
-  const [func, setFunc] = useState('sigmoid');
-  const [x, setX] = useState(0);
+  // Default values mapping
+  const initialFunc = values.alpha !== undefined ? 'leakyrelu' : 'sigmoid';
+  const initialX = values.x !== undefined ? values.x : (values.input !== undefined ? values.input : 0);
+
+  const [func, setFunc] = useState(initialFunc);
+  const [x, setX] = useState(initialX);
   
   // Sync with external values if they change
   useEffect(() => {
-    if (values.x !== undefined) setX(values.x);
-    if (values.input !== undefined) setX(values.input);
+    let newX = null;
+    let newFunc = null;
+
+    if (values.x !== undefined) newX = values.x;
+    else if (values.input !== undefined) newX = values.input;
+
+    if (values.alpha !== undefined) newFunc = 'leakyrelu';
     
-    // Auto-switch function based on common keywords
-    if (values.alpha !== undefined) setFunc('leakyrelu');
+    if (newX !== null) {
+        setTimeout(() => setX(newX), 0);
+    }
+    if (newFunc !== null) {
+        setTimeout(() => setFunc(newFunc), 0);
+    }
   }, [values.x, values.input, values.alpha]);
 
   const functions = {

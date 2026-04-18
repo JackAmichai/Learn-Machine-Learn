@@ -1,22 +1,44 @@
 import React, { useState, useEffect } from 'react';
 
 export default function LossVisualizer({ values = {} }) {
-  const [predicted, setPredicted] = useState(3);
-  const [actual, setActual] = useState(5);
+  const defaultActual = values.actual !== undefined ? values.actual : (values.y !== undefined ? values.y : 5);
+  let defaultPredicted = 3;
+  if (values.err !== undefined) {
+      defaultPredicted = defaultActual - values.err;
+  } else if (values.predicted !== undefined) {
+      defaultPredicted = values.predicted;
+  } else if (values.yhat !== undefined) {
+      defaultPredicted = values.yhat;
+  }
+
+  const [predicted, setPredicted] = useState(defaultPredicted);
+  const [actual, setActual] = useState(defaultActual);
   
   // Sync with external values if they change
   useEffect(() => {
-    // If we have 'err' (y - yhat), we can adjust predicted to be actual - err
+    let newPredicted = null;
+    let newActual = null;
+
+    if (values.actual !== undefined) newActual = values.actual;
+    else if (values.y !== undefined) newActual = values.y;
+
+    const baseActual = newActual !== null ? newActual : actual;
+
     if (values.err !== undefined) {
-      setPredicted(actual - values.err);
-    } else {
-      if (values.predicted !== undefined) setPredicted(values.predicted);
-      if (values.yhat !== undefined) setPredicted(values.yhat);
+        newPredicted = baseActual - values.err;
+    } else if (values.predicted !== undefined) {
+        newPredicted = values.predicted;
+    } else if (values.yhat !== undefined) {
+        newPredicted = values.yhat;
     }
-    
-    if (values.actual !== undefined) setActual(values.actual);
-    if (values.y !== undefined) setActual(values.y);
-  }, [values, actual]);
+
+    if (newActual !== null) {
+        setTimeout(() => setActual(newActual), 0);
+    }
+    if (newPredicted !== null) {
+        setTimeout(() => setPredicted(newPredicted), 0);
+    }
+  }, [values.err, values.predicted, values.yhat, values.actual, values.y, actual]);
 
   const mse = Math.pow(predicted - actual, 2);
   

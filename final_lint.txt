@@ -1,0 +1,18 @@
+
+> neural-visualizer@0.0.0 lint /app
+> eslint .
+
+
+/app/src/contexts/progressContextBase.js
+  24:1  warning  Unused eslint-disable directive (no problems were reported from 'react-refresh/only-export-components')
+
+/app/src/engine/mathContent.js
+  289:2  error  Parsing error: Unexpected token {
+
+/app/src/engine/personalizationEngine.js
+  299:3  warning  Unused eslint-disable directive (no problems were reported from 'no-unused-vars')
+
+✖ 3 problems (1 error, 2 warnings)
+  0 errors and 2 warnings potentially fixable with the `--fix` option.
+
+ ELIFECYCLE  Command failed with exit code 1.

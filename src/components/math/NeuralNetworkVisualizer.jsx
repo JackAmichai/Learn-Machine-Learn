@@ -1,16 +1,23 @@
 import React, { useState, useEffect } from 'react';
 
 export default function NeuralNetworkVisualizer({ values = {} }) {
-  const [layers, setLayers] = useState([3, 4, 2]);
   const [activeLayer, setActiveLayer] = useState(1);
   
+  const initialNodes = values.nodes !== undefined ? values.nodes : (values.hiddenNodes !== undefined ? values.hiddenNodes : 4);
+  const [layers, setLayers] = useState([3, initialNodes, 2]);
+
   // Sync with external values if they change
   useEffect(() => {
+    let newNodes = null;
     if (values.nodes !== undefined) {
-      setLayers([layers[0], values.nodes, layers[2]]);
+      newNodes = values.nodes;
+    } else if (values.hiddenNodes !== undefined) {
+      newNodes = values.hiddenNodes;
     }
-    if (values.hiddenNodes !== undefined) {
-      setLayers([layers[0], values.hiddenNodes, layers[2]]);
+    if (newNodes !== null) {
+      setTimeout(() => {
+        setLayers(l => [l[0], newNodes, l[2]]);
+      }, 0);
     }
   }, [values.nodes, values.hiddenNodes]);
 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 export default function EmbeddingVisualizer() {
   const [show3D, setShow3D] = useState(false);
-  const [vectors, setVectors] = useState([
+  const [vectors] = useState([
     { name: 'King', vec: [0.8, 0.2, 0.1, 0.3] },
     { name: 'Queen', vec: [0.7, 0.9, 0.2, 0.1] },
     { name: 'Man', vec: [0.9, 0.1, 0.4, 0.2] },
@@ -15,10 +15,6 @@ export default function EmbeddingVisualizer() {
     const mag2 = Math.sqrt(v2.reduce((sum, a) => sum + a * a, 0));
     return mag1 && mag2 ? dot / (mag1 * mag2) : 0;
   };
-
-  const analogies = [
-    { a: 'King', b: 'Queen', c: 'Man', expected: 'Woman' },
-  ];
 
   return (
     <div className="embedding-visualizer">
