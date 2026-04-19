@@ -420,8 +420,8 @@ export function Controls(props) {
                             </div>
                             {trainingMode === 'slow' && (
                                 <div className="slow-slider">
-                                    <label htmlFor="frame-delay">Frame Delay</label>
-                                    <input id="frame-delay" type="range" min="150" max="2000" step="50" value={slowDelay} onChange={(e) => setSlowDelay(parseInt(e.target.value, 10))} />
+                                    <label>Frame Delay</label>
+                                    <input type="range" min="150" max="2000" step="50" value={slowDelay} onChange={(e) => setSlowDelay(parseInt(e.target.value, 10))} />
                                     <span>{slowDelay}ms</span>
                                 </div>
                             )}
@@ -487,8 +487,8 @@ export function Controls(props) {
                                     ))}
                                 </div>
                                 <div className="noise-control">
-                                    <label htmlFor="noise-slider">Noise</label>
-                                    <input id="noise-slider" type="range" min="0" max="0.6" step="0.01" value={datasetParams.noise} onChange={(e) => handleNoiseChange(parseFloat(e.target.value))} />
+                                    <label>Noise</label>
+                                    <input type="range" min="0" max="0.6" step="0.01" value={datasetParams.noise} onChange={(e) => handleNoiseChange(parseFloat(e.target.value))} />
                                     <span className="noise-value">{datasetParams.noise.toFixed(2)}</span>
                                 </div>
                             </div>
@@ -525,29 +525,29 @@ export function Controls(props) {
                         <div className="section">
                             <h3>Hyperparameters</h3>
                             <div className="hp-grid">
-                                <label htmlFor="learning-rate-slider"><Tooltip word="Learning Rate" /></label>
+                                <label><Tooltip word="Learning Rate" /></label>
                                 <div className="lr-control">
-                                    <input id="learning-rate-slider" type="range" min="0.001" max="0.3" step="0.001" value={hyperparams.learningRate} onChange={(e) => updateHyperparams({ learningRate: parseFloat(e.target.value) })} />
+                                    <input type="range" min="0.001" max="0.3" step="0.001" value={hyperparams.learningRate} onChange={(e) => updateHyperparams({ learningRate: parseFloat(e.target.value) })} />
                                     <span>{hyperparams.learningRate}</span>
                                 </div>
 
-                                <label htmlFor="activation-select"><Tooltip word="Activation" /></label>
-                                <select id="activation-select" value={hyperparams.activation} onChange={(e) => updateHyperparams({ activation: e.target.value })}>
+                                <label><Tooltip word="Activation" /></label>
+                                <select value={hyperparams.activation} onChange={(e) => updateHyperparams({ activation: e.target.value })}>
                                     <option value="relu">ReLU</option>
                                     <option value="sigmoid">Sigmoid</option>
                                     <option value="tanh">Tanh</option>
                                     <option value="linear">Linear</option>
                                 </select>
 
-                                <label htmlFor="optimizer-select"><Tooltip word="Optimizer" /></label>
-                                <select id="optimizer-select" value={hyperparams.optimizer} onChange={(e) => updateHyperparams({ optimizer: e.target.value })}>
+                                <label><Tooltip word="Optimizer" /></label>
+                                <select value={hyperparams.optimizer} onChange={(e) => updateHyperparams({ optimizer: e.target.value })}>
                                     <option value="adam">Adam</option>
                                     <option value="sgd">SGD</option>
                                 </select>
 
-                                <label htmlFor="batch-size-slider"><Tooltip word="Batch Size" /></label>
+                                <label><Tooltip word="Batch Size" /></label>
                                 <div className="lr-control">
-                                    <input id="batch-size-slider" type="range" min="1" max="128" step="1" value={hyperparams.batchSize || 32} onChange={(e) => updateHyperparams({ batchSize: parseInt(e.target.value, 10) })} />
+                                    <input type="range" min="1" max="128" step="1" value={hyperparams.batchSize || 32} onChange={(e) => updateHyperparams({ batchSize: parseInt(e.target.value, 10) })} />
                                     <span>{hyperparams.batchSize || 32}</span>
                                 </div>
                             </div>
@@ -556,8 +556,8 @@ export function Controls(props) {
                         <div className="section">
                             <h3>Gradient Control</h3>
                             <div className="clip-control">
-                                <label htmlFor="gradient-clip-slider">Gradient Clip</label>
-                                <input id="gradient-clip-slider" type="range" min="0" max="5" step="0.1" value={hyperparams.gradientClip} onChange={(e) => updateHyperparams({ gradientClip: parseFloat(e.target.value) })} />
+                                <label>Gradient Clip</label>
+                                <input type="range" min="0" max="5" step="0.1" value={hyperparams.gradientClip} onChange={(e) => updateHyperparams({ gradientClip: parseFloat(e.target.value) })} />
                                 <span>{hyperparams.gradientClip > 0 ? `${hyperparams.gradientClip.toFixed(1)}×` : 'Off'}</span>
                             </div>
                         </div>

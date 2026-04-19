@@ -10,17 +10,23 @@ export default function RLVisualizer() {
   const generatePath = () => {
     const points = [];
     let pos = { x: 0, y: 0 };
+    let seed = episode * 1000;
+    const pseudoRandom = () => {
+      let x = Math.sin(seed++) * 10000;
+      return x - Math.floor(x);
+    };
+
     for (let i = 0; i <= steps; i++) {
       points.push({ ...pos });
-      const action = Math.random() < explorationRate ? 'explore' : 'exploit';
+      const action = pseudoRandom() < explorationRate ? 'explore' : 'exploit';
       if (action === 'explore') {
         pos = {
-          x: pos.x + (Math.random() - 0.5) * 20,
-          y: pos.y + (Math.random() - 0.5) * 20
+          x: pos.x + (pseudoRandom() - 0.5) * 20,
+          y: pos.y + (pseudoRandom() - 0.5) * 20
         };
       } else {
         pos = {
-          x: pos.x + (Math.random() - 0.3) * 10,
+          x: pos.x + (pseudoRandom() - 0.3) * 10,
           y: pos.y - 5
         };
       }
