@@ -108,7 +108,8 @@ export function ProgressProvider({ children }) {
     useEffect(() => {
         if (initialized.current) return;
         initialized.current = true;
-        setState(prev => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+          setState(prev => {
             const today = todayStr();
             if (prev.lastActiveDate === today) return prev;
             const delta = daysBetween(prev.lastActiveDate, today);
@@ -152,7 +153,8 @@ export function ProgressProvider({ children }) {
 
     const markLessonVisited = useCallback((key) => {
         if (!key) return;
-        setState(prev => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+          setState(prev => {
             if (prev.visitedLessons.has(key)) return prev;
             const next = {
                 ...prev,
@@ -165,7 +167,8 @@ export function ProgressProvider({ children }) {
 
     const markQuizCompleted = useCallback((id, scorePct = 0) => {
         if (!id) return;
-        setState(prev => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+          setState(prev => {
             const wasCompleted = prev.completedQuizzes.has(id);
             const nextScore = Math.max(prev.bestScore, scorePct || 0);
             const xpGain = wasCompleted

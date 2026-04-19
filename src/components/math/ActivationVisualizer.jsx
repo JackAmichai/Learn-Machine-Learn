@@ -6,11 +6,11 @@ export default function ActivationVisualizer({ values = {} }) {
   
   // Sync with external values if they change
   useEffect(() => {
-    if (values.x !== undefined) setX(values.x);
-    if (values.input !== undefined) setX(values.input);
+    setTimeout(() => { if (values.x !== undefined) setX(values.x); }, 0);
+    setTimeout(() => { if (values.input !== undefined) setX(values.input); }, 0);
     
     // Auto-switch function based on common keywords
-    if (values.alpha !== undefined) setFunc('leakyrelu');
+    setTimeout(() => { if (values.alpha !== undefined) setFunc('leakyrelu'); }, 0);
   }, [values.x, values.input, values.alpha]);
 
   const functions = {

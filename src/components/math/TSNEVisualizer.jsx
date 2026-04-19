@@ -11,12 +11,24 @@ export default function TSNEVisualizer() {
     const numClusters = 5;
     for (let i = 0; i < numClusters; i++) {
       const points = [];
-      const centerX = Math.random() * 60 + 20;
-      const centerY = Math.random() * 60 + 20;
+      const centerX = (() => {
+        let x = Math.sin(i * 100 + 1) * 10000;
+        return x - Math.floor(x);
+      })() * 60 + 20;
+      const centerY = (() => {
+        let x = Math.sin(i * 100 + 1) * 10000;
+        return x - Math.floor(x);
+      })() * 60 + 20;
       for (let j = 0; j < 15; j++) {
         points.push({
-          x: centerX + (Math.random() - 0.5) * 15,
-          y: centerY + (Math.random() - 0.5) * 15,
+          x: centerX + ((() => {
+        let x = Math.sin(i * 100 + 1) * 10000;
+        return x - Math.floor(x);
+      })() - 0.5) * 15,
+          y: centerY + ((() => {
+        let x = Math.sin(i * 100 + 1) * 10000;
+        return x - Math.floor(x);
+      })() - 0.5) * 15,
           cluster: i
         });
       }

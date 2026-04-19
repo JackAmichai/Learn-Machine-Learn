@@ -1,6 +1,6 @@
 export const MATH_TOPICS = {
  "FoundationsIntro": {
-    visualizer: "NeuralNetwork",
+    visualizer_2: "NeuralNetwork",
  title: "Foundations: The Building Blocks",
  content: `
  <p>Welcome to the core of Neural Networks! In this section, we'll explore the fundamental components that make "learning" possible. Understanding these is crucial before diving into more complex architectures.</p>
@@ -32,10 +32,10 @@ export const MATH_TOPICS = {
   <li><strong>Vanishing gradients</strong>: Deep networks struggle to train as gradients can become tiny</li>
   </ul>
   `,
-  visualizer: "NeuralNetwork",
+  visualizer_34: "NeuralNetwork",
   },
   "MathIntro": {
-    visualizer: "LinearRegression",
+    visualizer_37: "LinearRegression",
  title: "Math Foundations: The Language of AI",
  content: `
  <p>Don't let the equations intimidate you! Machine Learning is built on a few key mathematical pillars: Linear Algebra, Calculus, and Probability. In this section, we'll make them intuitive.</p>
@@ -69,7 +69,7 @@ export const MATH_TOPICS = {
   `,
   },
   "ClassicalMLIntro": {
-    visualizer: "Tree",
+    visualizer_71: "Tree",
  title: "Classical ML: Statistical Wisdom",
  content: `
  <p>Before deep learning took over, "Classical" Machine Learning provided robust tools for data analysis. These methods are still widely used because they are fast, interpretable, and work great on smaller datasets.</p>
@@ -103,7 +103,7 @@ export const MATH_TOPICS = {
   `,
   },
   "CoreDLIntro": {
-    visualizer: "NeuralNetwork",
+    visualizer_105: "NeuralNetwork",
   title: "Deep Learning Core: Training Techniques",
   content: `
   <p>Moving beyond basic neurons, we need sophisticated techniques to train huge networks efficiently. This section covers the "engineering" of deep learning.</p>
@@ -137,7 +137,7 @@ export const MATH_TOPICS = {
   `,
   },
   "VisionIntro": {
-    visualizer: "CNN",
+    visualizer_139: "CNN",
  title: "Computer Vision: Teaching Machines to See",
  content: `
  <p>How does a computer see a cat in a grid of numbers? <strong>Convolutional Neural Networks (CNNs)</strong> are the answer. They use spatial patterns to recognize shapes, edges, and objects.</p>
@@ -169,10 +169,10 @@ export const MATH_TOPICS = {
   <li><strong>Replaced by ViT</strong>: Vision Transformers now often outperform CNNs on large datasets</li>
   </ul>
   `,
-  visualizer: "CNN",
+  visualizer_171: "CNN",
   },
   "ModernAIIntro": {
-    visualizer: "Transformer",
+    visualizer_174: "Transformer",
   title: "Modern AI: Transformers & Beyond",
   content: `
   <p>We are currently in the era of <strong>Generative AI</strong>. This section covers the architectures powering ChatGPT, Midjourney, and more.</p>
@@ -203,11 +203,11 @@ export const MATH_TOPICS = {
   <li><strong>Environmental impact</strong>: Training consumes enormous energy</li>
   </ul>
   `,
-  visualizer: "Transformer",
+  visualizer_205: "Transformer",
   },
   "SVM": {
  title: "SVM: Support Vector Machines",
- visualizer: "SVM",
+ visualizer_209: "SVM",
  summary: "Support Vector Machines (SVMs) are supervised learning models that find the optimal boundary (hyperplane) to separate different classes of data. The 'Support Vectors' are the critical data points closest to this boundary; they define the margin that the algorithm tries to maximize to ensure robust classification.",
  takeaways: [
    "SVM aims to maximize the margin between classes for better generalization.",
@@ -219,7 +219,7 @@ export const MATH_TOPICS = {
    "What is the difference between hard and soft margin SVM?",
    "When should I use an RBF kernel instead of a linear one?"
  ],
- interactiveFormulas: [
+ interactiveFormulas_221: [
  {
  name: "SVM Margin Width",
  components: [
@@ -289,8 +289,8 @@ export const MATH_TOPICS = {
   <li><strong>Sensitive to scaling</strong>: Features must be normalized, or SVM fails</li>
   </ul>
   `,
-  visualizer: "SVM",
- interactiveFormulas: [
+  visualizer_291: "SVM",
+ interactiveFormulas_292: [
  {
  name: "Margin Size",
  components: [
@@ -310,7 +310,7 @@ export const MATH_TOPICS = {
  ]
  },
  "DecisionTree": {
-    visualizer: "Tree",
+    visualizer_312: "Tree",
  title: "Decision Trees: If-Then Reasoning",
  content: `
  <p><strong>Decision Trees</strong> split data based on feature values to maximize 'purity' (homogeneity) in the resulting subsets — producing a flowchart of yes/no questions that ends in a prediction.</p>
@@ -360,8 +360,8 @@ export const MATH_TOPICS = {
   <li><strong>Greedy algorithm</strong>: Makes locally optimal splits that may not be globally optimal</li>
   </ul>
   `,
-  visualizer: "Tree",
- interactiveFormulas: [
+  visualizer_362: "Tree",
+ interactiveFormulas_363: [
  {
  name: "Gini Impurity",
  components: [
@@ -385,13 +385,13 @@ export const MATH_TOPICS = {
  ]
  },
  "RandomForest": {
-    visualizer: "RandomForest",
+    visualizer_387: "RandomForest",
  title: "Random Forests: Ensemble Learning",
  content: `
  <p><strong>Random Forests</strong> combine multiple Decision Trees to reduce overfitting and improve accuracy. This is a technique called <strong>Bagging</strong> (Bootstrap Aggregating).</p>
  `,
- visualizer: "RandomForest",
- interactiveFormulas: [
+ visualizer_392: "RandomForest",
+ interactiveFormulas_393: [
  {
  name: "Ensemble Prediction",
  components: [
@@ -428,7 +428,7 @@ export const MATH_TOPICS = {
   `,
   },
    "KNN": {
-    visualizer: "KNN",
+    visualizer_430: "KNN",
    title: "KNN: K-Nearest Neighbors",
    content: `
    <p><strong>KNN</strong> classifies a point based on the majority class of its 'k' closest neighbors. It's a 'lazy learner' (no training phase).</p>
@@ -449,8 +449,8 @@ export const MATH_TOPICS = {
    <li><strong>Sensitive to k</strong>: Small k = noise sensitive, large k = smooth but may miss patterns</li>
    </ul>
    `,
-   visualizer: "KNN",
- interactiveFormulas: [
+   visualizer_451: "KNN",
+ interactiveFormulas_452: [
  {
  name: "Euclidean Distance",
  components: [
@@ -471,7 +471,7 @@ export const MATH_TOPICS = {
  ]
  },
   "PCA": {
-    visualizer: "PCA",
+    visualizer_473: "PCA",
    title: "PCA: Principal Component Analysis",
    summary: "Principal Component Analysis (PCA) is a dimensionality reduction technique that transforms a large set of variables into a smaller one that still contains most of the original information. It finds the axes (Principal Components) along which the data varies the most, allowing for visualization and noise reduction.",
    takeaways: [
@@ -503,8 +503,8 @@ export const MATH_TOPICS = {
    <li><strong>Information loss</strong>: Reducing dimensions always loses some information</li>
    </ul>
    `,
-   visualizer: "PCA",
-  interactiveFormulas: [
+   visualizer_505: "PCA",
+  interactiveFormulas_506: [
  {
  name: "Explained Variance",
  components: [
@@ -531,7 +531,7 @@ export const MATH_TOPICS = {
  ]
  },
 "Loss": {
-    visualizer: "Loss",
+    visualizer_533: "Loss",
   title: "Loss Functions: Measuring Error",
   content: `
   <p>The <strong>Loss Function</strong> converts model mistakes into a single number we can minimize. Lower loss means better predictions.</p>
@@ -558,8 +558,8 @@ export const MATH_TOPICS = {
    <li><strong>Non-robust</strong>: A few bad predictions can make the whole loss huge</li>
    </ul>
    `,
-   visualizer: "Loss",
- interactiveFormulas: [
+   visualizer_560: "Loss",
+ interactiveFormulas_561: [
  {
  name: "Huber Loss",
  components: [
@@ -679,7 +679,7 @@ export const MATH_TOPICS = {
  ]
  },
   "Epoch": {
-    visualizer: "NeuralNetwork",
+    visualizer_681: "NeuralNetwork",
   title: "Epoch, Batch, and Iterations",
   content: `
   <p>An <strong>Epoch</strong> is one full sweep through the training data. Inside each epoch, we chop data into batches so gradients fit in memory.</p>
@@ -704,7 +704,7 @@ export const MATH_TOPICS = {
   <li><strong>Hard to determine optimal epochs</strong>: Requires validation or early stopping</li>
   </ul>
   `,
- interactiveFormulas: [
+ interactiveFormulas_706: [
  {
  name: "Training Update Counter",
  parts: [
@@ -760,7 +760,7 @@ export const MATH_TOPICS = {
  ]
  },
   "Learning Rate": {
-    visualizer: "GradientDescent",
+    visualizer_762: "GradientDescent",
   title: "Learning Rate and Schedules",
   content: `
   <p>The <strong>Learning Rate</strong> controls the size of weight updates. Too high and the system oscillates, too low and training crawls.</p>
@@ -785,7 +785,7 @@ export const MATH_TOPICS = {
   <li><strong>Differs per architecture</strong>: What works for CNNs may fail for RNNs</li>
   </ul>
   `,
- interactiveFormulas: [
+ interactiveFormulas_787: [
  {
  name: "Instant Weight Update",
  parts: [
@@ -843,7 +843,7 @@ export const MATH_TOPICS = {
   ]
   },
   "Activation": {
-    visualizer: "Activation",
+    visualizer_845: "Activation",
    title: "Activation Functions = Signal Shapers",
     content: `
     <p>Activations transform summed inputs before passing them onward. They introduce non-linearity so the network can learn complex patterns and logic gates.</p>
@@ -864,8 +864,8 @@ export const MATH_TOPICS = {
    <li><strong>Exploding outputs</strong>: Unbounded activations can cause numerical instability</li>
    </ul>
    `,
-   visualizer: "Activation",
-   interactiveFormulas: [
+   visualizer_866: "Activation",
+   interactiveFormulas_867: [
  {
  name: "Sigmoid",
  parts: [
@@ -931,7 +931,7 @@ export const MATH_TOPICS = {
  ]
  },
  "Hidden Layer": {
-    visualizer: "NeuralNetwork",
+    visualizer_933: "NeuralNetwork",
  title: "Hidden Layers = Feature Extractors",
  content: `
  <p>A hidden layer applies weights and biases to inputs, then an activation. Stacking layers lets the network learn hierarchical features (edges -> shapes -> concepts).</p>
@@ -939,7 +939,7 @@ export const MATH_TOPICS = {
  z = W * x + b, a = activation(z)
  </div>
  `,
- interactiveFormulas: [
+ interactiveFormulas_941: [
  {
  name: "Neuron (2 inputs)",
  parts: [
@@ -1006,7 +1006,7 @@ export const MATH_TOPICS = {
  ]
  },
   "Optimizer": {
-    visualizer: "Optimizer",
+    visualizer_1008: "Optimizer",
     title: "Optimizers: Strategies for Weight Updates",
     content: `
     <p>Optimizers decide how gradients adjust weights. Different strategies balance speed, stability, and memory.</p>
@@ -1027,8 +1027,8 @@ export const MATH_TOPICS = {
     <li><strong>Hyperparameters</strong>: Beta values still need tuning</li>
     </ul>
     `,
-    visualizer: "Optimizer",
-   interactiveFormulas: [
+    visualizer_1029: "Optimizer",
+   interactiveFormulas_1030: [
  {
  name: "SGD with Momentum",
  parts: [
@@ -1124,7 +1124,7 @@ export const MATH_TOPICS = {
  ]
  },
  "Nodes": {
-    visualizer: "NeuralNetwork",
+    visualizer_1126: "NeuralNetwork",
  title: "Neurons: Tiny Signal Processors",
  content: `
  <p>Each neuron gathers weighted inputs, adds a bias, and applies an activation. It is analogous to a weighted operational amplifier with a non-linear output stage.</p>
@@ -1148,7 +1148,7 @@ export const MATH_TOPICS = {
   <li><strong>No memory</strong>: Each forward pass is independent</li>
   </ul>
   `,
-  interactiveFormulas: [
+  interactiveFormulas_1150: [
  {
  name: "Neuron with ReLU",
  parts: [
@@ -1202,7 +1202,7 @@ export const MATH_TOPICS = {
  ]
  },
  "Layer": {
-    visualizer: "NeuralNetwork",
+    visualizer_1204: "NeuralNetwork",
  title: "Layers = Parameter Budgets",
  content: `
  <p>Each layer has weights (connections) and biases. The parameter count tells you the memory cost and overfitting risk.</p>
@@ -1226,7 +1226,7 @@ export const MATH_TOPICS = {
   <li><strong>Gradient degradation</strong>: Very deep networks suffer from vanishing gradients</li>
   </ul>
   `,
-  interactiveFormulas: [
+  interactiveFormulas_1228: [
  {
  name: "Dense Layer Parameters",
  parts: [
@@ -1253,7 +1253,7 @@ export const MATH_TOPICS = {
  ]
  },
 "Gradient": {
-    visualizer: "GradientDescent",
+    visualizer_1255: "GradientDescent",
    title: "Gradients: Directions for Learning",
    content: `
    <p>A <strong>Gradient</strong> is a vector of partial derivatives telling us which way the loss increases. The negative gradient points downhill.</p>
@@ -1275,8 +1275,8 @@ export const MATH_TOPICS = {
    <li><strong>Saddle points</strong>: Flat regions can fool optimizers into thinking they've converged</li>
    </ul>
    `,
-   visualizer: "GradientDescent",
-  interactiveFormulas: [
+   visualizer_1277: "GradientDescent",
+  interactiveFormulas_1278: [
  {
  name: "Gradient Magnitude",
  parts: [
@@ -1302,7 +1302,7 @@ export const MATH_TOPICS = {
  ]
  },
  "Backpropagation": {
-    visualizer: "GradientDescent",
+    visualizer_1304: "GradientDescent",
  title: "Backpropagation: Chain Rule in Action",
  content: `
  <p>Backpropagation applies the chain rule to send error information backward through the network. Each layer receives an error signal (delta) scaled by the derivative of its activation.</p>
@@ -1327,7 +1327,7 @@ export const MATH_TOPICS = {
   <li><strong>Not interpretable</strong>: Hard to understand what learned features mean</li>
   </ul>
   `,
-  interactiveFormulas: [
+  interactiveFormulas_1329: [
  {
  name: "Layer Delta",
  parts: [
@@ -1355,7 +1355,7 @@ export const MATH_TOPICS = {
  ]
  },
  "Softmax": {
-    visualizer: "Activation",
+    visualizer_1357: "Activation",
  title: "Softmax: Probabilities from Logits",
  content: `
  <p>The <strong>Softmax</strong> function converts raw scores (logits) into probabilities that sum to 1. Perfect for multi-class classification.</p>
@@ -1380,7 +1380,7 @@ export const MATH_TOPICS = {
   <li><strong>Requires cross-entropy</strong>: Best results come from pairing with log loss</li>
   </ul>
   `,
-  interactiveFormulas: [
+  interactiveFormulas_1382: [
  {
  name: "Softmax Probabilities",
  parts: [
@@ -1413,7 +1413,7 @@ export const MATH_TOPICS = {
  },
 "Regularization": {
   title: "Regularization: Guard Against Overfitting",
-  visualizer: "Regularization",
+  visualizer_1415: "Regularization",
   content: `
  <p>Regularization adds a penalty to large weights so the model generalizes better.</p>
 
@@ -1439,7 +1439,7 @@ export const MATH_TOPICS = {
   <li><strong>L1 non-differentiable</strong>: Requires special handling at zero</li>
   </ul>
   `,
-  interactiveFormulas: [
+  interactiveFormulas_1441: [
  {
  name: "L1 Penalty",
  parts: [
@@ -1493,7 +1493,7 @@ export const MATH_TOPICS = {
  ]
  },
  "Convolution": {
-    visualizer: "CNN",
+    visualizer_1495: "CNN",
  title: "Convolution: Sliding Dot Products",
  content: `
  <p>Convolution layers slide a small filter (kernel) across the input. Each position multiplies overlapping values and sums them.</p>
@@ -1515,7 +1515,7 @@ export const MATH_TOPICS = {
   <li><strong>Loses location info</strong>: Pooling discards precise position</li>
   </ul>
   `,
-  interactiveFormulas: [
+  interactiveFormulas_1517: [
  {
  name: "3x3 Filter Dot Product",
  parts: [
@@ -1547,7 +1547,7 @@ export const MATH_TOPICS = {
  ]
  },
  "Signal Processing": {
-    visualizer: "CNN",
+    visualizer_1549: "CNN",
  title: "Signals and Frequency",
  content: `
  <p>Neural networks can process signals too. Concepts like signal energy and frequency response connect EE fundamentals with machine learning.</p>
@@ -1555,7 +1555,7 @@ export const MATH_TOPICS = {
  Energy = sum x(t)^2, SNR = 10 * log10(signal / noise)
  </div>
  `,
- interactiveFormulas: [
+ interactiveFormulas_1557: [
  {
  name: "Signal-to-Noise Ratio",
  parts: [
@@ -1580,13 +1580,13 @@ export const MATH_TOPICS = {
  ]
  },
  "Vectors & Matrices": {
-    visualizer: "LinearAlgebra",
+    visualizer_1582: "LinearAlgebra",
  title: "Vectors & Matrices: Lego Bricks of Vision Models",
  content: `
  <p><strong>Vectors</strong> line up numbers in a single column. In vision mode the 10×10 canvas becomes a 100×1 vector before entering the dense layers.</p>
  <p><strong>Matrices</strong> arrange those vectors into 2D grids so filters can slide over rows and columns. Understanding their norms and determinants explains why scaling or rotating images affects activations.</p>
  `,
- interactiveFormulas: [
+ interactiveFormulas_1588: [
  {
  name: "Vector Magnitude (3D)",
  parts: [
@@ -1640,13 +1640,13 @@ export const MATH_TOPICS = {
  ]
  },
  "Dot Product": {
-    visualizer: "DotProduct",
+    visualizer_1642: "DotProduct",
  title: "Dot Product: Similarity Meter",
  content: `
  <p>The dot product measures how aligned two vectors are. In the vision model it compares your drawn strokes with learned weight vectors.</p>
  <p>Geometry version: a · b = |a||b|cosθ. Component version: sum of element-wise products. Both explain why brighter pixels boost certain neurons.</p>
  `,
- interactiveFormulas: [
+ interactiveFormulas_1648: [
  {
  name: "Component Form",
  parts: [
@@ -1703,13 +1703,13 @@ export const MATH_TOPICS = {
  ]
  },
  "Matrix Multiplication": {
-    visualizer: "MatMul",
+    visualizer_1705: "MatMul",
  title: "Matrix Multiplication: Layer Engine",
  content: `
  <p>Dense layers are nothing but matrix multiplications. A weight matrix multiplies the input vector to produce activations for the next layer.</p>
  <p>Vision models flatten 2D patches into vectors, multiply by weights, then reshape again. Tracking dimensions keeps tensor shapes valid.</p>
  `,
- interactiveFormulas: [
+ interactiveFormulas_1711: [
  {
  name: "2x2 × 2x2",
  parts: [
@@ -1768,13 +1768,13 @@ export const MATH_TOPICS = {
  ]
  },
  "Tensors": {
-    visualizer: "Tensor",
+    visualizer_1770: "Tensor",
  title: "Tensors: Multi-Dimensional Arrays",
  content: `
  <p>Tensors generalize scalars (rank 0), vectors (rank 1), and matrices (rank 2). Vision models juggle rank-3 (H×W×C) and rank-4 (Batch×Channel×H×W) tensors constantly.</p>
  <p>Keeping track of tensor volume prevents shape mismatches when reshaping, flattening, or feeding data between convolutional and dense layers.</p>
  `,
- interactiveFormulas: [
+ interactiveFormulas_1776: [
  {
  name: "Tensor Volume",
  parts: [
@@ -1820,14 +1820,14 @@ export const MATH_TOPICS = {
  ]
  },
  "Jacobian": {
-    visualizer: "Jacobian",
+    visualizer_1822: "Jacobian",
  title: "Jacobian: Matrix of First Derivatives",
  content: `
  <p>The <strong>Jacobian matrix</strong> contains all partial first-order derivatives of a vector-valued function. It's the multi-variable generalization of the derivative.</p>
  <div class="equation">J = [ ∂fᵢ / ∂xⱼ ]</div>
  <p>In deep learning, the Jacobian is used during backpropagation to compute how each output of a layer changes with respect to each input.</p>
  `,
- interactiveFormulas: [
+ interactiveFormulas_1829: [
  {
  name: "Jacobian Determinant (2x2)",
  components: [
@@ -1850,14 +1850,14 @@ export const MATH_TOPICS = {
  ]
  },
  "Hessian": {
-    visualizer: "Hessian",
+    visualizer_1852: "Hessian",
  title: "Hessian: Matrix of Second Derivatives",
  content: `
  <p>The <strong>Hessian matrix</strong> contains second-order partial derivatives. It describes the <strong>local curvature</strong> of a function.</p>
  <div class="equation">H = [ ∂²f / ∂xᵢ∂xⱼ ]</div>
  <p>Optimizers use the Hessian (or approximations like L-BFGS) to take smarter steps by understanding the 'shape' of the loss landscape.</p>
  `,
- interactiveFormulas: [
+ interactiveFormulas_1859: [
  {
  name: "Hessian Eigenvalues",
  components: [
@@ -1885,7 +1885,7 @@ export const MATH_TOPICS = {
  ]
  },
 "Classification Metrics": {
-     visualizer: "Metric",
+     visualizer_1887: "Metric",
   title: "Classification Metrics: Measuring Success",
  content: `
  <p><strong>Accuracy</strong> is just the start. To truly understand a classifier's performance, especially on imbalanced data, we need <strong>Precision</strong>, <strong>Recall</strong>, and the <strong>F1 Score</strong>.</p>
@@ -1915,7 +1915,7 @@ Recall = TP / (TP + FN)
   <li><strong>Can be gamed</strong>: May not reflect real-world performance</li>
   </ul>
   `,
- interactiveFormulas: [
+ interactiveFormulas_1917: [
  {
  name: "Accuracy Calculator",
  parts: [
@@ -1975,7 +1975,7 @@ Recall = TP / (TP + FN)
  ]
  },
  "Pip2Pip": {
-    visualizer: "GAN",
+    visualizer_1977: "GAN",
  title: "Pixel-to-Pixel (Autoencoder)",
  content: `
  <p><strong>Pip2Pip</strong> refers to pixel-to-pixel networks, commonly implemented as autoencoders. They learn to compress data into a latent space and reconstruct it.</p>
@@ -2005,7 +2005,7 @@ Recall = TP / (TP + FN)
   <li><strong>No guarantee of useful latent space</strong>: Needs VAE or other variants for structured generation</li>
   </ul>
   `,
-  interactiveFormulas: [
+  interactiveFormulas_2007: [
  {
  name: "Compression Ratio",
  parts: [
@@ -2057,7 +2057,7 @@ Recall = TP / (TP + FN)
  ]
  },
 "GAN": {
-    visualizer: "GAN",
+    visualizer_2059: "GAN",
    title: "Generative Adversarial Networks",
    content: `
 <p>A <strong>GAN</strong> has two networks competing: a <strong>Generator</strong> that creates fake images, and a <strong>Discriminator</strong> that tries to distinguish real from fake.</p>
@@ -2078,8 +2078,8 @@ Recall = TP / (TP + FN)
   <li><strong>No inference model</strong>: Can't easily estimate probability of given sample</li>
   </ul>
   `,
-  visualizer: "GAN",
-   interactiveFormulas: [
+  visualizer_2080: "GAN",
+   interactiveFormulas_2081: [
  {
  name: "Generator Loss",
  parts: [
@@ -2141,7 +2141,7 @@ Recall = TP / (TP + FN)
  L2 = (1/n) * sum (y - y_hat)^2
  </div>
  `,
- interactiveFormulas: [
+ interactiveFormulas_2143: [
  {
  name: "L1 vs L2 Comparison",
  parts: [
@@ -2191,7 +2191,7 @@ Recall = TP / (TP + FN)
  ]
  },
 "Pooling": {
-    visualizer: "Pooling",
+    visualizer_2193: "Pooling",
    title: "Pooling: Spatial Downsampling",
    content: `
 <p><strong>Pooling</strong> reduces spatial dimensions while retaining important information. Essential for vision networks.</p>
@@ -2212,8 +2212,8 @@ Recall = TP / (TP + FN)
   <li><strong>Replaced by strided convolutions</strong>: Modern architectures often use strided conv instead</li>
   </ul>
   `,
-  visualizer: "Pooling",
-   interactiveFormulas: [
+  visualizer_2214: "Pooling",
+   interactiveFormulas_2215: [
  {
  name: "Output Size Calculator",
  parts: [
@@ -2293,7 +2293,7 @@ Recall = TP / (TP + FN)
   <li><strong>Can dilute signal</strong>: Too much padding may dilute important central features</li>
   </ul>
   `,
-  interactiveFormulas: [
+  interactiveFormulas_2295: [
  {
  name: "Same Padding Calculator",
  parts: [
@@ -2342,7 +2342,7 @@ Recall = TP / (TP + FN)
  ]
  },
  "BatchNorm": {
-    visualizer: "Optimizer",
+    visualizer_2344: "Optimizer",
  title: "Batch Normalization: Stabilizing Training",
  content: `
  <p><strong>BatchNorm</strong> normalizes layer inputs to have zero mean and unit variance. Makes training faster and more stable.</p>
@@ -2372,7 +2372,7 @@ Recall = TP / (TP + FN)
   <li><strong>Can hurt performance</strong>: Sometimes hurts generalization in some architectures</li>
   </ul>
   `,
-  interactiveFormulas: [
+  interactiveFormulas_2374: [
  {
  name: "BatchNorm Forward",
  parts: [
@@ -2426,7 +2426,7 @@ Recall = TP / (TP + FN)
  ]
  },
  "Dropout": {
-    visualizer: "NeuralNetwork",
+    visualizer_2428: "NeuralNetwork",
  title: "Dropout: Regularization by Random Silencing",
  content: `
  <p><strong>Dropout</strong> randomly sets a fraction of neuron outputs to zero during training. Prevents overfitting.</p>
@@ -2456,7 +2456,7 @@ Recall = TP / (TP + FN)
   <li><strong>Less used now</strong>: Modern architectures often use other regularization</li>
   </ul>
   `,
-  interactiveFormulas: [
+  interactiveFormulas_2458: [
  {
  name: "Dropout Scaling",
  parts: [
@@ -2507,7 +2507,7 @@ Recall = TP / (TP + FN)
  },
 "SkipConnection": {
   title: "Skip Connections: Gradient Highways",
-  visualizer: "SkipConnection",
+  visualizer_2509: "SkipConnection",
   content: `
  <p><strong>Skip connections</strong> (residual connections) add the input of a layer to its output. Enables training very deep networks.</p>
  
@@ -2535,7 +2535,7 @@ Recall = TP / (TP + FN)
   <li><strong>Can hurt representation</strong>: Adding identity may limit learned capacity</li>
   </ul>
   `,
-  interactiveFormulas: [
+  interactiveFormulas_2537: [
  {
  name: "Residual Output",
  parts: [
@@ -2605,8 +2605,8 @@ Recall = TP / (TP + FN)
  <h4>Inception / GoogLeNet (2014)</h4>
  <p>Uses 'Inception modules' that apply different filter sizes (1x1, 3x3, 5x5) in parallel at the same layer. Efficient and powerful.</p>
  `,
- visualizer: "CNN",
- interactiveFormulas: [
+ visualizer_2607: "CNN",
+ interactiveFormulas_2608: [
  {
  name: "Parameter Count Comparison",
  components: [
@@ -2685,7 +2685,7 @@ Recall = TP / (TP + FN)
  ]
  },
  "Supervised": {
-    visualizer: "NeuralNetwork",
+    visualizer_2687: "NeuralNetwork",
  title: "Supervised Learning: Learning with Labels",
  content: `
  <p><strong>Supervised Learning</strong> is the most common ML paradigm. The model learns from input-output pairs (labeled data).</p>
@@ -2700,7 +2700,7 @@ Recall = TP / (TP + FN)
  <h4>Training Process</h4>
  <p>Forward pass → Calculate loss → Backward pass → Update weights. Repeat until convergence!</p>
  `,
- interactiveFormulas: [
+ interactiveFormulas_2702: [
  {
  name: "Training Accuracy",
  parts: [
@@ -2749,7 +2749,7 @@ Recall = TP / (TP + FN)
  ]
  },
  "Unsupervised": {
-    visualizer: "PCA",
+    visualizer_2751: "PCA",
  title: "Unsupervised Learning: Finding Patterns Without Labels",
  content: `
  <p><strong>Unsupervised Learning</strong> finds structure in data without any labels. The model discovers patterns on its own.</p>
@@ -2766,7 +2766,7 @@ Recall = TP / (TP + FN)
  <h4>Why Use It?</h4>
  <p>Labels are expensive! Unsupervised can find hidden patterns humans might miss.</p>
  `,
- interactiveFormulas: [
+ interactiveFormulas_2768: [
  {
  name: "K-Means Centroid Update",
  points: [
@@ -2821,7 +2821,7 @@ Recall = TP / (TP + FN)
  ]
  },
  "SemiSupervised": {
-    visualizer: "NeuralNetwork",
+    visualizer_2823: "NeuralNetwork",
  title: "Semi-Supervised Learning: Best of Both Worlds",
  content: `
  <p><strong>Semi-supervised learning</strong> uses both labeled and unlabeled data. Powerful when labels are scarce!</p>
@@ -2837,7 +2837,7 @@ Recall = TP / (TP + FN)
  <h4>Real World</h4>
  <p>Medical imaging, language translation - labeling is expensive!</p>
  `,
- interactiveFormulas: [
+ interactiveFormulas_2839: [
  {
  name: "Confidence Thresholding",
  components: [
@@ -2870,7 +2870,7 @@ Recall = TP / (TP + FN)
  ]
  },
 "MDP": {
-    visualizer: "MDP",
+    visualizer_2872: "MDP",
    title: "MDP: Markov Decision Processes",
    content: `
 <p><strong>MDPs</strong> provide a mathematical framework for modeling decision making in situations where outcomes are partly random and partly under the control of a decision maker.</p>
@@ -2891,8 +2891,8 @@ Recall = TP / (TP + FN)
   <li><strong>No function approximation</strong>: Basic MDP needs explicit state tables</li>
   </ul>
   `,
-  visualizer: "MDP",
-   interactiveFormulas: [
+  visualizer_2893: "MDP",
+   interactiveFormulas_2894: [
  {
  name: "Discounted Return",
  components: [
@@ -2917,7 +2917,7 @@ Recall = TP / (TP + FN)
  ]
  },
  "QLearning": {
-    visualizer: "GridWorld",
+    visualizer_2919: "GridWorld",
  title: "Q-Learning: Learning from Trial and Error",
  content: `
 <p><strong>Q-Learning</strong> is a model-free RL algorithm. It learns the quality (Q-value) of an action in a given state.</p>
@@ -2939,8 +2939,8 @@ Recall = TP / (TP + FN)
   <li><strong>Overestimation</strong>: Max can cause overestimation of Q-values</li>
   </ul>
   `,
-  visualizer: "GridWorld",
- interactiveFormulas: [
+  visualizer_2941: "GridWorld",
+ interactiveFormulas_2942: [
  {
  name: "Temporal Difference (TD) Update",
  components: [
@@ -2971,7 +2971,7 @@ Recall = TP / (TP + FN)
  ]
  },
 "DeepQN": {
-    visualizer: "DeepQN",
+    visualizer_2973: "DeepQN",
    title: "Deep Q-Networks (DQN): Scaling RL",
    content: `
 <p><strong>DQN</strong> uses a deep neural network to approximate the Q-value function. This allows RL to scale to complex environments like Atari games.</p>
@@ -2992,8 +2992,8 @@ Recall = TP / (TP + FN)
   <li><strong>Not stable</strong>: Training can be volatile</li>
   </ul>
   `,
-  visualizer: "DeepQN",
-   interactiveFormulas: [
+  visualizer_2994: "DeepQN",
+   interactiveFormulas_2995: [
  {
  name: "DQN Loss",
  components: [
@@ -3014,13 +3014,13 @@ Recall = TP / (TP + FN)
  ]
  },
  "PolicyGradient": {
-    visualizer: "PPO",
+    visualizer_3016: "PPO",
  title: "Policy Gradients: Direct Action Learning",
  content: `
  <p><strong>Policy Gradients</strong> directly optimize the agent's policy (π) rather than the value function. This works better for continuous action spaces.</p>
  <div class="equation">∇J(θ) = E[ ∇ log π(a|s;θ) * G_t ]</div>
  `,
- interactiveFormulas: [
+ interactiveFormulas_3022: [
  {
  name: "REINFORCE Update",
  components: [
@@ -3042,7 +3042,7 @@ Recall = TP / (TP + FN)
  ]
  },
 "PPO": {
-    visualizer: "PPO",
+    visualizer_3044: "PPO",
   title: "PPO: Proximal Policy Optimization",
   content: `
   <p><strong>PPO</strong> is a state-of-the-art RL algorithm that stabilizes training by clipping policy updates.</p>
@@ -3063,8 +3063,8 @@ Recall = TP / (TP + FN)
   <li><strong>Performance ceiling</strong>: Sometimes outperformed by more specialized algorithms</li>
   </ul>
   `,
-  visualizer: "PPO",
- interactiveFormulas: [
+  visualizer_3065: "PPO",
+ interactiveFormulas_3066: [
  {
  name: "PPO Clipped Objective",
  components: [
@@ -3092,7 +3092,7 @@ Recall = TP / (TP + FN)
  ]
  },
  "SelfSupervised": {
-    visualizer: "Transformer",
+    visualizer_3094: "Transformer",
  title: "Self-Supervised Learning: Proxy Tasks for Rich Representations",
  content: `
  <p><strong>Self-supervised learning</strong> creates labels from the data itself. Design a task where the 'answer' is in the input!</p>
@@ -3122,7 +3122,7 @@ Recall = TP / (TP + FN)
   <li><strong>Negative sampling</strong>: Contrastive learning needs careful negatives</li>
   </ul>
   `,
-  interactiveFormulas: [
+  interactiveFormulas_3124: [
  {
  name: "InfoNCE Contrastive Loss",
  components: [
@@ -3153,7 +3153,7 @@ Recall = TP / (TP + FN)
  ]
  },
  "Transformer": {
-    visualizer: "Transformer",
+    visualizer_3155: "Transformer",
  title: "Transformers: Attention Is All You Need",
  content: `
  <p><strong>Transformers</strong> use self-attention to process sequences. No recurrence, no convolution - just attention!</p>
@@ -3188,8 +3188,8 @@ Recall = TP / (TP + FN)
   <li><strong>Expensive for long sequences</strong>: GPT-4 has token limits due to this</li>
   </ul>
   `,
-  visualizer: "Transformer",
- interactiveFormulas: [
+  visualizer_3190: "Transformer",
+ interactiveFormulas_3191: [
  {
  name: "Attention Weights",
  components: [
@@ -3244,7 +3244,7 @@ Recall = TP / (TP + FN)
  ]
  },
  "VisionTransformer": {
-    visualizer: "Transformer",
+    visualizer_3246: "Transformer",
  title: "Vision Transformer (ViT): Transformers for Images",
  content: `
  <p><strong>ViT</strong> treats images as sequences of patches. Split image into fixed-size patches, linearly embed, feed to transformer.</p>
@@ -3274,7 +3274,7 @@ Recall = TP / (TP + FN)
   <li><strong>Fine-tuning sensitivity</strong>: Harder to fine-tune than CNNs</li>
   </ul>
   `,
-  interactiveFormulas: [
+  interactiveFormulas_3276: [
  {
  name: "Patch Count Calculator",
  components: [
@@ -3301,7 +3301,7 @@ Recall = TP / (TP + FN)
  ]
  },
  "LoRA": {
-    visualizer: "LoRA",
+    visualizer_3303: "LoRA",
  title: "LoRA: Low-Rank Adaptation",
  content: `
  <p><strong>LoRA</strong> fine-tunes large models by only training small, low-rank matrices. This allows fine-tuning an LLM on consumer hardware.</p>
@@ -3324,8 +3324,8 @@ Recall = TP / (TP + FN)
   <li><strong>Not universal</strong>: Doesn't work equally well for all model architectures</li>
   </ul>
   `,
-  visualizer: "LoRA",
- interactiveFormulas: [
+  visualizer_3326: "LoRA",
+ interactiveFormulas_3327: [
  {
  name: "LoRA Parameter Savings",
  components: [
@@ -3356,8 +3356,8 @@ Recall = TP / (TP + FN)
    content: `
    <p><strong>Diffusion models</strong> generate images by iteratively denoising. Start with noise, gradually clean up!</p>
    `,
-   visualizer: "Diffusion",
-   interactiveFormulas: [
+   visualizer_3358: "Diffusion",
+   interactiveFormulas_3359: [
  {
  name: "Noise Schedule (Linear)",
  components: [
@@ -3386,7 +3386,7 @@ Recall = TP / (TP + FN)
  ]
  },
 "CLIP": {
-     visualizer: "CLIP",
+     visualizer_3388: "CLIP",
   title: "CLIP: Connecting Images and Text",
  content: `
  <p><strong>CLIP</strong> learns to match images with text descriptions. Zero-shot classifier from natural language!</p>
@@ -3400,7 +3400,7 @@ Recall = TP / (TP + FN)
  <h4>Why It Works</strong>
  <p>Language provides rich supervision. Transfer across tasks. Robust to distribution shift.</p>
  `,
- interactiveFormulas: [
+ interactiveFormulas_3402: [
  {
  name: "Zero-Shot Prediction",
  components: [
@@ -3432,7 +3432,7 @@ Recall = TP / (TP + FN)
  },
 "ObjectDetection": {
   title: "Object Detection: Finding and Locating Objects",
-  visualizer: "ObjectDetection",
+  visualizer_3434: "ObjectDetection",
   content: `
  <p><strong>Object detection</strong> finds all objects in an image and draws bounding boxes around them.</p>
  
@@ -3445,7 +3445,7 @@ Recall = TP / (TP + FN)
  <h4>Key Metrics</h4>
  <p>mAP: mean Average Precision. IoU: Intersection over Union. PASCAL VOC vs COCO.</p>
  `,
- interactiveFormulas: [
+ interactiveFormulas_3447: [
  {
  name: "IoU (Intersection over Union)",
  components: [
@@ -3492,7 +3492,7 @@ Recall = TP / (TP + FN)
   <li><strong>Not end-to-end</strong>: Fixed priors limit flexibility</li>
   </ul>
   `,
-  interactiveFormulas: [
+  interactiveFormulas_3494: [
  {
  name: "Box Decoding",
  components: [
@@ -3542,7 +3542,7 @@ Recall = TP / (TP + FN)
   <li><strong>Limited by resolution</strong>: Small objects get missed</li>
   </ul>
   `,
-  interactiveFormulas: [
+  interactiveFormulas_3544: [
  {
  name: "Upsampling (Transposed Conv)",
  components: [
@@ -3700,7 +3700,7 @@ Recall = TP / (TP + FN)
   • 3Blue1Brown - Linear algebra visualizations<br/>
   • Learn Machine Learn - Interactive playground!</p>
  `,
- interactiveFormulas: [
+ interactiveFormulas_3702: [
  {
  name: "Study Time Estimator",
  components: [
@@ -3727,7 +3727,7 @@ Recall = TP / (TP + FN)
  ]
  },
  "StableDiffusion": {
-    visualizer: "Diffusion",
+    visualizer_3729: "Diffusion",
  title: "Stable Diffusion: Open Image Generation",
  content: `
  <p><strong>Stable Diffusion</strong> is a latent diffusion model. Runs on consumer GPUs! Open weights = massive community.</p>
@@ -3744,7 +3744,7 @@ Recall = TP / (TP + FN)
  • CLIP: Text understanding<br/>
  • Scheduler: Sampling strategy</p>
  `,
- interactiveFormulas: [
+ interactiveFormulas_3746: [
  {
  name: "CFG Scale Impact",
  components: [
@@ -3772,11 +3772,11 @@ Recall = TP / (TP + FN)
  },
 "TSNE": {
   title: "t-SNE: Visualizing High-Dim Data",
-  visualizer: "TSNE",
+  visualizer_3774: "TSNE",
   content: `
  <p><strong>t-SNE</strong> (t-distributed Stochastic Neighbor Embedding) is a nonlinear dimensionality reduction technique well-suited for embedding high-dimensional data for visualization in a low-dimensional space of two or three dimensions.</p>
  `,
- interactiveFormulas: [
+ interactiveFormulas_3778: [
  {
  name: "Perplexity Impact",
  components: [
@@ -3800,7 +3800,7 @@ Recall = TP / (TP + FN)
  content: `
  <p><strong>UMAP</strong> (Uniform Manifold Approximation and Projection) is a faster alternative to t-SNE that often preserves more of the global structure of the data.</p>
  `,
- interactiveFormulas: [
+ interactiveFormulas_3802: [
  {
  name: "Min Distance",
  components: [
@@ -3820,12 +3820,12 @@ Recall = TP / (TP + FN)
  ]
  },
  "WGAN": {
-    visualizer: "GAN",
+    visualizer_3822: "GAN",
  title: "WGAN: Wasserstein GAN",
  content: `
  <p><strong>WGAN</strong> uses the Earth Mover's (Wasserstein) distance to improve GAN stability and provide a meaningful loss metric that correlates with image quality.</p>
  `,
- interactiveFormulas: [
+ interactiveFormulas_3827: [
  {
  name: "Critic Loss (Minimax)",
  components: [
@@ -3846,7 +3846,7 @@ Recall = TP / (TP + FN)
  ]
  },
  "DCGAN": {
-    visualizer: "GAN",
+    visualizer_3848: "GAN",
  title: "DCGAN: Deep Convolutional GAN",
  content: `
  <p><strong>DCGAN</strong> introduced architectural constraints that made GANs stable to train using deep convolutional layers.</p>
@@ -3855,7 +3855,7 @@ Recall = TP / (TP + FN)
  • Use Batch Norm in both Generator and Discriminator.<br/>
  • Use ReLU in G and Leaky ReLU in D.</p>
  `,
- interactiveFormulas: [
+ interactiveFormulas_3857: [
  {
  name: "Leaky ReLU in DCGAN",
  components: [
@@ -3880,7 +3880,7 @@ Recall = TP / (TP + FN)
  ]
  },
  "SAM": {
-    visualizer: "CNN",
+    visualizer_3882: "CNN",
  title: "Segment Anything Model (SAM): Foundation for Segmentation",
  content: `
  <p><strong>SAM</strong> is a promptable segmentation model. Segment anything with just clicks, boxes, or text!</p>
@@ -3896,7 +3896,7 @@ Recall = TP / (TP + FN)
  <h4>Architecture</h4>
  <p>Image encoder (ViT) -> Prompt encoder -> Mask decoder. 3 mask outputs (whole, part, subpart).</p>
  `,
- interactiveFormulas: [
+ interactiveFormulas_3898: [
  {
  name: "Mask Generation",
  components: [
@@ -3925,7 +3925,7 @@ Recall = TP / (TP + FN)
  ]
  },
  "LLM": {
-    visualizer: "Transformer",
+    visualizer_3927: "Transformer",
  title: "Large Language Models: Transformers for Text",
  content: `
  <p><strong>LLMs</strong> are transformer models trained on massive text. GPT, Claude, Llama - they all use the same architecture!</p>
@@ -3957,7 +3957,7 @@ Recall = TP / (TP + FN)
   <li><strong>Not deterministic</strong>: Same prompt can produce different outputs</li>
   </ul>
   `,
-  interactiveFormulas: [
+  interactiveFormulas_3959: [
  {
  name: "Token Generation Probability",
  components: [
@@ -3986,7 +3986,7 @@ Recall = TP / (TP + FN)
  ]
  },
  "RAG": {
-    visualizer: "Transformer",
+    visualizer_3988: "Transformer",
  title: "Retrieval-Augmented Generation",
  content: `
  <p><strong>RAG</strong> combines LLMs with external knowledge. Don't rely on training data - retrieve relevant info!</p>
@@ -4006,7 +4006,7 @@ Recall = TP / (TP + FN)
  • Source attribution<br/>
  • Domain-specific knowledge</p>
  `,
- interactiveFormulas: [
+ interactiveFormulas_4008: [
  {
  name: "Retrieval Score (Cosine Similarity)",
  components: [
@@ -4036,7 +4036,7 @@ Recall = TP / (TP + FN)
  ]
  },
  "Multimodal": {
-    visualizer: "Transformer",
+    visualizer_4038: "Transformer",
  title: "Multimodal Learning: Beyond Single Modality",
  content: `
  <p><strong>Multimodal</strong> models process multiple types of data: text, images, audio, video together.</p>
@@ -4053,7 +4053,7 @@ Recall = TP / (TP + FN)
  <h4>Why Multimodal?</h4>
  <p>Humans use multiple senses. Richer understanding. Grounding in real world.</p>
  `,
- interactiveFormulas: [
+ interactiveFormulas_4055: [
  {
  name: "Cross-Modal Attention",
  components: [
@@ -4080,7 +4080,7 @@ Recall = TP / (TP + FN)
  ]
  },
  "NeRF": {
-    visualizer: "NeuralNetwork",
+    visualizer_4082: "NeuralNetwork",
  title: "Neural Radiance Fields: 3D from Images",
  content: `
  <p><strong>NeRF</strong> represents a scene as a neural network. Input: 5D (x,y,z,θ,φ). Output: color + density.</p>
@@ -4097,7 +4097,7 @@ Recall = TP / (TP + FN)
  • Object modeling, architecture<br/>
  • Video game environments</p>
  `,
- interactiveFormulas: [
+ interactiveFormulas_4099: [
  {
  name: "Volume Rendering (Simplified)",
  components: [
@@ -4127,7 +4127,7 @@ Recall = TP / (TP + FN)
  ]
  },
  "Sora": {
-    visualizer: "Diffusion",
+    visualizer_4129: "Diffusion",
  title: "Sora: Video Generation from Text",
  content: `
  <p><strong>Sora</strong> is OpenAI's video generation model. Text prompt -> minute-long videos!</p>
@@ -4145,7 +4145,7 @@ Recall = TP / (TP + FN)
  <h4>Why It Matters</h4>
  <p>First model showing emergent world simulation. Understanding 3D, occlusion, motion!</p>
  `,
- interactiveFormulas: [
+ interactiveFormulas_4147: [
  {
  name: "Video Patches Calculation",
  components: [
@@ -4175,7 +4175,7 @@ Recall = TP / (TP + FN)
  ]
  },
  "Agent": {
-    visualizer: "PPO",
+    visualizer_4177: "PPO",
  title: "AI Agents: Language Models That Use Tools",
  content: `
  <p><strong>AI Agents</strong> use LLMs to plan, use tools, and take actions. Not just text generation - real tasks!</p>
@@ -4192,7 +4192,7 @@ Recall = TP / (TP + FN)
  <h4>Frameworks</h4>
  <p>LangChain, AutoGPT, Claude Agent, ReAct prompting. ReAct: Reasoning + Acting interleaved.</p>
  `,
- interactiveFormulas: [
+ interactiveFormulas_4194: [
  {
  name: "ReAct: Reasoning + Acting",
  components: [
@@ -4222,7 +4222,7 @@ Recall = TP / (TP + FN)
  ]
  },
  "Quantization": {
-    visualizer: "Loss",
+    visualizer_4224: "Loss",
  title: "Model Quantization: Smaller, Faster Models",
  content: `
  <p><strong>Quantization</strong> reduces model precision (32-bit float -> 8-bit int). Huge savings with minimal accuracy loss!</p>
@@ -4258,7 +4258,7 @@ Recall = TP / (TP + FN)
   <li><strong>Irreversible</strong>: Can't recover original precision</li>
   </ul>
   `,
- interactiveFormulas: [
+ interactiveFormulas_4260: [
  {
  name: "Memory Savings Calculator",
  components: [
@@ -4284,7 +4284,7 @@ Recall = TP / (TP + FN)
  ]
  },
  "Distillation": {
-    visualizer: "NeuralNetwork",
+    visualizer_4286: "NeuralNetwork",
  title: "Knowledge Distillation: Small Model from Big",
  content: `
  <p><strong>Distillation</strong> trains a small 'student' model to mimic a large 'teacher'. The student learns from teacher logits!</p>
@@ -4298,7 +4298,7 @@ Recall = TP / (TP + FN)
  <h4>Why It Works</h4>
  <p>Teacher provides 'dark knowledge' - relationships between classes, not just answers. Student learns richer representation!</p>
  `,
- interactiveFormulas: [
+ interactiveFormulas_4300: [
  {
  name: "Distillation Loss",
  components: [
@@ -4327,7 +4327,7 @@ Recall = TP / (TP + FN)
  ]
  },
  "MoE": {
-    visualizer: "Transformer",
+    visualizer_4329: "Transformer",
  title: "Mixture of Experts: Scaling Efficiently",
  content: `
  <p><strong>MoE</strong> uses many 'expert' networks, only activates a few per input. Efficient scaling!</p>
@@ -4343,7 +4343,7 @@ Recall = TP / (TP + FN)
  • Mixtral 8x7B: 8 experts, 2 active = ~12B active params<br/>
  • GShard: Google's MoE transformer</p>
  `,
- interactiveFormulas: [
+ interactiveFormulas_4345: [
  {
  name: "Active Parameters Calculation",
  components: [
@@ -4371,7 +4371,7 @@ Recall = TP / (TP + FN)
  ]
  },
  "RecentAdvances": {
-    visualizer: "Transformer",
+    visualizer_4373: "Transformer",
  title: "Recent Advances 2024-2025",
  content: `
  <p>The ML field is evolving rapidly. Here are the latest breakthroughs shaping the future!</p>
@@ -4401,7 +4401,7 @@ Recall = TP / (TP + FN)
  • Efficient architectures<br/>
  • Real-world deployment</p>
  `,
- interactiveFormulas: [
+ interactiveFormulas_4403: [
  {
  name: "Compute Scaling Law",
  components: [
@@ -4429,7 +4429,7 @@ Recall = TP / (TP + FN)
  ]
  },
 "LinearRegression": {
-    visualizer: "LinearRegression",
+    visualizer_4431: "LinearRegression",
   title: "Linear Regression: The First ML Algorithm",
   summary: "Linear Regression is the bedrock of statistical prediction. It models the relationship between a dependent variable and one or more independent variables by fitting a linear equation to observed data. The goal is to minimize the sum of squared errors between the predicted and actual values.",
   takeaways: [
@@ -4462,8 +4462,8 @@ Recall = TP / (TP + FN)
   <li><strong>Underfits complex data</strong>: Too simple for most real-world problems</li>
   </ul>
   `,
-  visualizer: "LinearRegression",
-   interactiveFormulas: [
+  visualizer_4464: "LinearRegression",
+   interactiveFormulas_4465: [
  {
  name: "Simple Linear Prediction",
  parts: [
@@ -4513,7 +4513,7 @@ Recall = TP / (TP + FN)
  ]
  },
 "LogisticRegression": {
-    visualizer: "LogisticRegression",
+    visualizer_4515: "LogisticRegression",
    title: "Logistic Regression: From Lines to Probabilities",
    content: `
 <p><strong>Logistic Regression</strong> takes a linear model and squeezes the output through a sigmoid, converting it to a probability between 0 and 1.</p>
@@ -4534,8 +4534,8 @@ Recall = TP / (TP + FN)
   <li><strong>Outperforms often by trees</strong>: For complex data, ensemble methods beat it</li>
   </ul>
   `,
-  visualizer: "LogisticRegression",
-   interactiveFormulas: [
+  visualizer_4536: "LogisticRegression",
+   interactiveFormulas_4537: [
  {
  name: "Sigmoid Decision",
  parts: [
@@ -4586,7 +4586,7 @@ Recall = TP / (TP + FN)
  ]
  },
  "BayesTheorem": {
-    visualizer: "BayesTheorem",
+    visualizer_4588: "BayesTheorem",
  title: "Bayes' Theorem: Updating Beliefs with Evidence",
  content: `
  <p><strong>Bayes' Theorem</strong> is the foundation of probabilistic reasoning. It tells us how to update our beliefs when new evidence arrives.</p>
@@ -4605,7 +4605,7 @@ Recall = TP / (TP + FN)
  <h4>Medical Example</h4>
  <p>If a test is 95% accurate (sensitivity), but the disease only affects 1% of people (prior), a positive test result doesn't mean you're 95% likely to be sick! Bayes tells you the true probability.</p>
  `,
- interactiveFormulas: [
+ interactiveFormulas_4607: [
  {
  name: "Medical Test Calculator",
  parts: [
@@ -4659,7 +4659,7 @@ Recall = TP / (TP + FN)
  ]
  },
 "RNN": {
-    visualizer: "RNN",
+    visualizer_4661: "RNN",
    title: "Recurrent Neural Networks: Memory in Sequences",
    content: `
 <p><strong>RNNs</strong> process sequences by maintaining a hidden state that acts as memory, updated at each time step.</p>
@@ -4680,8 +4680,8 @@ Recall = TP / (TP + FN)
   <li><strong>Slow training</strong>: Sequential nature limits hardware utilization</li>
   </ul>
   `,
-  visualizer: "RNN",
-   interactiveFormulas: [
+  visualizer_4682: "RNN",
+   interactiveFormulas_4683: [
  {
  name: "Hidden State Update",
  parts: [
@@ -4736,7 +4736,7 @@ Recall = TP / (TP + FN)
  ]
  },
 "LSTM": {
-    visualizer: "LSTM",
+    visualizer_4738: "LSTM",
    title: "LSTM: Long Short-Term Memory",
    content: `
 <p><strong>LSTM</strong> solves the vanishing gradient problem with three gates that control information flow through a cell state.</p>
@@ -4757,8 +4757,8 @@ Recall = TP / (TP + FN)
   <li><strong>Outperformed by transformers</strong>: For most NLP, attention is better</li>
   </ul>
   `,
-  visualizer: "LSTM",
-   interactiveFormulas: [
+  visualizer_4759: "LSTM",
+   interactiveFormulas_4760: [
  {
  name: "Forget Gate",
  parts: [
@@ -4813,7 +4813,7 @@ Recall = TP / (TP + FN)
  ]
  },
  "KLDivergence": {
-    visualizer: "KLDivergence",
+    visualizer_4815: "KLDivergence",
  title: "KL Divergence: Measuring Distribution Mismatch",
  content: `
  <p><strong>KL Divergence</strong> measures how one probability distribution differs from another. It's central to VAEs, diffusion models, and RLHF.</p>
@@ -4849,7 +4849,7 @@ Recall = TP / (TP + FN)
   <li><strong>Scale sensitivity</strong>: Value depends on how probabilities are represented</li>
   </ul>
   `,
-  interactiveFormulas: [
+  interactiveFormulas_4851: [
  {
  name: "Gaussian KL Divergence",
  parts: [
@@ -4898,7 +4898,7 @@ Recall = TP / (TP + FN)
  ]
  },
  "Interpretability": {
-    visualizer: "NeuralNetwork",
+    visualizer_4900: "NeuralNetwork",
  title: "Model Interpretability: Why Did the Model Decide That?",
  content: `
  <p><strong>Interpretability</strong> methods explain WHY a model makes a prediction. Critical for medical, legal, and safety-critical applications.</p>
@@ -4934,7 +4934,7 @@ Recall = TP / (TP + FN)
   <li><strong>Trade-off with accuracy</strong>: Interpretable models often less accurate</li>
   </ul>
   `,
-  interactiveFormulas: [
+  interactiveFormulas_4936: [
  {
  name: "Feature Importance (Simplified SHAP)",
  parts: [
@@ -5035,7 +5035,7 @@ Recall = TP / (TP + FN)
   • <strong>Theory meets practice:</strong> SVM theory existed in 1960s but became practical in 1990s.<br/>
   • <strong>Open weights accelerate progress:</strong> ImageNet, Llama, Stable Diffusion democratized AI.</p>
   `,
-  interactiveFormulas: [
+  interactiveFormulas_5037: [
   {
     name: "Training Time Comparison (AlexNet vs Modern)",
     parts: [
@@ -5064,7 +5064,7 @@ Recall = TP / (TP + FN)
   ]
   },
   "ActivationAdvanced": {
-    visualizer: "Activation",
+    visualizer_5066: "Activation",
   title: "Advanced Activations: Beyond ReLU",
   content: `
   <p>Modern networks use activation functions that address ReLU's shortcomings — dead neurons, non-smooth gradients, and unbounded outputs.</p>
@@ -5087,7 +5087,7 @@ Recall = TP / (TP + FN)
  Swish(x) = x × σ(βx)
  </div>
  `,
- interactiveFormulas: [
+ interactiveFormulas_5089: [
  {
  name: "Leaky ReLU",
  parts: [

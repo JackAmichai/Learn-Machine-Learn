@@ -6,6 +6,17 @@ import React, { useState, useEffect } from 'react';
  * We cycle through (0,0) → (0,1) → (1,0) → (1,1) so learners can see every
  * row-times-column computation.
  */
+const Cell = ({ value, highlight, color = '#00f2ff' }) => (
+    <div className="mm-cell" style={{
+        background: highlight ? `${color}22` : 'rgba(255,255,255,0.04)',
+        borderColor: highlight ? color : 'rgba(255,255,255,0.08)',
+        color: highlight ? color : 'var(--text-secondary)',
+        fontWeight: highlight ? 700 : 400,
+    }}>
+        {typeof value === 'number' ? value.toFixed(2) : value}
+    </div>
+);
+
 export default function MatMulVisualizer({ values = {} }) {
     const a11 = values.a11 ?? 1;
     const a12 = values.a12 ?? 0.5;
@@ -36,16 +47,7 @@ export default function MatMulVisualizer({ values = {} }) {
     const A = [[a11, a12], [a21, a22]];
     const B = [[b11, b12], [b21, b22]];
 
-    const Cell = ({ value, highlight, color = '#00f2ff' }) => (
-        <div className="mm-cell" style={{
-            background: highlight ? `${color}22` : 'rgba(255,255,255,0.04)',
-            borderColor: highlight ? color : 'rgba(255,255,255,0.08)',
-            color: highlight ? color : 'var(--text-secondary)',
-            fontWeight: highlight ? 700 : 400,
-        }}>
-            {typeof value === 'number' ? value.toFixed(2) : value}
-        </div>
-    );
+
 
     const focusedContribution =
         A[focus.i][0] * B[0][focus.j] + A[focus.i][1] * B[1][focus.j];
