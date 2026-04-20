@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Tooltip } from './Tooltip';
+import { useToast } from '../hooks/useToast';
 import { ALLOWED_ACTIVATIONS, ALLOWED_OPTIMIZERS } from '../engine/NeuralNetwork';
 
 export function CodeExport({ structure, hyperparams }) {
     const [isOpen, setIsOpen] = useState(false);
     const [lang, setLang] = useState('python'); // 'python' or 'js'
+    const { pushToast } = useToast();
 
     const safeActivation = ALLOWED_ACTIVATIONS.includes(hyperparams.activation) ? hyperparams.activation : 'relu';
     const safeOptimizer = ALLOWED_OPTIMIZERS.includes(hyperparams.optimizer) ? hyperparams.optimizer : 'adam';
@@ -16,6 +18,27 @@ export function CodeExport({ structure, hyperparams }) {
             </button>
         );
     }
+
+    const handleCopy = async () => {
+        const code = lang === 'python' ? generatePython() : generateJS();
+        try {
+            await navigator.clipboard.writeText(code);
+            pushToast({
+                type: 'success',
+                title: 'Copied!',
+                message: 'Code copied to clipboard',
+                duration: 2000
+            });
+        } catch (err) {
+            pushToast({
+                type: 'error',
+                title: 'Copy failed',
+                message: 'Could not copy code to clipboard',
+                duration: 3000
+            });
+            console.error('Failed to copy:', err);
+        }
+    };
 
     const generatePython = () => {
         let code = `import tensorflow as tf\nfrom tensorflow.keras import layers, models\n\n`;
@@ -81,9 +104,14 @@ export function CodeExport({ structure, hyperparams }) {
                 </div>
 
                 <div className="code-block">
-                    <pre>
-                        {lang === 'python' ? generatePython() : generateJS()}
-                    </pre>
+                    <button className="copy-btn" onClick={handleCopy} aria-label="Copy to clipboard">
+                        Copy
+                    </button>
+                    <div className="code-content">
+                        <pre>
+                            {lang === 'python' ? generatePython() : generateJS()}
+                        </pre>
+                    </div>
                 </div>
 
                 <p className="tip">Copy this code to run your model in a real environment!</p>
@@ -160,11 +188,31 @@ export function CodeExport({ structure, hyperparams }) {
                 font-weight: bold;
             }
             .code-block {
+                position: relative;
                 background: #1e1e1e;
-                padding: 20px;
                 border-radius: 0 8px 8px 8px;
-                overflow-x: auto;
                 border: 1px solid var(--glass-border);
+            }
+            .code-content {
+                padding: 20px;
+                overflow-x: auto;
+            }
+            .copy-btn {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: rgba(60, 60, 60, 0.9);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                color: #fff;
+                padding: 4px 10px;
+                border-radius: 4px;
+                font-size: 11px;
+                cursor: pointer;
+                transition: background 0.2s;
+                z-index: 10;
+            }
+            .copy-btn:hover {
+                background: rgba(80, 80, 80, 1);
             }
             .code-block pre {
                 margin: 0;
