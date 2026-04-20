@@ -50,4 +50,24 @@ describe('useNeuralNetwork Security Vulnerability', () => {
     // Vulnerability fixed: The optimizer state is sanitized to default 'adam'
     expect(result.current.hyperparams.optimizer).toBe('adam');
   });
+
+  it('should sanitize malicious dataset size in imported JSON', () => {
+    const { result } = renderHook(() => useNeuralNetwork());
+
+    const maliciousPayload = {
+      version: 1,
+      structure: [2, 4, 1],
+      datasetParams: {
+        type: 'xor',
+        size: 1000000000, // Malicious size
+        noise: 0.1
+      }
+    };
+
+    act(() => {
+      result.current.importModelJSON(maliciousPayload);
+    });
+
+    expect(result.current.datasetParams.size).toBe(5000); // Should be clamped
+  });
 });
