@@ -333,6 +333,27 @@ export class NeuralNetwork {
   }
 
   /**
+   * Gets connection weights asynchronously to avoid blocking UI.
+   * @param {number} layerIndex - Index of the connection layer
+   * @returns {Promise<Float32Array|null>} Weight values or null
+   */
+  async getConnectionWeightsAsync(layerIndex) {
+    if (!this.connectionLayers[layerIndex]) return null;
+    try {
+      const weights = this.connectionLayers[layerIndex].getWeights();
+      if (!weights.length) return null;
+      const kernel = weights[0];
+      // await kernel.data() returns a Float32Array
+      // We do not dispose kernel because it belongs to the layer.
+      const data = await kernel.data();
+      return data;
+    } catch (e) {
+      console.error('Error fetching connection weights async:', e);
+      return null;
+    }
+  }
+
+  /**
    * Serializes all model weights to nested arrays.
    * Useful for saving/restoring model state.
    * @returns {Array} Serialized weights per layer
@@ -369,19 +390,16 @@ export class NeuralNetwork {
   /**
    * Scans the network for dead neurons (always zero activation).
    * @param {tf.Tensor2D} xs - Input batch
-   * @returns {Object} Map of layerIndex -> Array of dead neuron indices
+   * @returns {Promise<Object>} Map of layerIndex -> Array of dead neuron indices
    */
-  scanForDeadNeurons(xs) {
+  async scanForDeadNeurons(xs) {
     if (!this.model) return {};
 
-    // We need to traverse the model layers manually.
-    // structure index 0 is input.
-    // structure index 1 is first hidden layer (first Dense).
-
-    return tf.tidy(() => {
-      const deadMap = {};
+    // Use tf.tidy for computation, but export the boolean tensors
+    // to read them asynchronously outside of tidy.
+    const deadTensors = tf.tidy(() => {
+      const collected = [];
       let current = xs;
-      let denseLayerIndex = 1;
 
       for (const layer of this.model.layers) {
         // Apply layer to current tensor
@@ -393,22 +411,36 @@ export class NeuralNetwork {
           // We check max activation across the batch.
           const maxActivations = current.max(0); // Shape [units]
           const isDead = maxActivations.lessEqual(1e-5);
-          const deadIndices = [];
-          const deadData = isDead.dataSync(); // safe for small layer sizes
-
-          for (let j = 0; j < deadData.length; j++) {
-            if (deadData[j]) deadIndices.push(j);
-          }
-
-          if (deadIndices.length > 0) {
-            deadMap[denseLayerIndex] = deadIndices;
-          }
-
-          denseLayerIndex++;
+          // Keep the tensor for async extraction
+          collected.push(isDead);
         }
       }
-      return deadMap;
+      return collected;
     });
+
+    const deadMap = {};
+    let denseLayerIndex = 1;
+
+    try {
+      for (const t of deadTensors) {
+        const deadData = await t.data();
+        const deadIndices = [];
+        for (let j = 0; j < deadData.length; j++) {
+          if (deadData[j]) deadIndices.push(j);
+        }
+
+        if (deadIndices.length > 0) {
+          deadMap[denseLayerIndex] = deadIndices;
+        }
+
+        denseLayerIndex++;
+      }
+    } finally {
+      // Clean up tensors extracted from tidy
+      deadTensors.forEach(t => t.dispose());
+    }
+
+    return deadMap;
   }
 
   /**
