@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Tooltip } from './Tooltip';
 import { ALLOWED_ACTIVATIONS, ALLOWED_OPTIMIZERS } from '../engine/NeuralNetwork';
 
 export function CodeExport({ structure, hyperparams }) {
     const [isOpen, setIsOpen] = useState(false);
     const [lang, setLang] = useState('python'); // 'python' or 'js'
+    const [copied, setCopied] = useState(false);
+    const timeoutRef = useRef(null);
 
     const safeActivation = ALLOWED_ACTIVATIONS.includes(hyperparams.activation) ? hyperparams.activation : 'relu';
     const safeOptimizer = ALLOWED_OPTIMIZERS.includes(hyperparams.optimizer) ? hyperparams.optimizer : 'adam';
@@ -44,6 +46,14 @@ export function CodeExport({ structure, hyperparams }) {
         return code;
     };
 
+    const handleCopy = () => {
+        const code = lang === 'python' ? generatePython() : generateJS();
+        navigator.clipboard.writeText(code);
+        setCopied(true);
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        timeoutRef.current = setTimeout(() => setCopied(false), 2000);
+    };
+
     const generateJS = () => {
         let code = `const model = tf.sequential();\n\n`;
 
@@ -72,7 +82,7 @@ export function CodeExport({ structure, hyperparams }) {
             <div className="code-modal">
                 <div className="modal-header">
                     <h3>Export Model Code</h3>
-                    <button className="close" onClick={() => setIsOpen(false)}>×</button>
+                    <button className="close" onClick={() => setIsOpen(false)} aria-label="Close model export">×</button>
                 </div>
 
                 <div className="lang-tabs">
@@ -80,7 +90,26 @@ export function CodeExport({ structure, hyperparams }) {
                     <button className={lang === 'js' ? 'active' : ''} onClick={() => setLang('js')}>JavaScript (TF.js)</button>
                 </div>
 
-                <div className="code-block">
+                <div
+                    className="code-block"
+                    tabIndex={0}
+                    role="region"
+                    aria-label="Generated model code"
+                    style={{ position: 'relative', paddingRight: '70px' }}
+                >
+                    <button
+                        className="btn-sm"
+                        onClick={handleCopy}
+                        style={{
+                            position: 'absolute',
+                            top: '10px',
+                            right: '10px',
+                            background: 'var(--bg-panel)',
+                            zIndex: 10
+                        }}
+                    >
+                        {copied ? 'Copied!' : 'Copy'}
+                    </button>
                     <pre>
                         {lang === 'python' ? generatePython() : generateJS()}
                     </pre>

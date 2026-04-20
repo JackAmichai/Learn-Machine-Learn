@@ -1,3 +1,6 @@
 ## 2025-02-12 - Tooltip Nesting Patterns
 **Learning:** Interactive tooltips (via `Tooltip.jsx`) are frequently nested inside or adjacent to other interactive elements (buttons, labels), creating potential invalid HTML (nested interactive controls) and focus management issues.
 **Action:** In future, refactor `Tooltip` to be a non-interactive icon unless explicitly focused, or restructure UI to place help icons *outside* buttons/labels.
+## 2024-04-20 - Accessible Scrollable Code Block & Copy Feedback
+**Learning:** Implementing absolute-positioned elements (like a Copy button) inside or over `overflow: auto` scrollable areas (`.code-block`) requires adding `padding-right` to the container to prevent the underlying text from wrapping underneath the button and becoming unreadable. Furthermore, using a solid background color (`var(--bg-panel)`) on the absolute element prevents text bleeding.
+**Action:** When adding interactive elements hovering over text, ensure adequate padding on the text container and solid backgrounds on the hovering element. Make scrollable regions accessible with `tabIndex={0}`, `role="region"`, and `aria-label`.
