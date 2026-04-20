@@ -333,6 +333,25 @@ export class NeuralNetwork {
   }
 
   /**
+   * Gets connection weights as a flat Float32Array asynchronously.
+   * @param {number} layerIndex - Index of the connection layer
+   * @returns {Promise<Float32Array|null>} Weight values or null if invalid
+   */
+  async getConnectionWeightsAsync(layerIndex) {
+    if (!this.connectionLayers[layerIndex]) return null;
+    try {
+      const weights = this.connectionLayers[layerIndex].getWeights();
+      if (!weights.length) return null;
+      const kernel = weights[0];
+      // data() returns a promise resolving to the TypedArray
+      return await kernel.data();
+    } catch (e) {
+      console.error('Error fetching connection weights async:', e);
+      return null;
+    }
+  }
+
+  /**
    * Serializes all model weights to nested arrays.
    * Useful for saving/restoring model state.
    * @returns {Array} Serialized weights per layer
@@ -369,17 +388,19 @@ export class NeuralNetwork {
   /**
    * Scans the network for dead neurons (always zero activation).
    * @param {tf.Tensor2D} xs - Input batch
-   * @returns {Object} Map of layerIndex -> Array of dead neuron indices
+   * @returns {Promise<Object>} Map of layerIndex -> Array of dead neuron indices
    */
-  scanForDeadNeurons(xs) {
+  async scanForDeadNeurons(xs) {
     if (!this.model) return {};
 
     // We need to traverse the model layers manually.
     // structure index 0 is input.
     // structure index 1 is first hidden layer (first Dense).
 
-    return tf.tidy(() => {
-      const deadMap = {};
+    // We keep the heavy computation inside tidy
+    // But we need to extract the "isDead" boolean tensors to read them async.
+    const deadBooleanTensors = tf.tidy(() => {
+      const tensors = [];
       let current = xs;
       let denseLayerIndex = 1;
 
@@ -393,22 +414,31 @@ export class NeuralNetwork {
           // We check max activation across the batch.
           const maxActivations = current.max(0); // Shape [units]
           const isDead = maxActivations.lessEqual(1e-5);
-          const deadIndices = [];
-          const deadData = isDead.dataSync(); // safe for small layer sizes
-
-          for (let j = 0; j < deadData.length; j++) {
-            if (deadData[j]) deadIndices.push(j);
-          }
-
-          if (deadIndices.length > 0) {
-            deadMap[denseLayerIndex] = deadIndices;
-          }
-
+          tensors.push({ index: denseLayerIndex, tensor: isDead });
           denseLayerIndex++;
         }
       }
-      return deadMap;
+      return tensors;
     });
+
+    const deadMap = {};
+    try {
+      await Promise.all(deadBooleanTensors.map(async ({ index, tensor }) => {
+        const data = await tensor.data();
+        const deadIndices = [];
+        for (let j = 0; j < data.length; j++) {
+          if (data[j]) deadIndices.push(j);
+        }
+        if (deadIndices.length > 0) {
+          deadMap[index] = deadIndices;
+        }
+      }));
+    } finally {
+      // Dispose the tensors we extracted
+      deadBooleanTensors.forEach(({ tensor }) => tensor.dispose());
+    }
+
+    return deadMap;
   }
 
   /**
