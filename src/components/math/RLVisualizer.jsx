@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
 
+let seed = 1;
+function pseudorandom() {
+  let x = Math.sin(seed++) * 10000;
+  return x - Math.floor(x);
+}
+
 export default function RLVisualizer() {
   const [episode, setEpisode] = useState(0);
   const [epsilon, setEpsilon] = useState(1.0);
@@ -12,15 +18,15 @@ export default function RLVisualizer() {
     let pos = { x: 0, y: 0 };
     for (let i = 0; i <= steps; i++) {
       points.push({ ...pos });
-      const action = Math.random() < explorationRate ? 'explore' : 'exploit';
+      const action = pseudorandom() < explorationRate ? 'explore' : 'exploit';
       if (action === 'explore') {
         pos = {
-          x: pos.x + (Math.random() - 0.5) * 20,
-          y: pos.y + (Math.random() - 0.5) * 20
+          x: pos.x + (pseudorandom() - 0.5) * 20,
+          y: pos.y + (pseudorandom() - 0.5) * 20
         };
       } else {
         pos = {
-          x: pos.x + (Math.random() - 0.3) * 10,
+          x: pos.x + (pseudorandom() - 0.3) * 10,
           y: pos.y - 5
         };
       }

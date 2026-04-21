@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
 
+let seed = 1;
+function pseudorandom() {
+  let x = Math.sin(seed++) * 10000;
+  return x - Math.floor(x);
+}
+
 export default function TSNEVisualizer() {
   const [perplexity, setPerplexity] = useState(30);
   const [iterations, setIterations] = useState(1000);
@@ -11,12 +17,12 @@ export default function TSNEVisualizer() {
     const numClusters = 5;
     for (let i = 0; i < numClusters; i++) {
       const points = [];
-      const centerX = Math.random() * 60 + 20;
-      const centerY = Math.random() * 60 + 20;
+      const centerX = pseudorandom() * 60 + 20;
+      const centerY = pseudorandom() * 60 + 20;
       for (let j = 0; j < 15; j++) {
         points.push({
-          x: centerX + (Math.random() - 0.5) * 15,
-          y: centerY + (Math.random() - 0.5) * 15,
+          x: centerX + (pseudorandom() - 0.5) * 15,
+          y: centerY + (pseudorandom() - 0.5) * 15,
           cluster: i
         });
       }
