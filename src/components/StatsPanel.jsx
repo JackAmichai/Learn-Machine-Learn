@@ -130,20 +130,20 @@ export function StatsPanel({ model, data, modelVersion, epoch, loss }) {
                         <>
                             <div className="section-label"><Tooltip word="Confusion Matrix" /></div>
                             <div className="confusion-matrix" role="table" aria-label="Confusion Matrix">
-                                <div className="cm-header">
-                                    <div className="cm-corner"></div>
-                                    <div className="cm-col-label">Pred 0</div>
-                                    <div className="cm-col-label">Pred 1</div>
+                                <div className="cm-header" role="row">
+                                    <div className="cm-corner" role="columnheader"></div>
+                                    <div className="cm-col-label" role="columnheader">Pred 0</div>
+                                    <div className="cm-col-label" role="columnheader">Pred 1</div>
                                 </div>
-                                <div className="cm-row">
-                                    <div className="cm-row-label">Actual 0</div>
-                                    <div className="cm-cell tn" title="True Negative">{cm.tn}</div>
-                                    <div className="cm-cell fp" title="False Positive">{cm.fp}</div>
+                                <div className="cm-row" role="row">
+                                    <div className="cm-row-label" role="rowheader">Actual 0</div>
+                                    <div className="cm-cell tn" role="cell" title="True Negative">{cm.tn}</div>
+                                    <div className="cm-cell fp" role="cell" title="False Positive">{cm.fp}</div>
                                 </div>
-                                <div className="cm-row">
-                                    <div className="cm-row-label">Actual 1</div>
-                                    <div className="cm-cell fn" title="False Negative">{cm.fn}</div>
-                                    <div className="cm-cell tp" title="True Positive">{cm.tp}</div>
+                                <div className="cm-row" role="row">
+                                    <div className="cm-row-label" role="rowheader">Actual 1</div>
+                                    <div className="cm-cell fn" role="cell" title="False Negative">{cm.fn}</div>
+                                    <div className="cm-cell tp" role="cell" title="True Positive">{cm.tp}</div>
                                 </div>
                             </div>
 
