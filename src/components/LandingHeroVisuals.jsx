@@ -329,9 +329,10 @@ export function LandingHeroVisuals() {
                 </p>
 
                 <div className="hv-grid">
-                    {items.map(({ id, title, subtitle, Tile }) => (
+                    {/* eslint-disable-next-line no-unused-vars */}
+                    {items.map(({ id, title, subtitle, Tile: TileComp }) => (
                         <article key={id} className="hv-card">
-                            <div className="hv-tile"><Tile /></div>
+                            <div className="hv-tile"><TileComp /></div>
                             <div className="hv-meta">
                                 <h3>{title}</h3>
                                 <p>{subtitle}</p>

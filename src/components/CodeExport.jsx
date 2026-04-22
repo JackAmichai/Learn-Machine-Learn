@@ -1,12 +1,10 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { Tooltip } from './Tooltip';
 import { ALLOWED_ACTIVATIONS, ALLOWED_OPTIMIZERS } from '../engine/NeuralNetwork';
 
 export function CodeExport({ structure, hyperparams }) {
     const [isOpen, setIsOpen] = useState(false);
     const [lang, setLang] = useState('python'); // 'python' or 'js'
-    const [copied, setCopied] = useState(false);
-    const copyTimeoutRef = useRef(null);
 
     const safeActivation = ALLOWED_ACTIVATIONS.includes(hyperparams.activation) ? hyperparams.activation : 'relu';
     const safeOptimizer = ALLOWED_OPTIMIZERS.includes(hyperparams.optimizer) ? hyperparams.optimizer : 'adam';
@@ -18,18 +16,6 @@ export function CodeExport({ structure, hyperparams }) {
             </button>
         );
     }
-
-    const handleCopy = async () => {
-        const codeToCopy = lang === 'python' ? generatePython() : generateJS();
-        try {
-            await navigator.clipboard.writeText(codeToCopy);
-            setCopied(true);
-            if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
-            copyTimeoutRef.current = setTimeout(() => setCopied(false), 2000);
-        } catch (err) {
-            console.error('Failed to copy!', err);
-        }
-    };
 
     const generatePython = () => {
         let code = `import tensorflow as tf\nfrom tensorflow.keras import layers, models\n\n`;
@@ -86,7 +72,7 @@ export function CodeExport({ structure, hyperparams }) {
             <div className="code-modal">
                 <div className="modal-header">
                     <h3>Export Model Code</h3>
-                    <button className="close" onClick={() => setIsOpen(false)} aria-label="Close export modal">×</button>
+                    <button className="close" onClick={() => setIsOpen(false)}>×</button>
                 </div>
 
                 <div className="lang-tabs">
@@ -94,16 +80,8 @@ export function CodeExport({ structure, hyperparams }) {
                     <button className={lang === 'js' ? 'active' : ''} onClick={() => setLang('js')}>JavaScript (TF.js)</button>
                 </div>
 
-                <div className="code-block" style={{ position: 'relative' }} tabIndex={0} role="region" aria-label="Exported code">
-                    <button
-                        className="btn-sm"
-                        onClick={handleCopy}
-                        aria-label={copied ? "Copied!" : "Copy"}
-                        style={{ position: 'absolute', top: '10px', right: '10px', background: 'var(--bg-panel)' }}
-                    >
-                        {copied ? 'Copied!' : 'Copy'}
-                    </button>
-                    <pre style={{ paddingRight: '60px' }}>
+                <div className="code-block">
+                    <pre>
                         {lang === 'python' ? generatePython() : generateJS()}
                     </pre>
                 </div>
