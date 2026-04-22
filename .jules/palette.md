@@ -1,0 +1,3 @@
+## 2024-05-19 - Code Export Keyboard Accessibility and Copy Feature
+**Learning:** Scrollable code blocks (`<pre>`) often trap keyboard users. We must add `tabIndex={0}` and `role="region"` to the scrollable container. Additionally, when implementing absolute-positioned action buttons (like Copy) overlaid on text, the background must be solid to prevent text bleed-through, and `padding-right` must be added to the text container to prevent it wrapping *under* the button.
+**Action:** When adding scrollable data/code views, always apply `tabIndex={0}`, `role="region"`, and an `aria-label`. For overlaid action buttons, use solid backgrounds and add padding to the scrollable content to preserve readability.
