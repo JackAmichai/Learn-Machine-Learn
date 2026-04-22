@@ -32,7 +32,6 @@ export const MATH_TOPICS = {
   <li><strong>Vanishing gradients</strong>: Deep networks struggle to train as gradients can become tiny</li>
   </ul>
   `,
-  visualizer: "NeuralNetwork",
   },
   "MathIntro": {
     visualizer: "LinearRegression",
