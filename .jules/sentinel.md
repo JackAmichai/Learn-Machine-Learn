@@ -1,0 +1,4 @@
+## 2025-04-06 - Client-Side DoS via Unrestricted FileReader
+**Vulnerability:** The application was using `FileReader.readAsText()` to load user-provided JSON models entirely into memory without any size limits. If a massive file was uploaded, it could easily crash or freeze the browser, leading to a Client-Side Denial-of-Service (DoS).
+**Learning:** `FileReader` operations run entirely in the browser's memory. Loading large files synchronously or without limits circumvents standard server-side upload protections and directly attacks the user's local resources.
+**Prevention:** Always enforce strict, reasonable file size limits (e.g., 5MB for JSON models) before invoking any `FileReader` methods. Additionally, consider chunking large files or using web workers to prevent main thread blocking, though size limits are the primary defense against memory exhaustion.
