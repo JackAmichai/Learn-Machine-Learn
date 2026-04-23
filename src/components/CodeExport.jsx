@@ -5,15 +5,19 @@ import { ALLOWED_ACTIVATIONS, ALLOWED_OPTIMIZERS } from '../engine/NeuralNetwork
 export function CodeExport({ structure, hyperparams }) {
     const [isOpen, setIsOpen] = useState(false);
     const [lang, setLang] = useState('python'); // 'python' or 'js'
+    const [copied, setCopied] = useState(false);
 
     const safeActivation = ALLOWED_ACTIVATIONS.includes(hyperparams.activation) ? hyperparams.activation : 'relu';
     const safeOptimizer = ALLOWED_OPTIMIZERS.includes(hyperparams.optimizer) ? hyperparams.optimizer : 'adam';
 
     if (!isOpen) {
         return (
-            <button className="btn-code" onClick={() => setIsOpen(true)}>
-                &lt;/&gt; Show Code <Tooltip word="Export" overrideText="View the code to build this model" />
-            </button>
+            <div className="btn-code-wrapper">
+                <button className="btn-code" onClick={() => setIsOpen(true)}>
+                    &lt;/&gt; Show Code
+                </button>
+                <Tooltip word="Export" overrideText="View the code to build this model" />
+            </div>
         );
     }
 
@@ -67,6 +71,13 @@ export function CodeExport({ structure, hyperparams }) {
         return code;
     };
 
+    const handleCopy = () => {
+        const code = lang === 'python' ? generatePython() : generateJS();
+        navigator.clipboard.writeText(code);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
+
     return (
         <div className="code-modal-overlay">
             <div className="code-modal">
@@ -80,19 +91,34 @@ export function CodeExport({ structure, hyperparams }) {
                     <button className={lang === 'js' ? 'active' : ''} onClick={() => setLang('js')}>JavaScript (TF.js)</button>
                 </div>
 
-                <div className="code-block">
-                    <pre>
-                        {lang === 'python' ? generatePython() : generateJS()}
-                    </pre>
+                <div className="code-block-wrapper">
+                    <button
+                        className="btn-copy"
+                        onClick={handleCopy}
+                        aria-label="Copy code to clipboard"
+                    >
+                        {copied ? 'Copied!' : 'Copy'}
+                    </button>
+                    <div className="code-block">
+                        <pre>
+                            {lang === 'python' ? generatePython() : generateJS()}
+                        </pre>
+                    </div>
                 </div>
 
                 <p className="tip">Copy this code to run your model in a real environment!</p>
             </div>
 
             <style>{`
-            .btn-code {
-                width: 100%;
+            .btn-code-wrapper {
+                display: flex;
+                align-items: center;
+                gap: 8px;
                 margin-top: 20px;
+                width: 100%;
+            }
+            .btn-code {
+                flex: 1;
                 padding: 10px;
                 background: var(--bg-secondary);
                 border: 1px solid var(--glass-border);
@@ -158,6 +184,25 @@ export function CodeExport({ structure, hyperparams }) {
                 background: var(--accent-primary);
                 color: black;
                 font-weight: bold;
+            }
+            .code-block-wrapper {
+                position: relative;
+            }
+            .btn-copy {
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                padding: 4px 8px;
+                background: var(--bg-secondary);
+                color: var(--text-primary);
+                border: 1px solid var(--glass-border);
+                border-radius: 4px;
+                font-size: 11px;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+            .btn-copy:hover {
+                background: var(--accent-secondary);
             }
             .code-block {
                 background: #1e1e1e;
