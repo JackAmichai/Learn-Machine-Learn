@@ -80,7 +80,7 @@ export function CodeExport({ structure, hyperparams }) {
                     <button className={lang === 'js' ? 'active' : ''} onClick={() => setLang('js')}>JavaScript (TF.js)</button>
                 </div>
 
-                <div className="code-block">
+                <div className="code-block" tabIndex={0} role="region" aria-label="Exported code">
                     <pre>
                         {lang === 'python' ? generatePython() : generateJS()}
                     </pre>
