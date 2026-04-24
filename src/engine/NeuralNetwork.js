@@ -333,6 +333,24 @@ export class NeuralNetwork {
   }
 
   /**
+   * Gets connection weights asynchronously.
+   * @param {number} layerIndex - Index of the connection layer
+   * @returns {Promise<Float32Array|null>} Weight values or null if invalid
+   */
+  async getConnectionWeightsAsync(layerIndex) {
+    if (!this.connectionLayers[layerIndex]) return null;
+    try {
+      const weights = this.connectionLayers[layerIndex].getWeights();
+      if (!weights.length) return null;
+      const kernel = weights[0];
+      return await kernel.data();
+    } catch (e) {
+      console.error('Error fetching connection weights async:', e);
+      return null;
+    }
+  }
+
+  /**
    * Serializes all model weights to nested arrays.
    * Useful for saving/restoring model state.
    * @returns {Array} Serialized weights per layer
@@ -371,6 +389,51 @@ export class NeuralNetwork {
    * @param {tf.Tensor2D} xs - Input batch
    * @returns {Object} Map of layerIndex -> Array of dead neuron indices
    */
+  async scanForDeadNeuronsAsync(xs) {
+    if (!this.model) return {};
+
+    const deadMap = {};
+    let current = xs;
+    let denseLayerIndex = 1;
+    const tensorsToDispose = [];
+
+    for (const layer of this.model.layers) {
+      const nextCurrent = layer.apply(current);
+      if (current !== xs) {
+         tensorsToDispose.push(current);
+      }
+      current = nextCurrent;
+
+      if (layer.getClassName() === 'Dense') {
+        const maxActivations = current.max(0);
+        const isDead = maxActivations.lessEqual(1e-5);
+        const deadData = await isDead.data();
+
+        tensorsToDispose.push(maxActivations);
+        tensorsToDispose.push(isDead);
+
+        const deadIndices = [];
+        for (let j = 0; j < deadData.length; j++) {
+          if (deadData[j]) deadIndices.push(j);
+        }
+
+        if (deadIndices.length > 0) {
+          deadMap[denseLayerIndex] = deadIndices;
+        }
+
+        denseLayerIndex++;
+      }
+    }
+
+    if (current !== xs) {
+        tensorsToDispose.push(current);
+    }
+
+    tf.dispose(tensorsToDispose);
+
+    return deadMap;
+  }
+
   scanForDeadNeurons(xs) {
     if (!this.model) return {};
 
