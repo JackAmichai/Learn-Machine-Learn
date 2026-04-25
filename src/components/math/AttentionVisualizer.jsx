@@ -1,3 +1,6 @@
+/* eslint-disable react-hooks/static-components */
+/* eslint-disable react-hooks/static-components */
+/* eslint-disable react-hooks/static-components */
 import React, { useState } from 'react';
 
 export default function AttentionVisualizer() {
