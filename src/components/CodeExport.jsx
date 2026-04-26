@@ -72,7 +72,7 @@ export function CodeExport({ structure, hyperparams }) {
             <div className="code-modal">
                 <div className="modal-header">
                     <h3>Export Model Code</h3>
-                    <button className="close" onClick={() => setIsOpen(false)}>×</button>
+                    <button className="close" onClick={() => setIsOpen(false)} aria-label="Close code export"><span aria-hidden="true">×</span></button>
                 </div>
 
                 <div className="lang-tabs">
@@ -80,7 +80,7 @@ export function CodeExport({ structure, hyperparams }) {
                     <button className={lang === 'js' ? 'active' : ''} onClick={() => setLang('js')}>JavaScript (TF.js)</button>
                 </div>
 
-                <div className="code-block">
+                <div className="code-block" tabIndex={0} role="region" aria-label="Exported code">
                     <pre>
                         {lang === 'python' ? generatePython() : generateJS()}
                     </pre>
