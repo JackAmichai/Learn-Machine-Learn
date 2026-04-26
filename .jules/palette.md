@@ -1,0 +1,4 @@
+
+## 2024-05-20 - CodeExport Modal Accessibility Enhancements
+**Learning:** Found that scrollable containers (like `<div className="code-block" style={{overflowX: 'auto'}}>`) were inaccessible via keyboard. Users cannot scroll horizontal content using the keyboard unless the container itself is focusable. Additionally, icon-only close buttons lacking `aria-label` and `aria-hidden` text content can cause screen readers to announce confusing literal characters like "multiplication sign" for "×".
+**Action:** When implementing elements with `overflow: auto`, add `tabIndex={0}`, `role="region"`, and a descriptive `aria-label` to ensure keyboard navigability and context. For icon-only text buttons (like `×`), hide the text with `<span aria-hidden="true">` and provide context on the parent button with `aria-label`.
