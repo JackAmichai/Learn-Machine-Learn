@@ -7,9 +7,9 @@ export default function PCAVisualizer({ values = {} }) {
   
   // Sync with external values if they change
   useEffect(() => {
-    if (values.lambda1 !== undefined) setComponent1(values.lambda1);
-    if (values.lambda2 !== undefined) setComponent2(values.lambda2);
-    if (values.lambda3 !== undefined) setComponent3(values.lambda3);
+    if (values.lambda1 !== undefined) setTimeout(() => setComponent1(values.lambda1), 0);
+    if (values.lambda2 !== undefined) setTimeout(() => setComponent2(values.lambda2), 0);
+    if (values.lambda3 !== undefined) setTimeout(() => setComponent3(values.lambda3), 0);
   }, [values.lambda1, values.lambda2, values.lambda3]);
 
   const total = component1 + component2 + component3;
