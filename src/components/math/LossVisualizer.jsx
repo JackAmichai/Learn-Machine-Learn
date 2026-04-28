@@ -1,22 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 export default function LossVisualizer({ values = {} }) {
-  const [predicted, setPredicted] = useState(3);
-  const [actual, setActual] = useState(5);
+  const [localPredicted, setPredicted] = useState(3);
+  const [localActual, setActual] = useState(5);
   
-  // Sync with external values if they change
-  useEffect(() => {
-    // If we have 'err' (y - yhat), we can adjust predicted to be actual - err
-    if (values.err !== undefined) {
-      setPredicted(actual - values.err);
-    } else {
-      if (values.predicted !== undefined) setPredicted(values.predicted);
-      if (values.yhat !== undefined) setPredicted(values.yhat);
-    }
-    
-    if (values.actual !== undefined) setActual(values.actual);
-    if (values.y !== undefined) setActual(values.y);
-  }, [values, actual]);
+  const actual = values.actual !== undefined ? values.actual : (values.y !== undefined ? values.y : localActual);
+
+  let predicted = localPredicted;
+  if (values.err !== undefined) {
+      predicted = actual - values.err;
+  } else if (values.predicted !== undefined) {
+      predicted = values.predicted;
+  } else if (values.yhat !== undefined) {
+      predicted = values.yhat;
+  }
 
   const mse = Math.pow(predicted - actual, 2);
   

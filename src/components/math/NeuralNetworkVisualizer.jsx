@@ -6,12 +6,14 @@ export default function NeuralNetworkVisualizer({ values = {} }) {
   
   // Sync with external values if they change
   useEffect(() => {
-    if (values.nodes !== undefined) {
-      setLayers([layers[0], values.nodes, layers[2]]);
-    }
-    if (values.hiddenNodes !== undefined) {
-      setLayers([layers[0], values.hiddenNodes, layers[2]]);
-    }
+    setTimeout(() => {
+      if (values.nodes !== undefined) {
+        setLayers(l => [l[0], values.nodes, l[2]]);
+      }
+      if (values.hiddenNodes !== undefined) {
+        setLayers(l => [l[0], values.hiddenNodes, l[2]]);
+      }
+    }, 0);
   }, [values.nodes, values.hiddenNodes]);
 
   const activations = ['Input', 'ReLU', 'Softmax'];
