@@ -4,7 +4,6 @@ import { VisualizerRegistry } from './math/VisualizerRegistry';
 import { PersonalizationContext } from '../contexts/PersonalizationContext';
 import { getTopicPresentation } from '../engine/personalizationEngine';
 import { getWikiUrl } from '../data/wikipediaLinks';
-import { getNotebookLMLink } from '../data/notebookLMLinks';
 
 export function MathModal({ topic, onClose, onComplete }) {
  const data = MATH_TOPICS[topic];
@@ -733,6 +732,7 @@ function FormulaPlayground({ formula, sliderValues, onSliderChange, activeFormul
  {variables.map((variable, idx) => (
  <div key={idx} className="control-row">
  <label 
+ htmlFor={`formula-var-${variable.key}`}
  className={activeFormula === variable.key ? 'highlight' : ''}
  onMouseEnter={() => onPartHover(variable.key)}
  onMouseLeave={() => onPartHover(null)}
@@ -741,6 +741,7 @@ function FormulaPlayground({ formula, sliderValues, onSliderChange, activeFormul
  <span className="var-name">{variable.name}</span>
  </label>
  <input
+ id={`formula-var-${variable.key}`}
  type="range"
  min={variable.min}
  max={variable.max}
