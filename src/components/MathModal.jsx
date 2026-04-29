@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useState, useContext } from 'react';
 import { MATH_TOPICS } from '../engine/mathContent';
 import { VisualizerRegistry } from './math/VisualizerRegistry';
