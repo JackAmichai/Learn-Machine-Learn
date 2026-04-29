@@ -1,0 +1,3 @@
+## 2025-04-29 - Code Block Scroll and Action Target Padding
+**Learning:** When positioning floating actions (like a "Copy" button) absolutely inside a scrollable `<pre>` or code block, the text content will flow underneath the button, creating visual overlap and unreadable text.
+**Action:** Always add `padding-right` to the scrollable text container equal to or slightly larger than the absolute positioned button's width to ensure the text wraps safely before hitting the action zone. Also ensure scrollable regions have `tabIndex={0}` and appropriate ARIA roles (`role="region"`) and labels for keyboard and screen reader accessibility.
