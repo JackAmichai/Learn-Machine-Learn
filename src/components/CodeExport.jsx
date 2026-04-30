@@ -1,21 +1,15 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Tooltip } from './Tooltip';
 import { ALLOWED_ACTIVATIONS, ALLOWED_OPTIMIZERS } from '../engine/NeuralNetwork';
 
 export function CodeExport({ structure, hyperparams }) {
     const [isOpen, setIsOpen] = useState(false);
     const [lang, setLang] = useState('python'); // 'python' or 'js'
+    const [copied, setCopied] = useState(false);
+    const timeoutRef = useRef(null);
 
     const safeActivation = ALLOWED_ACTIVATIONS.includes(hyperparams.activation) ? hyperparams.activation : 'relu';
     const safeOptimizer = ALLOWED_OPTIMIZERS.includes(hyperparams.optimizer) ? hyperparams.optimizer : 'adam';
-
-    if (!isOpen) {
-        return (
-            <button className="btn-code" onClick={() => setIsOpen(true)}>
-                &lt;/&gt; Show Code <Tooltip word="Export" overrideText="View the code to build this model" />
-            </button>
-        );
-    }
 
     const generatePython = () => {
         let code = `import tensorflow as tf\nfrom tensorflow.keras import layers, models\n\n`;
@@ -67,27 +61,48 @@ export function CodeExport({ structure, hyperparams }) {
         return code;
     };
 
+    const handleCopy = () => {
+        const code = lang === 'python' ? generatePython() : generateJS();
+        navigator.clipboard.writeText(code);
+        setCopied(true);
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        timeoutRef.current = setTimeout(() => setCopied(false), 2000);
+    };
+
     return (
-        <div className="code-modal-overlay">
-            <div className="code-modal">
-                <div className="modal-header">
-                    <h3>Export Model Code</h3>
-                    <button className="close" onClick={() => setIsOpen(false)}>×</button>
-                </div>
+        <>
+            {!isOpen ? (
+                <button className="btn-code" onClick={() => setIsOpen(true)}>
+                    &lt;/&gt; Show Code <Tooltip word="Export" overrideText="View the code to build this model" />
+                </button>
+            ) : (
+                <div className="code-modal-overlay">
+                    <div className="code-modal">
+                        <div className="modal-header">
+                            <h3>Export Model Code</h3>
+                            <button className="close" onClick={() => setIsOpen(false)} aria-label="Close export modal">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
 
-                <div className="lang-tabs">
-                    <button className={lang === 'python' ? 'active' : ''} onClick={() => setLang('python')}>Python (Keras)</button>
-                    <button className={lang === 'js' ? 'active' : ''} onClick={() => setLang('js')}>JavaScript (TF.js)</button>
-                </div>
+                        <div className="lang-tabs">
+                            <button className={lang === 'python' ? 'active' : ''} onClick={() => setLang('python')}>Python (Keras)</button>
+                            <button className={lang === 'js' ? 'active' : ''} onClick={() => setLang('js')}>JavaScript (TF.js)</button>
+                        </div>
 
-                <div className="code-block">
-                    <pre>
-                        {lang === 'python' ? generatePython() : generateJS()}
-                    </pre>
-                </div>
+                        <div className="code-block" tabIndex={0} role="region" aria-label="Exported code">
+                            <button className="btn-copy" onClick={handleCopy} aria-label="Copy code">
+                                {copied ? 'Copied!' : 'Copy'}
+                            </button>
+                            <pre>
+                                {lang === 'python' ? generatePython() : generateJS()}
+                            </pre>
+                        </div>
 
-                <p className="tip">Copy this code to run your model in a real environment!</p>
-            </div>
+                        <p className="tip">Copy this code to run your model in a real environment!</p>
+                    </div>
+                </div>
+            )}
 
             <style>{`
             .btn-code {
@@ -160,11 +175,34 @@ export function CodeExport({ structure, hyperparams }) {
                 font-weight: bold;
             }
             .code-block {
+                position: relative;
                 background: #1e1e1e;
                 padding: 20px;
+                padding-right: 80px;
                 border-radius: 0 8px 8px 8px;
                 overflow-x: auto;
                 border: 1px solid var(--glass-border);
+            }
+            .code-block:focus-visible {
+                outline: 2px solid var(--accent-primary);
+                outline-offset: -2px;
+            }
+            .btn-copy {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                padding: 4px 8px;
+                font-size: 12px;
+                background: var(--bg-panel);
+                color: var(--text-primary);
+                border: 1px solid var(--glass-border);
+                border-radius: 4px;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+            .btn-copy:hover {
+                background: var(--accent-primary);
+                color: black;
             }
             .code-block pre {
                 margin: 0;
@@ -181,6 +219,6 @@ export function CodeExport({ structure, hyperparams }) {
                 text-align: center;
             }
         `}</style>
-        </div>
+        </>
     );
 }
