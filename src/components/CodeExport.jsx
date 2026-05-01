@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Tooltip } from './Tooltip';
 import { ALLOWED_ACTIVATIONS, ALLOWED_OPTIMIZERS } from '../engine/NeuralNetwork';
 
 export function CodeExport({ structure, hyperparams }) {
     const [isOpen, setIsOpen] = useState(false);
     const [lang, setLang] = useState('python'); // 'python' or 'js'
+    const [copied, setCopied] = useState(false);
+    const timeoutRef = useRef(null);
 
     const safeActivation = ALLOWED_ACTIVATIONS.includes(hyperparams.activation) ? hyperparams.activation : 'relu';
     const safeOptimizer = ALLOWED_OPTIMIZERS.includes(hyperparams.optimizer) ? hyperparams.optimizer : 'adam';
@@ -67,6 +69,22 @@ export function CodeExport({ structure, hyperparams }) {
         return code;
     };
 
+    const handleCopy = async () => {
+        const codeToCopy = lang === 'python' ? generatePython() : generateJS();
+        try {
+            await navigator.clipboard.writeText(codeToCopy);
+            setCopied(true);
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+            timeoutRef.current = setTimeout(() => {
+                setCopied(false);
+            }, 2000);
+        } catch (err) {
+            console.error('Failed to copy code: ', err);
+        }
+    };
+
     return (
         <div className="code-modal-overlay">
             <div className="code-modal">
@@ -80,10 +98,24 @@ export function CodeExport({ structure, hyperparams }) {
                     <button className={lang === 'js' ? 'active' : ''} onClick={() => setLang('js')}>JavaScript (TF.js)</button>
                 </div>
 
-                <div className="code-block">
-                    <pre>
-                        {lang === 'python' ? generatePython() : generateJS()}
-                    </pre>
+                <div className="code-block-container">
+                    <button
+                        className="btn-copy-code"
+                        onClick={handleCopy}
+                        aria-label="Copy code to clipboard"
+                    >
+                        {copied ? 'Copied!' : 'Copy'}
+                    </button>
+                    <div
+                        className="code-block"
+                        tabIndex={0}
+                        role="region"
+                        aria-label="Code preview"
+                    >
+                        <pre>
+                            {lang === 'python' ? generatePython() : generateJS()}
+                        </pre>
+                    </div>
                 </div>
 
                 <p className="tip">Copy this code to run your model in a real environment!</p>
@@ -159,6 +191,26 @@ export function CodeExport({ structure, hyperparams }) {
                 color: black;
                 font-weight: bold;
             }
+            .code-block-container {
+                position: relative;
+            }
+            .btn-copy-code {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: #333;
+                color: #fff;
+                border: 1px solid #555;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 12px;
+                cursor: pointer;
+                transition: background 0.2s;
+                z-index: 10;
+            }
+            .btn-copy-code:hover {
+                background: #444;
+            }
             .code-block {
                 background: #1e1e1e;
                 padding: 20px;
@@ -166,12 +218,17 @@ export function CodeExport({ structure, hyperparams }) {
                 overflow-x: auto;
                 border: 1px solid var(--glass-border);
             }
+            .code-block:focus-visible {
+                outline: 2px solid var(--accent-primary);
+                outline-offset: -2px;
+            }
             .code-block pre {
                 margin: 0;
                 font-family: 'Fira Code', monospace;
                 font-size: 13px;
                 color: #d4d4d4;
                 white-space: pre-wrap;
+                padding-right: 60px;
             }
             .tip {
                 margin-top: 15px;

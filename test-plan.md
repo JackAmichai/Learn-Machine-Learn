@@ -1,0 +1,5 @@
+1. **Create/Update `.jules/palette.md`**: Create the file and log the reusable UX pattern regarding absolute positioned buttons over scrollable areas, maintaining proper right-padding, solid backgrounds, and using `useRef` for timeout clearance.
+2. **Modify `src/components/CodeExport.jsx`**: Implement the copy button with `navigator.clipboard.writeText`. Provide temporary visual feedback ("Copied!") properly using `setTimeout` and `useRef`. Add accessibility attributes (`tabIndex={0}`, `role="region"`, `aria-label`) to the scrollable `.code-block`, and apply solid background and right padding to prevent text overlap.
+3. **Verify Changes**: Run `pnpm install`, `pnpm lint`, and `pnpm test` to ensure no regressions and verify the component renders.
+4. **Complete pre-commit steps**: Complete pre-commit steps to ensure proper testing, verification, review, and reflection are done.
+5. **Submit Change**: Use the submit tool with a descriptive PR title "🎨 Palette: Add accessible Copy code button to CodeExport modal" and relevant details.
