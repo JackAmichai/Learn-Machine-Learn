@@ -310,10 +310,10 @@ function DiffusionTile() {
 /* ---------- COMPOSITE GALLERY ---------- */
 export function LandingHeroVisuals() {
     const items = [
-        { id: 'autoencoder', title: 'Encoder → Decoder', subtitle: 'Compress information into a tiny latent — then reconstruct it.', Tile: EncoderDecoderTile },
-        { id: 'attention', title: 'Self-Attention', subtitle: 'Each token decides which other tokens matter to it.', Tile: AttentionTile },
-        { id: 'cnn', title: 'Convolutional Stacks', subtitle: 'Layer by layer, edges become shapes — shapes become objects.', Tile: CNNTile },
-        { id: 'diffusion', title: 'Diffusion', subtitle: 'Start from noise, denoise step by step until an image appears.', Tile: DiffusionTile },
+        { id: 'autoencoder', title: 'Encoder → Decoder', subtitle: 'Compress information into a tiny latent — then reconstruct it.' },
+        { id: 'attention', title: 'Self-Attention', subtitle: 'Each token decides which other tokens matter to it.' },
+        { id: 'cnn', title: 'Convolutional Stacks', subtitle: 'Layer by layer, edges become shapes — shapes become objects.' },
+        { id: 'diffusion', title: 'Diffusion', subtitle: 'Start from noise, denoise step by step until an image appears.' },
     ];
 
     return (
@@ -329,9 +329,9 @@ export function LandingHeroVisuals() {
                 </p>
 
                 <div className="hv-grid">
-                    {items.map(({ id, title, subtitle, Tile }) => (
+                    {items.map(({ id, title, subtitle }) => (
                         <article key={id} className="hv-card">
-                            <div className="hv-tile"><Tile /></div>
+                            <div className="hv-tile"></div>
                             <div className="hv-meta">
                                 <h3>{title}</h3>
                                 <p>{subtitle}</p>
