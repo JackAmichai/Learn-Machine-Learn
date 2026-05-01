@@ -1,0 +1,3 @@
+## 2024-05-01 - Accessible Copy Buttons over Scrollable Areas
+**Learning:** When adding absolute-positioned elements (like a "Copy" button) over scrollable text/code blocks, it's critical to use solid background colors for the button to prevent text bleed-through, apply adequate `padding-right` to the scrollable container to prevent text from wrapping under the button, ensure the scrollable region itself has keyboard accessibility (`tabIndex={0}`, `role="region"`, `aria-label`), and use `useRef` to clear visual feedback timeouts (e.g. "Copied!") properly.
+**Action:** Always apply solid backgrounds, padding offsets, semantic ARIA attributes, and `useRef`-managed timeouts for interactive absolute-positioned overlays in scrollable containers.
