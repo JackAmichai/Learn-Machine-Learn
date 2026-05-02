@@ -367,6 +367,16 @@ export function Controls(props) {
     const handleImportFile = (event) => {
         const file = event.target.files?.[0];
         if (!file) return;
+
+        // Security: Prevent client-side DoS by strictly limiting file size before reading into memory
+        if (file.size > 5 * 1024 * 1024) { // 5MB limit
+            setStatus('error', 'File size exceeds 5MB limit.');
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+            return;
+        }
+
         const reader = new FileReader();
         reader.onload = () => {
             try {
