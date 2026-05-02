@@ -32,6 +32,7 @@ export const MATH_TOPICS = {
   <li><strong>Vanishing gradients</strong>: Deep networks struggle to train as gradients can become tiny</li>
   </ul>
   `,
+  visualizer: "NeuralNetwork",
   },
   "MathIntro": {
     visualizer: "LinearRegression",
@@ -168,6 +169,7 @@ export const MATH_TOPICS = {
   <li><strong>Replaced by ViT</strong>: Vision Transformers now often outperform CNNs on large datasets</li>
   </ul>
   `,
+  visualizer: "CNN",
   },
   "ModernAIIntro": {
     visualizer: "Transformer",
@@ -201,6 +203,7 @@ export const MATH_TOPICS = {
   <li><strong>Environmental impact</strong>: Training consumes enormous energy</li>
   </ul>
   `,
+  visualizer: "Transformer",
   },
   "SVM": {
  title: "SVM: Support Vector Machines",
@@ -286,6 +289,8 @@ export const MATH_TOPICS = {
   <li><strong>Sensitive to scaling</strong>: Features must be normalized, or SVM fails</li>
   </ul>
   `,
+  visualizer: "SVM",
+ interactiveFormulas: [
  {
  name: "Margin Size",
  components: [
@@ -355,6 +360,7 @@ export const MATH_TOPICS = {
   <li><strong>Greedy algorithm</strong>: Makes locally optimal splits that may not be globally optimal</li>
   </ul>
   `,
+  visualizer: "Tree",
  interactiveFormulas: [
  {
  name: "Gini Impurity",
@@ -384,6 +390,7 @@ export const MATH_TOPICS = {
  content: `
  <p><strong>Random Forests</strong> combine multiple Decision Trees to reduce overfitting and improve accuracy. This is a technique called <strong>Bagging</strong> (Bootstrap Aggregating).</p>
  `,
+ visualizer: "RandomForest",
  interactiveFormulas: [
  {
  name: "Ensemble Prediction",
@@ -442,6 +449,7 @@ export const MATH_TOPICS = {
    <li><strong>Sensitive to k</strong>: Small k = noise sensitive, large k = smooth but may miss patterns</li>
    </ul>
    `,
+   visualizer: "KNN",
  interactiveFormulas: [
  {
  name: "Euclidean Distance",
@@ -495,6 +503,7 @@ export const MATH_TOPICS = {
    <li><strong>Information loss</strong>: Reducing dimensions always loses some information</li>
    </ul>
    `,
+   visualizer: "PCA",
   interactiveFormulas: [
  {
  name: "Explained Variance",
@@ -549,6 +558,7 @@ export const MATH_TOPICS = {
    <li><strong>Non-robust</strong>: A few bad predictions can make the whole loss huge</li>
    </ul>
    `,
+   visualizer: "Loss",
  interactiveFormulas: [
  {
  name: "Huber Loss",
@@ -854,6 +864,7 @@ export const MATH_TOPICS = {
    <li><strong>Exploding outputs</strong>: Unbounded activations can cause numerical instability</li>
    </ul>
    `,
+   visualizer: "Activation",
    interactiveFormulas: [
  {
  name: "Sigmoid",
@@ -1016,6 +1027,7 @@ export const MATH_TOPICS = {
     <li><strong>Hyperparameters</strong>: Beta values still need tuning</li>
     </ul>
     `,
+    visualizer: "Optimizer",
    interactiveFormulas: [
  {
  name: "SGD with Momentum",
@@ -1263,6 +1275,7 @@ export const MATH_TOPICS = {
    <li><strong>Saddle points</strong>: Flat regions can fool optimizers into thinking they've converged</li>
    </ul>
    `,
+   visualizer: "GradientDescent",
   interactiveFormulas: [
  {
  name: "Gradient Magnitude",
@@ -2065,6 +2078,7 @@ Recall = TP / (TP + FN)
   <li><strong>No inference model</strong>: Can't easily estimate probability of given sample</li>
   </ul>
   `,
+  visualizer: "GAN",
    interactiveFormulas: [
  {
  name: "Generator Loss",
@@ -2198,6 +2212,7 @@ Recall = TP / (TP + FN)
   <li><strong>Replaced by strided convolutions</strong>: Modern architectures often use strided conv instead</li>
   </ul>
   `,
+  visualizer: "Pooling",
    interactiveFormulas: [
  {
  name: "Output Size Calculator",
@@ -2876,6 +2891,7 @@ Recall = TP / (TP + FN)
   <li><strong>No function approximation</strong>: Basic MDP needs explicit state tables</li>
   </ul>
   `,
+  visualizer: "MDP",
    interactiveFormulas: [
  {
  name: "Discounted Return",
@@ -2923,6 +2939,7 @@ Recall = TP / (TP + FN)
   <li><strong>Overestimation</strong>: Max can cause overestimation of Q-values</li>
   </ul>
   `,
+  visualizer: "GridWorld",
  interactiveFormulas: [
  {
  name: "Temporal Difference (TD) Update",
@@ -2975,6 +2992,7 @@ Recall = TP / (TP + FN)
   <li><strong>Not stable</strong>: Training can be volatile</li>
   </ul>
   `,
+  visualizer: "DeepQN",
    interactiveFormulas: [
  {
  name: "DQN Loss",
@@ -3045,6 +3063,7 @@ Recall = TP / (TP + FN)
   <li><strong>Performance ceiling</strong>: Sometimes outperformed by more specialized algorithms</li>
   </ul>
   `,
+  visualizer: "PPO",
  interactiveFormulas: [
  {
  name: "PPO Clipped Objective",
@@ -3169,6 +3188,7 @@ Recall = TP / (TP + FN)
   <li><strong>Expensive for long sequences</strong>: GPT-4 has token limits due to this</li>
   </ul>
   `,
+  visualizer: "Transformer",
  interactiveFormulas: [
  {
  name: "Attention Weights",
@@ -3304,6 +3324,7 @@ Recall = TP / (TP + FN)
   <li><strong>Not universal</strong>: Doesn't work equally well for all model architectures</li>
   </ul>
   `,
+  visualizer: "LoRA",
  interactiveFormulas: [
  {
  name: "LoRA Parameter Savings",
@@ -4441,6 +4462,7 @@ Recall = TP / (TP + FN)
   <li><strong>Underfits complex data</strong>: Too simple for most real-world problems</li>
   </ul>
   `,
+  visualizer: "LinearRegression",
    interactiveFormulas: [
  {
  name: "Simple Linear Prediction",
@@ -4512,6 +4534,7 @@ Recall = TP / (TP + FN)
   <li><strong>Outperforms often by trees</strong>: For complex data, ensemble methods beat it</li>
   </ul>
   `,
+  visualizer: "LogisticRegression",
    interactiveFormulas: [
  {
  name: "Sigmoid Decision",
@@ -4657,6 +4680,7 @@ Recall = TP / (TP + FN)
   <li><strong>Slow training</strong>: Sequential nature limits hardware utilization</li>
   </ul>
   `,
+  visualizer: "RNN",
    interactiveFormulas: [
  {
  name: "Hidden State Update",
@@ -4733,6 +4757,7 @@ Recall = TP / (TP + FN)
   <li><strong>Outperformed by transformers</strong>: For most NLP, attention is better</li>
   </ul>
   `,
+  visualizer: "LSTM",
    interactiveFormulas: [
  {
  name: "Forget Gate",
