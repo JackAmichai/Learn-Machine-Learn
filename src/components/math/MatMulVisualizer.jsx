@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from 'react';
 
+const Cell = ({ value, highlight, color = '#00f2ff' }) => (
+    <div className="mm-cell" style={{
+        background: highlight ? `${color}22` : 'rgba(255,255,255,0.04)',
+        borderColor: highlight ? color : 'rgba(255,255,255,0.08)',
+        color: highlight ? color : 'var(--text-secondary)',
+        fontWeight: highlight ? 700 : 400,
+    }}>
+        {typeof value === 'number' ? value.toFixed(2) : value}
+    </div>
+);
+
 /**
  * MatMulVisualizer — shows C = A·B for 2×2 matrices.
  * A coloured row of A "meets" a column of B, their dot product lands in C[i,j].
@@ -35,17 +46,6 @@ export default function MatMulVisualizer({ values = {} }) {
 
     const A = [[a11, a12], [a21, a22]];
     const B = [[b11, b12], [b21, b22]];
-
-    const Cell = ({ value, highlight, color = '#00f2ff' }) => (
-        <div className="mm-cell" style={{
-            background: highlight ? `${color}22` : 'rgba(255,255,255,0.04)',
-            borderColor: highlight ? color : 'rgba(255,255,255,0.08)',
-            color: highlight ? color : 'var(--text-secondary)',
-            fontWeight: highlight ? 700 : 400,
-        }}>
-            {typeof value === 'number' ? value.toFixed(2) : value}
-        </div>
-    );
 
     const focusedContribution =
         A[focus.i][0] * B[0][focus.j] + A[focus.i][1] * B[1][focus.j];
