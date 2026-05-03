@@ -32,7 +32,6 @@ export const MATH_TOPICS = {
   <li><strong>Vanishing gradients</strong>: Deep networks struggle to train as gradients can become tiny</li>
   </ul>
   `,
-  visualizer: "NeuralNetwork",
   },
   "MathIntro": {
     visualizer: "LinearRegression",
@@ -169,7 +168,6 @@ export const MATH_TOPICS = {
   <li><strong>Replaced by ViT</strong>: Vision Transformers now often outperform CNNs on large datasets</li>
   </ul>
   `,
-  visualizer: "CNN",
   },
   "ModernAIIntro": {
     visualizer: "Transformer",
@@ -203,7 +201,6 @@ export const MATH_TOPICS = {
   <li><strong>Environmental impact</strong>: Training consumes enormous energy</li>
   </ul>
   `,
-  visualizer: "Transformer",
   },
   "SVM": {
  title: "SVM: Support Vector Machines",
@@ -289,8 +286,7 @@ export const MATH_TOPICS = {
   <li><strong>Sensitive to scaling</strong>: Features must be normalized, or SVM fails</li>
   </ul>
   `,
-  visualizer: "SVM",
- interactiveFormulas: [
+ interactiveFormulas2: [
  {
  name: "Margin Size",
  components: [

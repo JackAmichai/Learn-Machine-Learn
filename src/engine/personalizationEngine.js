@@ -296,7 +296,6 @@ export function loadProfile() {
  * Mark a topic as completed.
  */
 export function markTopicComplete(topicKey) {
-  // eslint-disable-next-line no-unused-vars
  const profile = loadProfile();
  if (!profile) return;
  if (!profile.completedTopics) profile.completedTopics = [];
