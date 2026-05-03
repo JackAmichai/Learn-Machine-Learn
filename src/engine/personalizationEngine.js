@@ -296,6 +296,7 @@ export function loadProfile() {
  * Mark a topic as completed.
  */
 export function markTopicComplete(topicKey) {
+
  const profile = loadProfile();
  if (!profile) return;
  if (!profile.completedTopics) profile.completedTopics = [];
