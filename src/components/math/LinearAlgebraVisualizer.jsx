@@ -1,3 +1,14 @@
+const Cell = ({ value, highlight, color = '#00f2ff' }) => (
+    <div className="mm-cell" style={{
+        background: highlight ? `${color}22` : 'rgba(255,255,255,0.04)',
+        borderColor: highlight ? color : 'rgba(255,255,255,0.08)',
+        color: highlight ? color : 'var(--text-secondary)',
+        fontWeight: highlight ? 700 : 400,
+    }}>
+        {typeof value === 'number' ? value.toFixed(2) : value}
+    </div>
+);
+
 import React from 'react';
 
 // Isometric projection: puts +x forward-right, +y forward-left, +z up.
