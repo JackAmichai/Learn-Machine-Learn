@@ -1,18 +1,32 @@
 const fs = require('fs');
 
-const file = 'src/components/math/LinearAlgebraVisualizer.jsx';
-if (fs.existsSync(file)) {
-  let content = fs.readFileSync(file, 'utf8');
-  content = content.replace(/const Cell = \(\{\s*value,\s*highlight,\s*color\s*=\s*'#00f2ff'\s*\}\) => \([\s\S]*?\);\n/g, '');
-  content = content.replace(/const focusedContribution =/g, `const Cell = ({ value, highlight, color = '#00f2ff' }) => (
-        <div className="mm-cell" style={{
-            background: highlight ? \`\${color}22\` : 'rgba(255,255,255,0.04)',
-            borderColor: highlight ? color : 'rgba(255,255,255,0.08)',
-            color: highlight ? color : 'var(--text-secondary)',
-            fontWeight: highlight ? 700 : 400,
-        }}>
-            {typeof value === 'number' ? value.toFixed(2) : value}
-        </div>
-    );\n\n    const focusedContribution =`);
-  fs.writeFileSync(file, content);
-}
+const file = 'src/components/Controls.jsx';
+let content = fs.readFileSync(file, 'utf8');
+content = content.replace(/const handleImportFile = \(event\) => \{[\s\S]*?reader\.readAsText\(file\);\n    \};/, `const handleImportFile = (event) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        if (file.size > 5 * 1024 * 1024) {
+            setStatus('error', 'File is larger than 5MB — try a smaller file.');
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            try {
+                importModelJSON(reader.result);
+                setStatus('success', \`Imported \${file.name}.\`);
+            } catch (err) {
+                setStatus('error', err.message);
+            } finally {
+                if (fileInputRef.current) {
+                    fileInputRef.current.value = '';
+                }
+            }
+        };
+        reader.readAsText(file);
+    };`);
+fs.writeFileSync(file, content);
