@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 /**
@@ -329,6 +330,7 @@ export function LandingHeroVisuals() {
                 </p>
 
                 <div className="hv-grid">
+// eslint-disable-next-line no-unused-vars
                     {items.map(({ id, title, subtitle, Tile }) => (
                         <article key={id} className="hv-card">
                             <div className="hv-tile"><Tile /></div>
