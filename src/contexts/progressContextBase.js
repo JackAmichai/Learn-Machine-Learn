@@ -21,7 +21,7 @@ import { createContext } from 'react';
  *
  * The provider derives `level` and `nextLevelAt` from totalXP for HomeNav.
  */
-
+// eslint-disable-next-line react-refresh/only-export-components
 export const ProgressContext = createContext({
     visitedLessons: new Set(),
     completedQuizzes: new Set(),
