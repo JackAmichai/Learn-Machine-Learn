@@ -72,7 +72,7 @@ export function MathModal({ topic, onClose, onComplete }) {
  className="close-btn"
  onClick={onClose}
  aria-label="Close modal"
- >×</button>
+        ><span aria-hidden="true">×</span></button>
  </div>
 
  {/* Persona complexity badge */}
