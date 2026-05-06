@@ -22,7 +22,7 @@ export function ToastStack() {
                         <strong>{toast.title}</strong>
                         {toast.message && <p>{toast.message}</p>}
                     </div>
-                    <button className="toast-dismiss" onClick={() => dismissToast(toast.id)} aria-label="Dismiss notification">×</button>
+                    <button className="toast-dismiss" onClick={() => dismissToast(toast.id)} aria-label="Dismiss notification"><span aria-hidden="true">×</span></button>
                 </div>
             ))}
             <style>{`
