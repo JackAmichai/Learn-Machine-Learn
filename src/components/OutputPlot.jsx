@@ -5,6 +5,7 @@ export function OutputPlot({ model, data, modelVersion }) {
     const canvasRef = useRef(null);
 
     useEffect(() => {
+        let isMounted = true;
         const canvas = canvasRef.current;
         if (!canvas || !model || !data) return;
 
@@ -27,9 +28,24 @@ export function OutputPlot({ model, data, modelVersion }) {
             }
         }
 
-        tf.tidy(() => {
-            const inputTensor = tf.tensor2d(inputs);
-            const preds = model.predict(inputTensor).dataSync();
+        async function draw() {
+            let inputTensor, predsTensor;
+            let preds;
+
+            try {
+                inputTensor = tf.tensor2d(inputs);
+                predsTensor = model.predict(inputTensor);
+                // Extract asynchronously
+                preds = await predsTensor.data();
+            } finally {
+                if (inputTensor) inputTensor.dispose();
+                if (predsTensor) predsTensor.dispose();
+            }
+
+            if (!isMounted) return;
+
+            // Clear the canvas explicitly since we are async
+            ctx.clearRect(0, 0, width, height);
 
             // Draw the heatmap
             const wCell = width / gridSize;
@@ -56,26 +72,31 @@ export function OutputPlot({ model, data, modelVersion }) {
                     ctx.fillRect(i * wCell, height - (j + 1) * hCell, wCell, hCell);
                 }
             }
-        });
 
-        // 2. Draw Data Points
-        if (data.points) {
-            data.points.forEach((pt, idx) => {
-                const x = (pt[0] + 1.5) / 3 * width;
-                const y = height - (pt[1] + 1.5) / 3 * height;
+            // 2. Draw Data Points
+            if (data.points) {
+                data.points.forEach((pt, idx) => {
+                    const x = (pt[0] + 1.5) / 3 * width;
+                    const y = height - (pt[1] + 1.5) / 3 * height;
 
-                const label = data.labels[idx];
+                    const label = data.labels[idx];
 
-                ctx.beginPath();
-                ctx.arc(x, y, 4, 0, 2 * Math.PI);
-                ctx.fillStyle = label === 1 ? '#00f2ff' : '#7000ff';
-                ctx.strokeStyle = '#fff';
-                ctx.lineWidth = 1.5;
-                ctx.fill();
-                ctx.stroke();
-            });
+                    ctx.beginPath();
+                    ctx.arc(x, y, 4, 0, 2 * Math.PI);
+                    ctx.fillStyle = label === 1 ? '#00f2ff' : '#7000ff';
+                    ctx.strokeStyle = '#fff';
+                    ctx.lineWidth = 1.5;
+                    ctx.fill();
+                    ctx.stroke();
+                });
+            }
         }
 
+        draw();
+
+        return () => {
+            isMounted = false;
+        };
     }, [model, data, modelVersion]);
 
     return (
