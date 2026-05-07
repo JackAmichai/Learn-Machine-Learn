@@ -1,0 +1,4 @@
+## 2024-05-07 - Cross-Site Scripting (XSS) via React dangerouslySetInnerHTML
+**Vulnerability:** Static, complex HTML content containing educational text was being injected directly into the DOM using `dangerouslySetInnerHTML` in `MathModal.jsx` and `LookingForward.jsx` without any sanitization.
+**Learning:** Even if data originates from static files (like `mathContent.js`), injecting it directly into React's `dangerouslySetInnerHTML` is an insecure pattern that violates defense-in-depth principles. If the content source is ever modified to include user input or external data, it immediately becomes a high-severity XSS vulnerability.
+**Prevention:** Always sanitize dynamic or external HTML content using `DOMPurify.sanitize()` before passing it to `dangerouslySetInnerHTML`, regardless of its current perceived trust level.
