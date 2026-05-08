@@ -1,0 +1,3 @@
+## 2024-05-18 - Icon-Only Button Accessibility Pattern
+**Learning:** Found an accessibility issue pattern specific to this app's components where icon-only close buttons (like the `×` character) lacked descriptive labels for screen readers. A sighted user understands "×" means close, but a screen reader reads it out of context (e.g., as "multiply" or "times").
+**Action:** When adding or auditing icon-only buttons, always apply an `aria-label` to the `<button>` element to describe its action, and wrap the literal icon character/SVG in a `<span aria-hidden="true">` to prevent screen readers from reading the visual representation.
