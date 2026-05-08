@@ -1,0 +1,4 @@
+## 2024-05-24 - Unsanitized HTML Rendering causing XSS
+**Vulnerability:** The application was using React's `dangerouslySetInnerHTML` to render content (from `src/engine/mathContent.js` and other data structures) without sanitization in `MathModal.jsx` and `LookingForward.jsx`. This could allow Cross-Site Scripting (XSS) if any malicious scripts were injected into the content data.
+**Learning:** Even if HTML content comes from internal sources or static configuration files, relying on trust over verification when rendering dynamic HTML is dangerous. If content structures are ever made editable, extended, or sourced from users, unsanitized `dangerouslySetInnerHTML` becomes an immediate vector for attack.
+**Prevention:** Always sanitize dynamic or external HTML content using `DOMPurify.sanitize()` before passing it to `dangerouslySetInnerHTML` in React components to prevent Cross-Site Scripting (XSS) vulnerabilities.
