@@ -5,6 +5,8 @@ export function OutputPlot({ model, data, modelVersion }) {
     const canvasRef = useRef(null);
 
     useEffect(() => {
+        let isMounted = true;
+
         const canvas = canvasRef.current;
         if (!canvas || !model || !data) return;
 
@@ -27,9 +29,27 @@ export function OutputPlot({ model, data, modelVersion }) {
             }
         }
 
-        tf.tidy(() => {
-            const inputTensor = tf.tensor2d(inputs);
-            const preds = model.predict(inputTensor).dataSync();
+        async function draw() {
+            let inputTensor;
+            let predsTensor;
+            let preds;
+            try {
+                inputTensor = tf.tensor2d(inputs);
+                predsTensor = model.predict(inputTensor);
+                // ⚡ Bolt: Use asynchronous data() instead of blocking dataSync()
+                // This prevents UI thread locking during rendering of the output plot
+                preds = await predsTensor.data();
+            } finally {
+                if (inputTensor) inputTensor.dispose();
+                if (predsTensor) predsTensor.dispose();
+            }
+
+            if (!isMounted) return;
+
+            // ⚡ Bolt: Clear the canvas before drawing to prevent opacity buildup
+            ctx.clearRect(0, 0, width, height);
+
+
 
             // Draw the heatmap
             const wCell = width / gridSize;
@@ -56,7 +76,6 @@ export function OutputPlot({ model, data, modelVersion }) {
                     ctx.fillRect(i * wCell, height - (j + 1) * hCell, wCell, hCell);
                 }
             }
-        });
 
         // 2. Draw Data Points
         if (data.points) {
@@ -76,6 +95,11 @@ export function OutputPlot({ model, data, modelVersion }) {
             });
         }
 
+
+        }
+
+        draw();
+        return () => { isMounted = false; };
     }, [model, data, modelVersion]);
 
     return (
