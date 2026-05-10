@@ -617,19 +617,19 @@ export function LookingForward() {
                       <Visualizer />
                     </div>
                     
-                    <div className="lesson-content" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(lesson.content, { USE_PROFILES: { mathMl: true, svg: true, html: true } }) }} />
+                    <div className="lesson-content" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(lesson.content, { ADD_TAGS: ['math', 'mi', 'mo', 'mn', 'ms', 'mtext', 'annotation-xml'], ADD_ATTR: ['xmlns', 'display', 'mathvariant'] }) }} />
                     
                     {lesson.solved && (
                       <div className="lesson-section solved-section">
                         <h4>✅ What This Solved</h4>
-                        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(lesson.solved, { USE_PROFILES: { mathMl: true, svg: true, html: true } }) }} />
+                        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(lesson.solved) }} />
                       </div>
                     )}
                     
                     {lesson.shortcomings && (
                       <div className="lesson-section shortcomings-section">
                         <h4>⚠️ Current Shortcomings</h4>
-                        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(lesson.shortcomings, { USE_PROFILES: { mathMl: true, svg: true, html: true } }) }} />
+                        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(lesson.shortcomings) }} />
                       </div>
                     )}
                     
