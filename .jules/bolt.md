@@ -13,3 +13,11 @@
 ## 2024-05-22 - Synchronous TF.js Operations in Render
 **Learning:** TensorFlow.js `dataSync()` is a synchronous blocking operation. Using it directly inside a React component's render body (e.g., in `NetworkGraph`) causes significant performance degradation on every re-render.
 **Action:** Always wrap weight extraction logic or any TF.js `dataSync()` calls in `useMemo` to ensure they only run when the model or structure actually changes.
+
+## 2026-01-27 - tf.tidy and Asynchronous Tensor Operations
+**Learning:** `tf.tidy()` does not support asynchronous operations (Promises). When refactoring `dataSync()` to `await tensor.data()`, `tf.tidy()` must be removed.
+**Action:** Replace `tf.tidy()` with a `try...finally` block to manually call `.dispose()` on all created tensors when extracting data asynchronously.
+
+## 2026-01-27 - Canvas Artifacts after Async Refactor
+**Learning:** Moving canvas drawing operations into an asynchronous flow (like waiting for `await tensor.data()`) can cause visual artifacts like opacity buildup on successive frames if the canvas is not explicitly cleared. Synchronous `dataSync()` often worked without clearing because the entire drawing cycle was blocking and consecutive.
+**Action:** Always explicitly call `ctx.clearRect(0, 0, width, height)` before drawing in asynchronous canvas operations, especially when using rgba colors with transparency.
