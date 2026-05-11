@@ -1,0 +1,3 @@
+## 2024-05-11 - Text overlap on absolutely positioned overlay buttons
+**Learning:** When overlaying an action button (like "Copy" or "Dismiss") using `position: absolute` inside a scrollable container (like `<pre>` code blocks or toast notifications), the underlying text content will visually bleed underneath and be obscured by the button unless explicit layout boundaries are set, making the content unreadable.
+**Action:** Always apply `padding-right` to the underlying text container that is equal to or greater than the absolute element's width plus its right margin/padding, ensuring text wraps cleanly before touching the overlay element.
