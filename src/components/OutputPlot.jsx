@@ -90,6 +90,8 @@ export function OutputPlot({ model, data, modelVersion }) {
                     borderRadius: '12px',
                     background: '#000'
                 }}
+                role="img"
+                aria-label="Scatter plot showing neural network decision boundary and data points."
             />
         </div>
     );
