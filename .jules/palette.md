@@ -1,0 +1,3 @@
+## 2024-05-14 - Accessible Custom Modal Dialogs
+**Learning:** For custom modals that act as overlays containing dynamic content, simply applying visual overlays and click handlers isn't enough for screen readers. Screen readers need semantic context to trap reading flow appropriately and announce the modal's presence and title.
+**Action:** Always wrap custom modal containers with `role="dialog"`, `aria-modal="true"`, and use `aria-labelledby` referencing the title element's ID. Additionally, for icon-only close buttons (like "×"), obscure the literal character from screen readers with `<span aria-hidden="true">` and provide a clear `aria-label` on the button itself.
