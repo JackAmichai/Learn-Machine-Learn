@@ -1,9 +1,15 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { CodeExport } from './CodeExport';
 
 describe('CodeExport Security', () => {
     const defaultStructure = [2, 4, 1];
+
+    Object.assign(navigator, {
+        clipboard: {
+            writeText: vi.fn(),
+        },
+    });
 
     it('should sanitize activation function to prevent code injection', () => {
         const maliciousHyperparams = {
