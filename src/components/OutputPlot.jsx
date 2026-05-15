@@ -27,55 +27,81 @@ export function OutputPlot({ model, data, modelVersion }) {
             }
         }
 
-        tf.tidy(() => {
-            const inputTensor = tf.tensor2d(inputs);
-            const preds = model.predict(inputTensor).dataSync();
+        let isMounted = true;
+        let inputTensor = null;
+        let predsTensor = null;
 
-            // Draw the heatmap
-            const wCell = width / gridSize;
-            const hCell = height / gridSize;
+        async function drawPlot() {
+            try {
+                inputTensor = tf.tensor2d(inputs);
+                predsTensor = model.predict(inputTensor);
 
-            for (let i = 0; i < gridSize; i++) {
-                for (let j = 0; j < gridSize; j++) {
-                    const val = preds[i * gridSize + j];
+                // ⚡ Bolt: Use async data() instead of blocking dataSync()
+                // This prevents UI freezes during the training loop when rendering the 50x50 grid
+                const preds = await predsTensor.data();
 
-                    // Premium look: Purple (0) → Cyan (1)
-                    const c1 = [112, 0, 255];
-                    const c2 = [0, 242, 255];
+                if (!isMounted) return;
 
-                    const rComp = c1[0] + (c2[0] - c1[0]) * val;
-                    const gComp = c1[1] + (c2[1] - c1[1]) * val;
-                    const bComp = c1[2] + (c2[2] - c1[2]) * val;
+                // Clear canvas before drawing to avoid opacity buildup since we're using async await
+                ctx.clearRect(0, 0, width, height);
 
-                    ctx.fillStyle = `rgba(${rComp}, ${gComp}, ${bComp}, 0.3)`;
-                    // Correction for canvas Y axis (0 is top)
-                    // Math y=-1.5 is bottom. Canvas y=height is bottom.
-                    // x is i, y is j.
+                // Draw the heatmap
+                const wCell = width / gridSize;
+                const hCell = height / gridSize;
 
-                    // Draw rect
-                    ctx.fillRect(i * wCell, height - (j + 1) * hCell, wCell, hCell);
+                for (let i = 0; i < gridSize; i++) {
+                    for (let j = 0; j < gridSize; j++) {
+                        const val = preds[i * gridSize + j];
+
+                        // Premium look: Purple (0) → Cyan (1)
+                        const c1 = [112, 0, 255];
+                        const c2 = [0, 242, 255];
+
+                        const rComp = c1[0] + (c2[0] - c1[0]) * val;
+                        const gComp = c1[1] + (c2[1] - c1[1]) * val;
+                        const bComp = c1[2] + (c2[2] - c1[2]) * val;
+
+                        ctx.fillStyle = `rgba(${rComp}, ${gComp}, ${bComp}, 0.3)`;
+                        // Correction for canvas Y axis (0 is top)
+                        // Math y=-1.5 is bottom. Canvas y=height is bottom.
+                        // x is i, y is j.
+
+                        // Draw rect
+                        ctx.fillRect(i * wCell, height - (j + 1) * hCell, wCell, hCell);
+                    }
                 }
+
+                // 2. Draw Data Points
+                if (data.points) {
+                    data.points.forEach((pt, idx) => {
+                        const x = (pt[0] + 1.5) / 3 * width;
+                        const y = height - (pt[1] + 1.5) / 3 * height;
+
+                        const label = data.labels[idx];
+
+                        ctx.beginPath();
+                        ctx.arc(x, y, 4, 0, 2 * Math.PI);
+                        ctx.fillStyle = label === 1 ? '#00f2ff' : '#7000ff';
+                        ctx.strokeStyle = '#fff';
+                        ctx.lineWidth = 1.5;
+                        ctx.fill();
+                        ctx.stroke();
+                    });
+                }
+            } catch (err) {
+                console.error("Error drawing plot:", err);
+            } finally {
+                // Manually dispose of tensors because tf.tidy() doesn't work with async code
+                if (inputTensor) inputTensor.dispose();
+                if (predsTensor) predsTensor.dispose();
             }
-        });
-
-        // 2. Draw Data Points
-        if (data.points) {
-            data.points.forEach((pt, idx) => {
-                const x = (pt[0] + 1.5) / 3 * width;
-                const y = height - (pt[1] + 1.5) / 3 * height;
-
-                const label = data.labels[idx];
-
-                ctx.beginPath();
-                ctx.arc(x, y, 4, 0, 2 * Math.PI);
-                ctx.fillStyle = label === 1 ? '#00f2ff' : '#7000ff';
-                ctx.strokeStyle = '#fff';
-                ctx.lineWidth = 1.5;
-                ctx.fill();
-                ctx.stroke();
-            });
         }
 
+        drawPlot();
+
+        return () => {
+            isMounted = false;
+        };
     }, [model, data, modelVersion]);
 
     return (
