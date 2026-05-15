@@ -1,0 +1,4 @@
+## 2024-03-20 - XSS in React dangerouslySetInnerHTML
+**Vulnerability:** Found multiple instances of `dangerouslySetInnerHTML` rendering unsanitized external HTML content in `MathModal.jsx` and `LookingForward.jsx`, leading to critical XSS vulnerabilities.
+**Learning:** When adopting DOMPurify to mitigate XSS in heavily domain-specific applications (like a math visualizer using MathML/SVG), restricting allowed tags via `USE_PROFILES` without explicitly re-enabling standard HTML (`html: true`) strips all structural formatting (like `<div>` and `<p>`), breaking the application's UI.
+**Prevention:** Always verify that strict sanitization policies (`USE_PROFILES`) do not inadvertently strip essential formatting elements by explicitly enabling standard HTML profiles alongside domain-specific ones (`{ html: true, mathMl: true, svg: true }`).
