@@ -1,0 +1,23 @@
+<<<<<<< SEARCH
+import { useState } from 'react';
+import { Tooltip } from './Tooltip';
+import { ALLOWED_ACTIVATIONS, ALLOWED_OPTIMIZERS } from '../engine/NeuralNetwork';
+
+export function CodeExport({ structure, hyperparams }) {
+    const [isOpen, setIsOpen] = useState(false);
+    const [lang, setLang] = useState('python'); // 'python' or 'js'
+
+    const safeActivation = ALLOWED_ACTIVATIONS.includes(hyperparams.activation) ? hyperparams.activation : 'relu';
+=======
+import { useState, useRef } from 'react';
+import { Tooltip } from './Tooltip';
+import { ALLOWED_ACTIVATIONS, ALLOWED_OPTIMIZERS } from '../engine/NeuralNetwork';
+
+export function CodeExport({ structure, hyperparams }) {
+    const [isOpen, setIsOpen] = useState(false);
+    const [lang, setLang] = useState('python'); // 'python' or 'js'
+    const [copied, setCopied] = useState(false);
+    const copyTimeoutRef = useRef(null);
+
+    const safeActivation = ALLOWED_ACTIVATIONS.includes(hyperparams.activation) ? hyperparams.activation : 'relu';
+>>>>>>> REPLACE
