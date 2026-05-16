@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Tooltip } from './Tooltip';
 import { ALLOWED_ACTIVATIONS, ALLOWED_OPTIMIZERS } from '../engine/NeuralNetwork';
+import { useToast } from '../hooks/useToast';
 
 export function CodeExport({ structure, hyperparams }) {
     const [isOpen, setIsOpen] = useState(false);
     const [lang, setLang] = useState('python'); // 'python' or 'js'
+    const { pushToast } = useToast();
 
     const safeActivation = ALLOWED_ACTIVATIONS.includes(hyperparams.activation) ? hyperparams.activation : 'relu';
     const safeOptimizer = ALLOWED_OPTIMIZERS.includes(hyperparams.optimizer) ? hyperparams.optimizer : 'adam';
@@ -67,12 +69,22 @@ export function CodeExport({ structure, hyperparams }) {
         return code;
     };
 
+    const handleCopy = async () => {
+        const code = lang === 'python' ? generatePython() : generateJS();
+        try {
+            await navigator.clipboard.writeText(code);
+            pushToast({ type: 'success', message: 'Code copied to clipboard!' });
+        } catch {
+            pushToast({ type: 'error', message: 'Failed to copy code.' });
+        }
+    };
+
     return (
         <div className="code-modal-overlay">
             <div className="code-modal">
                 <div className="modal-header">
                     <h3>Export Model Code</h3>
-                    <button className="close" onClick={() => setIsOpen(false)}>×</button>
+                    <button className="close" onClick={() => setIsOpen(false)} aria-label="Close">×</button>
                 </div>
 
                 <div className="lang-tabs">
@@ -86,7 +98,10 @@ export function CodeExport({ structure, hyperparams }) {
                     </pre>
                 </div>
 
-                <p className="tip">Copy this code to run your model in a real environment!</p>
+                <div className="actions">
+                    <p className="tip">Copy this code to run your model in a real environment!</p>
+                    <button className="btn-copy" onClick={handleCopy}>Copy Code</button>
+                </div>
             </div>
 
             <style>{`
@@ -174,11 +189,28 @@ export function CodeExport({ structure, hyperparams }) {
                 white-space: pre-wrap;
             }
             .tip {
-                margin-top: 15px;
                 font-size: 12px;
                 color: var(--text-secondary);
                 font-style: italic;
-                text-align: center;
+            }
+            .actions {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 15px;
+            }
+            .btn-copy {
+                background: var(--accent-primary);
+                color: black;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 6px;
+                cursor: pointer;
+                font-weight: bold;
+                font-size: 12px;
+            }
+            .btn-copy:hover {
+                opacity: 0.9;
             }
         `}</style>
         </div>
