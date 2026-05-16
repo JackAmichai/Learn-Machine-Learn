@@ -32,7 +32,6 @@ export const MATH_TOPICS = {
   <li><strong>Vanishing gradients</strong>: Deep networks struggle to train as gradients can become tiny</li>
   </ul>
   `,
-  visualizer: "NeuralNetwork",
   },
   "MathIntro": {
     visualizer: "LinearRegression",
@@ -169,7 +168,6 @@ export const MATH_TOPICS = {
   <li><strong>Replaced by ViT</strong>: Vision Transformers now often outperform CNNs on large datasets</li>
   </ul>
   `,
-  visualizer: "CNN",
   },
   "ModernAIIntro": {
     visualizer: "Transformer",
@@ -203,7 +201,6 @@ export const MATH_TOPICS = {
   <li><strong>Environmental impact</strong>: Training consumes enormous energy</li>
   </ul>
   `,
-  visualizer: "Transformer",
   },
   "SVM": {
  title: "SVM: Support Vector Machines",
@@ -288,79 +285,6 @@ export const MATH_TOPICS = {
   <li><strong>No probability output</strong>: Only gives class labels, not probabilities (without Platt scaling)</li>
   <li><strong>Sensitive to scaling</strong>: Features must be normalized, or SVM fails</li>
   </ul>
-  `,
-  visualizer: "SVM",
- interactiveFormulas: [
- {
- name: "Margin Size",
- components: [
- { symbol: "Margin", key: "margin", name: "Margin Width", description: "Distance between support vectors" },
- { symbol: " = 2 / ||w||", key: "formula", name: "Formula", description: "Inversely proportional to weight norm" }
- ],
- variables: [
- { key: "wnorm", symbol: "||w||", name: "Weight Norm", min: 0.1, max: 10, step: 0.1, default: 2, decimals: 1 }
- ],
- calculate: (vals, get) => 2 / get("wnorm", 2),
- insights: [
- "Smaller weights = larger margins = better generalization.",
- "Support vectors are the points 'supporting' the margin.",
- "Hinge loss penalizes points inside the margin."
- ]
- }
- ]
- },
- "DecisionTree": {
-    visualizer: "Tree",
- title: "Decision Trees: If-Then Reasoning",
- content: `
- <p><strong>Decision Trees</strong> split data based on feature values to maximize 'purity' (homogeneity) in the resulting subsets — producing a flowchart of yes/no questions that ends in a prediction.</p>
-
- <h4>Intuition</h4>
- <p>Think of how a doctor diagnoses: "Fever? Yes. Cough? Yes. Shortness of breath? Yes → possible pneumonia." A tree learns that sequence of questions automatically, choosing at each step the question that most cleanly separates the remaining cases.</p>
-
- <h4>Splitting Criteria</h4>
- <p>Common metrics are <strong>Gini Impurity</strong> and <strong>Information Gain</strong> (based on <em>Entropy</em>). Both measure disorder — a perfect split sends all one class left and all the other class right.</p>
-
-<h4>History of Decision Trees</h4>
-  <p><strong>1963</strong>: Morgan and Sonquist introduce <em>AID</em> (Automatic Interaction Detector) — first decision tree for survey analysis.<br/>
-  <strong>1980</strong>: J. Ross Quinlan begins work on <em>ID3</em> (Iterative Dichotomiser 3).<br/>
-  <strong>1986</strong>: Quinlan publishes <em>ID3</em> — uses entropy and information gain.<br/>
-  <strong>1993</strong>: Quinlan releases <em>C4.5</em> — improves ID3 with numeric attributes, pruning, and missing values.<br/>
-  <strong>1984</strong>: Leo Breiman et al. publish <em>CART</em> (Classification and Regression Trees) — uses Gini impurity, full Bayesian interpretation.<br/>
-  <strong>2014</strong>: Tianqi Chen introduces <em>XGBoost</em> — gradient boosted trees, dominates Kaggle.<br/>
-  <strong>2017</strong>: Microsoft releases <em>LightGBM</em> — faster gradient boosted trees with histogram binning.<br/>
-  <strong>Why Survived</strong>: Trees are interpretable, handle mixed data types, and ensemble methods (boosting) achieve state-of-the-art accuracy.</p>
-
- <h4>Strengths</h4>
- <p>• Zero feature scaling required — splits are based on order, not magnitude.<br/>
- • Native handling of mixed numeric and categorical features.<br/>
- • Fully interpretable — you can print the tree and read the rules.</p>
-
- <h4>Common Pitfalls</h4>
- <p>• Trees overfit hard: a deep unpruned tree can memorize noise. Always set <code>max_depth</code> or use pruning.<br/>
- • Instability: small data changes can produce very different trees → use ensembles like Random Forests.<br/>
- • Biased toward features with many unique values (use permutation importance to check).</p>
-
- <h4>Real-World Uses</h4>
-  <p>Credit scoring, medical triage, customer-churn rules engines, and as the weak learners inside Random Forests and Gradient Boosting (XGBoost, LightGBM) — which still win the majority of tabular-data Kaggle competitions.</p>
-  `,
-  solved: `
-  <ul>
-  <li><strong>Interpretability</strong>: Can print and read the tree — no black box</li>
-  <li><strong>Mixed data types</strong>: Handles both numeric and categorical without one-hot encoding</li>
-  <li><strong>No feature scaling needed</strong>: Splits depend on order, not magnitude</li>
-  <li><strong>Non-linear relationships</strong>: Can capture complex patterns without explicit feature engineering</li>
-  </ul>
-  `,
-  shortcomings: `
-  <ul>
-  <li><strong>Overfitting</strong>: Deep trees memorize noise; need max_depth or pruning</li>
-  <li><strong>Instability</strong>: Small data changes produce very different trees</li>
-  <li><strong>Biased to features with many unique values</strong>: Can miss important features with few values</li>
-  <li><strong>Greedy algorithm</strong>: Makes locally optimal splits that may not be globally optimal</li>
-  </ul>
-  `,
-  visualizer: "Tree",
  interactiveFormulas: [
  {
  name: "Gini Impurity",
@@ -390,7 +314,6 @@ export const MATH_TOPICS = {
  content: `
  <p><strong>Random Forests</strong> combine multiple Decision Trees to reduce overfitting and improve accuracy. This is a technique called <strong>Bagging</strong> (Bootstrap Aggregating).</p>
  `,
- visualizer: "RandomForest",
  interactiveFormulas: [
  {
  name: "Ensemble Prediction",
@@ -449,7 +372,6 @@ export const MATH_TOPICS = {
    <li><strong>Sensitive to k</strong>: Small k = noise sensitive, large k = smooth but may miss patterns</li>
    </ul>
    `,
-   visualizer: "KNN",
  interactiveFormulas: [
  {
  name: "Euclidean Distance",
@@ -503,7 +425,6 @@ export const MATH_TOPICS = {
    <li><strong>Information loss</strong>: Reducing dimensions always loses some information</li>
    </ul>
    `,
-   visualizer: "PCA",
   interactiveFormulas: [
  {
  name: "Explained Variance",
@@ -558,7 +479,6 @@ export const MATH_TOPICS = {
    <li><strong>Non-robust</strong>: A few bad predictions can make the whole loss huge</li>
    </ul>
    `,
-   visualizer: "Loss",
  interactiveFormulas: [
  {
  name: "Huber Loss",
@@ -864,7 +784,6 @@ export const MATH_TOPICS = {
    <li><strong>Exploding outputs</strong>: Unbounded activations can cause numerical instability</li>
    </ul>
    `,
-   visualizer: "Activation",
    interactiveFormulas: [
  {
  name: "Sigmoid",
@@ -1027,7 +946,6 @@ export const MATH_TOPICS = {
     <li><strong>Hyperparameters</strong>: Beta values still need tuning</li>
     </ul>
     `,
-    visualizer: "Optimizer",
    interactiveFormulas: [
  {
  name: "SGD with Momentum",
@@ -1275,7 +1193,6 @@ export const MATH_TOPICS = {
    <li><strong>Saddle points</strong>: Flat regions can fool optimizers into thinking they've converged</li>
    </ul>
    `,
-   visualizer: "GradientDescent",
   interactiveFormulas: [
  {
  name: "Gradient Magnitude",
@@ -2078,7 +1995,6 @@ Recall = TP / (TP + FN)
   <li><strong>No inference model</strong>: Can't easily estimate probability of given sample</li>
   </ul>
   `,
-  visualizer: "GAN",
    interactiveFormulas: [
  {
  name: "Generator Loss",
@@ -2212,7 +2128,6 @@ Recall = TP / (TP + FN)
   <li><strong>Replaced by strided convolutions</strong>: Modern architectures often use strided conv instead</li>
   </ul>
   `,
-  visualizer: "Pooling",
    interactiveFormulas: [
  {
  name: "Output Size Calculator",
@@ -2891,7 +2806,6 @@ Recall = TP / (TP + FN)
   <li><strong>No function approximation</strong>: Basic MDP needs explicit state tables</li>
   </ul>
   `,
-  visualizer: "MDP",
    interactiveFormulas: [
  {
  name: "Discounted Return",
@@ -2939,7 +2853,6 @@ Recall = TP / (TP + FN)
   <li><strong>Overestimation</strong>: Max can cause overestimation of Q-values</li>
   </ul>
   `,
-  visualizer: "GridWorld",
  interactiveFormulas: [
  {
  name: "Temporal Difference (TD) Update",
@@ -2992,7 +2905,6 @@ Recall = TP / (TP + FN)
   <li><strong>Not stable</strong>: Training can be volatile</li>
   </ul>
   `,
-  visualizer: "DeepQN",
    interactiveFormulas: [
  {
  name: "DQN Loss",
@@ -3063,7 +2975,6 @@ Recall = TP / (TP + FN)
   <li><strong>Performance ceiling</strong>: Sometimes outperformed by more specialized algorithms</li>
   </ul>
   `,
-  visualizer: "PPO",
  interactiveFormulas: [
  {
  name: "PPO Clipped Objective",
@@ -3188,7 +3099,6 @@ Recall = TP / (TP + FN)
   <li><strong>Expensive for long sequences</strong>: GPT-4 has token limits due to this</li>
   </ul>
   `,
-  visualizer: "Transformer",
  interactiveFormulas: [
  {
  name: "Attention Weights",
@@ -3324,7 +3234,6 @@ Recall = TP / (TP + FN)
   <li><strong>Not universal</strong>: Doesn't work equally well for all model architectures</li>
   </ul>
   `,
-  visualizer: "LoRA",
  interactiveFormulas: [
  {
  name: "LoRA Parameter Savings",
@@ -4462,7 +4371,6 @@ Recall = TP / (TP + FN)
   <li><strong>Underfits complex data</strong>: Too simple for most real-world problems</li>
   </ul>
   `,
-  visualizer: "LinearRegression",
    interactiveFormulas: [
  {
  name: "Simple Linear Prediction",
@@ -4534,7 +4442,6 @@ Recall = TP / (TP + FN)
   <li><strong>Outperforms often by trees</strong>: For complex data, ensemble methods beat it</li>
   </ul>
   `,
-  visualizer: "LogisticRegression",
    interactiveFormulas: [
  {
  name: "Sigmoid Decision",
@@ -4680,7 +4587,6 @@ Recall = TP / (TP + FN)
   <li><strong>Slow training</strong>: Sequential nature limits hardware utilization</li>
   </ul>
   `,
-  visualizer: "RNN",
    interactiveFormulas: [
  {
  name: "Hidden State Update",
@@ -4757,7 +4663,6 @@ Recall = TP / (TP + FN)
   <li><strong>Outperformed by transformers</strong>: For most NLP, attention is better</li>
   </ul>
   `,
-  visualizer: "LSTM",
    interactiveFormulas: [
  {
  name: "Forget Gate",

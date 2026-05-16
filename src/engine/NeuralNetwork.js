@@ -285,6 +285,25 @@ export class NeuralNetwork {
   }
 
   /**
+   * Gets connection weights asynchronously as a flat Float32Array.
+   * Prevents UI blocking during rendering.
+   * @param {number} layerIndex - Index of the connection layer
+   * @returns {Promise<Float32Array|null>} Promise resolving to weight values
+   */
+  async getConnectionWeightsAsync(layerIndex) {
+    if (!this.connectionLayers[layerIndex]) return null;
+    try {
+      const weights = this.connectionLayers[layerIndex].getWeights();
+      if (!weights.length) return null;
+      const kernel = weights[0];
+      return await kernel.data();
+    } catch (e) {
+      console.error('Error fetching connection weights async:', e);
+      return null;
+    }
+  }
+
+  /**
    * Makes predictions on input data.
    * @param {tf.Tensor2D} xs - Input tensor
    * @returns {tf.Tensor|null} Prediction tensor or null if no model
@@ -409,6 +428,54 @@ export class NeuralNetwork {
       }
       return deadMap;
     });
+  }
+
+  /**
+   * Scans the network for dead neurons asynchronously.
+   * @param {tf.Tensor2D} xs - Input batch
+   * @returns {Promise<Object>} Promise resolving to Map of layerIndex -> Array of dead neuron indices
+   */
+  async scanForDeadNeuronsAsync(xs) {
+    if (!this.model) return {};
+
+    const deadMap = {};
+    let current = xs.clone();
+    let denseLayerIndex = 1;
+    let tensorsToDispose = [current];
+
+    try {
+      for (const layer of this.model.layers) {
+        // Apply layer to current tensor
+        const nextCurrent = layer.apply(current);
+        tensorsToDispose.push(nextCurrent);
+        current = nextCurrent;
+
+        // Check if it's a Dense layer (which has the activation)
+        if (layer.getClassName() === 'Dense') {
+          // If activation is ReLU (or similar), dead means always <= 0 (or close to 0)
+          // We check max activation across the batch.
+          const maxActivations = current.max(0); // Shape [units]
+          const isDead = maxActivations.lessEqual(1e-5);
+          tensorsToDispose.push(maxActivations, isDead);
+
+          const deadIndices = [];
+          const deadData = await isDead.data();
+
+          for (let j = 0; j < deadData.length; j++) {
+            if (deadData[j]) deadIndices.push(j);
+          }
+
+          if (deadIndices.length > 0) {
+            deadMap[denseLayerIndex] = deadIndices;
+          }
+
+          denseLayerIndex++;
+        }
+      }
+      return deadMap;
+    } finally {
+      tensorsToDispose.forEach(t => t.dispose());
+    }
   }
 
   /**
