@@ -216,8 +216,8 @@ export function Home() {
                 <div className="viz-inner vision-container">
                   <VisionCanvas
                     onAddSample={nn.addSample}
-                    onPredict={(grid) => {
-                      const res = nn.predictSample(grid);
+                    onPredict={async (grid) => {
+                      const res = await nn.predictSample(grid);
                       if (res) alert(`Prediction: Class A: ${(res[0] * 100).toFixed(1)}%, Class B: ${(res[1] * 100).toFixed(1)}%`);
                     }}
                     disabled={nn.isPlaying}
@@ -266,8 +266,8 @@ export function Home() {
                 <div className="viz-inner vision-container">
                   <VisionCanvas
                     onAddSample={nn.addSample}
-                    onPredict={(grid) => {
-                      const res = nn.predictSample(grid);
+                    onPredict={async (grid) => {
+                      const res = await nn.predictSample(grid);
                       if (res) alert(`Class A: ${(res[0]*100).toFixed(1)}%  |  Class B: ${(res[1]*100).toFixed(1)}%`);
                     }}
                     disabled={nn.isPlaying}
