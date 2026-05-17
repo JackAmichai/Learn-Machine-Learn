@@ -1,0 +1,5 @@
+# Palette's Journal - UX & Accessibility Learnings
+
+## 2025-05-17 - Semantic Modal Accessibility Pattern
+**Learning:** Custom overlay modals built without native `<dialog>` tags (like the `CodeExport` modal) must be explicitly upgraded with WAI-ARIA properties (`role="dialog"`, `aria-modal="true"`, `aria-labelledby="[id-of-heading]"`) to ensure screen readers trap focus and announce the context correctly. Furthermore, literal icon characters (like `×` for close buttons) will be confusingly read aloud as "multiplication sign" by screen readers unless hidden with `<span aria-hidden="true">` and accompanied by a descriptive `aria-label` on the parent button.
+**Action:** Always verify that custom popups or modals in the codebase have explicitly linked labels (`aria-labelledby` + `id`) and use semantic roles, and never leave raw text symbols exposed as interactive button labels without an `aria-label` override.
