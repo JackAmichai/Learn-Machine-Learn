@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Tooltip } from './Tooltip';
 import { ALLOWED_ACTIVATIONS, ALLOWED_OPTIMIZERS } from '../engine/NeuralNetwork';
 
 export function CodeExport({ structure, hyperparams }) {
     const [isOpen, setIsOpen] = useState(false);
     const [lang, setLang] = useState('python'); // 'python' or 'js'
+    const [copied, setCopied] = useState(false);
+    const copyTimeoutRef = useRef(null);
 
     const safeActivation = ALLOWED_ACTIVATIONS.includes(hyperparams.activation) ? hyperparams.activation : 'relu';
     const safeOptimizer = ALLOWED_OPTIMIZERS.includes(hyperparams.optimizer) ? hyperparams.optimizer : 'adam';
@@ -67,6 +69,22 @@ export function CodeExport({ structure, hyperparams }) {
         return code;
     };
 
+    const handleCopy = async () => {
+        const codeToCopy = lang === 'python' ? generatePython() : generateJS();
+        try {
+            await navigator.clipboard.writeText(codeToCopy);
+            setCopied(true);
+            if (copyTimeoutRef.current) {
+                clearTimeout(copyTimeoutRef.current);
+            }
+            copyTimeoutRef.current = setTimeout(() => {
+                setCopied(false);
+            }, 2000);
+        } catch (err) {
+            console.error('Failed to copy text: ', err);
+        }
+    };
+
     return (
         <div className="code-modal-overlay">
             <div className="code-modal">
@@ -80,10 +98,19 @@ export function CodeExport({ structure, hyperparams }) {
                     <button className={lang === 'js' ? 'active' : ''} onClick={() => setLang('js')}>JavaScript (TF.js)</button>
                 </div>
 
-                <div className="code-block">
-                    <pre>
-                        {lang === 'python' ? generatePython() : generateJS()}
-                    </pre>
+                <div style={{ position: 'relative' }}>
+                    <div className="code-block">
+                        <pre>
+                            {lang === 'python' ? generatePython() : generateJS()}
+                        </pre>
+                    </div>
+                    <button
+                        className="copy-btn"
+                        onClick={handleCopy}
+                        aria-label="Copy code to clipboard"
+                    >
+                        {copied ? 'Copied!' : 'Copy'}
+                    </button>
                 </div>
 
                 <p className="tip">Copy this code to run your model in a real environment!</p>
@@ -172,6 +199,24 @@ export function CodeExport({ structure, hyperparams }) {
                 font-size: 13px;
                 color: #d4d4d4;
                 white-space: pre-wrap;
+                padding-right: 60px;
+            }
+            .copy-btn {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: var(--bg-secondary);
+                color: var(--text-primary);
+                border: 1px solid var(--glass-border);
+                border-radius: 6px;
+                padding: 4px 8px;
+                font-size: 12px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+            .copy-btn:hover {
+                background: var(--accent-primary);
+                color: black;
             }
             .tip {
                 margin-top: 15px;
