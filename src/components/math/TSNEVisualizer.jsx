@@ -9,14 +9,20 @@ export default function TSNEVisualizer() {
   const generateClusters = () => {
     const clusters = [];
     const numClusters = 5;
+    let seed = perplexity * iterations; // Deterministic seed based on state
+    const nextRandom = () => {
+      let x = Math.sin(seed++) * 10000;
+      return x - Math.floor(x);
+    };
+
     for (let i = 0; i < numClusters; i++) {
       const points = [];
-      const centerX = Math.random() * 60 + 20;
-      const centerY = Math.random() * 60 + 20;
+      const centerX = nextRandom() * 60 + 20;
+      const centerY = nextRandom() * 60 + 20;
       for (let j = 0; j < 15; j++) {
         points.push({
-          x: centerX + (Math.random() - 0.5) * 15,
-          y: centerY + (Math.random() - 0.5) * 15,
+          x: centerX + (nextRandom() - 0.5) * 15,
+          y: centerY + (nextRandom() - 0.5) * 15,
           cluster: i
         });
       }

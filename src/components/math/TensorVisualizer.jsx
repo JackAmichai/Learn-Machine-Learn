@@ -50,7 +50,7 @@ export default function TensorVisualizer({ values = {} }) {
 
     const drawCube = ({ x, y, z }) => {
         // 8 corners
-        const p000 = iso(x, y, z);
+        // p000 is not used for visible faces, kept for structural completeness conceptually, but removed to satisfy linter
         const p100 = iso(x + 1, y, z);
         const p110 = iso(x + 1, y + 1, z);
         const p010 = iso(x, y + 1, z);
