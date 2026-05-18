@@ -6,16 +6,18 @@ export default function LossVisualizer({ values = {} }) {
   
   // Sync with external values if they change
   useEffect(() => {
-    // If we have 'err' (y - yhat), we can adjust predicted to be actual - err
-    if (values.err !== undefined) {
-      setPredicted(actual - values.err);
-    } else {
-      if (values.predicted !== undefined) setPredicted(values.predicted);
-      if (values.yhat !== undefined) setPredicted(values.yhat);
-    }
-    
-    if (values.actual !== undefined) setActual(values.actual);
-    if (values.y !== undefined) setActual(values.y);
+    setTimeout(() => {
+      // If we have 'err' (y - yhat), we can adjust predicted to be actual - err
+      if (values.err !== undefined) {
+        setPredicted(actual - values.err);
+      } else {
+        if (values.predicted !== undefined) setPredicted(values.predicted);
+        if (values.yhat !== undefined) setPredicted(values.yhat);
+      }
+
+      if (values.actual !== undefined) setActual(values.actual);
+      if (values.y !== undefined) setActual(values.y);
+    }, 0);
   }, [values, actual]);
 
   const mse = Math.pow(predicted - actual, 2);
