@@ -1,0 +1,4 @@
+## 2024-05-18 - Adding Absolute-Positioned Buttons to Scrollable Areas
+
+**Learning:** When implementing an absolute-positioned button (like a Copy button) inside or over a scrollable container (such as a `<pre>` tag for code), the text content can wrap beneath the button, rendering the underlying content unreadable or obscuring it. Furthermore, utilizing `setTimeout` for temporary visual UI states (e.g. "Copied!") requires careful management of overlapping timeouts during rapid sequential interactions to avoid unexpected behavior.
+**Action:** Always apply sufficient `padding` (like `padding-right: 60px`) to the scrollable content container to provide clearance for the overlay button. Additionally, securely implement timeout-driven visual feedback by storing the timeout ID in a `useRef` and clearing the existing timeout (with `clearTimeout`) before setting a new one.
