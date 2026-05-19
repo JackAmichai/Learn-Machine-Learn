@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Tooltip } from './Tooltip';
 import { ALLOWED_ACTIVATIONS, ALLOWED_OPTIMIZERS } from '../engine/NeuralNetwork';
 
 export function CodeExport({ structure, hyperparams }) {
     const [isOpen, setIsOpen] = useState(false);
     const [lang, setLang] = useState('python'); // 'python' or 'js'
+    const [copied, setCopied] = useState(false);
+    const timeoutRef = useRef(null);
 
     const safeActivation = ALLOWED_ACTIVATIONS.includes(hyperparams.activation) ? hyperparams.activation : 'relu';
     const safeOptimizer = ALLOWED_OPTIMIZERS.includes(hyperparams.optimizer) ? hyperparams.optimizer : 'adam';
@@ -67,6 +69,23 @@ export function CodeExport({ structure, hyperparams }) {
         return code;
     };
 
+    const handleCopy = async () => {
+        const codeText = lang === 'python' ? generatePython() : generateJS();
+        try {
+            await navigator.clipboard.writeText(codeText);
+            setCopied(true);
+
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+            timeoutRef.current = setTimeout(() => {
+                setCopied(false);
+            }, 2000);
+        } catch (err) {
+            console.error('Failed to copy text: ', err);
+        }
+    };
+
     return (
         <div className="code-modal-overlay">
             <div className="code-modal">
@@ -81,6 +100,13 @@ export function CodeExport({ structure, hyperparams }) {
                 </div>
 
                 <div className="code-block">
+                    <button
+                        className="btn-copy"
+                        onClick={handleCopy}
+                        aria-label="Copy code to clipboard"
+                    >
+                        {copied ? 'Copied!' : 'Copy'}
+                    </button>
                     <pre>
                         {lang === 'python' ? generatePython() : generateJS()}
                     </pre>
@@ -162,9 +188,28 @@ export function CodeExport({ structure, hyperparams }) {
             .code-block {
                 background: #1e1e1e;
                 padding: 20px;
+                padding-right: 80px;
                 border-radius: 0 8px 8px 8px;
                 overflow-x: auto;
                 border: 1px solid var(--glass-border);
+                position: relative;
+            }
+            .btn-copy {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: var(--bg-secondary);
+                color: var(--text-secondary);
+                border: 1px solid var(--glass-border);
+                border-radius: 4px;
+                padding: 4px 8px;
+                font-size: 12px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+            .btn-copy:hover {
+                background: var(--glass-border);
+                color: var(--text-primary);
             }
             .code-block pre {
                 margin: 0;
