@@ -12,7 +12,7 @@ export function CodeExport({ structure, hyperparams }) {
     if (!isOpen) {
         return (
             <button className="btn-code" onClick={() => setIsOpen(true)}>
-                &lt;/&gt; Show Code <Tooltip word="Export" overrideText="View the code to build this model" />
+                <span aria-hidden="true">&lt;/&gt;</span> Show Code <Tooltip word="Export" overrideText="View the code to build this model" />
             </button>
         );
     }
@@ -72,7 +72,9 @@ export function CodeExport({ structure, hyperparams }) {
             <div className="code-modal">
                 <div className="modal-header">
                     <h3>Export Model Code</h3>
-                    <button className="close" onClick={() => setIsOpen(false)}>×</button>
+                    <button className="close" onClick={() => setIsOpen(false)} aria-label="Close export modal">
+                        <span aria-hidden="true">×</span>
+                    </button>
                 </div>
 
                 <div className="lang-tabs">
