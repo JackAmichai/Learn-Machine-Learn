@@ -73,7 +73,7 @@ export class NeuralNetwork {
 
     // Validate output activation
     if (safeConfig.outputActivation && !ALLOWED_ACTIVATIONS.includes(safeConfig.outputActivation)) {
-      console.warn(`Invalid output activation '${safeConfig.outputActivation}'. Defaulting to 'sigmoid'.`);
+      console.warn(`Invalid outputActivation '${safeConfig.outputActivation}'. Defaulting to 'sigmoid'.`);
       safeConfig.outputActivation = 'sigmoid';
     }
 
@@ -328,6 +328,25 @@ export class NeuralNetwork {
       return kernel.dataSync();
     } catch (e) {
       console.error('Error fetching connection weights:', e);
+      return null;
+    }
+  }
+
+  /**
+   * Gets connection weights as a flat Float32Array asynchronously.
+   * @param {number} layerIndex - Index of the connection layer
+   * @returns {Promise<Float32Array|null>} Weight values or null if invalid
+   */
+  async getConnectionWeightsAsync(layerIndex) {
+    if (!this.connectionLayers[layerIndex]) return null;
+    try {
+      const weights = this.connectionLayers[layerIndex].getWeights();
+      if (!weights.length) return null;
+      const kernel = weights[0];
+      // data returns a copy - do NOT dispose the original tensors
+      return await kernel.data();
+    } catch (e) {
+      console.error('Error fetching connection weights async:', e);
       return null;
     }
   }
