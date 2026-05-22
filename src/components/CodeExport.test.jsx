@@ -1,5 +1,5 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { render, screen, fireEvent, act } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
 import { CodeExport } from './CodeExport';
 
 describe('CodeExport Security', () => {
@@ -38,5 +38,33 @@ describe('CodeExport Security', () => {
         const codeContent = preElement.textContent;
 
         expect(codeContent).not.toContain("import os; os.system('echo hacked')");
+    });
+
+    it('should copy code to clipboard', async () => {
+        const hyperparams = {
+            activation: 'relu',
+            optimizer: 'adam'
+        };
+
+        Object.assign(navigator, {
+            clipboard: {
+                writeText: vi.fn().mockImplementation(() => Promise.resolve())
+            }
+        });
+
+        render(<CodeExport structure={defaultStructure} hyperparams={hyperparams} />);
+
+        fireEvent.click(screen.getByText(/Show Code/i));
+
+        const copyButton = screen.getByRole('button', { name: /Copy code to clipboard/i });
+
+        await act(async () => {
+            fireEvent.click(copyButton);
+        });
+
+        const preElement = screen.getByText(/import tensorflow/i).closest('pre');
+        const codeContent = preElement.textContent;
+
+        expect(navigator.clipboard.writeText).toHaveBeenCalledWith(codeContent);
     });
 });
