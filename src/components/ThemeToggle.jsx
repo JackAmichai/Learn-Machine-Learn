@@ -4,7 +4,7 @@ export function ThemeToggle() {
  const { theme, toggleTheme } = useTheme();
 
  return (
- <button onClick={toggleTheme} className="theme-toggle" aria-label="Toggle Theme">
+ <button onClick={toggleTheme} className="theme-toggle" aria-label="Toggle Theme" aria-pressed={theme === 'dark'}>
  {theme === 'dark' ? '️' : ''}
  <style>{`
  .theme-toggle {
