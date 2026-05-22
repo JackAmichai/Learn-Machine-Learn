@@ -188,7 +188,7 @@ export function useNeuralNetwork() {
 
     useEffect(() => {
         resetStepState('Configuration changed - run forward pass.');
-    }, [datasetParams.type, datasetParams.size, datasetParams.noise, mode, structure]);
+    }, [datasetParams.type, datasetParams.size, datasetParams.noise, mode, structure, batchSize]);
 
     useEffect(() => {
         if (mode === 'vision') {
