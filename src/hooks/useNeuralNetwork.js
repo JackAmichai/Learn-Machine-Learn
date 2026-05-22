@@ -414,6 +414,19 @@ export function useNeuralNetwork() {
         return res; // Float32Array
     };
 
+    const predictSampleAsync = async (inputGrid) => {
+        if (!network.model) return null;
+        let input, preds;
+        try {
+            input = tf.tensor2d([Array.from(inputGrid)]);
+            preds = network.predict(input);
+            return await preds.data();
+        } finally {
+            if (input) input.dispose();
+            if (preds) preds.dispose();
+        }
+    };
+
     const runForwardPass = async () => {
         const batch = getTrainingBatch();
         if (!batch) {
@@ -606,6 +619,7 @@ export function useNeuralNetwork() {
         setMode: changeMode,
         addSample,
         predictSample,
+        predictSampleAsync,
         customData,
         hyperparams,
         updateHyperparams,

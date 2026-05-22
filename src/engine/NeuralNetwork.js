@@ -73,7 +73,7 @@ export class NeuralNetwork {
 
     // Validate output activation
     if (safeConfig.outputActivation && !ALLOWED_ACTIVATIONS.includes(safeConfig.outputActivation)) {
-      console.warn(`Invalid output activation '${safeConfig.outputActivation}'. Defaulting to 'sigmoid'.`);
+      console.warn(`Invalid outputActivation '${safeConfig.outputActivation}'. Defaulting to 'sigmoid'.`);
       safeConfig.outputActivation = 'sigmoid';
     }
 
@@ -333,6 +333,26 @@ export class NeuralNetwork {
   }
 
   /**
+   * Gets connection weights as a flat Float32Array asynchronously.
+   * @param {number} layerIndex - Index of the connection layer
+   * @returns {Promise<Float32Array|null>} Weight values or null if invalid
+   */
+  async getConnectionWeightsAsync(layerIndex) {
+    if (!this.connectionLayers[layerIndex]) return null;
+    try {
+      const weights = this.connectionLayers[layerIndex].getWeights();
+      if (!weights.length) return null;
+      const kernel = weights[0];
+      // data returns a copy - do NOT dispose the original tensors
+      // as they are the layer's internal state
+      return await kernel.data();
+    } catch (e) {
+      console.error('Error fetching connection weights:', e);
+      return null;
+    }
+  }
+
+  /**
    * Serializes all model weights to nested arrays.
    * Useful for saving/restoring model state.
    * @returns {Array} Serialized weights per layer
@@ -409,6 +429,59 @@ export class NeuralNetwork {
       }
       return deadMap;
     });
+  }
+
+  async scanForDeadNeuronsAsync(xs) {
+    if (!this.model) return {};
+
+    const deadMap = {};
+    let current = xs;
+    let denseLayerIndex = 1;
+    let tensorsToDispose = [];
+
+    try {
+      for (const layer of this.model.layers) {
+        // Apply layer to current tensor
+        const next = layer.apply(current);
+        if (current !== xs) {
+            tensorsToDispose.push(current);
+        }
+        current = next;
+
+        // Check if it's a Dense layer (which has the activation)
+        if (layer.getClassName() === 'Dense') {
+          // If activation is ReLU (or similar), dead means always <= 0 (or close to 0)
+          // We check max activation across the batch.
+          const maxActivations = current.max(0); // Shape [units]
+          const isDead = maxActivations.lessEqual(1e-5);
+
+          tensorsToDispose.push(maxActivations);
+          tensorsToDispose.push(isDead);
+
+          const deadIndices = [];
+          // Use async data() to prevent blocking
+          const deadData = await isDead.data();
+
+          for (let j = 0; j < deadData.length; j++) {
+            if (deadData[j]) deadIndices.push(j);
+          }
+
+          if (deadIndices.length > 0) {
+            deadMap[denseLayerIndex] = deadIndices;
+          }
+
+          denseLayerIndex++;
+        }
+      }
+    } finally {
+        if (current !== xs) {
+            tensorsToDispose.push(current);
+        }
+        tensorsToDispose.forEach(t => {
+            if (t && !t.isDisposed) t.dispose();
+        });
+    }
+    return deadMap;
   }
 
   /**
