@@ -1,21 +1,27 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Tooltip } from './Tooltip';
 import { ALLOWED_ACTIVATIONS, ALLOWED_OPTIMIZERS } from '../engine/NeuralNetwork';
 
 export function CodeExport({ structure, hyperparams }) {
     const [isOpen, setIsOpen] = useState(false);
     const [lang, setLang] = useState('python'); // 'python' or 'js'
+    const [copied, setCopied] = useState(false);
+    const copyTimeoutRef = useRef(null);
 
     const safeActivation = ALLOWED_ACTIVATIONS.includes(hyperparams.activation) ? hyperparams.activation : 'relu';
     const safeOptimizer = ALLOWED_OPTIMIZERS.includes(hyperparams.optimizer) ? hyperparams.optimizer : 'adam';
 
-    if (!isOpen) {
-        return (
-            <button className="btn-code" onClick={() => setIsOpen(true)}>
-                &lt;/&gt; Show Code <Tooltip word="Export" overrideText="View the code to build this model" />
-            </button>
-        );
-    }
+    const handleCopy = () => {
+        const code = lang === 'python' ? generatePython() : generateJS();
+        navigator.clipboard.writeText(code);
+        setCopied(true);
+        if (copyTimeoutRef.current) {
+            clearTimeout(copyTimeoutRef.current);
+        }
+        copyTimeoutRef.current = setTimeout(() => {
+            setCopied(false);
+        }, 2000);
+    };
 
     const generatePython = () => {
         let code = `import tensorflow as tf\nfrom tensorflow.keras import layers, models\n\n`;
@@ -68,26 +74,55 @@ export function CodeExport({ structure, hyperparams }) {
     };
 
     return (
-        <div className="code-modal-overlay">
-            <div className="code-modal">
-                <div className="modal-header">
-                    <h3>Export Model Code</h3>
-                    <button className="close" onClick={() => setIsOpen(false)}>×</button>
-                </div>
+        <>
+            <button className="btn-code" onClick={() => setIsOpen(true)}>
+                &lt;/&gt; Show Code <Tooltip word="Export" overrideText="View the code to build this model" />
+            </button>
 
-                <div className="lang-tabs">
-                    <button className={lang === 'python' ? 'active' : ''} onClick={() => setLang('python')}>Python (Keras)</button>
-                    <button className={lang === 'js' ? 'active' : ''} onClick={() => setLang('js')}>JavaScript (TF.js)</button>
-                </div>
+            {isOpen && (
+                <div className="code-modal-overlay">
+                    <div className="code-modal" role="dialog" aria-labelledby="code-modal-title" aria-modal="true">
+                        <div className="modal-header">
+                            <h3 id="code-modal-title">Export Model Code</h3>
+                            <button className="close" aria-label="Close modal" onClick={() => setIsOpen(false)}>×</button>
+                        </div>
 
-                <div className="code-block">
-                    <pre>
-                        {lang === 'python' ? generatePython() : generateJS()}
-                    </pre>
-                </div>
+                        <div className="lang-tabs" role="tablist" aria-label="Code languages">
+                            <button
+                                role="tab"
+                                aria-selected={lang === 'python'}
+                                className={lang === 'python' ? 'active' : ''}
+                                onClick={() => setLang('python')}
+                            >
+                                Python (Keras)
+                            </button>
+                            <button
+                                role="tab"
+                                aria-selected={lang === 'js'}
+                                className={lang === 'js' ? 'active' : ''}
+                                onClick={() => setLang('js')}
+                            >
+                                JavaScript (TF.js)
+                            </button>
+                        </div>
 
-                <p className="tip">Copy this code to run your model in a real environment!</p>
-            </div>
+                        <div className="code-block" tabIndex={0} role="region" aria-label="Exported code">
+                            <button
+                                className="btn-copy"
+                                onClick={handleCopy}
+                                aria-label="Copy code to clipboard"
+                            >
+                                {copied ? 'Copied!' : 'Copy Code'}
+                            </button>
+                            <pre>
+                                {lang === 'python' ? generatePython() : generateJS()}
+                            </pre>
+                        </div>
+
+                        <p className="tip">Copy this code to run your model in a real environment!</p>
+                    </div>
+                </div>
+            )}
 
             <style>{`
             .btn-code {
@@ -165,6 +200,27 @@ export function CodeExport({ structure, hyperparams }) {
                 border-radius: 0 8px 8px 8px;
                 overflow-x: auto;
                 border: 1px solid var(--glass-border);
+                position: relative;
+            }
+            .code-block:focus-visible {
+                outline: 2px solid var(--accent-primary);
+                outline-offset: -2px;
+            }
+            .btn-copy {
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                color: #fff;
+                font-size: 11px;
+                padding: 4px 8px;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: background 0.2s;
+            }
+            .btn-copy:hover {
+                background: rgba(255, 255, 255, 0.2);
             }
             .code-block pre {
                 margin: 0;
@@ -172,6 +228,7 @@ export function CodeExport({ structure, hyperparams }) {
                 font-size: 13px;
                 color: #d4d4d4;
                 white-space: pre-wrap;
+                margin-top: 16px;
             }
             .tip {
                 margin-top: 15px;
@@ -181,6 +238,6 @@ export function CodeExport({ structure, hyperparams }) {
                 text-align: center;
             }
         `}</style>
-        </div>
+        </>
     );
 }
