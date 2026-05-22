@@ -184,7 +184,7 @@ export function useNeuralNetwork() {
         if (trainingMode === 'step' && isPlaying) {
             setIsPlaying(false);
         }
-    }, [trainingMode, isPlaying]);
+    }, [trainingMode, isPlaying, batchSize]);
 
     useEffect(() => {
         resetStepState('Configuration changed - run forward pass.');
