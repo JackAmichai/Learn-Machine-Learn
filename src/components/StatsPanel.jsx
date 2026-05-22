@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import * as tf from '@tensorflow/tfjs';
 import { Tooltip } from './Tooltip';
 
 /**
@@ -7,20 +6,19 @@ import { Tooltip } from './Tooltip';
  * @param {Object} model - The neural network model wrapper
  * @param {Object} data - Dataset with xs, ys tensors and labels array
  * @param {number} modelVersion - Version trigger for recompute
- * @returns {Object} Metrics object with confusion matrix, accuracy, precision, recall, F1
+ * @returns {Promise<Object>} Metrics object with confusion matrix, accuracy, precision, recall, F1
  */
-function computeMetrics(model, data, modelVersion) {
+async function computeMetricsAsync(model, data, modelVersion) {
     if (!model?.model || !data?.xs || !data?.labels) {
         return null;
     }
 
+    let preds;
     try {
-        const predictions = tf.tidy(() => {
-            const preds = model.predict(data.xs);
-            // For binary classification with single output node
-            const predData = preds.dataSync();
-            return Array.from(predData).map(p => (p >= 0.5 ? 1 : 0));
-        });
+        preds = model.predict(data.xs);
+        // For binary classification with single output node
+        const predData = await preds.data();
+        const predictions = Array.from(predData).map(p => (p >= 0.5 ? 1 : 0));
 
         const actual = data.labels;
         const n = Math.min(predictions.length, actual.length);
@@ -65,6 +63,8 @@ function computeMetrics(model, data, modelVersion) {
     } catch (error) {
         console.error('Error computing metrics:', error);
         return null;
+    } finally {
+        if (preds) preds.dispose();
     }
 }
 
@@ -73,17 +73,21 @@ export function StatsPanel({ model, data, modelVersion, epoch, loss }) {
     const [expanded, setExpanded] = useState(true);
 
     useEffect(() => {
+        let isMounted = true;
         // Debounce metric computation to avoid blocking UI
-        const timer = setTimeout(() => {
+        const timer = setTimeout(async () => {
             if (!model || !data) {
-                setMetrics(null);
+                if (isMounted) setMetrics(null);
                 return;
             }
-            const computed = computeMetrics(model, data, modelVersion);
-            setMetrics(computed);
+            const computed = await computeMetricsAsync(model, data, modelVersion);
+            if (isMounted) setMetrics(computed);
         }, 100);
 
-        return () => clearTimeout(timer);
+        return () => {
+            isMounted = false;
+            clearTimeout(timer);
+        };
     }, [model, data, modelVersion]);
 
     const formatPct = (value) => `${(value * 100).toFixed(1)}%`;
