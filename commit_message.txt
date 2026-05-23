@@ -1,0 +1,5 @@
+🎨 Palette: Add copy to clipboard functionality and fix accessibility in CodeExport
+
+💡 What: Added a "Copy Code" button to the CodeExport modal with visual confirmation on copy, and improved the close button accessibility.
+🎯 Why: Developers need to easily copy generated model code, and screen readers need to accurately interpret icon-only character buttons.
+♿ Accessibility: Hid the '×' literal text via `aria-hidden` and added a descriptive `aria-label` to the close button.

@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Tooltip } from './Tooltip';
 import { ALLOWED_ACTIVATIONS, ALLOWED_OPTIMIZERS } from '../engine/NeuralNetwork';
 
 export function CodeExport({ structure, hyperparams }) {
     const [isOpen, setIsOpen] = useState(false);
     const [lang, setLang] = useState('python'); // 'python' or 'js'
+    const [copied, setCopied] = useState(false);
+    const timeoutRef = useRef(null);
 
     const safeActivation = ALLOWED_ACTIVATIONS.includes(hyperparams.activation) ? hyperparams.activation : 'relu';
     const safeOptimizer = ALLOWED_OPTIMIZERS.includes(hyperparams.optimizer) ? hyperparams.optimizer : 'adam';
@@ -67,12 +69,24 @@ export function CodeExport({ structure, hyperparams }) {
         return code;
     };
 
+    const handleCopy = async () => {
+        const code = lang === 'python' ? generatePython() : generateJS();
+        try {
+            await navigator.clipboard.writeText(code);
+            setCopied(true);
+            if (timeoutRef.current) clearTimeout(timeoutRef.current);
+            timeoutRef.current = setTimeout(() => setCopied(false), 2000);
+        } catch (err) {
+            console.error('Failed to copy text: ', err);
+        }
+    };
+
     return (
         <div className="code-modal-overlay">
             <div className="code-modal">
                 <div className="modal-header">
                     <h3>Export Model Code</h3>
-                    <button className="close" onClick={() => setIsOpen(false)}>×</button>
+                    <button className="close" onClick={() => setIsOpen(false)} aria-label="Close code export"><span aria-hidden="true">×</span></button>
                 </div>
 
                 <div className="lang-tabs">
@@ -84,6 +98,9 @@ export function CodeExport({ structure, hyperparams }) {
                     <pre>
                         {lang === 'python' ? generatePython() : generateJS()}
                     </pre>
+                    <button className="copy-btn" onClick={handleCopy} aria-label="Copy code to clipboard">
+                        {copied ? 'Copied!' : 'Copy Code'}
+                    </button>
                 </div>
 
                 <p className="tip">Copy this code to run your model in a real environment!</p>
@@ -160,6 +177,7 @@ export function CodeExport({ structure, hyperparams }) {
                 font-weight: bold;
             }
             .code-block {
+                position: relative;
                 background: #1e1e1e;
                 padding: 20px;
                 border-radius: 0 8px 8px 8px;
@@ -172,6 +190,24 @@ export function CodeExport({ structure, hyperparams }) {
                 font-size: 13px;
                 color: #d4d4d4;
                 white-space: pre-wrap;
+            }
+            .copy-btn {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                padding: 6px 12px;
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                color: #d4d4d4;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 12px;
+                transition: all 0.2s;
+            }
+            .copy-btn:hover {
+                background: var(--accent-primary);
+                color: black;
+                border-color: var(--accent-primary);
             }
             .tip {
                 margin-top: 15px;
