@@ -1,0 +1,5 @@
+
+## 2024-05-27 - Unsanitized User Content in dangerouslySetInnerHTML
+**Vulnerability:** React components (`MathModal.jsx` and `LookingForward.jsx`) were directly rendering externally sourced HTML strings (from `mathContent.js`) using `dangerouslySetInnerHTML` without any prior sanitization, creating a Cross-Site Scripting (XSS) vulnerability.
+**Learning:** The application architecture fetches extensive, visually rich educational content (including SVGs and MathML formulas) as raw HTML strings from a central configuration and renders them dynamically. This structural pattern requires special care.
+**Prevention:** Always sanitize dynamic HTML content using `DOMPurify.sanitize()` before passing it to `dangerouslySetInnerHTML`. Because the app heavily relies on mathematical formatting and custom vector visuals, it is crucial to use the configuration `{ USE_PROFILES: { html: true, mathMl: true, svg: true } }` so that `DOMPurify` does not strip out the essential instructional elements while removing malicious scripts.
