@@ -284,6 +284,19 @@ export class NeuralNetwork {
     }
   }
 
+  async getConnectionWeightsAsync(layerIndex) {
+    if (!this.connectionLayers[layerIndex]) return null;
+    try {
+      const weights = this.connectionLayers[layerIndex].getWeights();
+      if (!weights.length) return null;
+      const kernel = weights[0];
+      return await kernel.data();
+    } catch (e) {
+      console.error('Error fetching connection weights:', e);
+      return null;
+    }
+  }
+
   /**
    * Makes predictions on input data.
    * @param {tf.Tensor2D} xs - Input tensor
