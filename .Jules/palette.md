@@ -1,3 +1,4 @@
 ## 2025-02-12 - Tooltip Nesting Patterns
 **Learning:** Interactive tooltips (via `Tooltip.jsx`) are frequently nested inside or adjacent to other interactive elements (buttons, labels), creating potential invalid HTML (nested interactive controls) and focus management issues.
 **Action:** In future, refactor `Tooltip` to be a non-interactive icon unless explicitly focused, or restructure UI to place help icons *outside* buttons/labels.
+## 2026-05-25 - ARIA labels for icon-only buttons\n**Learning:** When adding `aria-label` to icon-only buttons that use literal text characters (e.g., '×' for close buttons), screen readers might still read the literal character along with the label. \n**Action:** Always wrap the literal text character in a `<span aria-hidden="true">` element when applying an `aria-label` to its parent button to ensure only the intended descriptive label is read.
