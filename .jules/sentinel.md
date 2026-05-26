@@ -1,0 +1,4 @@
+## 2024-05-18 - [XSS Vulnerability in dynamically injected HTML content]
+**Vulnerability:** Several components (`MathModal.jsx`, `LookingForward.jsx`) were using Reacts `dangerouslySetInnerHTML` directly with unsanitized data (e.g. `lesson.content`, `data.solved`). This created Cross-Site Scripting (XSS) vulnerabilities.
+**Learning:** These applications used user-provided or external data models without validating the HTML payload. While React prevents XSS natively with its DOM rendering, explicitly bypassing it with `dangerouslySetInnerHTML` shifts the responsibility of sanitization onto the developer.
+**Prevention:** Always sanitize data passed to `dangerouslySetInnerHTML` using `DOMPurify.sanitize()`. For math-specific or visual features, utilize `USE_PROFILES: { html: true, mathMl: true, svg: true }` so that mathematical content/icons are preserved without allowing executable `<script>` blocks.
