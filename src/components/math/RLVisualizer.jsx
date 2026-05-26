@@ -12,15 +12,15 @@ export default function RLVisualizer() {
     let pos = { x: 0, y: 0 };
     for (let i = 0; i <= steps; i++) {
       points.push({ ...pos });
-      const action = Math.random() < explorationRate ? 'explore' : 'exploit';
+      const _rand1 = Math.sin(i * 1000 + steps); const action = (_rand1 - Math.floor(_rand1)) < explorationRate ? 'explore' : 'exploit';
       if (action === 'explore') {
         pos = {
-          x: pos.x + (Math.random() - 0.5) * 20,
-          y: pos.y + (Math.random() - 0.5) * 20
+          x: pos.x + ((Math.sin(i * 2000 + steps) - Math.floor(Math.sin(i * 2000 + steps))) - 0.5) * 20,
+          y: pos.y + ((Math.sin(i * 3000 + steps) - Math.floor(Math.sin(i * 3000 + steps))) - 0.5) * 20
         };
       } else {
         pos = {
-          x: pos.x + (Math.random() - 0.3) * 10,
+          x: pos.x + ((Math.sin(i * 4000 + steps) - Math.floor(Math.sin(i * 4000 + steps))) - 0.3) * 10,
           y: pos.y - 5
         };
       }
