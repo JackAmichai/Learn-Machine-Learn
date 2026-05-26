@@ -6,6 +6,18 @@ import { getTopicPresentation } from '../engine/personalizationEngine';
 import { getWikiUrl } from '../data/wikipediaLinks';
 import { getNotebookLMLink } from '../data/notebookLMLinks';
 
+
+const Cell = ({ value, highlight, color = '#00f2ff' }) => (
+    <div className="mm-cell" style={{
+        background: highlight ? `${color}22` : 'rgba(255,255,255,0.04)',
+        borderColor: highlight ? color : 'rgba(255,255,255,0.08)',
+        color: highlight ? color : 'var(--text-secondary)',
+        fontWeight: highlight ? 700 : 400,
+    }}>
+        {typeof value === 'number' ? value.toFixed(2) : value}
+    </div>
+);
+
 export function MathModal({ topic, onClose, onComplete }) {
  const data = MATH_TOPICS[topic];
  const [activeFormula, setActiveFormula] = useState(null);
