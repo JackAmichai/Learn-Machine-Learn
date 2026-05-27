@@ -9,14 +9,15 @@ export default function TSNEVisualizer() {
   const generateClusters = () => {
     const clusters = [];
     const numClusters = 5;
+    let seed = 1;
     for (let i = 0; i < numClusters; i++) {
       const points = [];
-      const centerX = Math.random() * 60 + 20;
-      const centerY = Math.random() * 60 + 20;
+      const centerX = ((Math.sin(seed++) * 10000) - Math.floor(Math.sin(seed++) * 10000)) * 60 + 20;
+      const centerY = ((Math.sin(seed++) * 10000) - Math.floor(Math.sin(seed++) * 10000)) * 60 + 20;
       for (let j = 0; j < 15; j++) {
         points.push({
-          x: centerX + (Math.random() - 0.5) * 15,
-          y: centerY + (Math.random() - 0.5) * 15,
+          x: centerX + (((Math.sin(seed++) * 10000) - Math.floor(Math.sin(seed++) * 10000)) - 0.5) * 15,
+          y: centerY + (((Math.sin(seed++) * 10000) - Math.floor(Math.sin(seed++) * 10000)) - 0.5) * 15,
           cluster: i
         });
       }
