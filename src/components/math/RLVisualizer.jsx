@@ -10,17 +10,18 @@ export default function RLVisualizer() {
   const generatePath = () => {
     const points = [];
     let pos = { x: 0, y: 0 };
+    let seed = 1;
     for (let i = 0; i <= steps; i++) {
       points.push({ ...pos });
-      const action = Math.random() < explorationRate ? 'explore' : 'exploit';
+      const action = ((Math.sin(seed++) * 10000) - Math.floor(Math.sin(seed++) * 10000)) < explorationRate ? 'explore' : 'exploit';
       if (action === 'explore') {
         pos = {
-          x: pos.x + (Math.random() - 0.5) * 20,
-          y: pos.y + (Math.random() - 0.5) * 20
+          x: pos.x + (((Math.sin(seed++) * 10000) - Math.floor(Math.sin(seed++) * 10000)) - 0.5) * 20,
+          y: pos.y + (((Math.sin(seed++) * 10000) - Math.floor(Math.sin(seed++) * 10000)) - 0.5) * 20
         };
       } else {
         pos = {
-          x: pos.x + (Math.random() - 0.3) * 10,
+          x: pos.x + (((Math.sin(seed++) * 10000) - Math.floor(Math.sin(seed++) * 10000)) - 0.3) * 10,
           y: pos.y - 5
         };
       }
