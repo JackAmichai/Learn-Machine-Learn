@@ -68,11 +68,18 @@ export function CodeExport({ structure, hyperparams }) {
     };
 
     return (
-        <div className="code-modal-overlay">
+        <div
+            className="code-modal-overlay"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="code-modal-title"
+        >
             <div className="code-modal">
                 <div className="modal-header">
-                    <h3>Export Model Code</h3>
-                    <button className="close" onClick={() => setIsOpen(false)}>×</button>
+                    <h3 id="code-modal-title">Export Model Code</h3>
+                    <button className="close" onClick={() => setIsOpen(false)} aria-label="Close export code modal">
+                        <span aria-hidden="true">×</span>
+                    </button>
                 </div>
 
                 <div className="lang-tabs">
