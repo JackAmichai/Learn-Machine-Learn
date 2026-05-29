@@ -2,8 +2,10 @@ import { useState, useContext } from 'react';
 import { MATH_TOPICS } from '../engine/mathContent';
 import { VisualizerRegistry } from './math/VisualizerRegistry';
 import { PersonalizationContext } from '../contexts/PersonalizationContext';
+import DOMPurify from 'dompurify';
 import { getTopicPresentation } from '../engine/personalizationEngine';
 import { getWikiUrl } from '../data/wikipediaLinks';
+// eslint-disable-next-line no-unused-vars
 import { getNotebookLMLink } from '../data/notebookLMLinks';
 
 export function MathModal({ topic, onClose, onComplete }) {
@@ -48,6 +50,8 @@ export function MathModal({ topic, onClose, onComplete }) {
  // Get interactive formulas if available
  const interactiveFormulas = data.interactiveFormulas || [];
 
+ const sanitizeHtml = (html) => DOMPurify.sanitize(html, { USE_PROFILES: { html: true, mathMl: true, svg: true } });
+
  return (
  <div 
  className="math-modal-overlay" 
@@ -88,7 +92,7 @@ export function MathModal({ topic, onClose, onComplete }) {
  <SummaryView data={data} />
  ) : (
  <>
- <div className={`math-body ${!presentation.showMath ? 'visual-only' : ''}`} dangerouslySetInnerHTML={{ __html: data.content }} />
+ <div className={`math-body ${!presentation.showMath ? 'visual-only' : ''}`} dangerouslySetInnerHTML={{ __html: sanitizeHtml(data.content) }} />
 
   {/* Custom Visualizer Section */}
   {Visualizer && (
@@ -101,7 +105,7 @@ export function MathModal({ topic, onClose, onComplete }) {
   {data.solved && (
   <div className="lesson-section solved-section">
     <h4>✅ What This Solved</h4>
-    <div dangerouslySetInnerHTML={{ __html: data.solved }} />
+    <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(data.solved) }} />
   </div>
   )}
 
@@ -109,7 +113,7 @@ export function MathModal({ topic, onClose, onComplete }) {
   {data.shortcomings && (
   <div className="lesson-section shortcomings-section">
     <h4>⚠️ Current Shortcomings</h4>
-    <div dangerouslySetInnerHTML={{ __html: data.shortcomings }} />
+    <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(data.shortcomings) }} />
   </div>
   )}
 
