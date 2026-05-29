@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Footer } from '../components/Footer';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { AccessibilityPanel } from '../components/AccessibilityPanel';
+import DOMPurify from 'dompurify';
 
 // ============ VISUALIZERS FOR FUTURE TOPICS ============
 
@@ -560,6 +561,8 @@ export function LookingForward() {
     }
   };
 
+  const sanitizeHtml = (html) => DOMPurify.sanitize(html, { USE_PROFILES: { html: true, mathMl: true, svg: true } });
+
   return (
     <div className="forward-page">
       {showBalloons && (
@@ -616,19 +619,19 @@ export function LookingForward() {
                       <Visualizer />
                     </div>
                     
-                    <div className="lesson-content" dangerouslySetInnerHTML={{ __html: lesson.content }} />
+                    <div className="lesson-content" dangerouslySetInnerHTML={{ __html: sanitizeHtml(lesson.content) }} />
                     
                     {lesson.solved && (
                       <div className="lesson-section solved-section">
                         <h4>✅ What This Solved</h4>
-                        <div dangerouslySetInnerHTML={{ __html: lesson.solved }} />
+                        <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(lesson.solved) }} />
                       </div>
                     )}
                     
                     {lesson.shortcomings && (
                       <div className="lesson-section shortcomings-section">
                         <h4>⚠️ Current Shortcomings</h4>
-                        <div dangerouslySetInnerHTML={{ __html: lesson.shortcomings }} />
+                        <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(lesson.shortcomings) }} />
                       </div>
                     )}
                     
