@@ -1,4 +1,0 @@
-## 2024-05-31 - Cross-Site Scripting (XSS) via dangerouslySetInnerHTML
-**Vulnerability:** The `MathModal.jsx` and `LookingForward.jsx` components were rendering dynamic lesson content directly into the DOM using `dangerouslySetInnerHTML={{ __html: data.content }}` without any sanitization.
-**Learning:** While the content is primarily sourced from internal files, leaving `dangerouslySetInnerHTML` unsanitized creates a brittle architecture where any future dynamic or external content (like user-submitted notes or API responses) could instantly become a critical XSS vector.
-**Prevention:** Always wrap dynamically injected HTML content with a sanitizer like `DOMPurify.sanitize()`. When preserving complex layouts (like SVG math equations or visualizers), explicitly allowlist necessary profiles (e.g., `{ USE_PROFILES: { html: true, mathMl: true, svg: true } }`) rather than disabling sanitization entirely.
