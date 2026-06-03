@@ -4,7 +4,7 @@ import { VisualizerRegistry } from './math/VisualizerRegistry';
 import { PersonalizationContext } from '../contexts/PersonalizationContext';
 import { getTopicPresentation } from '../engine/personalizationEngine';
 import { getWikiUrl } from '../data/wikipediaLinks';
-import { getNotebookLMLink } from '../data/notebookLMLinks';
+import { getNotebookLMLink as _getNotebookLMLink } from '../data/notebookLMLinks';
 
 export function MathModal({ topic, onClose, onComplete }) {
  const data = MATH_TOPICS[topic];
