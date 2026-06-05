@@ -7,6 +7,7 @@ export default function NeuralNetworkVisualizer({ values = {} }) {
   // Sync with external values if they change
   useEffect(() => {
     if (values.nodes !== undefined) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLayers([layers[0], values.nodes, layers[2]]);
     }
     if (values.hiddenNodes !== undefined) {
