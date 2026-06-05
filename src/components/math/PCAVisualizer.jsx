@@ -7,6 +7,7 @@ export default function PCAVisualizer({ values = {} }) {
   
   // Sync with external values if they change
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (values.lambda1 !== undefined) setComponent1(values.lambda1);
     if (values.lambda2 !== undefined) setComponent2(values.lambda2);
     if (values.lambda3 !== undefined) setComponent3(values.lambda3);
