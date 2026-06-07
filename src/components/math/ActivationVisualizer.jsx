@@ -1,17 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 export default function ActivationVisualizer({ values = {} }) {
   const [func, setFunc] = useState('sigmoid');
   const [x, setX] = useState(0);
   
-  // Sync with external values if they change
-  useEffect(() => {
-    if (values.x !== undefined) setX(values.x);
-    if (values.input !== undefined) setX(values.input);
-    
-    // Auto-switch function based on common keywords
-    if (values.alpha !== undefined) setFunc('leakyrelu');
-  }, [values.x, values.input, values.alpha]);
+
 
   const functions = {
     sigmoid: { 

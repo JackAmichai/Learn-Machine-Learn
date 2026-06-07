@@ -7,7 +7,7 @@ export default function RLVisualizer() {
   
   const explorationRate = Math.max(0.01, epsilon * Math.exp(-episode / 100));
   
-  const generatePath = () => {
+  const generatePath = React.useCallback(() => {
     const points = [];
     let pos = { x: 0, y: 0 };
     for (let i = 0; i <= steps; i++) {
@@ -26,9 +26,9 @@ export default function RLVisualizer() {
       }
     }
     return points;
-  };
+  }, [steps, explorationRate]);
 
-  const path = generatePath();
+  const path = React.useMemo(() => generatePath(), [generatePath]);
 
   return (
     <div className="rl-visualizer">
