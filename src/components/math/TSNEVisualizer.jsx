@@ -6,7 +6,7 @@ export default function TSNEVisualizer() {
 
   const clusterColors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#dfe6e9', '#a29bfe', '#fd79a8'];
 
-  const generateClusters = () => {
+  const generateClusters = React.useCallback(() => {
     const clusters = [];
     const numClusters = 5;
     for (let i = 0; i < numClusters; i++) {
@@ -23,9 +23,9 @@ export default function TSNEVisualizer() {
       clusters.push(...points);
     }
     return clusters;
-  };
+  }, []);
 
-  const clusters = generateClusters();
+  const clusters = React.useMemo(() => generateClusters(), [generateClusters]);
 
   const getPerplexityDescription = () => {
     if (perplexity < 10) return 'Very local focus - fine clusters';
