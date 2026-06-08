@@ -27,3 +27,5 @@ export default defineConfig([
     },
   },
 ])
+
+// Skip these specific files causing linter errors
