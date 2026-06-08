@@ -11,9 +11,12 @@ export function CodeExport({ structure, hyperparams }) {
 
     if (!isOpen) {
         return (
-            <button className="btn-code" onClick={() => setIsOpen(true)}>
-                &lt;/&gt; Show Code <Tooltip word="Export" overrideText="View the code to build this model" />
-            </button>
+            <div className="btn-code-wrapper">
+                <button className="btn-code" onClick={() => setIsOpen(true)}>
+                    &lt;/&gt; Show Code
+                </button>
+                <span className="code-tooltip-wrapper"><Tooltip word="Export" overrideText="View the code to build this model" /></span>
+            </div>
         );
     }
 
@@ -72,7 +75,7 @@ export function CodeExport({ structure, hyperparams }) {
             <div className="code-modal">
                 <div className="modal-header">
                     <h3>Export Model Code</h3>
-                    <button className="close" onClick={() => setIsOpen(false)}>×</button>
+                    <button className="close" onClick={() => setIsOpen(false)} aria-label="Close export modal">×</button>
                 </div>
 
                 <div className="lang-tabs">
@@ -90,9 +93,15 @@ export function CodeExport({ structure, hyperparams }) {
             </div>
 
             <style>{`
-            .btn-code {
-                width: 100%;
+            .btn-code-wrapper {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
                 margin-top: 20px;
+            }
+            .btn-code {
+                flex: 1;
                 padding: 10px;
                 background: var(--bg-secondary);
                 border: 1px solid var(--glass-border);
@@ -100,6 +109,9 @@ export function CodeExport({ structure, hyperparams }) {
                 border-radius: 8px;
                 cursor: pointer;
                 font-family: monospace;
+            }
+            .code-tooltip-wrapper {
+                flex-shrink: 0;
             }
             .btn-code:hover {
                 background: var(--glass-border);

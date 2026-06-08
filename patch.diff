@@ -1,0 +1,55 @@
+--- src/components/CodeExport.jsx
++++ src/components/CodeExport.jsx
+@@ -12,9 +12,11 @@
+
+     if (!isOpen) {
+         return (
+-            <button className="btn-code" onClick={() => setIsOpen(true)}>
+-                &lt;/&gt; Show Code <Tooltip word="Export" overrideText="View the code to build this model" />
+-            </button>
++            <div className="btn-code-wrapper">
++                <button className="btn-code" onClick={() => setIsOpen(true)}>
++                    &lt;/&gt; Show Code
++                </button>
++                <span className="code-tooltip-wrapper"><Tooltip word="Export" overrideText="View the code to build this model" /></span>
++            </div>
+         );
+     }
+
+@@ -73,7 +75,7 @@
+             <div className="code-modal">
+                 <div className="modal-header">
+                     <h3>Export Model Code</h3>
+-                    <button className="close" onClick={() => setIsOpen(false)}>×</button>
++                    <button className="close" onClick={() => setIsOpen(false)} aria-label="Close export modal">×</button>
+                 </div>
+
+                 <div className="lang-tabs">
+@@ -91,9 +93,16 @@
+             </div>
+
+             <style>{`
++            .btn-code-wrapper {
++                display: flex;
++                align-items: center;
++                justify-content: center;
++                gap: 10px;
++                margin-top: 20px;
++            }
+             .btn-code {
+-                width: 100%;
+-                margin-top: 20px;
++                flex: 1;
+                 padding: 10px;
+                 background: var(--bg-secondary);
+                 border: 1px solid var(--glass-border);
+@@ -104,6 +113,9 @@
+             .btn-code:hover {
+                 background: var(--glass-border);
+             }
++            .code-tooltip-wrapper {
++                flex-shrink: 0;
++            }
+             .code-modal-overlay {
+                 position: fixed;
+                 top: 0; left: 0; right: 0; bottom: 0;
