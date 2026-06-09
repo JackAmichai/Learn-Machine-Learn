@@ -1,18 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 export default function NeuralNetworkVisualizer({ values = {} }) {
-  const [layers, setLayers] = useState([3, 4, 2]);
   const [activeLayer, setActiveLayer] = useState(1);
+  const [localHiddenNodes, setLocalHiddenNodes] = useState(4);
   
-  // Sync with external values if they change
-  useEffect(() => {
-    if (values.nodes !== undefined) {
-      setLayers([layers[0], values.nodes, layers[2]]);
-    }
-    if (values.hiddenNodes !== undefined) {
-      setLayers([layers[0], values.hiddenNodes, layers[2]]);
-    }
-  }, [values.nodes, values.hiddenNodes]);
+  let hiddenLayerNodes = localHiddenNodes;
+  if (values.nodes !== undefined) {
+    hiddenLayerNodes = values.nodes;
+  } else if (values.hiddenNodes !== undefined) {
+    hiddenLayerNodes = values.hiddenNodes;
+  }
+
+  const layers = [3, hiddenLayerNodes, 2];
 
   const activations = ['Input', 'ReLU', 'Softmax'];
   const colors = ['#ff5555', '#ffaa00', '#55ff55', '#55aaff'];
@@ -94,7 +93,7 @@ export default function NeuralNetworkVisualizer({ values = {} }) {
               value={layers[1]} 
               onChange={(e) => {
                 const n = Number(e.target.value);
-                setLayers([layers[0], n, layers[2]]);
+                setLocalHiddenNodes(n);
               }} 
             />
           </div>

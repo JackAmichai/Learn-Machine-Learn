@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 
 export default function TSNEVisualizer() {
   const [perplexity, setPerplexity] = useState(30);
@@ -6,8 +6,8 @@ export default function TSNEVisualizer() {
 
   const clusterColors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#dfe6e9', '#a29bfe', '#fd79a8'];
 
-  const generateClusters = () => {
-    const clusters = [];
+  const clusters = useMemo(() => {
+    const cls = [];
     const numClusters = 5;
     for (let i = 0; i < numClusters; i++) {
       const points = [];
@@ -20,12 +20,10 @@ export default function TSNEVisualizer() {
           cluster: i
         });
       }
-      clusters.push(...points);
+      cls.push(...points);
     }
-    return clusters;
-  };
-
-  const clusters = generateClusters();
+    return cls;
+  }, []); // Calculate only once on mount
 
   const getPerplexityDescription = () => {
     if (perplexity < 10) return 'Very local focus - fine clusters';
