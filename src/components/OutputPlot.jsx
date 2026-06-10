@@ -28,14 +28,16 @@ export function OutputPlot({ model, data, modelVersion }) {
         }
 
         let isMounted = true;
+        let inputTensor = null;
+        let predsTensor = null;
 
         async function drawPlot() {
-            const tensorsToDispose = [];
             try {
-                const inputTensor = tf.tensor2d(inputs);
-                tensorsToDispose.push(inputTensor);
-                const predsTensor = model.predict(inputTensor);
-                tensorsToDispose.push(predsTensor);
+                inputTensor = tf.tensor2d(inputs);
+                predsTensor = model.predict(inputTensor);
+
+                // ⚡ Bolt: Use asynchronous data extraction to avoid blocking the main thread
+                // during high-frequency updates (e.g., model training loops).
                 const preds = await predsTensor.data();
 
                 if (!isMounted) return;
@@ -83,8 +85,12 @@ export function OutputPlot({ model, data, modelVersion }) {
                         ctx.stroke();
                     });
                 }
+            } catch (error) {
+                console.error("Error drawing OutputPlot:", error);
             } finally {
-                tf.dispose(tensorsToDispose);
+                // Manually dispose of tensors as tf.tidy does not support async operations
+                if (inputTensor) inputTensor.dispose();
+                if (predsTensor) predsTensor.dispose();
             }
         }
 
