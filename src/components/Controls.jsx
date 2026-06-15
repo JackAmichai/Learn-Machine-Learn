@@ -525,29 +525,29 @@ export function Controls(props) {
                         <div className="section">
                             <h3>Hyperparameters</h3>
                             <div className="hp-grid">
-                                <label><Tooltip word="Learning Rate" /></label>
+                                <span><Tooltip word="Learning Rate" /></span>
                                 <div className="lr-control">
-                                    <input type="range" min="0.001" max="0.3" step="0.001" value={hyperparams.learningRate} onChange={(e) => updateHyperparams({ learningRate: parseFloat(e.target.value) })} />
+                                    <input type="range" aria-label="Learning Rate" min="0.001" max="0.3" step="0.001" value={hyperparams.learningRate} onChange={(e) => updateHyperparams({ learningRate: parseFloat(e.target.value) })} />
                                     <span>{hyperparams.learningRate}</span>
                                 </div>
 
-                                <label><Tooltip word="Activation" /></label>
-                                <select value={hyperparams.activation} onChange={(e) => updateHyperparams({ activation: e.target.value })}>
+                                <span><Tooltip word="Activation" /></span>
+                                <select aria-label="Activation" value={hyperparams.activation} onChange={(e) => updateHyperparams({ activation: e.target.value })}>
                                     <option value="relu">ReLU</option>
                                     <option value="sigmoid">Sigmoid</option>
                                     <option value="tanh">Tanh</option>
                                     <option value="linear">Linear</option>
                                 </select>
 
-                                <label><Tooltip word="Optimizer" /></label>
-                                <select value={hyperparams.optimizer} onChange={(e) => updateHyperparams({ optimizer: e.target.value })}>
+                                <span><Tooltip word="Optimizer" /></span>
+                                <select aria-label="Optimizer" value={hyperparams.optimizer} onChange={(e) => updateHyperparams({ optimizer: e.target.value })}>
                                     <option value="adam">Adam</option>
                                     <option value="sgd">SGD</option>
                                 </select>
 
-                                <label><Tooltip word="Batch Size" /></label>
+                                <span><Tooltip word="Batch Size" /></span>
                                 <div className="lr-control">
-                                    <input type="range" min="1" max="128" step="1" value={hyperparams.batchSize || 32} onChange={(e) => updateHyperparams({ batchSize: parseInt(e.target.value, 10) })} />
+                                    <input type="range" aria-label="Batch Size" min="1" max="128" step="1" value={hyperparams.batchSize || 32} onChange={(e) => updateHyperparams({ batchSize: parseInt(e.target.value, 10) })} />
                                     <span>{hyperparams.batchSize || 32}</span>
                                 </div>
                             </div>
