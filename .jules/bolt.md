@@ -13,3 +13,7 @@
 ## 2024-05-22 - Synchronous TF.js Operations in Render
 **Learning:** TensorFlow.js `dataSync()` is a synchronous blocking operation. Using it directly inside a React component's render body (e.g., in `NetworkGraph`) causes significant performance degradation on every re-render.
 **Action:** Always wrap weight extraction logic or any TF.js `dataSync()` calls in `useMemo` to ensure they only run when the model or structure actually changes.
+## 2025-06-15 - React Hook SetState Sync Lint Pattern
+**Vulnerability:** Not a security vulnerability but a structural bug pattern.
+**Learning:** Components created inside render blocks or setting state synchronously during an effect cycle causes cascading renders and violates ESLint hooks rules. Using `setTimeout(..., 0)` is a hack, instead moving `Cell` definition outside the render body of `MatMulVisualizer` and destructuring `Tile` property properly in map solved the unused var issues cleanly.
+**Prevention:** Declare components outside of render. Ensure that effects updating component local state safely bypass synchronization or cascade warning by tracking refs or using correct dependencies.
