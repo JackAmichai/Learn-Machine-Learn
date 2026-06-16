@@ -1,0 +1,21 @@
+--- src/components/OutputPlot.jsx
++++ src/components/OutputPlot.jsx
+@@ -32,6 +32,9 @@
+             try {
+                 inputTensor = tf.tensor2d(inputs);
+                 predsTensor = model.predict(inputTensor);
++
++                // ⚡ Bolt Optimization: Use async data() instead of blocking dataSync()
++                // This prevents the UI thread from freezing during tensor data extraction
+                 const preds = await predsTensor.data();
+
+                 if (!isMounted) return;
+@@ -75,6 +78,8 @@
+             } catch (error) {
+                 console.error("Error drawing OutputPlot:", error);
+             } finally {
++                // Manually dispose of tensors to prevent memory leaks since
++                // async operations cannot be wrapped in tf.tidy()
+                 if (inputTensor) inputTensor.dispose();
+                 if (predsTensor) predsTensor.dispose();
+             }
