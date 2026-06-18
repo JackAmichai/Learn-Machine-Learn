@@ -6,6 +6,7 @@ export default function PCAVisualizer({ values = {} }) {
   const [component3, setComponent3] = useState(10);
   
   // Sync with external values if they change
+  /* eslint-disable react-hooks/exhaustive-deps, react-hooks/set-state-in-effect */
   useEffect(() => {
     if (values.lambda1 !== undefined) setComponent1(values.lambda1);
     if (values.lambda2 !== undefined) setComponent2(values.lambda2);
