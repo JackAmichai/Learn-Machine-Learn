@@ -32,7 +32,7 @@ export const MATH_TOPICS = {
   <li><strong>Vanishing gradients</strong>: Deep networks struggle to train as gradients can become tiny</li>
   </ul>
   `,
-  visualizer: "NeuralNetwork",
+
   },
   "MathIntro": {
     visualizer: "LinearRegression",
@@ -169,7 +169,7 @@ export const MATH_TOPICS = {
   <li><strong>Replaced by ViT</strong>: Vision Transformers now often outperform CNNs on large datasets</li>
   </ul>
   `,
-  visualizer: "CNN",
+
   },
   "ModernAIIntro": {
     visualizer: "Transformer",
@@ -203,7 +203,7 @@ export const MATH_TOPICS = {
   <li><strong>Environmental impact</strong>: Training consumes enormous energy</li>
   </ul>
   `,
-  visualizer: "Transformer",
+
   },
   "SVM": {
  title: "SVM: Support Vector Machines",
@@ -289,28 +289,28 @@ export const MATH_TOPICS = {
   <li><strong>Sensitive to scaling</strong>: Features must be normalized, or SVM fails</li>
   </ul>
   `,
-  visualizer: "SVM",
- interactiveFormulas: [
- {
- name: "Margin Size",
- components: [
- { symbol: "Margin", key: "margin", name: "Margin Width", description: "Distance between support vectors" },
- { symbol: " = 2 / ||w||", key: "formula", name: "Formula", description: "Inversely proportional to weight norm" }
- ],
- variables: [
- { key: "wnorm", symbol: "||w||", name: "Weight Norm", min: 0.1, max: 10, step: 0.1, default: 2, decimals: 1 }
- ],
- calculate: (vals, get) => 2 / get("wnorm", 2),
- insights: [
- "Smaller weights = larger margins = better generalization.",
- "Support vectors are the points 'supporting' the margin.",
- "Hinge loss penalizes points inside the margin."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "DecisionTree": {
-    visualizer: "Tree",
+
  title: "Decision Trees: If-Then Reasoning",
  content: `
  <p><strong>Decision Trees</strong> split data based on feature values to maximize 'purity' (homogeneity) in the resulting subsets — producing a flowchart of yes/no questions that ends in a prediction.</p>
@@ -360,56 +360,56 @@ export const MATH_TOPICS = {
   <li><strong>Greedy algorithm</strong>: Makes locally optimal splits that may not be globally optimal</li>
   </ul>
   `,
-  visualizer: "Tree",
- interactiveFormulas: [
- {
- name: "Gini Impurity",
- components: [
- { symbol: "Gini", key: "gini", name: "Impurity", description: "How mixed a node is" },
- { symbol: " = 1 - (p₁² + p₂²)", key: "formula", name: "Formula", description: "Sum of squared probabilities" }
- ],
- variables: [
- { key: "p1", symbol: "p₁", name: "Prob Class 1", min: 0, max: 1, step: 0.05, default: 0.5, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const p1 = get("p1", 0.5);
- const p2 = 1 - p1;
- return 1 - (p1 * p1 + p2 * p2);
- },
- insights: [
- "Gini = 0 means a node is perfectly pure (all one class).",
- "Gini = 0.5 (for 2 classes) is maximum impurity.",
- "Trees are prone to overfitting without 'pruning'."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "RandomForest": {
-    visualizer: "RandomForest",
+
  title: "Random Forests: Ensemble Learning",
  content: `
  <p><strong>Random Forests</strong> combine multiple Decision Trees to reduce overfitting and improve accuracy. This is a technique called <strong>Bagging</strong> (Bootstrap Aggregating).</p>
  `,
- visualizer: "RandomForest",
- interactiveFormulas: [
- {
- name: "Ensemble Prediction",
- components: [
- { symbol: "Vote", key: "vote", name: "Tree Votes", description: "Average or majority" },
- { symbol: " = Σ(t_i) / n", key: "formula", name: "Formula", description: "Aggregate predictions" }
- ],
- variables: [
- { key: "numTrees", symbol: "N", name: "Number of Trees", min: 1, max: 100, step: 1, default: 10, decimals: 0 },
- { key: "featureSubset", symbol: "m", name: "Feature Subset %", min: 10, max: 100, step: 10, default: 50, decimals: 0 }
- ],
- calculate: (vals, get) => get("numTrees", 10),
- insights: [
- "More trees reduce variance (overfitting) without increasing bias.",
- "Random subsets of features force trees to be diverse.",
- "The final prediction is typically a majority vote (classification) or average (regression)."
- ]
- }
-  ],
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   solved: `
   <ul>
   <li><strong>Reduced variance</strong>: Averaging many trees reduces overfitting compared to single tree</li>
@@ -428,7 +428,7 @@ export const MATH_TOPICS = {
   `,
   },
    "KNN": {
-    visualizer: "KNN",
+
    title: "KNN: K-Nearest Neighbors",
    content: `
    <p><strong>KNN</strong> classifies a point based on the majority class of its 'k' closest neighbors. It's a 'lazy learner' (no training phase).</p>
@@ -449,26 +449,26 @@ export const MATH_TOPICS = {
    <li><strong>Sensitive to k</strong>: Small k = noise sensitive, large k = smooth but may miss patterns</li>
    </ul>
    `,
-   visualizer: "KNN",
- interactiveFormulas: [
- {
- name: "Euclidean Distance",
- components: [
- { symbol: "d", key: "dist", name: "Distance", description: "Straight-line distance" },
- { symbol: " = √((x₂-x₁)² + (y₂-y₁)²)", key: "formula", name: "Formula", description: "Pythagorean theorem" }
- ],
- variables: [
- { key: "dx", symbol: "Δx", name: "X Diff", min: 0, max: 10, step: 0.1, default: 3, decimals: 1 },
- { key: "dy", symbol: "Δy", name: "Y Diff", min: 0, max: 10, step: 0.1, default: 4, decimals: 1 }
- ],
- calculate: (vals, get) => Math.sqrt(Math.pow(get("dx", 3), 2) + Math.pow(get("dy", 4), 2)),
- insights: [
- "Choosing 'k' is critical: small k = sensitive to noise, large k = smooth boundaries.",
- "Requires feature scaling (normalization) to work correctly.",
- "Computational cost increases with dataset size."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
   "PCA": {
     visualizer: "PCA",
@@ -503,7 +503,7 @@ export const MATH_TOPICS = {
    <li><strong>Information loss</strong>: Reducing dimensions always loses some information</li>
    </ul>
    `,
-   visualizer: "PCA",
+
   interactiveFormulas: [
  {
  name: "Explained Variance",
@@ -531,7 +531,7 @@ export const MATH_TOPICS = {
  ]
  },
 "Loss": {
-    visualizer: "Loss",
+
   title: "Loss Functions: Measuring Error",
   content: `
   <p>The <strong>Loss Function</strong> converts model mistakes into a single number we can minimize. Lower loss means better predictions.</p>
@@ -558,125 +558,125 @@ export const MATH_TOPICS = {
    <li><strong>Non-robust</strong>: A few bad predictions can make the whole loss huge</li>
    </ul>
    `,
-   visualizer: "Loss",
- interactiveFormulas: [
- {
- name: "Huber Loss",
- components: [
- { symbol: "L_δ", key: "loss", name: "Loss", description: "Huber value" },
- { symbol: " = ", key: null },
- { symbol: "if |err| < δ: 0.5*err² else δ*(|err|-0.5*δ)", key: "formula", name: "Formula", description: "Piecewise quadratic/linear" }
- ],
- variables: [
- { key: "err", symbol: "err", name: "Error (y-ŷ)", min: -10, max: 10, step: 0.1, default: 4, decimals: 1 },
- { key: "delta", symbol: "δ", name: "Delta", min: 0.1, max: 5, step: 0.1, default: 1.0, decimals: 1 }
- ],
- calculate: (vals, get) => {
- const err = Math.abs(get("err", 4));
- const d = get("delta", 1);
- return err <= d ? 0.5 * err * err : d * (err - 0.5 * d);
- },
- insights: [
- "Combines best of MSE (smooth at zero) and MAE (robust to outliers).",
- "Delta (δ) controls the transition point from quadratic to linear.",
- "Commonly used in Robust Regression and Deep RL."
- ]
- },
- {
- name: "Hinge Loss",
- components: [
- { symbol: "Loss", key: "loss", name: "Loss", description: "Hinge value" },
- { symbol: " = max(0, 1 - y * ŷ)", key: "formula", name: "Formula", description: "Zero loss if on correct side of margin" }
- ],
- variables: [
- { key: "y", symbol: "y", name: "Target (±1)", min: -1, max: 1, step: 2, default: 1, decimals: 0 },
- { key: "yhat", symbol: "ŷ", name: "Prediction", min: -2, max: 2, step: 0.1, default: 0.5, decimals: 1 }
- ],
- calculate: (vals, get) => Math.max(0, 1 - get("y", 1) * get("yhat", 0.5)),
- insights: [
- "Encourages a margin: loss is zero only if ŷ has same sign as y AND |ŷ| >= 1.",
- "If ŷ is between 0 and 1 (for y=1), it still pays a 'margin penalty'.",
- "The backbone of the Support Vector Machine (SVM)."
- ]
- },
- {
- name: "Mean Squared Error",
- parts: [
- { symbol: "(", key: null },
- { symbol: "y", key: "y_true", name: "True Value", description: "Ground-truth target from the dataset" },
- { symbol: " - ", key: null },
- { symbol: "ŷ", key: "y_pred", name: "Predicted Value", description: "Model output after forward pass" },
- { symbol: ")^2", key: "squared", name: "Square", description: "Amplifies large errors and removes negative signs" }
- ],
- variables: [
- { key: "y_true", symbol: "y", name: "True Value", min: 0, max: 1, step: 0.01, default: 1, decimals: 2 },
- { key: "y_pred", symbol: "ŷ", name: "Prediction", min: 0, max: 1, step: 0.01, default: 0.35, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const y = get("y_true", 1);
- const yhat = get("y_pred", 0.35);
- return Math.pow(y - yhat, 2);
- },
- insights: [
- "Loss is zero when prediction matches truth.",
- "Errors twice as large become four times more costly.",
- "Sensitive to outliers, so great for smooth regression tasks."
- ]
- },
- {
- name: "Binary Cross-Entropy",
- parts: [
- { symbol: "- [", key: null },
- { symbol: "y", key: "y_true", name: "True Label", description: "1 for positive class, 0 for negative class" },
- { symbol: " * log(", key: null },
- { symbol: "ŷ", key: "y_pred", name: "Predicted Prob", description: "Model confidence for class = 1" },
- { symbol: ") + (1 - y) * log(1 - ŷ)]", key: "complement", name: "Second Term", description: "Handles the opposite class" }
- ],
- variables: [
- { key: "y_true", symbol: "y", name: "True Label", min: 0, max: 1, step: 1, default: 1, decimals: 0 },
- { key: "y_pred", symbol: "ŷ", name: "Predicted Prob", min: 0.01, max: 0.99, step: 0.01, default: 0.8, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const y = get("y_true", 1);
- const yhat = Math.max(0.001, Math.min(0.999, get("y_pred", 0.8)));
- return -(y * Math.log(yhat) + (1 - y) * Math.log(1 - yhat));
- },
- insights: [
- "Confident wrong answers explode the loss (log of a tiny number).",
- "Used heavily in digital communications (bit error modeling).",
- "Probabilities stay inside (0,1) to avoid math issues."
- ]
- },
- {
- name: "Weighted Cross-Entropy",
- parts: [
- { symbol: "- [", key: null },
- { symbol: "w_pos", key: "w_pos", name: "Positive Weight", description: "Reward/penalize positive class more" },
- { symbol: " * y * log(ŷ)", key: "pos_term", name: "Positive Term", description: "Loss if true label is 1" },
- { symbol: " + ", key: null },
- { symbol: "w_neg", key: "w_neg", name: "Negative Weight", description: "Reward/penalize negative class" },
- { symbol: " * (1 - y) * log(1 - ŷ)]", key: "neg_term", name: "Negative Term", description: "Loss if true label is 0" }
- ],
- variables: [
- { key: "y_true", symbol: "y", name: "True Label", min: 0, max: 1, step: 1, default: 0, decimals: 0 },
- { key: "y_pred", symbol: "ŷ", name: "Predicted Prob", min: 0.01, max: 0.99, step: 0.01, default: 0.2, decimals: 2 },
- { key: "w_pos", symbol: "w_pos", name: "Positive Weight", min: 0.1, max: 5, step: 0.1, default: 2, decimals: 2 },
- { key: "w_neg", symbol: "w_neg", name: "Negative Weight", min: 0.1, max: 5, step: 0.1, default: 1, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const y = get("y_true", 0);
- const p = Math.max(0.001, Math.min(0.999, get("y_pred", 0.2)));
- const wp = get("w_pos", 2);
- const wn = get("w_neg", 1);
- return -(wp * y * Math.log(p) + wn * (1 - y) * Math.log(1 - p));
- },
- insights: [
- "Heavily used in anomaly detection (faults vs normal signals).",
- "Set w_pos high when missing positive cases is very expensive.",
- "Balanced choices keep both classes equally important."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
   "Epoch": {
     visualizer: "NeuralNetwork",
@@ -760,7 +760,7 @@ export const MATH_TOPICS = {
  ]
  },
   "Learning Rate": {
-    visualizer: "GradientDescent",
+
   title: "Learning Rate and Schedules",
   content: `
   <p>The <strong>Learning Rate</strong> controls the size of weight updates. Too high and the system oscillates, too low and training crawls.</p>
@@ -785,62 +785,62 @@ export const MATH_TOPICS = {
   <li><strong>Differs per architecture</strong>: What works for CNNs may fail for RNNs</li>
   </ul>
   `,
- interactiveFormulas: [
- {
- name: "Instant Weight Update",
- parts: [
- { symbol: "w_new", key: "w_new", name: "New Weight", description: "Weight after this update" },
- { symbol: " = ", key: null },
- { symbol: "w_old", key: "w_old", name: "Current Weight", description: "Weight before update" },
- { symbol: " - ", key: null },
- { symbol: "lr", key: "lr", name: "Learning Rate", description: "Step size" },
- { symbol: " * ", key: null },
- { symbol: "grad", key: "grad", name: "Gradient", description: "Slope telling which way to move" }
- ],
- variables: [
- { key: "w_old", symbol: "w", name: "Current Weight", min: -3, max: 3, step: 0.1, default: 1.2, decimals: 2 },
- { key: "lr", symbol: "lr", name: "Learning Rate", min: 0.0001, max: 1, step: 0.0001, default: 0.05, decimals: 4 },
- { key: "grad", symbol: "grad", name: "Gradient", min: -5, max: 5, step: 0.1, default: -1.4, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const w = get("w_old", 1.2);
- const lr = get("lr", 0.05);
- const g = get("grad", -1.4);
- return w - lr * g;
- },
- insights: [
- "Sign of gradient decides direction of movement.",
- "Doubling lr doubles update magnitude.",
- "In control systems, lr acts like a proportional gain." 
- ]
- },
- {
- name: "Exponential Decay Schedule",
- parts: [
- { symbol: "lr_k", key: "lr_k", name: "Current LR", description: "Learning rate at step k" },
- { symbol: " = ", key: null },
- { symbol: "lr_0", key: "lr0", name: "Initial LR", description: "Learning rate at start of training" },
- { symbol: " * ", key: null },
- { symbol: "decay^k", key: "decay", name: "Decay Factor", description: "Fraction applied per step" }
- ],
- variables: [
- { key: "lr0", symbol: "lr_0", name: "Initial LR", min: 0.0001, max: 1, step: 0.0001, default: 0.1, decimals: 4 },
- { key: "decay", symbol: "decay", name: "Decay", min: 0.5, max: 0.999, step: 0.001, default: 0.95, decimals: 3 },
- { key: "step", symbol: "k", name: "Step", min: 0, max: 200, step: 1, default: 20, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const lr0 = get("lr0", 0.1);
- const decay = get("decay", 0.95);
- const step = get("step", 20);
- return lr0 * Math.pow(decay, step);
- },
- insights: [
- "Popular in deep learning: fast learning early, stable later.",
- "Analogous to annealing temperature in metallurgy.",
- "Helps networks converge without oscillation." 
- ]
- }
-  ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   },
   "Activation": {
     visualizer: "Activation",
@@ -864,7 +864,7 @@ export const MATH_TOPICS = {
    <li><strong>Exploding outputs</strong>: Unbounded activations can cause numerical instability</li>
    </ul>
    `,
-   visualizer: "Activation",
+
    interactiveFormulas: [
  {
  name: "Sigmoid",
@@ -931,7 +931,7 @@ export const MATH_TOPICS = {
  ]
  },
  "Hidden Layer": {
-    visualizer: "NeuralNetwork",
+
  title: "Hidden Layers = Feature Extractors",
  content: `
  <p>A hidden layer applies weights and biases to inputs, then an activation. Stacking layers lets the network learn hierarchical features (edges -> shapes -> concepts).</p>
@@ -939,71 +939,71 @@ export const MATH_TOPICS = {
  z = W * x + b, a = activation(z)
  </div>
  `,
- interactiveFormulas: [
- {
- name: "Neuron (2 inputs)",
- parts: [
- { symbol: "z", key: "z", name: "Pre-Activation", description: "Weighted sum before activation" },
- { symbol: " = ", key: null },
- { symbol: "w1*x1", key: "term1", name: "Contribution 1", description: "Input 1 scaled by weight 1" },
- { symbol: " + ", key: null },
- { symbol: "w2*x2", key: "term2", name: "Contribution 2", description: "Input 2 scaled by weight 2" },
- { symbol: " + b", key: "bias", name: "Bias", description: "Baseline signal" }
- ],
- variables: [
- { key: "x1", symbol: "x1", name: "Input 1", min: -2, max: 2, step: 0.1, default: 0.8, decimals: 2 },
- { key: "x2", symbol: "x2", name: "Input 2", min: -2, max: 2, step: 0.1, default: -0.4, decimals: 2 },
- { key: "w1", symbol: "w1", name: "Weight 1", min: -2, max: 2, step: 0.1, default: 1.1, decimals: 2 },
- { key: "w2", symbol: "w2", name: "Weight 2", min: -2, max: 2, step: 0.1, default: 0.7, decimals: 2 },
- { key: "b", symbol: "b", name: "Bias", min: -2, max: 2, step: 0.1, default: 0.2, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const x1 = get("x1", 0.8);
- const x2 = get("x2", -0.4);
- const w1 = get("w1", 1.1);
- const w2 = get("w2", 0.7);
- const b = get("b", 0.2);
- return w1 * x1 + w2 * x2 + b;
- },
- insights: [
- "Positive weights amplify inputs, negative weights invert them.",
- "Bias shifts the activation threshold (like DC offset).",
- "Hidden layers learn features automatically from data." 
- ]
- },
- {
- name: "Neuron (3 inputs)",
- parts: [
- { symbol: "z", key: "z3", name: "Pre-Activation", description: "Sum of three weighted inputs" },
- { symbol: " = ", key: null },
- { symbol: "w1*x1 + w2*x2 + w3*x3 + b", key: "sum", name: "Weighted Sum", description: "Classic affine transform" }
- ],
- variables: [
- { key: "x1", symbol: "x1", name: "Input 1", min: -2, max: 2, step: 0.1, default: 0.2, decimals: 2 },
- { key: "x2", symbol: "x2", name: "Input 2", min: -2, max: 2, step: 0.1, default: 1.2, decimals: 2 },
- { key: "x3", symbol: "x3", name: "Input 3", min: -2, max: 2, step: 0.1, default: -0.6, decimals: 2 },
- { key: "w1", symbol: "w1", name: "Weight 1", min: -2, max: 2, step: 0.1, default: 0.5, decimals: 2 },
- { key: "w2", symbol: "w2", name: "Weight 2", min: -2, max: 2, step: 0.1, default: -1.4, decimals: 2 },
- { key: "w3", symbol: "w3", name: "Weight 3", min: -2, max: 2, step: 0.1, default: 0.9, decimals: 2 },
- { key: "b", symbol: "b", name: "Bias", min: -2, max: 2, step: 0.1, default: 0.05, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const x1 = get("x1", 0.2);
- const x2 = get("x2", 1.2);
- const x3 = get("x3", -0.6);
- const w1 = get("w1", 0.5);
- const w2 = get("w2", -1.4);
- const w3 = get("w3", 0.9);
- const b = get("b", 0.05);
- return w1 * x1 + w2 * x2 + w3 * x3 + b;
- },
- insights: [
- "Adds expressive power for multi-sensor fusion.",
- "Common in robotics: combine accelerometer, gyro, magnetometer.",
- "Hidden layers learn to weight each channel appropriately." 
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
   "Optimizer": {
     visualizer: "Optimizer",
@@ -1027,7 +1027,7 @@ export const MATH_TOPICS = {
     <li><strong>Hyperparameters</strong>: Beta values still need tuning</li>
     </ul>
     `,
-    visualizer: "Optimizer",
+
    interactiveFormulas: [
  {
  name: "SGD with Momentum",
@@ -1124,7 +1124,7 @@ export const MATH_TOPICS = {
  ]
  },
  "Nodes": {
-    visualizer: "NeuralNetwork",
+
  title: "Neurons: Tiny Signal Processors",
  content: `
  <p>Each neuron gathers weighted inputs, adds a bias, and applies an activation. It is analogous to a weighted operational amplifier with a non-linear output stage.</p>
@@ -1148,61 +1148,61 @@ export const MATH_TOPICS = {
   <li><strong>No memory</strong>: Each forward pass is independent</li>
   </ul>
   `,
-  interactiveFormulas: [
- {
- name: "Neuron with ReLU",
- parts: [
- { symbol: "a", key: "activation", name: "Activation", description: "Neuron output after ReLU" },
- { symbol: " = ", key: null },
- { symbol: "ReLU( w1*x1 + w2*x2 + b )", key: "formula", name: "Forward Pass", description: "Weighted sum plus bias" }
- ],
- variables: [
- { key: "w1", symbol: "w1", name: "Weight 1", min: -3, max: 3, step: 0.1, default: 1.4, decimals: 2 },
- { key: "w2", symbol: "w2", name: "Weight 2", min: -3, max: 3, step: 0.1, default: -1.1, decimals: 2 },
- { key: "x1", symbol: "x1", name: "Input 1", min: 0, max: 1, step: 0.05, default: 0.6, decimals: 2 },
- { key: "x2", symbol: "x2", name: "Input 2", min: 0, max: 1, step: 0.05, default: 0.3, decimals: 2 },
- { key: "b", symbol: "b", name: "Bias", min: -1, max: 1, step: 0.05, default: 0.05, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const w1 = get("w1", 1.4);
- const w2 = get("w2", -1.1);
- const x1 = get("x1", 0.6);
- const x2 = get("x2", 0.3);
- const b = get("b", 0.05);
- const z = w1 * x1 + w2 * x2 + b;
- return Math.max(0, z);
- },
- insights: [
- "Positive outputs mean the neuron fired (feature detected).",
- "Negative weighted sum gets clipped to zero by ReLU.",
- "In EE terms, this is a weighted summing amplifier with diode." 
- ]
- },
- {
- name: "Neuron Energy",
- parts: [
- { symbol: "energy", key: "energy", name: "Signal Energy", description: "Sum of squared activation over time" }
- ],
- variables: [
- { key: "a1", symbol: "a1", name: "Activation t1", min: -1, max: 1, step: 0.1, default: 0.2, decimals: 2 },
- { key: "a2", symbol: "a2", name: "Activation t2", min: -1, max: 1, step: 0.1, default: 0.4, decimals: 2 },
- { key: "a3", symbol: "a3", name: "Activation t3", min: -1, max: 1, step: 0.1, default: -0.3, decimals: 2 }],
- calculate: (vals, get) => {
- const a1 = get("a1", 0.2);
- const a2 = get("a2", 0.4);
- const a3 = get("a3", -0.3);
- return a1 * a1 + a2 * a2 + a3 * a3;
- },
- insights: [
- "Useful when comparing power consumption of activations.",
- "Connects neural nets with signal energy concepts in EE.",
- "Higher energy neurons can dominate downstream layers." 
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "Layer": {
-    visualizer: "NeuralNetwork",
+
  title: "Layers = Parameter Budgets",
  content: `
  <p>Each layer has weights (connections) and biases. The parameter count tells you the memory cost and overfitting risk.</p>
@@ -1226,34 +1226,34 @@ export const MATH_TOPICS = {
   <li><strong>Gradient degradation</strong>: Very deep networks suffer from vanishing gradients</li>
   </ul>
   `,
-  interactiveFormulas: [
- {
- name: "Dense Layer Parameters",
- parts: [
- { symbol: "params", key: "params", name: "Parameters", description: "Total trainable numbers" },
- { symbol: " = ", key: null },
- { symbol: "inputs * outputs", key: "weights", name: "Weights", description: "Each input connects to all outputs" },
- { symbol: " + outputs", key: "biases", name: "Biases", description: "One bias per neuron" }
- ],
- variables: [
- { key: "inputs", symbol: "inputs", name: "Inputs", min: 1, max: 2048, step: 1, default: 100, decimals: 0 },
- { key: "outputs", symbol: "outputs", name: "Outputs", min: 1, max: 512, step: 1, default: 32, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const inputs = get("inputs", 100);
- const outputs = get("outputs", 32);
- return inputs * outputs + outputs;
- },
- insights: [
- "Helps gauge memory footprint on embedded devices.",
- "Doubling outputs doubles weights (plus extra biases).",
- "Keep params in check to avoid overfitting small datasets." 
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
 "Gradient": {
-    visualizer: "GradientDescent",
+
    title: "Gradients: Directions for Learning",
    content: `
    <p>A <strong>Gradient</strong> is a vector of partial derivatives telling us which way the loss increases. The negative gradient points downhill.</p>
@@ -1275,34 +1275,34 @@ export const MATH_TOPICS = {
    <li><strong>Saddle points</strong>: Flat regions can fool optimizers into thinking they've converged</li>
    </ul>
    `,
-   visualizer: "GradientDescent",
-  interactiveFormulas: [
- {
- name: "Gradient Magnitude",
- parts: [
- { symbol: "|grad|", key: "mag", name: "Magnitude", description: "Overall steepness" },
- { symbol: " = ", key: null },
- { symbol: "sqrt( (dL/dx)^2 + (dL/dy)^2 )", key: "formula", name: "Euclidean Norm", description: "Combines axis slopes" }
- ],
- variables: [
- { key: "dx", symbol: "dL/dx", name: "Partial wrt x", min: -5, max: 5, step: 0.1, default: 2.1, decimals: 2 },
- { key: "dy", symbol: "dL/dy", name: "Partial wrt y", min: -5, max: 5, step: 0.1, default: -1.4, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const dx = get("dx", 2.1);
- const dy = get("dy", -1.4);
- return Math.sqrt(dx * dx + dy * dy);
- },
- insights: [
- "Large magnitude means steep slope (fast learning).",
- "Near-zero gradient indicates a plateau or optimum.",
- "Direction = atan2(dy, dx) shows where to move weights." 
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "Backpropagation": {
-    visualizer: "GradientDescent",
+
  title: "Backpropagation: Chain Rule in Action",
  content: `
  <p>Backpropagation applies the chain rule to send error information backward through the network. Each layer receives an error signal (delta) scaled by the derivative of its activation.</p>
@@ -1327,35 +1327,35 @@ export const MATH_TOPICS = {
   <li><strong>Not interpretable</strong>: Hard to understand what learned features mean</li>
   </ul>
   `,
-  interactiveFormulas: [
- {
- name: "Layer Delta",
- parts: [
- { symbol: "delta_l", key: "delta", name: "Layer Error", description: "Error signal for this layer" },
- { symbol: " = ", key: null },
- { symbol: "upstream", key: "up", name: "Upstream Error", description: "Error coming from next layer" },
- { symbol: " * ", key: null },
- { symbol: "activation'", key: "act", name: "Activation Derivative", description: "Slope of activation" }
- ],
- variables: [
- { key: "up", symbol: "upstream", name: "Upstream Error", min: -3, max: 3, step: 0.1, default: 0.8, decimals: 2 },
- { key: "deriv", symbol: "activation'", name: "Derivative", min: 0, max: 1, step: 0.05, default: 0.25, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const up = get("up", 0.8);
- const d = get("deriv", 0.25);
- return up * d;
- },
- insights: [
- "ReLU derivative is 1 when neuron is active, 0 otherwise.",
- "Sigmoid derivative shrinks when neuron saturates.",
- "If derivative is zero, learning stalls (dead neuron)." 
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "Softmax": {
-    visualizer: "Activation",
+
  title: "Softmax: Probabilities from Logits",
  content: `
  <p>The <strong>Softmax</strong> function converts raw scores (logits) into probabilities that sum to 1. Perfect for multi-class classification.</p>
@@ -1380,40 +1380,40 @@ export const MATH_TOPICS = {
   <li><strong>Requires cross-entropy</strong>: Best results come from pairing with log loss</li>
   </ul>
   `,
-  interactiveFormulas: [
- {
- name: "Softmax Probabilities",
- parts: [
- { symbol: "softmax(z)", key: "soft", name: "Probabilities", description: "Distribution over classes" }
- ],
- variables: [
- { key: "z1", symbol: "z1", name: "Logit 1", min: -5, max: 5, step: 0.1, default: 1.0, decimals: 2 },
- { key: "z2", symbol: "z2", name: "Logit 2", min: -5, max: 5, step: 0.1, default: -0.5, decimals: 2 },
- { key: "z3", symbol: "z3", name: "Logit 3", min: -5, max: 5, step: 0.1, default: 0.2, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const z1 = get("z1", 1.0);
- const z2 = get("z2", -0.5);
- const z3 = get("z3", 0.2);
- const max = Math.max(z1, z2, z3);
- const exp1 = Math.exp(z1 - max);
- const exp2 = Math.exp(z2 - max);
- const exp3 = Math.exp(z3 - max);
- const sum = exp1 + exp2 + exp3;
- const probs = [exp1 / sum, exp2 / sum, exp3 / sum];
- return probs.map(p => p.toFixed(3)).join(', ');
- },
- insights: [
- "Subtracting max logit prevents overflow (numerical trick).",
- "Temperature scaling can make distribution sharper or softer.",
- "Softmax shows confidence: dominant class has highest probability." 
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
 "Regularization": {
   title: "Regularization: Guard Against Overfitting",
-  visualizer: "Regularization",
+
   content: `
  <p>Regularization adds a penalty to large weights so the model generalizes better.</p>
 
@@ -1439,61 +1439,61 @@ export const MATH_TOPICS = {
   <li><strong>L1 non-differentiable</strong>: Requires special handling at zero</li>
   </ul>
   `,
-  interactiveFormulas: [
- {
- name: "L1 Penalty",
- parts: [
- { symbol: "lambda", key: "lambda", name: "Strength", description: "How much regularization to apply" },
- { symbol: " * sum |w|", key: "sum", name: "Absolute Sum", description: "Magnitude of weights" }
- ],
- variables: [
- { key: "lambda", symbol: "lambda", name: "Lambda", min: 0, max: 1, step: 0.01, default: 0.1, decimals: 2 },
- { key: "w1", symbol: "w1", name: "w1", min: -2, max: 2, step: 0.1, default: 0.8, decimals: 2 },
- { key: "w2", symbol: "w2", name: "w2", min: -2, max: 2, step: 0.1, default: -0.6, decimals: 2 },
- { key: "w3", symbol: "w3", name: "w3", min: -2, max: 2, step: 0.1, default: 0.3, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const lambda = get("lambda", 0.1);
- const w1 = Math.abs(get("w1", 0.8));
- const w2 = Math.abs(get("w2", -0.6));
- const w3 = Math.abs(get("w3", 0.3));
- return lambda * (w1 + w2 + w3);
- },
- insights: [
- "Pushes small weights to zero (feature selection).",
- "Sparse models run faster on hardware (good for edge devices).",
- "Too much L1 causes underfitting." 
- ]
- },
- {
- name: "L2 Penalty",
- parts: [
- { symbol: "lambda", key: "lambda2", name: "Strength", description: "Regularization coefficient" },
- { symbol: " * sum w^2", key: "sum2", name: "Squared Sum", description: "Energy of weights" }
- ],
- variables: [
- { key: "lambda", symbol: "lambda", name: "Lambda", min: 0, max: 1, step: 0.01, default: 0.01, decimals: 2 },
- { key: "w1", symbol: "w1", name: "w1", min: -2, max: 2, step: 0.1, default: 0.5, decimals: 2 },
- { key: "w2", symbol: "w2", name: "w2", min: -2, max: 2, step: 0.1, default: -1.0, decimals: 2 },
- { key: "w3", symbol: "w3", name: "w3", min: -2, max: 2, step: 0.1, default: 0.1, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const lambda = get("lambda", 0.01);
- const w1 = get("w1", 0.5);
- const w2 = get("w2", -1.0);
- const w3 = get("w3", 0.1);
- return lambda * (w1 * w1 + w2 * w2 + w3 * w3);
- },
- insights: [
- "Keeps weights small to avoid exploding outputs.",
- "Equivalent to adding resistors limiting current in analog circuits.",
- "Standard in ridge regression and weight decay." 
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "Convolution": {
-    visualizer: "CNN",
+
  title: "Convolution: Sliding Dot Products",
  content: `
  <p>Convolution layers slide a small filter (kernel) across the input. Each position multiplies overlapping values and sums them.</p>
@@ -1515,39 +1515,39 @@ export const MATH_TOPICS = {
   <li><strong>Loses location info</strong>: Pooling discards precise position</li>
   </ul>
   `,
-  interactiveFormulas: [
- {
- name: "3x3 Filter Dot Product",
- parts: [
- { symbol: "sum kernel(i,j) * patch(i,j)", key: "sum", name: "Dot Product", description: "Weighted sum of overlapping region" }
- ],
- variables: [
- { key: "k1", symbol: "k1", name: "Kernel 1", min: -2, max: 2, step: 0.1, default: -1, decimals: 1 },
- { key: "k2", symbol: "k2", name: "Kernel 2", min: -2, max: 2, step: 0.1, default: 0, decimals: 1 },
- { key: "k3", symbol: "k3", name: "Kernel 3", min: -2, max: 2, step: 0.1, default: 1, decimals: 1 },
- { key: "p1", symbol: "p1", name: "Pixel 1", min: 0, max: 1, step: 0.05, default: 0.2, decimals: 2 },
- { key: "p2", symbol: "p2", name: "Pixel 2", min: 0, max: 1, step: 0.05, default: 0.6, decimals: 2 },
- { key: "p3", symbol: "p3", name: "Pixel 3", min: 0, max: 1, step: 0.05, default: 0.8, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const k1 = get("k1", -1);
- const k2 = get("k2", 0);
- const k3 = get("k3", 1);
- const p1 = get("p1", 0.2);
- const p2 = get("p2", 0.6);
- const p3 = get("p3", 0.8);
- return k1 * p1 + k2 * p2 + k3 * p3;
- },
- insights: [
- "Edge detector kernels look like [-1, 0, 1].",
- "Same concept as sliding window multiply-and-accumulate (MAC).",
- "Hardware accelerators implement this efficiently." 
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "Signal Processing": {
-    visualizer: "CNN",
+
  title: "Signals and Frequency",
  content: `
  <p>Neural networks can process signals too. Concepts like signal energy and frequency response connect EE fundamentals with machine learning.</p>
@@ -1555,337 +1555,337 @@ export const MATH_TOPICS = {
  Energy = sum x(t)^2, SNR = 10 * log10(signal / noise)
  </div>
  `,
- interactiveFormulas: [
- {
- name: "Signal-to-Noise Ratio",
- parts: [
- { symbol: "SNR", key: "snr", name: "Signal to Noise", description: "Ratio in decibels" },
- { symbol: " = 10 * log10(signal / noise)", key: "formula", name: "Formula", description: "Power ratio in dB" }
- ],
- variables: [
- { key: "signal", symbol: "signal", name: "Signal Power", min: 0.01, max: 10, step: 0.01, default: 1, decimals: 2 },
- { key: "noise", symbol: "noise", name: "Noise Power", min: 0.001, max: 5, step: 0.001, default: 0.1, decimals: 3 }
- ],
- calculate: (vals, get) => {
- const signal = get("signal", 1);
- const noise = Math.max(0.0001, get("noise", 0.1));
- return 10 * Math.log10(signal / noise);
- },
- insights: [
- "Higher SNR means clearer signal (less noise).",
- "In ML, data augmentation often improves effective SNR.",
- "Helps compare sensor quality for embedded systems." 
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "Vectors & Matrices": {
-    visualizer: "LinearAlgebra",
+
  title: "Vectors & Matrices: Lego Bricks of Vision Models",
  content: `
  <p><strong>Vectors</strong> line up numbers in a single column. In vision mode the 10×10 canvas becomes a 100×1 vector before entering the dense layers.</p>
  <p><strong>Matrices</strong> arrange those vectors into 2D grids so filters can slide over rows and columns. Understanding their norms and determinants explains why scaling or rotating images affects activations.</p>
  `,
- interactiveFormulas: [
- {
- name: "Vector Magnitude (3D)",
- parts: [
- { symbol: "|v|", key: "mag", name: "Magnitude", description: "Length of the vector" },
- { symbol: " = ", key: null },
- { symbol: "sqrt(x^2 + y^2 + z^2)", key: "formula", name: "Euclidean Norm", description: "Distance from origin" }
- ],
- variables: [
- { key: "vx", symbol: "x", name: "x", min: -5, max: 5, step: 0.1, default: 1.2, decimals: 1 },
- { key: "vy", symbol: "y", name: "y", min: -5, max: 5, step: 0.1, default: -0.4, decimals: 1 },
- { key: "vz", symbol: "z", name: "z", min: -5, max: 5, step: 0.1, default: 2.3, decimals: 1 }
- ],
- calculate: (vals, get) => {
- const x = get("vx", 1.2);
- const y = get("vy", -0.4);
- const z = get("vz", 2.3);
- return Math.sqrt(x * x + y * y + z * z);
- },
- insights: [
- "Magnitude shows how strong a pixel gradient or feature vector is.",
- "Normalizing vectors (dividing by |v|) stabilizes training.",
- "Longer vectors mean brighter strokes on the vision canvas." 
- ]
- },
- {
- name: "2x2 Determinant",
- parts: [
- { symbol: "det(A)", key: "det", name: "Determinant", description: "Area scale factor" },
- { symbol: " = ", key: null },
- { symbol: "a11*a22 - a12*a21", key: "formula", name: "Formula", description: "Signed area" }
- ],
- variables: [
- { key: "a11", symbol: "a11", name: "a11", min: -3, max: 3, step: 0.1, default: 1, decimals: 1 },
- { key: "a12", symbol: "a12", name: "a12", min: -3, max: 3, step: 0.1, default: 0.5, decimals: 1 },
- { key: "a21", symbol: "a21", name: "a21", min: -3, max: 3, step: 0.1, default: -0.3, decimals: 1 },
- { key: "a22", symbol: "a22", name: "a22", min: -3, max: 3, step: 0.1, default: 2, decimals: 1 }
- ],
- calculate: (vals, get) => {
- const a11 = get("a11", 1);
- const a12 = get("a12", 0.5);
- const a21 = get("a21", -0.3);
- const a22 = get("a22", 2);
- return a11 * a22 - a12 * a21;
- },
- insights: [
- "det(A)=0 means the matrix squashes space—information is lost.",
- "Positive determinant preserves orientation; negative flips it.",
- "Useful for reasoning about data augmentation transforms." 
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "Dot Product": {
-    visualizer: "DotProduct",
+
  title: "Dot Product: Similarity Meter",
  content: `
  <p>The dot product measures how aligned two vectors are. In the vision model it compares your drawn strokes with learned weight vectors.</p>
  <p>Geometry version: a · b = |a||b|cosθ. Component version: sum of element-wise products. Both explain why brighter pixels boost certain neurons.</p>
  `,
- interactiveFormulas: [
- {
- name: "Component Form",
- parts: [
- { symbol: "a · b", key: "dot", name: "Dot Product", description: "Similarity score" },
- { symbol: " = ", key: null },
- { symbol: "ax*bx + ay*by + az*bz", key: "formula", name: "Sum of products", description: "Multiply, then add" }
- ],
- variables: [
- { key: "ax", symbol: "ax", name: "a_x", min: -3, max: 3, step: 0.1, default: 0.8, decimals: 1 },
- { key: "ay", symbol: "ay", name: "a_y", min: -3, max: 3, step: 0.1, default: 0.4, decimals: 1 },
- { key: "az", symbol: "az", name: "a_z", min: -3, max: 3, step: 0.1, default: 0, decimals: 1 },
- { key: "bx", symbol: "bx", name: "b_x", min: -3, max: 3, step: 0.1, default: 1.1, decimals: 1 },
- { key: "by", symbol: "by", name: "b_y", min: -3, max: 3, step: 0.1, default: -0.6, decimals: 1 },
- { key: "bz", symbol: "bz", name: "b_z", min: -3, max: 3, step: 0.1, default: 0.2, decimals: 1 }
- ],
- calculate: (vals, get) => {
- const ax = get("ax", 0.8);
- const ay = get("ay", 0.4);
- const az = get("az", 0);
- const bx = get("bx", 1.1);
- const by = get("by", -0.6);
- const bz = get("bz", 0.2);
- return ax * bx + ay * by + az * bz;
- },
- insights: [
- "Positive values mean vectors look in the same direction.",
- "Zero indicates orthogonal features (independent information).",
- "Used everywhere: attention layers, cosine similarity, projections." 
- ]
- },
- {
- name: "Angle Form",
- parts: [
- { symbol: "a · b", key: "dot", name: "Dot Product", description: "Projection of a onto b" },
- { symbol: " = |a||b|cos(θ)", key: "angle", name: "Angle", description: "Controls sign and magnitude" }
- ],
- variables: [
- { key: "magA", symbol: "|a|", name: "|a|", min: 0, max: 5, step: 0.1, default: 2, decimals: 1 },
- { key: "magB", symbol: "|b|", name: "|b|", min: 0, max: 5, step: 0.1, default: 1.5, decimals: 1 },
- { key: "theta", symbol: "θ", name: "Angle (deg)", min: 0, max: 180, step: 1, default: 35, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const a = get("magA", 2);
- const b = get("magB", 1.5);
- const theta = get("theta", 35) * Math.PI / 180;
- return a * b * Math.cos(theta);
- },
- insights: [
- "θ=0° ⇒ cosθ=1 ⇒ maximum reinforcement between vectors.",
- "θ=90° ⇒ dot product = 0 ⇒ no influence.",
- "θ>90° ⇒ negative dot ⇒ inhibitory effect (important for filters)." 
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "Matrix Multiplication": {
-    visualizer: "MatMul",
+
  title: "Matrix Multiplication: Layer Engine",
  content: `
  <p>Dense layers are nothing but matrix multiplications. A weight matrix multiplies the input vector to produce activations for the next layer.</p>
  <p>Vision models flatten 2D patches into vectors, multiply by weights, then reshape again. Tracking dimensions keeps tensor shapes valid.</p>
  `,
- interactiveFormulas: [
- {
- name: "2x2 × 2x2",
- parts: [
- { symbol: "C = A·B", key: "product", name: "Product", description: "Resulting matrix" }
- ],
- variables: [
- { key: "a11", symbol: "a11", name: "A11", min: -3, max: 3, step: 0.1, default: 1, decimals: 1 },
- { key: "a12", symbol: "a12", name: "A12", min: -3, max: 3, step: 0.1, default: 0.5, decimals: 1 },
- { key: "a21", symbol: "a21", name: "A21", min: -3, max: 3, step: 0.1, default: -0.8, decimals: 1 },
- { key: "a22", symbol: "a22", name: "A22", min: -3, max: 3, step: 0.1, default: 2.2, decimals: 1 },
- { key: "b11", symbol: "b11", name: "B11", min: -3, max: 3, step: 0.1, default: 0.7, decimals: 1 },
- { key: "b12", symbol: "b12", name: "B12", min: -3, max: 3, step: 0.1, default: -1, decimals: 1 },
- { key: "b21", symbol: "b21", name: "B21", min: -3, max: 3, step: 0.1, default: 0.3, decimals: 1 },
- { key: "b22", symbol: "b22", name: "B22", min: -3, max: 3, step: 0.1, default: 1.4, decimals: 1 }
- ],
- calculate: (vals, get) => {
- const a11 = get("a11", 1); const a12 = get("a12", 0.5);
- const a21 = get("a21", -0.8); const a22 = get("a22", 2.2);
- const b11 = get("b11", 0.7); const b12 = get("b12", -1);
- const b21 = get("b21", 0.3); const b22 = get("b22", 1.4);
- const c11 = a11 * b11 + a12 * b21;
- const c12 = a11 * b12 + a12 * b22;
- const c21 = a21 * b11 + a22 * b21;
- const c22 = a21 * b12 + a22 * b22;
- return `[[${c11.toFixed(2)}, ${c12.toFixed(2)}], [${c21.toFixed(2)}, ${c22.toFixed(2)}]]`;
- },
- insights: [
- "Row of A interacts with column of B—match inner dimensions.",
- "Each output element is a dot product (MAC operation).",
- "Visualize dense layer weights as filters applied to full vectors." 
- ]
- },
- {
- name: "MAC Counter",
- parts: [
- { symbol: "MACs", key: "macs", name: "Multiply-Accumulates", description: "Work required" },
- { symbol: " = rows * cols * shared", key: "formula", name: "Cost", description: "Operation count" }
- ],
- variables: [
- { key: "rows", symbol: "rows", name: "Rows", min: 1, max: 512, step: 1, default: 64, decimals: 0 },
- { key: "cols", symbol: "cols", name: "Cols", min: 1, max: 512, step: 1, default: 32, decimals: 0 },
- { key: "shared", symbol: "shared", name: "Shared Dim", min: 1, max: 1024, step: 1, default: 100, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const rows = get("rows", 64);
- const cols = get("cols", 32);
- const shared = get("shared", 100);
- return rows * cols * shared;
- },
- insights: [
- "MACs correlate with latency and power on embedded hardware.",
- "Reducing shared dimension (inputs) cuts cost dramatically.",
- "Depthwise separable convolutions lower MACs by splitting dims." 
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "Tensors": {
-    visualizer: "Tensor",
+
  title: "Tensors: Multi-Dimensional Arrays",
  content: `
  <p>Tensors generalize scalars (rank 0), vectors (rank 1), and matrices (rank 2). Vision models juggle rank-3 (H×W×C) and rank-4 (Batch×Channel×H×W) tensors constantly.</p>
  <p>Keeping track of tensor volume prevents shape mismatches when reshaping, flattening, or feeding data between convolutional and dense layers.</p>
  `,
- interactiveFormulas: [
- {
- name: "Tensor Volume",
- parts: [
- { symbol: "elements", key: "elements", name: "Element Count", description: "Total scalars" },
- { symbol: " = d1 * d2 * d3", key: "product", name: "Dimensions", description: "Multiply each axis" }
- ],
- variables: [
- { key: "d1", symbol: "d1", name: "Dim 1", min: 1, max: 64, step: 1, default: 10, decimals: 0 },
- { key: "d2", symbol: "d2", name: "Dim 2", min: 1, max: 64, step: 1, default: 10, decimals: 0 },
- { key: "d3", symbol: "d3", name: "Dim 3", min: 1, max: 32, step: 1, default: 1, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const d1 = get("d1", 10);
- const d2 = get("d2", 10);
- const d3 = get("d3", 1);
- return d1 * d2 * d3;
- },
- insights: [
- "A 10×10×1 tensor matches the vision canvas grid.",
- "Batching multiplies the count further (Batch×H×W×C).",
- "Reshape only works when new dims keep the same volume." 
- ]
- },
- {
- name: "Jacobian Determinant (2x2)",
- components: [
- { symbol: "|J|", key: "det", name: "Determinant", description: "Volume change factor" },
- { symbol: " = (∂f₁/∂x₁)*(∂f₂/∂x₂) - (∂f₁/∂x₂)*(∂f₂/∂x₁)", key: "formula", name: "Formula", description: "AD - BC" }
- ],
- variables: [
- { key: "a", symbol: "∂f₁/∂x₁", name: "df1/dx1", min: -2, max: 2, step: 0.1, default: 1.0, decimals: 1 },
- { key: "b", symbol: "∂f₁/∂x₂", name: "df1/dx2", min: -2, max: 2, step: 0.1, default: 0.2, decimals: 1 },
- { key: "c", symbol: "∂f₂/∂x₁", name: "df2/dx1", min: -2, max: 2, step: 0.1, default: 0.3, decimals: 1 },
- { key: "d", symbol: "∂f₂/∂x₂", name: "df2/dx2", min: -2, max: 2, step: 0.1, default: 1.0, decimals: 1 }
- ],
- calculate: (vals, get) => get("a", 1) * get("d", 1) - get("b", 0.2) * get("c", 0.3),
- insights: [
- "Det(J) measures how the function scales space/volume locally.",
- "If Det(J) = 0, the function is locally 'flat' (loses a dimension).",
- "Used in Normalizing Flows to ensure probability integrates to 1."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "Jacobian": {
-    visualizer: "Jacobian",
+
  title: "Jacobian: Matrix of First Derivatives",
  content: `
  <p>The <strong>Jacobian matrix</strong> contains all partial first-order derivatives of a vector-valued function. It's the multi-variable generalization of the derivative.</p>
  <div class="equation">J = [ ∂fᵢ / ∂xⱼ ]</div>
  <p>In deep learning, the Jacobian is used during backpropagation to compute how each output of a layer changes with respect to each input.</p>
  `,
- interactiveFormulas: [
- {
- name: "Jacobian Determinant (2x2)",
- components: [
- { symbol: "|J|", key: "det", name: "Determinant", description: "Volume change factor" },
- { symbol: " = (∂f₁/∂x₁)*(∂f₂/∂x₂) - (∂f₁/∂x₂)*(∂f₂/∂x₁)", key: "formula", name: "Formula", description: "AD - BC" }
- ],
- variables: [
- { key: "a", symbol: "∂f₁/∂x₁", name: "df1/dx1", min: -2, max: 2, step: 0.1, default: 1.0, decimals: 1 },
- { key: "b", symbol: "∂f₁/∂x₂", name: "df1/dx2", min: -2, max: 2, step: 0.1, default: 0.2, decimals: 1 },
- { key: "c", symbol: "∂f₂/∂x₁", name: "df2/dx1", min: -2, max: 2, step: 0.1, default: 0.3, decimals: 1 },
- { key: "d", symbol: "∂f₂/∂x₂", name: "df2/dx2", min: -2, max: 2, step: 0.1, default: 1.0, decimals: 1 }
- ],
- calculate: (vals, get) => get("a", 1) * get("d", 1) - get("b", 0.2) * get("c", 0.3),
- insights: [
- "Det(J) measures how the function scales space/volume locally.",
- "If Det(J) = 0, the function is locally 'flat' (loses a dimension).",
- "Used in Normalizing Flows to ensure probability integrates to 1."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "Hessian": {
-    visualizer: "Hessian",
+
  title: "Hessian: Matrix of Second Derivatives",
  content: `
  <p>The <strong>Hessian matrix</strong> contains second-order partial derivatives. It describes the <strong>local curvature</strong> of a function.</p>
  <div class="equation">H = [ ∂²f / ∂xᵢ∂xⱼ ]</div>
  <p>Optimizers use the Hessian (or approximations like L-BFGS) to take smarter steps by understanding the 'shape' of the loss landscape.</p>
  `,
- interactiveFormulas: [
- {
- name: "Hessian Eigenvalues",
- components: [
- { symbol: "Curvature", key: "curv", name: "Local Shape", description: "Based on eigenvalues" },
- { symbol: " = λ₁ > 0, λ₂ > 0 ?", key: "formula", name: "Formula", description: "Positive definite test" }
- ],
- variables: [
- { key: "l1", symbol: "λ₁", name: "Eigenvalue 1", min: -5, max: 5, step: 0.1, default: 2.0, decimals: 1 },
- { key: "l2", symbol: "λ₂", name: "Eigenvalue 2", min: -5, max: 5, step: 0.1, default: 1.5, decimals: 1 }
- ],
- calculate: (vals, get) => {
- const l1 = get("l1", 2.0);
- const l2 = get("l2", 1.5);
- if (l1 > 0 && l2 > 0) return "Minimum (Bowl)";
- if (l1 < 0 && l2 < 0) return "Maximum (Peak)";
- if (l1 * l2 < 0) return "Saddle Point";
- return "Flat/Unknown";
- },
- insights: [
- "Positive eigenvalues (λ > 0) mean the surface curves upward.",
- "Deep learning loss landscapes are full of saddle points.",
- "Second-order optimizers adjust step size based on 1/λ."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
 "Classification Metrics": {
-     visualizer: "Metric",
+
   title: "Classification Metrics: Measuring Success",
  content: `
  <p><strong>Accuracy</strong> is just the start. To truly understand a classifier's performance, especially on imbalanced data, we need <strong>Precision</strong>, <strong>Recall</strong>, and the <strong>F1 Score</strong>.</p>
@@ -1915,67 +1915,67 @@ Recall = TP / (TP + FN)
   <li><strong>Can be gamed</strong>: May not reflect real-world performance</li>
   </ul>
   `,
- interactiveFormulas: [
- {
- name: "Accuracy Calculator",
- parts: [
- { symbol: "Acc", key: "acc", name: "Accuracy", description: "Overall correct predictions" },
- { symbol: " = ", key: null },
- { symbol: "(TP + TN) / Total", key: "formula", name: "Formula", description: "Ratio of correct guesses" }
- ],
- variables: [
- { key: "TP", symbol: "TP", name: "True Positives", min: 0, max: 100, step: 1, default: 45, decimals: 0 },
- { key: "TN", symbol: "TN", name: "True Negatives", min: 0, max: 100, step: 1, default: 40, decimals: 0 },
- { key: "FP", symbol: "FP", name: "False Positives", min: 0, max: 100, step: 1, default: 10, decimals: 0 },
- { key: "FN", symbol: "FN", name: "False Negatives", min: 0, max: 100, step: 1, default: 5, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const TP = get("TP", 45);
- const TN = get("TN", 40);
- const FP = get("FP", 10);
- const FN = get("FN", 5);
- const total = TP + TN + FP + FN;
- return total > 0 ? (TP + TN) / total : 0;
- },
- insights: [
- "High accuracy can be misleading if classes are imbalanced.",
- "Example: 99% accuracy is easy if 99% of samples are negative.",
- "Always look at confusion matrix for the full picture."
- ]
- },
- {
- name: "F1 Score",
- parts: [
- { symbol: "F1", key: "f1", name: "F1 Score", description: "Harmonic mean of Precision and Recall" },
- { symbol: " = ", key: null },
- { symbol: "2 * (P * R) / (P + R)", key: "formula", name: "Formula", description: "Balances false positives and false negatives" }
- ],
- variables: [
- { key: "TP", symbol: "TP", name: "True Positives", min: 0, max: 100, step: 1, default: 30, decimals: 0 },
- { key: "FP", symbol: "FP", name: "False Positives", min: 0, max: 100, step: 1, default: 10, decimals: 0 },
- { key: "FN", symbol: "FN", name: "False Negatives", min: 0, max: 100, step: 1, default: 20, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const TP = get("TP", 30);
- const FP = get("FP", 10);
- const FN = get("FN", 20);
 
- const precision = TP + FP > 0 ? TP / (TP + FP) : 0;
- const recall = TP + FN > 0 ? TP / (TP + FN) : 0;
 
- if (precision + recall === 0) return 0;
- return 2 * (precision * recall) / (precision + recall);
- },
- insights: [
- "F1 is lower than accuracy if P or R is low.",
- "Perfect F1 (1.0) requires perfect Precision AND Recall.",
- "Crucial metric for medical diagnosis or fraud detection."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "Pip2Pip": {
-    visualizer: "GAN",
+
  title: "Pixel-to-Pixel (Autoencoder)",
  content: `
  <p><strong>Pip2Pip</strong> refers to pixel-to-pixel networks, commonly implemented as autoencoders. They learn to compress data into a latent space and reconstruct it.</p>
@@ -2005,59 +2005,59 @@ Recall = TP / (TP + FN)
   <li><strong>No guarantee of useful latent space</strong>: Needs VAE or other variants for structured generation</li>
   </ul>
   `,
-  interactiveFormulas: [
- {
- name: "Compression Ratio",
- parts: [
- { symbol: "ratio", key: "ratio", name: "Compression", description: "How much we compress" },
- { symbol: " = ", key: null },
- { symbol: "input / bottleneck", key: "formula", name: "Formula", description: "Input dim divided by latent dim" }
- ],
- variables: [
- { key: "input", symbol: "input", name: "Input Size", min: 16, max: 1024, step: 16, default: 784, decimals: 0 },
- { key: "bottleneck", symbol: "latent", name: "Latent Size", min: 2, max: 128, step: 1, default: 32, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const input = get("input", 784);
- const latent = Math.max(1, get("bottleneck", 32));
- return input / latent;
- },
- insights: [
- "Higher ratio = more compression = harder to reconstruct.",
- "Latent size of 2-32 is common for visualization.",
- "Too small latent = information loss (blurry outputs)."
- ]
- },
- {
- name: "Reconstruction Loss",
- parts: [
- { symbol: "loss", key: "loss", name: "Error", description: "Pixel-wise difference" },
- { symbol: " = ", key: null },
- { symbol: "mean(|x - x_hat|)", key: "formula", name: "MAE", description: "Mean absolute error per pixel" }
- ],
- variables: [
- { key: "x1", symbol: "x1", name: "Original 1", min: 0, max: 1, step: 0.01, default: 0.8, decimals: 2 },
- { key: "x2", symbol: "x2", name: "Original 2", min: 0, max: 1, step: 0.01, default: 0.3, decimals: 2 },
- { key: "x3", symbol: "x3", name: "Original 3", min: 0, max: 1, step: 0.01, default: 0.9, decimals: 2 },
- { key: "xh1", symbol: "xh1", name: "Recon 1", min: 0, max: 1, step: 0.01, default: 0.75, decimals: 2 },
- { key: "xh2", symbol: "xh2", name: "Recon 2", min: 0, max: 1, step: 0.01, default: 0.35, decimals: 2 },
- { key: "xh3", symbol: "xh3", name: "Recon 3", min: 0, max: 1, step: 0.01, default: 0.85, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const x1 = get("x1", 0.8), x2 = get("x2", 0.3), x3 = get("x3", 0.9);
- const xh1 = get("xh1", 0.75), xh2 = get("xh2", 0.35), xh3 = get("xh3", 0.85);
- return (Math.abs(x1-xh1) + Math.abs(x2-xh2) + Math.abs(x3-xh3)) / 3;
- },
- insights: [
- "Lower loss = better reconstruction quality.",
- "Denoising autoencoders add noise to input, learn to clean it.",
- "Variational autoencoders (VAE) add probabilistic latent space."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
 "GAN": {
-    visualizer: "GAN",
+
    title: "Generative Adversarial Networks",
    content: `
 <p>A <strong>GAN</strong> has two networks competing: a <strong>Generator</strong> that creates fake images, and a <strong>Discriminator</strong> that tries to distinguish real from fake.</p>
@@ -2078,120 +2078,120 @@ Recall = TP / (TP + FN)
   <li><strong>No inference model</strong>: Can't easily estimate probability of given sample</li>
   </ul>
   `,
-  visualizer: "GAN",
-   interactiveFormulas: [
- {
- name: "Generator Loss",
- parts: [
- { symbol: "L_G", key: "lg", name: "Gen Loss", description: "How well it fooled the discriminator" },
- { symbol: " = ", key: null },
- { symbol: "-log(D(G(z)))", key: "formula", name: "Formula", description: "Wanted discriminator to say 1 (real)" }
- ],
- variables: [
- { key: "d_fake", symbol: "D(G(z))", name: "Disc Output", min: 0, max: 1, step: 0.01, default: 0.3, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const d = Math.max(0.001, Math.min(0.999, get("d_fake", 0.3)));
- return -Math.log(d);
- },
- insights: [
- "Generator wants D(G(z)) close to 1 (discriminator thinks fake is real).",
- "If loss is high, generator is not fooling discriminator enough.",
- "Training balance is key - if discriminator too strong, generator stops learning."
- ]
- },
- {
- name: "Discriminator Loss",
- parts: [
- { symbol: "L_D", key: "ld", name: "Disc Loss", description: "How well it distinguishes real from fake" },
- { symbol: " = ", key: null },
- { symbol: "-log(D(x)) - log(1-D(G(z)))", key: "formula", name: "Formula", description: "Real correct, fake wrong" }
- ],
- variables: [
- { key: "d_real", symbol: "D(x)", name: "Real Output", min: 0, max: 1, step: 0.01, default: 0.9, decimals: 2 },
- { key: "d_fake", symbol: "D(G(z))", name: "Fake Output", min: 0, max: 1, step: 0.01, default: 0.4, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const dr = Math.max(0.001, Math.min(0.999, get("d_real", 0.9)));
- const df = Math.max(0.001, Math.min(0.999, get("d_fake", 0.4)));
- return -Math.log(dr) - Math.log(1 - df);
- },
- insights: [
- "Good discriminator: high D(real) near 1, low D(fake) near 0.",
- "Perfect equilibrium: D outputs 0.5 for everything (can't distinguish).",
- "Mode collapse: generator learns to make only one type of image."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "L1L2": {
  title: "L1 vs L2 Loss: When to Use Which",
  content: `
  <p><strong>L1 (MAE)</strong> and <strong>L2 (MSE)</strong> loss measure pixel-wise differences in vision models. They behave very differently!</p>
- 
+
  <h4>L1 Loss (Mean Absolute Error)</h4>
  <p>Sum of absolute differences. Robust to outliers. Creates sharper edges.</p>
  <div class="equation">
  L1 = (1/n) * sum |y - y_hat|
  </div>
- 
+
  <h4>L2 Loss (Mean Squared Error)</h4>
  <p>Sum of squared differences. Penalizes large errors heavily. Smooth gradients.</p>
  <div class="equation">
  L2 = (1/n) * sum (y - y_hat)^2
  </div>
  `,
- interactiveFormulas: [
- {
- name: "L1 vs L2 Comparison",
- parts: [
- { symbol: "ratio", key: "ratio", name: "L2/L1", description: "How much more L2 penalizes large errors" },
- { symbol: " = ", key: null },
- { symbol: "(error^2) / |error|", key: "formula", name: "Formula", description: "Simplifies to |error|" }
- ],
- variables: [
- { key: "error", symbol: "e", name: "Error", min: 0.1, max: 5, step: 0.1, default: 1.5, decimals: 1 }
- ],
- calculate: (vals, get) => {
- const e = get("error", 1.5);
- return e;
- },
- insights: [
- "L2 penalizes error=2 four times more than error=1.",
- "L2 gives smoother gradients (no kinks in loss landscape).",
- "L1 is more robust - outliers don't dominate the loss."
- ]
- },
- {
- name: "Perceptual Loss Components",
- parts: [
- { symbol: "L_total", key: "total", name: "Perceptual Loss", description: "Combined loss for image generation" },
- { symbol: " = ", key: null },
- { symbol: "alpha * L_content + beta * L_style", key: "formula", name: "Formula", description: "Weighted combination" }
- ],
- variables: [
- { key: "alpha", symbol: "alpha", name: "Content Weight", min: 0, max: 1, step: 0.1, default: 0.5, decimals: 2 },
- { key: "l_content", symbol: "L_c", name: "Content Loss", min: 0, max: 10, step: 0.1, default: 2.1, decimals: 2 },
- { key: "beta", symbol: "beta", name: "Style Weight", min: 0, max: 1, step: 0.1, default: 0.5, decimals: 2 },
- { key: "l_style", symbol: "L_s", name: "Style Loss", min: 0, max: 10, step: 0.1, default: 1.5, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const a = get("alpha", 0.5);
- const lc = get("l_content", 2.1);
- const b = get("beta", 0.5);
- const ls = get("l_style", 1.5);
- return a * lc + b * ls;
- },
- insights: [
- "Content loss preserves structure (usually VGG features).",
- "Style loss captures texture using Gram matrices.",
- "Balance alpha/beta to get structure vs style tradeoff."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
 "Pooling": {
-    visualizer: "Pooling",
+
    title: "Pooling: Spatial Downsampling",
    content: `
 <p><strong>Pooling</strong> reduces spatial dimensions while retaining important information. Essential for vision networks.</p>
@@ -2212,56 +2212,56 @@ Recall = TP / (TP + FN)
   <li><strong>Replaced by strided convolutions</strong>: Modern architectures often use strided conv instead</li>
   </ul>
   `,
-  visualizer: "Pooling",
-   interactiveFormulas: [
- {
- name: "Output Size Calculator",
- parts: [
- { symbol: "out", key: "out", name: "Output Size", description: "Spatial dimension after pooling" },
- { symbol: " = floor((in - k) / s) + 1", key: "formula", name: "Formula", description: "Standard pooling formula" }
- ],
- variables: [
- { key: "input", symbol: "W_in", name: "Input Size", min: 4, max: 64, step: 1, default: 28, decimals: 0 },
- { key: "kernel", symbol: "k", name: "Kernel", min: 2, max: 5, step: 1, default: 2, decimals: 0 },
- { key: "stride", symbol: "s", name: "Stride", min: 1, max: 4, step: 1, default: 2, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const w = get("input", 28);
- const k = get("kernel", 2);
- const s = get("stride", 2);
- return Math.floor((w - k) / s) + 1;
- },
- insights: [
- "Stride 2 halves dimensions (common for downsampling).",
- "Kernel 2 with stride 2 = non-overlapping (no redundancy).",
- "Global pooling converts HxWxC to 1x1xC (parameter free!)."
- ]
- },
- {
- name: "Receptive Field Growth",
- parts: [
- { symbol: "rf", key: "rf", name: "Receptive Field", description: "Input pixels affecting one output" },
- { symbol: " = ", key: null },
- { symbol: "1 + (layers - 1) * stride_prod", key: "formula", name: "Formula", description: "Cumulative stride effect" }
- ],
- variables: [
- { key: "layers", symbol: "n", name: "Pool Layers", min: 1, max: 5, step: 1, default: 3, decimals: 0 },
- { key: "stride", symbol: "s", name: "Stride", min: 1, max: 3, step: 1, default: 2, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const n = get("layers", 3);
- const s = get("stride", 2);
- let product = 1;
- for (let i = 0; i < n; i++) product *= s;
- return 1 + (n - 1) * product;
- },
- insights: [
- "Each pooling layer increases receptive field exponentially.",
- "After 3 maxpools (stride 2), one output sees 8x8 input region.",
- "Deeper networks = larger receptive field = more global context."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "Padding": {
  title: "Padding: Managing Edge Pixels",
@@ -2293,56 +2293,56 @@ Recall = TP / (TP + FN)
   <li><strong>Can dilute signal</strong>: Too much padding may dilute important central features</li>
   </ul>
   `,
-  interactiveFormulas: [
- {
- name: "Same Padding Calculator",
- parts: [
- { symbol: "p", key: "pad", name: "Padding", description: "Pixels to add around input" },
- { symbol: " = ", key: null },
- { symbol: "(k - 1) / 2", key: "formula", name: "Formula", description: "To keep output same size" }
- ],
- variables: [
- { key: "kernel", symbol: "k", name: "Kernel Size", min: 1, max: 7, step: 2, default: 3, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const k = get("kernel", 3);
- return (k - 1) / 2;
- },
- insights: [
- "3x3 kernel needs padding 1 to preserve size.",
- "5x5 kernel needs padding 2.",
- "Same padding ensures corner pixels contribute to center outputs."
- ]
- },
- {
- name: "Output Dimension",
- parts: [
- { symbol: "W_out", key: "out", name: "Output Width", description: "After convolution" },
- { symbol: " = floor((W_in - k + 2p) / s) + 1", key: "formula", name: "Formula", description: "Full convolution formula" }
- ],
- variables: [
- { key: "input", symbol: "W_in", name: "Input Size", min: 4, max: 64, step: 1, default: 32, decimals: 0 },
- { key: "kernel", symbol: "k", name: "Kernel", min: 1, max: 7, step: 2, default: 3, decimals: 0 },
- { key: "pad", symbol: "p", name: "Padding", min: 0, max: 4, step: 1, default: 1, decimals: 0 },
- { key: "stride", symbol: "s", name: "Stride", min: 1, max: 3, step: 1, default: 1, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const w = get("input", 32);
- const k = get("kernel", 3);
- const p = get("pad", 1);
- const s = get("stride", 1);
- return Math.floor((w - k + 2 * p) / s) + 1;
- },
- insights: [
- "Stride affects how far kernel moves each step.",
- "Padding 2 with kernel 5 = output slightly larger than input.",
- "Use floor - pixels at edge may not have full kernel coverage."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "BatchNorm": {
-    visualizer: "Optimizer",
+
  title: "Batch Normalization: Stabilizing Training",
  content: `
  <p><strong>BatchNorm</strong> normalizes layer inputs to have zero mean and unit variance. Makes training faster and more stable.</p>
@@ -2372,61 +2372,61 @@ Recall = TP / (TP + FN)
   <li><strong>Can hurt performance</strong>: Sometimes hurts generalization in some architectures</li>
   </ul>
   `,
-  interactiveFormulas: [
- {
- name: "BatchNorm Forward",
- parts: [
- { symbol: "y", key: "out", name: "Normalized", description: "Output after normalization" },
- { symbol: " = gamma * (x - mu) / sigma + beta", key: "formula", name: "Formula", description: "Scale and shift learned params" }
- ],
- variables: [
- { key: "x", symbol: "x", name: "Input", min: -3, max: 3, step: 0.1, default: 1.5, decimals: 2 },
- { key: "mu", symbol: "mu", name: "Mean", min: -2, max: 2, step: 0.1, default: 0.2, decimals: 2 },
- { key: "sigma", symbol: "sigma", name: "Std Dev", min: 0.1, max: 2, step: 0.1, default: 0.8, decimals: 2 },
- { key: "gamma", symbol: "gamma", name: "Scale", min: 0.1, max: 2, step: 0.1, default: 1.0, decimals: 2 },
- { key: "beta", symbol: "beta", name: "Shift", min: -2, max: 2, step: 0.1, default: 0.0, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const x = get("x", 1.5);
- const mu = get("mu", 0.2);
- const sigma = get("sigma", 0.8);
- const g = get("gamma", 1.0);
- const b = get("beta", 0.0);
- return g * (x - mu) / sigma + b;
- },
- insights: [
- "Gamma and beta are learnable - network can undo normalization if needed.",
- "During training, normalize by batch stats. During inference, use moving avg.",
- "Can be disabled during evaluation (frozen) for deployment."
- ]
- },
- {
- name: "Momentum for Running Stats",
- parts: [
- { symbol: "stat_new", key: "new", name: "Updated Stat", description: "Running mean or variance" },
- { symbol: " = (1 - m) * stat_old + m * batch_stat", key: "formula", name: "Formula", description: "Exponential moving average" }
- ],
- variables: [
- { key: "old", symbol: "old", name: "Old Stat", min: 0, max: 2, step: 0.01, default: 0.5, decimals: 2 },
- { key: "batch", symbol: "batch", name: "Batch Stat", min: 0, max: 2, step: 0.01, default: 0.7, decimals: 2 },
- { key: "momentum", symbol: "m", name: "Momentum", min: 0.9, max: 0.999, step: 0.001, default: 0.99, decimals: 3 }
- ],
- calculate: (vals, get) => {
- const old = get("old", 0.5);
- const batch = get("batch", 0.7);
- const m = get("momentum", 0.99);
- return (1 - m) * old + m * batch;
- },
- insights: [
- "High momentum = slow adaptation to new data distributions.",
- "Low momentum = fast adaptation but noisy estimates.",
- "0.99 is common default (99% old, 1% new batch)."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "Dropout": {
-    visualizer: "NeuralNetwork",
+
  title: "Dropout: Regularization by Random Silencing",
  content: `
  <p><strong>Dropout</strong> randomly sets a fraction of neuron outputs to zero during training. Prevents overfitting.</p>
@@ -2456,58 +2456,58 @@ Recall = TP / (TP + FN)
   <li><strong>Less used now</strong>: Modern architectures often use other regularization</li>
   </ul>
   `,
-  interactiveFormulas: [
- {
- name: "Dropout Scaling",
- parts: [
- { symbol: "output", key: "out", name: "Scaled Output", description: "Neuron output after scaling" },
- { symbol: " = ", key: null },
- { symbol: "input / (1 - p)", key: "formula", name: "Formula", description: "Inverted dropout for inference" }
- ],
- variables: [
- { key: "input", symbol: "x", name: "Raw Output", min: 0, max: 5, step: 0.1, default: 2.3, decimals: 2 },
- { key: "rate", symbol: "p", name: "Dropout Rate", min: 0, max: 0.9, step: 0.1, default: 0.5, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const x = get("input", 2.3);
- const p = get("rate", 0.5);
- return p >= 1 ? 0 : x / (1 - p);
- },
- insights: [
- "Inverted dropout (scale at train time) is modern default.",
- "p=0.5 is common for hidden layers.",
- "p=0.1-0.3 for input layers (inputs less redundant)."
- ]
- },
- {
- name: "Effective Network Size",
- parts: [
- { symbol: "active", key: "active", name: "Active Neurons", description: "Not dropped per layer" },
- { symbol: " = ", key: null },
- { symbol: "total * (1 - p)^layers", key: "formula", name: "Formula", description: "Cumulative dropout effect" }
- ],
- variables: [
- { key: "total", symbol: "N", name: "Layer Size", min: 10, max: 512, step: 1, default: 128, decimals: 0 },
- { key: "rate", symbol: "p", name: "Dropout Rate", min: 0, max: 0.9, step: 0.1, default: 0.5, decimals: 2 },
- { key: "layers", symbol: "L", name: "Layers", min: 1, max: 5, step: 1, default: 3, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const N = get("total", 128);
- const p = get("rate", 0.5);
- const L = get("layers", 3);
- return Math.round(N * Math.pow(1 - p, L));
- },
- insights: [
- "Deep networks with dropout effectively sample from huge model space.",
- "More layers = more dropout combinations = more regularization.",
- "Without dropout, larger networks don't necessarily generalize better."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
 "SkipConnection": {
   title: "Skip Connections: Gradient Highways",
-  visualizer: "SkipConnection",
+
   content: `
  <p><strong>Skip connections</strong> (residual connections) add the input of a layer to its output. Enables training very deep networks.</p>
  
@@ -2535,55 +2535,55 @@ Recall = TP / (TP + FN)
   <li><strong>Can hurt representation</strong>: Adding identity may limit learned capacity</li>
   </ul>
   `,
-  interactiveFormulas: [
- {
- name: "Residual Output",
- parts: [
- { symbol: "y", key: "out", name: "Block Output", description: "After residual addition" },
- { symbol: " = ", key: null },
- { symbol: "F(x) + x", key: "formula", name: "Formula", description: "Identity skip connection" }
- ],
- variables: [
- { key: "fx", symbol: "F(x)", name: "Residual", min: -3, max: 3, step: 0.1, default: 0.8, decimals: 2 },
- { key: "x", symbol: "x", name: "Skip Input", min: -3, max: 3, step: 0.1, default: 1.2, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const fx = get("fx", 0.8);
- const x = get("x", 1.2);
- return fx + x;
- },
- insights: [
- "If residual branch learns nothing, output = input (identity).",
- "Deep ResNets (100+ layers) train successfully because gradients flow through skips.",
- "Works even when dimensions change - use projection shortcut."
- ]
- },
- {
- name: "Gradient Magnitude (Skip vs Deep)",
- parts: [
- { symbol: "grad_skip", key: "gskip", name: "Skip Path", description: "Gradient through identity" },
- { symbol: " = ", key: null },
- { symbol: "grad_deep * product(weights)", key: "formula", name: "Deep Path", description: "Through many layers" }
- ],
- variables: [
- { key: "g_deep", symbol: "g", name: "Base Gradient", min: 0.1, max: 2, step: 0.1, default: 0.5, decimals: 2 },
- { key: "layers", symbol: "L", name: "Layers", min: 5, max: 50, step: 5, default: 20, decimals: 0 },
- { key: "avg_w", symbol: "w", name: "Avg Weight", min: 0.5, max: 1.5, step: 0.1, default: 0.9, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const g = get("g_deep", 0.5);
- const L = get("layers", 20);
- const w = get("avg_w", 0.9);
- const deepGrad = g * Math.pow(w, L);
- return deepGrad.toFixed(4);
- },
- insights: [
- "With skip connections, gradient ~base grad (close to 1).",
- "Without skips, small weights^layers = vanishing gradient.",
- "ResNet allows training 1000+ layer networks successfully."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "VisionArchitecture": {
  title: "Vision Network Architectures",
@@ -2605,87 +2605,87 @@ Recall = TP / (TP + FN)
  <h4>Inception / GoogLeNet (2014)</h4>
  <p>Uses 'Inception modules' that apply different filter sizes (1x1, 3x3, 5x5) in parallel at the same layer. Efficient and powerful.</p>
  `,
- visualizer: "CNN",
- interactiveFormulas: [
- {
- name: "Parameter Count Comparison",
- components: [
- { symbol: "Params", key: "params", name: "Total Parameters", description: "Learnable weights + biases" },
- { symbol: " = conv_params + fc_params", key: "formula", name: "Formula", description: "Sum across all layers" }
- ],
- variables: [
- { key: "arch", symbol: "Model", name: "Architecture", min: 0, max: 3, step: 1, default: 0, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const archs = ["LeNet (60K)", "AlexNet (60M)", "VGG-16 (138M)", "ResNet-50 (25M)"];
- return archs[get("arch", 0)];
- },
- insights: [
- "VGG is very 'heavy' due to large fully connected layers.",
- "ResNet is deep but efficient thanks to global average pooling.",
- "Inception (GoogLeNet) has only ~7M params, yet beats AlexNet."
- ]
- },
- {
- name: "Parameter Counter",
- parts: [
- { symbol: "params", key: "params", name: "Total Parameters", description: "In millions" },
- { symbol: " = ", key: null },
- { symbol: "conv_params + fc_params", key: "formula", name: "Formula", description: "Sum of all weights" }
- ],
- variables: [
- { key: "conv_layers", symbol: "C", name: "Conv Layers", min: 1, max: 20, step: 1, default: 8, decimals: 0 },
- { key: "avg_filters", symbol: "F", name: "Avg Filters/Layer", min: 8, max: 512, step: 8, default: 64, decimals: 0 },
- { key: "kernel", symbol: "k", name: "Kernel Size", min: 3, max: 11, step: 2, default: 3, decimals: 0 },
- { key: "fc_size", symbol: "FC", name: "FC Layers", min: 1, max: 5, step: 1, default: 3, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const C = get("conv_layers", 8);
- const F = get("avg_filters", 64);
- const k = get("kernel", 3);
- const FC = get("fc_size", 3);
- const convParams = C * F * F * k * k / 1000000;
- const fcParams = FC * F * 10 / 1000000;
- return (convParams + fcParams).toFixed(2);
- },
- insights: [
- "FC layers often have most parameters in older architectures.",
- "3x3 conv stacked is more parameter-efficient than one large kernel.",
- "Modern architectures reduce FC params with global pooling."
- ]
- },
- {
- name: "FLOPs Calculator",
- parts: [
- { symbol: "FLOPs", key: "flops", name: "Floating Point Ops", description: "In millions" },
- { symbol: " = ", key: null },
- { symbol: "2 * (C_out * H_out * W_out * C_in * k^2)", key: "formula", name: "Formula", description: "Forward pass cost" }
- ],
- variables: [
- { key: "c_out", symbol: "C_out", name: "Output Channels", min: 8, max: 256, step: 8, default: 64, decimals: 0 },
- { key: "h_out", symbol: "H_out", name: "Output Height", min: 1, max: 56, step: 1, default: 28, decimals: 0 },
- { key: "w_out", symbol: "W_out", name: "Output Width", min: 1, max: 56, step: 1, default: 28, decimals: 0 },
- { key: "c_in", symbol: "C_in", name: "Input Channels", min: 1, max: 128, step: 1, default: 64, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const cout = get("c_out", 64);
- const hout = get("h_out", 28);
- const wout = get("w_out", 28);
- const cin = get("c_in", 64);
- const k = 3;
- const flops = 2 * cout * hout * wout * cin * k * k;
- return (flops / 1000000).toFixed(2);
- },
- insights: [
- "FLOPs determine inference speed on hardware.",
- "Depthwise separable conv reduces FLOPs by ~8-9x.",
- "MobileNet uses ~3.4M FLOPs vs 11.5M for standard conv."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "Supervised": {
-    visualizer: "NeuralNetwork",
+
  title: "Supervised Learning: Learning with Labels",
  content: `
  <p><strong>Supervised Learning</strong> is the most common ML paradigm. The model learns from input-output pairs (labeled data).</p>
@@ -2700,56 +2700,56 @@ Recall = TP / (TP + FN)
  <h4>Training Process</h4>
  <p>Forward pass → Calculate loss → Backward pass → Update weights. Repeat until convergence!</p>
  `,
- interactiveFormulas: [
- {
- name: "Training Accuracy",
- parts: [
- { symbol: "acc", key: "acc", name: "Accuracy", description: "Correct predictions / total" },
- { symbol: " = ", key: null },
- { symbol: "correct / total", key: "formula", name: "Formula", description: "Percentage of right answers" }
- ],
- variables: [
- { key: "correct", symbol: "correct", name: "Correct", min: 0, max: 100, step: 1, default: 85, decimals: 0 },
- { key: "total", symbol: "total", name: "Total", min: 1, max: 200, step: 1, default: 100, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const c = get("correct", 85);
- const t = get("total", 100);
- return t > 0 ? (c / t * 100).toFixed(1) + '%' : '0%';
- },
- insights: [
- "100% training accuracy might mean overfitting!",
- "Test accuracy is what truly matters (generalization).",
- "Gap between train/test accuracy = overfitting amount."
- ]
- },
- {
- name: "Loss vs Epochs",
- parts: [
- { symbol: "L(t)", key: "loss", name: "Loss", description: "Error at epoch t" },
- { symbol: " = L_0 * exp(-k*t)", key: "formula", name: "Decay", description: "Exponential decay model" }
- ],
- variables: [
- { key: "l0", symbol: "L_0", name: "Initial Loss", min: 0.1, max: 5, step: 0.1, default: 2.5, decimals: 2 },
- { key: "k", symbol: "k", name: "Decay Rate", min: 0.01, max: 0.2, step: 0.01, default: 0.05, decimals: 2 },
- { key: "epoch", symbol: "t", name: "Epoch", min: 0, max: 100, step: 1, default: 20, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const l0 = get("l0", 2.5);
- const k = get("k", 0.05);
- const t = get("epoch", 20);
- return (l0 * Math.exp(-k * t)).toFixed(4);
- },
- insights: [
- "Loss should decrease over epochs (model learns).",
- "Plateau region = model stopped learning much.",
- "Loss increasing = something wrong (learning rate too high?)."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "Unsupervised": {
-    visualizer: "PCA",
+
  title: "Unsupervised Learning: Finding Patterns Without Labels",
  content: `
  <p><strong>Unsupervised Learning</strong> finds structure in data without any labels. The model discovers patterns on its own.</p>
@@ -2766,62 +2766,62 @@ Recall = TP / (TP + FN)
  <h4>Why Use It?</h4>
  <p>Labels are expensive! Unsupervised can find hidden patterns humans might miss.</p>
  `,
- interactiveFormulas: [
- {
- name: "K-Means Centroid Update",
- points: [
- { symbol: "c_i", key: "cnew", name: "New Centroid", description: "Mean of cluster points" },
- { symbol: " = (1/k) * sum(x_j)", key: "formula", name: "Formula", description: "Average of assigned points" }
- ],
- variables: [
- { key: "x1", symbol: "x1", name: "Point 1", min: 0, max: 10, step: 0.1, default: 2.3, decimals: 1 },
- { key: "x2", symbol: "x2", name: "Point 2", min: 0, max: 10, step: 0.1, default: 4.7, decimals: 1 },
- { key: "x3", symbol: "x3", name: "Point 3", min: 0, max: 10, step: 0.1, default: 5.1, decimals: 1 },
- { key: "k", symbol: "k", name: "Cluster Size", min: 1, max: 10, step: 1, default: 3, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const x1 = get("x1", 2.3);
- const x2 = get("x2", 4.7);
- const x3 = get("x3", 5.1);
- const k = get("k", 3);
- return ((x1 + x2 + x3) / k).toFixed(2);
- },
- insights: [
- "K-means alternates between assign and update steps.",
- "Result depends on initialization - run multiple times!",
- "Elbow method helps choose optimal K."
- ]
- },
- {
- name: "PCA Variance Explained",
- components: [
- { symbol: "var_explained", key: "var", name: "Variance %", description: "How much info retained" },
- { symbol: " = sum(eigenvalues[:k]) / sum(all)", key: "formula", name: "Formula", description: "Ratio of captured variance" }
- ],
- variables: [
- { key: "e1", symbol: "λ1", name: "PC1", min: 1, max: 100, step: 1, default: 45, decimals: 0 },
- { key: "e2", symbol: "λ2", name: "PC2", min: 1, max: 100, step: 1, default: 30, decimals: 0 },
- { key: "e3", symbol: "λ3", name: "PC3", min: 1, max: 100, step: 1, default: 15, decimals: 0 },
- { key: "e4", symbol: "λ4", name: "PC4+", min: 1, max: 100, step: 1, default: 10, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const e1 = get("e1", 45);
- const e2 = get("e2", 30);
- const e3 = get("e3", 15);
- const e4 = get("e4", 10);
- const total = e1 + e2 + e3 + e4;
- return ((e1 + e2) / total * 100).toFixed(1) + '%';
- },
- insights: [
- "First 2 PCs often capture 80%+ variance in images.",
- "More PCs = more detail but more dimensions.",
- "PCA is linear - may miss non-linear patterns."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "SemiSupervised": {
-    visualizer: "NeuralNetwork",
+
  title: "Semi-Supervised Learning: Best of Both Worlds",
  content: `
  <p><strong>Semi-supervised learning</strong> uses both labeled and unlabeled data. Powerful when labels are scarce!</p>
@@ -2837,40 +2837,40 @@ Recall = TP / (TP + FN)
  <h4>Real World</h4>
  <p>Medical imaging, language translation - labeling is expensive!</p>
  `,
- interactiveFormulas: [
- {
- name: "Confidence Thresholding",
- components: [
- { symbol: "pseudo_labels", key: "pl", name: "Added Labels", description: "High confidence predictions" },
- { symbol: " = count(predictions > threshold)", key: "formula", name: "Formula", description: "Filter by confidence" }
- ],
- variables: [
- { key: "threshold", symbol: "τ", name: "Threshold", min: 0.5, max: 0.99, step: 0.01, default: 0.9, decimals: 2 },
- { key: "conf1", symbol: "c1", name: "Conf 1", min: 0, max: 1, step: 0.01, default: 0.95, decimals: 2 },
- { key: "conf2", symbol: "c2", name: "Conf 2", min: 0, max: 1, step: 0.01, default: 0.72, decimals: 2 },
- { key: "conf3", symbol: "c3", name: "Conf 3", min: 0, max: 1, step: 0.01, default: 0.88, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const t = get("threshold", 0.9);
- const c1 = get("conf1", 0.95);
- const c2 = get("conf2", 0.72);
- const c3 = get("conf3", 0.88);
- let count = 0;
- if (c1 >= t) count++;
- if (c2 >= t) count++;
- if (c3 >= t) count++;
- return count;
- },
- insights: [
- "Higher threshold = cleaner labels but fewer of them.",
- "Lower threshold = more labels but more noise.",
- "Iterative self-training often improves over rounds."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
 "MDP": {
-    visualizer: "MDP",
+
    title: "MDP: Markov Decision Processes",
    content: `
 <p><strong>MDPs</strong> provide a mathematical framework for modeling decision making in situations where outcomes are partly random and partly under the control of a decision maker.</p>
@@ -2891,33 +2891,33 @@ Recall = TP / (TP + FN)
   <li><strong>No function approximation</strong>: Basic MDP needs explicit state tables</li>
   </ul>
   `,
-  visualizer: "MDP",
-   interactiveFormulas: [
- {
- name: "Discounted Return",
- components: [
- { symbol: "G_t", key: "return", name: "Return", description: "Total future reward" },
- { symbol: " = R_t+1 + γ*R_t+2 + γ²*R_t+3 + ...", key: "formula", name: "Formula", description: "Geometric sum of rewards" }
- ],
- variables: [
- { key: "r1", symbol: "R₁", name: "Reward 1", min: 0, max: 10, step: 1, default: 10, decimals: 0 },
- { key: "r2", symbol: "R₂", name: "Reward 2", min: 0, max: 10, step: 1, default: 5, decimals: 0 },
- { key: "gamma", symbol: "γ", name: "Discount", min: 0, max: 0.99, step: 0.01, default: 0.9, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const g = get("gamma", 0.9);
- return get("r1", 10) + g * get("r2", 5);
- },
- insights: [
- "Low γ = 'shortsighted' agent (prefers immediate rewards).",
- "High γ = 'farsighted' agent (values future rewards).",
- "The Markov property: 'the future is independent of the past given the present'."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "QLearning": {
-    visualizer: "GridWorld",
+
  title: "Q-Learning: Learning from Trial and Error",
  content: `
 <p><strong>Q-Learning</strong> is a model-free RL algorithm. It learns the quality (Q-value) of an action in a given state.</p>
@@ -2939,39 +2939,39 @@ Recall = TP / (TP + FN)
   <li><strong>Overestimation</strong>: Max can cause overestimation of Q-values</li>
   </ul>
   `,
-  visualizer: "GridWorld",
- interactiveFormulas: [
- {
- name: "Temporal Difference (TD) Update",
- components: [
- { symbol: "ΔQ", key: "delta", name: "Update", description: "Change in Q-value" },
- { symbol: " = α * [Reward + γ*maxQ' - Q_old]", key: "formula", name: "Formula", description: "The Bellman Equation update" }
- ],
- variables: [
- { key: "lr", symbol: "α", name: "Learning Rate", min: 0.01, max: 1.0, step: 0.01, default: 0.1, decimals: 2 },
- { key: "reward", symbol: "R", name: "Reward", min: -10, max: 10, step: 1, default: 10, decimals: 0 },
- { key: "gamma", symbol: "γ", name: "Discount", min: 0, max: 0.99, step: 0.01, default: 0.9, decimals: 2 },
- { key: "qold", symbol: "Q", name: "Old Q-Value", min: 0, max: 100, step: 1, default: 50, decimals: 0 },
- { key: "qnext", symbol: "Q'", name: "Max Future Q", min: 0, max: 100, step: 1, default: 60, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const a = get("lr", 0.1);
- const r = get("reward", 10);
- const g = get("gamma", 0.9);
- const qold = get("qold", 50);
- const qnext = get("qnext", 60);
- return a * (r + g * qnext - qold);
- },
- insights: [
- "Q-learning is 'off-policy': it learns the optimal policy regardless of agent's current actions.",
- "The term in brackets is the 'TD Error'.",
- "Exploration (ε-greedy) is needed to find the best actions."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
 "DeepQN": {
-    visualizer: "DeepQN",
+
    title: "Deep Q-Networks (DQN): Scaling RL",
    content: `
 <p><strong>DQN</strong> uses a deep neural network to approximate the Q-value function. This allows RL to scale to complex environments like Atari games.</p>
@@ -2992,57 +2992,57 @@ Recall = TP / (TP + FN)
   <li><strong>Not stable</strong>: Training can be volatile</li>
   </ul>
   `,
-  visualizer: "DeepQN",
-   interactiveFormulas: [
- {
- name: "DQN Loss",
- components: [
- { symbol: "Loss", key: "loss", name: "Loss", description: "L2 distance to target" },
- { symbol: " = (Target - Q(s,a;θ))²", key: "formula", name: "Formula", description: "MSE on Bellman target" }
- ],
- variables: [
- { key: "target", symbol: "T", name: "Target", min: 0, max: 100, step: 1, default: 75, decimals: 0 },
- { key: "qpred", symbol: "Q", name: "Network Pred", min: 0, max: 100, step: 1, default: 60, decimals: 0 }
- ],
- calculate: (vals, get) => Math.pow(get("target", 75) - get("qpred", 60), 2),
- insights: [
- "Target = R + γ max Q(s',a';θ_target).",
- "Theta (θ) are the network parameters.",
- "DQN brought RL into the deep learning era."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "PolicyGradient": {
-    visualizer: "PPO",
+
  title: "Policy Gradients: Direct Action Learning",
  content: `
  <p><strong>Policy Gradients</strong> directly optimize the agent's policy (π) rather than the value function. This works better for continuous action spaces.</p>
  <div class="equation">∇J(θ) = E[ ∇ log π(a|s;θ) * G_t ]</div>
  `,
- interactiveFormulas: [
- {
- name: "REINFORCE Update",
- components: [
- { symbol: "Step", key: "step", name: "Update Step", description: "Gradient ascent on policy" },
- { symbol: " = lr * log_prob * return", key: "formula", name: "Formula", description: "Reinforce correct actions" }
- ],
- variables: [
- { key: "prob", symbol: "π(a|s)", name: "Action Prob", min: 0.01, max: 1.0, step: 0.01, default: 0.4, decimals: 2 },
- { key: "ret", symbol: "G", name: "Return", min: -10, max: 10, step: 0.1, default: 5, decimals: 1 },
- { key: "lr", symbol: "η", name: "Learning Rate", min: 0.001, max: 0.1, step: 0.001, default: 0.01, decimals: 3 }
- ],
- calculate: (vals, get) => get("lr", 0.01) * Math.log(get("prob", 0.4)) * get("ret", 5),
- insights: [
- "Positive return (G) increases the probability of the chosen action.",
- "Negative return (G) decreases the probability.",
- "Suffers from high variance in gradients."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
 "PPO": {
-    visualizer: "PPO",
+
   title: "PPO: Proximal Policy Optimization",
   content: `
   <p><strong>PPO</strong> is a state-of-the-art RL algorithm that stabilizes training by clipping policy updates.</p>
@@ -3063,36 +3063,36 @@ Recall = TP / (TP + FN)
   <li><strong>Performance ceiling</strong>: Sometimes outperformed by more specialized algorithms</li>
   </ul>
   `,
-  visualizer: "PPO",
- interactiveFormulas: [
- {
- name: "PPO Clipped Objective",
- components: [
- { symbol: "L", key: "loss", name: "Clipped Loss", description: "Prevent large updates" },
- { symbol: " = min(ratio*A, clip(ratio)*A)", key: "formula", name: "Formula", description: "Clipping ratio between (1-ε) and (1+ε)" }
- ],
- variables: [
- { key: "ratio", symbol: "r(θ)", name: "Prob Ratio", min: 0.5, max: 1.5, step: 0.01, default: 1.2, decimals: 2 },
- { key: "adv", symbol: "A", name: "Advantage", min: -5, max: 5, step: 0.1, default: 2, decimals: 1 },
- { key: "eps", symbol: "ε", name: "Clip Eps", min: 0.05, max: 0.3, step: 0.01, default: 0.2, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const r = get("ratio", 1.2);
- const A = get("adv", 2);
- const e = get("eps", 0.2);
- const clipped = Math.min(Math.max(r, 1 - e), 1 + e);
- return Math.min(r * A, clipped * A);
- },
- insights: [
- "If the update is too large (outside ε range), the gradient is zeroed out.",
- "Advantage (A) measures how much better an action is than average.",
- "Reliable, robust, and widely used in robotics and LLM alignment (RLHF)."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "SelfSupervised": {
-    visualizer: "Transformer",
+
  title: "Self-Supervised Learning: Proxy Tasks for Rich Representations",
  content: `
  <p><strong>Self-supervised learning</strong> creates labels from the data itself. Design a task where the 'answer' is in the input!</p>
@@ -3122,38 +3122,38 @@ Recall = TP / (TP + FN)
   <li><strong>Negative sampling</strong>: Contrastive learning needs careful negatives</li>
   </ul>
   `,
-  interactiveFormulas: [
- {
- name: "InfoNCE Contrastive Loss",
- components: [
- { symbol: "L", key: "loss", name: "Contrastive Loss", description: "NCE approximation to mutual information" },
- { symbol: " = -log(exp(sim(pos)/τ) / sum(exp(sim(all)/τ)))", key: "formula", name: "Formula", description: "Temperature-scaled softmax" }
- ],
- variables: [
- { key: "sim_pos", symbol: "sim+", name: "Positive Sim", min: 0, max: 2, step: 0.1, default: 1.2, decimals: 2 },
- { key: "sim_neg1", symbol: "sim-1", name: "Negative 1", min: 0, max: 2, step: 0.1, default: 0.3, decimals: 2 },
- { key: "sim_neg2", symbol: "sim-2", name: "Negative 2", min: 0, max: 2, step: 0.1, default: 0.4, decimals: 2 },
- { key: "temp", symbol: "τ", name: "Temperature", min: 0.01, max: 1, step: 0.01, default: 0.1, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const sp = get("sim_pos", 1.2);
- const sn1 = get("sim_neg1", 0.3);
- const sn2 = get("sim_neg2", 0.4);
- const t = get("temp", 0.1);
- const pos = Math.exp(sp / t);
- const neg = Math.exp(sn1 / t) + Math.exp(sn2 / t);
- return (-Math.log(pos / (pos + neg))).toFixed(4);
- },
- insights: [
- "Lower temperature = sharper distribution (harder contrastive).",
- "Higher temperature = softer distribution (easier learning).",
- "0.07-0.1 is common for contrastive learning."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "Transformer": {
-    visualizer: "Transformer",
+
  title: "Transformers: Attention Is All You Need",
  content: `
  <p><strong>Transformers</strong> use self-attention to process sequences. No recurrence, no convolution - just attention!</p>
@@ -3188,63 +3188,63 @@ Recall = TP / (TP + FN)
   <li><strong>Expensive for long sequences</strong>: GPT-4 has token limits due to this</li>
   </ul>
   `,
-  visualizer: "Transformer",
- interactiveFormulas: [
- {
- name: "Attention Weights",
- components: [
- { symbol: "a_ij", key: "attn", name: "Attention", description: "How much position i attends to j" },
- { symbol: " = softmax(Q_i · K_j / sqrt(d))", key: "formula", name: "Formula", description: "Scaled dot-product attention" }
- ],
- variables: [
- { key: "q_k", symbol: "Q·K", name: "Query-Key Score", min: -5, max: 10, step: 0.1, default: 3.2, decimals: 1 },
- { key: "d", symbol: "d", name: "Dim", min: 16, max: 512, step: 16, default: 64, decimals: 0 },
- { key: "other1", symbol: "other1", name: "Other Scores", min: -5, max: 5, step: 0.1, default: 0.5, decimals: 1 },
- { key: "other2", symbol: "other2", name: "Other 2", min: -5, max: 5, step: 0.1, default: 0.3, decimals: 1 }
- ],
- calculate: (vals, get) => {
- const qk = get("q_k", 3.2);
- const d = get("d", 64);
- const o1 = get("other1", 0.5);
- const o2 = get("other2", 0.3);
- const scale = Math.sqrt(d);
- const e1 = Math.exp(qk / scale);
- const e2 = Math.exp(o1 / scale);
- const e3 = Math.exp(o2 / scale);
- return (e1 / (e1 + e2 + e3)).toFixed(3);
- },
- insights: [
- "sqrt(d) prevents gradients from vanishing for large d.",
- "Higher attention = stronger relationship between positions.",
- "Visual attention maps show what the model focuses on."
- ]
- },
- {
- name: "Parameters vs Layer Count",
- components: [
- { symbol: "M params", key: "params", name: "Model Size", description: "In millions" },
- { symbol: " = L * (4d^2 + 2d^2)", key: "formula", name: "Formula", description: "Attention + FFN per layer" }
- ],
- variables: [
- { key: "layers", symbol: "L", name: "Layers", min: 1, max: 100, step: 1, default: 12, decimals: 0 },
- { key: "hidden", symbol: "d", name: "Hidden Dim", min: 128, max: 1024, step: 64, default: 768, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const L = get("layers", 12);
- const d = get("hidden", 768);
- const params = L * (4 * d * d + 2 * d * d);
- return (params / 1000000).toFixed(1);
- },
- insights: [
- "GPT-3: 96 layers, 175B params. Huge!",
- "Feed-forward often 4x attention size.",
- "Scaling laws: more data + params = better performance."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "VisionTransformer": {
-    visualizer: "Transformer",
+
  title: "Vision Transformer (ViT): Transformers for Images",
  content: `
  <p><strong>ViT</strong> treats images as sequences of patches. Split image into fixed-size patches, linearly embed, feed to transformer.</p>
@@ -3274,34 +3274,34 @@ Recall = TP / (TP + FN)
   <li><strong>Fine-tuning sensitivity</strong>: Harder to fine-tune than CNNs</li>
   </ul>
   `,
-  interactiveFormulas: [
- {
- name: "Patch Count Calculator",
- components: [
- { symbol: "N", key: "patches", name: "Patch Count", description: "Tokens to process" },
- { symbol: " = (H/p) * (W/p)", key: "formula", name: "Formula", description: "Image dims / patch dims" }
- ],
- variables: [
- { key: "height", symbol: "H", name: "Image Height", min: 64, max: 512, step: 16, default: 224, decimals: 0 },
- { key: "width", symbol: "W", name: "Image Width", min: 64, max: 512, step: 16, default: 224, decimals: 0 },
- { key: "patch", symbol: "p", name: "Patch Size", min: 8, max: 32, step: 4, default: 16, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const h = get("height", 224);
- const w = get("width", 224);
- const p = get("patch", 16);
- return (h / p) * (w / p);
- },
- insights: [
- "16x16 is common patch size (14x14=196 tokens).",
- "Smaller patches = more tokens = more compute.",
- "ViT needs more data than CNNs to train well."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "LoRA": {
-    visualizer: "LoRA",
+
  title: "LoRA: Low-Rank Adaptation",
  content: `
  <p><strong>LoRA</strong> fine-tunes large models by only training small, low-rank matrices. This allows fine-tuning an LLM on consumer hardware.</p>
@@ -3324,69 +3324,69 @@ Recall = TP / (TP + FN)
   <li><strong>Not universal</strong>: Doesn't work equally well for all model architectures</li>
   </ul>
   `,
-  visualizer: "LoRA",
- interactiveFormulas: [
- {
- name: "LoRA Parameter Savings",
- components: [
- { symbol: "Params", key: "p", name: "Trainable Params", description: "Count of weights in A and B" },
- { symbol: " = 2 * d * r", key: "formula", name: "Formula", description: "Low-rank approximation count" }
- ],
- variables: [
- { key: "dim", symbol: "d", name: "Model Dim", min: 128, max: 8192, step: 128, default: 1024, decimals: 0 },
- { key: "rank", symbol: "r", name: "Rank", min: 1, max: 64, step: 1, default: 8, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const d = get("dim", 1024);
- const r = get("rank", 8);
- const lora = 2 * d * r;
- const full = d * d;
- return (lora / full * 100).toFixed(2) + "% of original";
- },
- insights: [
- "A rank of 8 is often enough to adapt a 1024-dim layer.",
- "Reduces VRAM requirements for fine-tuning by 10,000x.",
- "Weights A and B can be merged back into W₀ for zero-latency inference."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
 "Diffusion": {
    title: "Diffusion Models: Iterative Denoising",
    content: `
    <p><strong>Diffusion models</strong> generate images by iteratively denoising. Start with noise, gradually clean up!</p>
    `,
-   visualizer: "Diffusion",
-   interactiveFormulas: [
- {
- name: "Noise Schedule (Linear)",
- components: [
- { symbol: "β_t", key: "beta", name: "Noise at Step t", description: "Variance schedule" },
- { symbol: " = β_start + (β_end - β_start) * t / T", key: "formula", name: "Formula", description: "Linear interpolation" }
- ],
- variables: [
- { key: "start", symbol: "β_start", name: "Start", min: 0.0001, max: 0.01, step: 0.0001, default: 0.0001, decimals: 4 },
- { key: "end", symbol: "β_end", name: "End", min: 0.01, max: 0.2, step: 0.01, default: 0.02, decimals: 3 },
- { key: "t", symbol: "t", name: "Step", min: 0, max: 1000, step: 1, default: 500, decimals: 0 },
- { key: "T", symbol: "T", name: "Total Steps", min: 100, max: 2000, step: 100, default: 1000, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const s = get("start", 0.0001);
- const e = get("end", 0.02);
- const t = get("t", 500);
- const T = get("T", 1000);
- return (s + (e - s) * t / T).toFixed(6);
- },
- insights: [
- "Cosine schedule often works better than linear.",
- "More steps = better quality but slower generation.",
- "DDPM, DDIM, Stable Diffusion - different samplers."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
 "CLIP": {
-     visualizer: "CLIP",
+
   title: "CLIP: Connecting Images and Text",
  content: `
  <p><strong>CLIP</strong> learns to match images with text descriptions. Zero-shot classifier from natural language!</p>
@@ -3400,39 +3400,39 @@ Recall = TP / (TP + FN)
  <h4>Why It Works</strong>
  <p>Language provides rich supervision. Transfer across tasks. Robust to distribution shift.</p>
  `,
- interactiveFormulas: [
- {
- name: "Zero-Shot Prediction",
- components: [
- { symbol: "pred", key: "pred", name: "Predicted Class", description: "Argmax of similarities" },
- { symbol: " = argmax(I · T_i / τ)", key: "formula", name: "Formula", description: "Image-text similarity" }
- ],
- variables: [
- { key: "img", symbol: "I", name: "Image Embed", min: -1, max: 1, step: 0.1, default: 0.8, decimals: 1 },
- { key: "txt1", symbol: "T1", name: "Text 1", min: -1, max: 1, step: 0.1, default: 0.6, decimals: 1 },
- { key: "txt2", symbol: "T2", name: "Text 2", min: -1, max: 1, step: 0.1, default: 0.2, decimals: 1 },
- { key: "temp", symbol: "τ", name: "Temp", min: 0.01, max: 1, step: 0.01, default: 0.1, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const img = get("img", 0.8);
- const t1 = get("txt1", 0.6);
- const t2 = get("txt2", 0.2);
- const temp = get("temp", 0.1);
- const s1 = Math.exp(img * t1 / temp);
- const s2 = Math.exp(img * t2 / temp);
- return s1 > s2 ? "Class 1" : "Class 2";
- },
- insights: [
- "CLIP can classify anything you can describe in text!",
- "Prompt engineering matters: 'a photo of a [class]' works better than just [class].",
- "Multi-prompt ensembles improve robustness."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
 "ObjectDetection": {
   title: "Object Detection: Finding and Locating Objects",
-  visualizer: "ObjectDetection",
+
   content: `
  <p><strong>Object detection</strong> finds all objects in an image and draws bounding boxes around them.</p>
  
@@ -3445,29 +3445,29 @@ Recall = TP / (TP + FN)
  <h4>Key Metrics</h4>
  <p>mAP: mean Average Precision. IoU: Intersection over Union. PASCAL VOC vs COCO.</p>
  `,
- interactiveFormulas: [
- {
- name: "IoU (Intersection over Union)",
- components: [
- { symbol: "IoU", key: "iou", name: "Overlap", description: "Box overlap measure" },
- { symbol: " = area(intersection) / area(union)", key: "formula", name: "Formula", description: "0= no overlap, 1= perfect" }
- ],
- variables: [
- { key: "intersection", symbol: "inter", name: "Intersection", min: 0, max: 100, step: 1, default: 64, decimals: 0 },
- { key: "union", symbol: "union", name: "Union", min: 1, max: 200, step: 1, default: 100, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const inter = get("intersection", 64);
- const union = get("union", 100);
- return union > 0 ? (inter / union).toFixed(3) : 0;
- },
- insights: [
- "IoU >= 0.5 is usually considered a 'detection' (mAP@0.5).",
- "Strict IoU (0.75) used for more precise evaluation.",
- "COCO uses multiple IoU thresholds (0.5:0.95)."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "AnchorBoxes": {
  title: "Anchor Boxes: Predefined Shapes",
@@ -3492,25 +3492,25 @@ Recall = TP / (TP + FN)
   <li><strong>Not end-to-end</strong>: Fixed priors limit flexibility</li>
   </ul>
   `,
-  interactiveFormulas: [
- {
- name: "Box Decoding",
- components: [
- { symbol: "w_pred", key: "w", name: "Predicted Width", description: "Final box width" },
- { symbol: " = w_anchor * exp(offset_w)", key: "formula", name: "Formula", description: "Log-space offset" }
- ],
- variables: [
- { key: "w_anc", symbol: "w_a", name: "Anchor Width", min: 10, max: 100, step: 1, default: 50, decimals: 0 },
- { key: "off_w", symbol: "off", name: "Offset", min: -1, max: 1, step: 0.1, default: 0.2, decimals: 1 }
- ],
- calculate: (vals, get) => get("w_anc", 50) * Math.exp(get("off_w", 0.2)),
- insights: [
- "Using log-space for width/height offsets prevents negative sizes.",
- "Different anchors at each grid cell handle overlapping objects.",
- "The model learns to choose the best-fitting anchor."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "Segmentation": {
  title: "Image Segmentation: Pixel-Level Understanding",
@@ -3542,33 +3542,33 @@ Recall = TP / (TP + FN)
   <li><strong>Limited by resolution</strong>: Small objects get missed</li>
   </ul>
   `,
-  interactiveFormulas: [
- {
- name: "Upsampling (Transposed Conv)",
- components: [
- { symbol: "out", key: "out", name: "Output Size", description: "After transposed conv" },
- { symbol: " = s * (in - 1) + k - 2p", key: "formula", name: "Formula", description: "Upsampling formula" }
- ],
- variables: [
- { key: "input", symbol: "in", name: "Input", min: 1, max: 50, step: 1, default: 7, decimals: 0 },
- { key: "stride", symbol: "s", name: "Stride", min: 1, max: 4, step: 1, default: 2, decimals: 0 },
- { key: "kernel", symbol: "k", name: "Kernel", min: 1, max: 5, step: 2, default: 3, decimals: 0 },
- { key: "pad", symbol: "p", name: "Padding", min: 0, max: 3, step: 1, default: 1, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const inVal = get("input", 7);
- const s = get("stride", 2);
- const k = get("kernel", 3);
- const p = get("pad", 1);
- return s * (inVal - 1) + k - 2 * p;
- },
- insights: [
- "Transposed conv 'reverses' spatial shrinking of conv.",
- "Also called deconvolution (misnomer - not actual deconv).",
- "Alternative: upsampling + conv (often better quality)."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
 "LearningPath": {
   title: "How Concepts Build On Each Other: The ML Concept Map",
@@ -3700,34 +3700,34 @@ Recall = TP / (TP + FN)
   • 3Blue1Brown - Linear algebra visualizations<br/>
   • Learn Machine Learn - Interactive playground!</p>
  `,
- interactiveFormulas: [
- {
- name: "Study Time Estimator",
- components: [
- { symbol: "hours", key: "hours", name: "Total Hours", description: "To complete path" },
- { symbol: " = phase * weeks * hours_per_week", key: "formula", name: "Formula", description: "Simple estimation" }
- ],
- variables: [
- { key: "phases", symbol: "P", name: "Phases", min: 1, max: 4, step: 1, default: 4, decimals: 0 },
- { key: "weeks", symbol: "W", name: "Weeks/Phase", min: 2, max: 8, step: 1, default: 4, decimals: 0 },
- { key: "weekly", symbol: "h", name: "Hours/Week", min: 5, max: 30, step: 1, default: 10, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const P = get("phases", 4);
- const W = get("weeks", 4);
- const h = get("weekly", 10);
- return P * W * h;
- },
- insights: [
- "16 weeks at 10 hrs/week = 160 hours.",
- "Consistency matters more than intensity.",
- "Build projects along the way - learning by doing!"
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "StableDiffusion": {
-    visualizer: "Diffusion",
+
  title: "Stable Diffusion: Open Image Generation",
  content: `
  <p><strong>Stable Diffusion</strong> is a latent diffusion model. Runs on consumer GPUs! Open weights = massive community.</p>
@@ -3744,109 +3744,109 @@ Recall = TP / (TP + FN)
  • CLIP: Text understanding<br/>
  • Scheduler: Sampling strategy</p>
  `,
- interactiveFormulas: [
- {
- name: "CFG Scale Impact",
- components: [
- { symbol: "cond", key: "cond", name: "Guided Prediction", description: "With classifier-free guidance" },
- { symbol: " = (1+w)*cond - w*uncond", key: "formula", name: "Formula", description: "Guidance formula" }
- ],
- variables: [
- { key: "cond", symbol: "c", name: "Conditional", min: -2, max: 2, step: 0.1, default: 0.8, decimals: 1 },
- { key: "uncond", symbol: "u", name: "Unconditional", min: -2, max: 2, step: 0.1, default: 0.2, decimals: 1 },
- { key: "scale", symbol: "w", name: "CFG Scale", min: 1, max: 20, step: 0.5, default: 7.5, decimals: 1 }
- ],
- calculate: (vals, get) => {
- const c = get("cond", 0.8);
- const u = get("uncond", 0.2);
- const w = get("scale", 7.5);
- return ((1 + w) * c - w * u).toFixed(3);
- },
- insights: [
- "w=0: no guidance (random). w=7-12: good balance.",
- "Too high w: oversaturated, artifacts.",
- "Lower w (1-3): more creative, diverse."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
 "TSNE": {
   title: "t-SNE: Visualizing High-Dim Data",
-  visualizer: "TSNE",
+
   content: `
  <p><strong>t-SNE</strong> (t-distributed Stochastic Neighbor Embedding) is a nonlinear dimensionality reduction technique well-suited for embedding high-dimensional data for visualization in a low-dimensional space of two or three dimensions.</p>
  `,
- interactiveFormulas: [
- {
- name: "Perplexity Impact",
- components: [
- { symbol: "Neighbors", key: "neighbors", name: "Effective Neighbors", description: "Soft neighborhood size" },
- { symbol: " = log₂(Perplexity)", key: "formula", name: "Formula", description: "Shannon entropy relation" }
- ],
- variables: [
- { key: "perp", symbol: "Perp", name: "Perplexity", min: 2, max: 100, step: 1, default: 30, decimals: 0 }
- ],
- calculate: (vals, get) => Math.log2(get("perp", 30)).toFixed(1),
- insights: [
- "Perplexity roughly balances attention between local and global data aspects.",
- "Low perplexity focuses on small clusters, high perplexity on overall shape.",
- "Unlike PCA, t-SNE distances in 2D don't always reflect real-world distances."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "UMAP": {
  title: "UMAP: Faster Nonlinear Embedding",
  content: `
  <p><strong>UMAP</strong> (Uniform Manifold Approximation and Projection) is a faster alternative to t-SNE that often preserves more of the global structure of the data.</p>
  `,
- interactiveFormulas: [
- {
- name: "Min Distance",
- components: [
- { symbol: "Tightness", key: "tight", name: "Cluster Tightness", description: "How closely points pack" },
- { symbol: " = f(min_dist)", key: "formula", name: "Parameter", description: "Lower = more crowded" }
- ],
- variables: [
- { key: "min_dist", symbol: "d_min", name: "Min Distance", min: 0.001, max: 1, step: 0.01, default: 0.1, decimals: 2 }
- ],
- calculate: (vals, get) => get("min_dist", 0.1) < 0.05 ? "Very dense clusters" : "Loose clusters",
- insights: [
- "Min Distance controls how tightly UMAP packs points together.",
- "Lower values emphasize fine structure; higher values emphasize global shape.",
- "UMAP is mathematically grounded in Riemannian geometry and algebraic topology."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "WGAN": {
-    visualizer: "GAN",
+
  title: "WGAN: Wasserstein GAN",
  content: `
  <p><strong>WGAN</strong> uses the Earth Mover's (Wasserstein) distance to improve GAN stability and provide a meaningful loss metric that correlates with image quality.</p>
  `,
- interactiveFormulas: [
- {
- name: "Critic Loss (Minimax)",
- components: [
- { symbol: "L", key: "loss", name: "Wasserstein Loss", description: "Critic score difference" },
- { symbol: " = E[C(x)] - E[C(G(z))]", key: "formula", name: "Formula", description: "Real score - Fake score" }
- ],
- variables: [
- { key: "real", symbol: "C(x)", name: "Real Score", min: -10, max: 10, step: 0.1, default: 5, decimals: 1 },
- { key: "fake", symbol: "C(G)", name: "Fake Score", min: -10, max: 10, step: 0.1, default: -2, decimals: 1 }
- ],
- calculate: (vals, get) => get("real", 5) - get("fake", -2),
- insights: [
- "Unlike standard GANs, the Critic (C) doesn't use a sigmoid (it's not a classifier).",
- "WGAN loss avoids mode collapse and provides stable gradients.",
- "Requires 1-Lipschitz continuity (often enforced via Gradient Penalty)."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "DCGAN": {
-    visualizer: "GAN",
+
  title: "DCGAN: Deep Convolutional GAN",
  content: `
  <p><strong>DCGAN</strong> introduced architectural constraints that made GANs stable to train using deep convolutional layers.</p>
@@ -3855,32 +3855,32 @@ Recall = TP / (TP + FN)
  • Use Batch Norm in both Generator and Discriminator.<br/>
  • Use ReLU in G and Leaky ReLU in D.</p>
  `,
- interactiveFormulas: [
- {
- name: "Leaky ReLU in DCGAN",
- components: [
- { symbol: "f(x)", key: "out", name: "Activation", description: "Prevents dying neurons" },
- { symbol: " = max(αx, x)", key: "formula", name: "Formula", description: "Slope α for x < 0" }
- ],
- variables: [
- { key: "x", symbol: "x", name: "Input", min: -5, max: 5, step: 0.1, default: -2, decimals: 1 },
- { key: "alpha", symbol: "α", name: "Alpha", min: 0.01, max: 0.3, step: 0.01, default: 0.2, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const x = get("x", -2);
- const a = get("alpha", 0.2);
- return x < 0 ? (a * x).toFixed(2) : x.toFixed(2);
- },
- insights: [
- "DCGAN standardizes α=0.2 for the Discriminator.",
- "Allowing a small gradient for negative inputs helps the Generator learn even from 'rejected' samples.",
- "Strided convolutions are essential for the Generator to learn its own upsampling."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "SAM": {
-    visualizer: "CNN",
+
  title: "Segment Anything Model (SAM): Foundation for Segmentation",
  content: `
  <p><strong>SAM</strong> is a promptable segmentation model. Segment anything with just clicks, boxes, or text!</p>
@@ -3896,36 +3896,36 @@ Recall = TP / (TP + FN)
  <h4>Architecture</h4>
  <p>Image encoder (ViT) -> Prompt encoder -> Mask decoder. 3 mask outputs (whole, part, subpart).</p>
  `,
- interactiveFormulas: [
- {
- name: "Mask Generation",
- components: [
- { symbol: "masks", key: "masks", name: "Output Masks", description: "Multiple predictions" },
- { symbol: " = decode(image_emb + prompt_emb)", key: "formula", name: "Formula", description: "Transformer decoder" }
- ],
- variables: [
- { key: "img_emb", symbol: "I", name: "Image Embed", min: 0, max: 1, step: 0.1, default: 0.7, decimals: 1 },
- { key: "pt_emb", symbol: "P", name: "Prompt Embed", min: 0, max: 1, step: 0.1, default: 0.5, decimals: 1 },
- { key: "iou", symbol: "iou", name: "IoU Score", min: 0, max: 1, step: 0.01, default: 0.85, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const I = get("img_emb", 0.7);
- const P = get("pt_emb", 0.5);
- const iou = get("iou", 0.85);
- // 'combined' was unused, calculating score directly
- const score = (I + P) / 2;
- return iou > 0.8 && score > 0.5 ? "High quality mask!" : "Low quality - try more prompts";
- },
- insights: [
- "SAM works zero-shot on new object types.",
- "Can be automated: segment everything in image.",
- "Foundation model for many downstream tasks."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "LLM": {
-    visualizer: "Transformer",
+
  title: "Large Language Models: Transformers for Text",
  content: `
  <p><strong>LLMs</strong> are transformer models trained on massive text. GPT, Claude, Llama - they all use the same architecture!</p>
@@ -3957,36 +3957,36 @@ Recall = TP / (TP + FN)
   <li><strong>Not deterministic</strong>: Same prompt can produce different outputs</li>
   </ul>
   `,
-  interactiveFormulas: [
- {
- name: "Token Generation Probability",
- components: [
- { symbol: "P(token | context)", key: "prob", name: "Next Token Prob", description: "Model's prediction" },
- { symbol: " = softmax(logits / T)", key: "formula", name: "Formula", description: "Temperature-scaled softmax" }
- ],
- variables: [
- { key: "logit1", symbol: "logit1", name: "Top Logit", min: -10, max: 20, step: 0.5, default: 8.5, decimals: 1 },
- { key: "logit2", symbol: "logit2", name: "2nd Logit", min: -10, max: 20, step: 0.5, default: 5.2, decimals: 1 },
- { key: "temp", symbol: "T", name: "Temperature", min: 0.1, max: 2, step: 0.1, default: 1.0, decimals: 1 }
- ],
- calculate: (vals, get) => {
- const l1 = get("logit1", 8.5);
- const l2 = get("logit2", 5.2);
- const T = get("temp", 1.0);
- const e1 = Math.exp(l1 / T);
- const e2 = Math.exp(l2 / T);
- return ((e1 / (e1 + e2)) * 100).toFixed(1) + '%';
- },
- insights: [
- "T=1: normal distribution. T<1: peaky (deterministic).",
- "T>1: more random, creative outputs.",
- "Top-k and top-p (nucleus) sampling also used."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "RAG": {
-    visualizer: "Transformer",
+
  title: "Retrieval-Augmented Generation",
  content: `
  <p><strong>RAG</strong> combines LLMs with external knowledge. Don't rely on training data - retrieve relevant info!</p>
@@ -4006,37 +4006,37 @@ Recall = TP / (TP + FN)
  • Source attribution<br/>
  • Domain-specific knowledge</p>
  `,
- interactiveFormulas: [
- {
- name: "Retrieval Score (Cosine Similarity)",
- components: [
- { symbol: "sim", key: "sim", name: "Similarity", description: "Query-document match" },
- { symbol: " = (A · B) / (|A| * |B|)", key: "formula", name: "Formula", description: "Cosine similarity" }
- ],
- variables: [
- { key: "a1", symbol: "a1", name: "Query 1", min: -1, max: 1, step: 0.1, default: 0.8, decimals: 1 },
- { key: "a2", symbol: "a2", name: "Query 2", min: -1, max: 1, step: 0.1, default: 0.3, decimals: 1 },
- { key: "b1", symbol: "b1", name: "Doc 1", min: -1, max: 1, step: 0.1, default: 0.7, decimals: 1 },
- { key: "b2", symbol: "b2", name: "Doc 2", min: -1, max: 1, step: 0.1, default: 0.4, decimals: 1 }
- ],
- calculate: (vals, get) => {
- const a1 = get("a1", 0.8), a2 = get("a2", 0.3);
- const b1 = get("b1", 0.7), b2 = get("b2", 0.4);
- const dot = a1*b1 + a2*b2;
- const magA = Math.sqrt(a1*a1 + a2*a2);
- const magB = Math.sqrt(b1*b1 + b2*b2);
- return (dot / (magA * magB)).toFixed(3);
- },
- insights: [
- "Similarity > 0.7 usually relevant. < 0.5 not relevant.",
- "Embedding models: BERT, Sentence-transformers, OpenAI ada.",
- "Chunk size matters for retrieval quality."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "Multimodal": {
-    visualizer: "Transformer",
+
  title: "Multimodal Learning: Beyond Single Modality",
  content: `
  <p><strong>Multimodal</strong> models process multiple types of data: text, images, audio, video together.</p>
@@ -4053,34 +4053,34 @@ Recall = TP / (TP + FN)
  <h4>Why Multimodal?</h4>
  <p>Humans use multiple senses. Richer understanding. Grounding in real world.</p>
  `,
- interactiveFormulas: [
- {
- name: "Cross-Modal Attention",
- components: [
- { symbol: "fused", key: "fused", name: "Fused Representation", description: "Combined vision+text" },
- { symbol: " = attention(V · W_v, T · W_t, V · W_v)", key: "formula", name: "Formula", description: "Query from text, keys/values from image" }
- ],
- variables: [
- { key: "v_feat", symbol: "V", name: "Vision Features", min: 0, max: 1, step: 0.1, default: 0.8, decimals: 1 },
- { key: "t_feat", symbol: "T", name: "Text Features", min: 0, max: 1, step: 0.1, default: 0.6, decimals: 1 },
- { key: "attn", symbol: "A", name: "Attention Score", min: 0, max: 1, step: 0.05, default: 0.75, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const V = get("v_feat", 0.8);
- const T = get("t_feat", 0.6);
- const A = get("attn", 0.75);
- return ((V * A + T * (1-A)) * 100).toFixed(1) + '%';
- },
- insights: [
- "Multimodal models often need aligned pre-training.",
- "Can learn without explicit labels (self-supervised).",
- "Emerging: any-to-any models (text->image, image->audio)."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "NeRF": {
-    visualizer: "NeuralNetwork",
+
  title: "Neural Radiance Fields: 3D from Images",
  content: `
  <p><strong>NeRF</strong> represents a scene as a neural network. Input: 5D (x,y,z,θ,φ). Output: color + density.</p>
@@ -4097,37 +4097,37 @@ Recall = TP / (TP + FN)
  • Object modeling, architecture<br/>
  • Video game environments</p>
  `,
- interactiveFormulas: [
- {
- name: "Volume Rendering (Simplified)",
- components: [
- { symbol: "C", key: "color", name: "Pixel Color", description: "Accumulated along ray" },
- { symbol: " = sum(T_i * α_i * c_i)", key: "formula", name: "Formula", description: "Transmittance * density * color" }
- ],
- variables: [
- { key: "c1", symbol: "c1", name: "Color 1", min: 0, max: 1, step: 0.1, default: 0.8, decimals: 1 },
- { key: "t1", symbol: "T1", name: "Trans 1", min: 0, max: 1, step: 0.1, default: 0.9, decimals: 1 },
- { key: "alpha", symbol: "α", name: "Density", min: 0, max: 1, step: 0.1, default: 0.6, decimals: 1 },
- { key: "c2", symbol: "c2", name: "Color 2", min: 0, max: 1, step: 0.1, default: 0.3, decimals: 1 }
- ],
- calculate: (vals, get) => {
- const c1 = get("c1", 0.8);
- const T1 = get("t1", 0.9);
- const alpha = get("alpha", 0.6);
- const c2 = get("c2", 0.3);
- const t2 = T1 * (1 - alpha);
- return ((T1 * alpha * c1 + t2 * c2) * 255).toFixed(0);
- },
- insights: [
- "NeRF needs many posed images (typically 20-100).",
- "Training takes hours on GPU. Instant-NGP is faster.",
- "Gaussian splatting: explicit instead of implicit."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "Sora": {
-    visualizer: "Diffusion",
+
  title: "Sora: Video Generation from Text",
  content: `
  <p><strong>Sora</strong> is OpenAI's video generation model. Text prompt -> minute-long videos!</p>
@@ -4145,37 +4145,37 @@ Recall = TP / (TP + FN)
  <h4>Why It Matters</h4>
  <p>First model showing emergent world simulation. Understanding 3D, occlusion, motion!</p>
  `,
- interactiveFormulas: [
- {
- name: "Video Patches Calculation",
- components: [
- { symbol: "N", key: "patches", name: "Patch Count", description: "Tokens per frame" },
- { symbol: " = (T/p_t) * (H/p) * (W/p)", key: "formula", name: "Formula", description: "Spatiotemporal patch grid" }
- ],
- variables: [
- { key: "frames", symbol: "T", name: "Frames", min: 1, max: 100, step: 1, default: 60, decimals: 0 },
- { key: "height", symbol: "H", name: "Height", min: 64, max: 1024, step: 64, default: 256, decimals: 0 },
- { key: "width", symbol: "W", name: "Width", min: 64, max: 1024, step: 64, default: 256, decimals: 0 },
- { key: "patch", symbol: "p", name: "Patch Size", min: 8, max: 32, step: 4, default: 16, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const T = get("frames", 60);
- const H = get("height", 256);
- const W = get("width", 256);
- const p = get("patch", 16);
- const pt = 2;
- return Math.ceil(T/pt) * Math.ceil(H/p) * Math.ceil(W/p);
- },
- insights: [
- "More frames = more tokens = more compute.",
- "Sora uses 16 frames at a time, generates 60.",
- "Still limited: can't interact with generated world."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "Agent": {
-    visualizer: "PPO",
+
  title: "AI Agents: Language Models That Use Tools",
  content: `
  <p><strong>AI Agents</strong> use LLMs to plan, use tools, and take actions. Not just text generation - real tasks!</p>
@@ -4192,37 +4192,37 @@ Recall = TP / (TP + FN)
  <h4>Frameworks</h4>
  <p>LangChain, AutoGPT, Claude Agent, ReAct prompting. ReAct: Reasoning + Acting interleaved.</p>
  `,
- interactiveFormulas: [
- {
- name: "ReAct: Reasoning + Acting",
- components: [
- { symbol: "trajectory", key: "traj", name: "Steps Taken", description: "Thought-action-observation chain" },
- { symbol: " = n * (thought + action + observation)", key: "formula", name: "Formula", description: "ReAct cycle count" }
- ],
- variables: [
- { key: "thought", symbol: "T", name: "Thought Quality", min: 0, max: 1, step: 0.1, default: 0.8, decimals: 1 },
- { key: "action", symbol: "A", name: "Action Validity", min: 0, max: 1, step: 0.1, default: 0.9, decimals: 1 },
- { key: "obs", symbol: "O", name: "Observation Help", min: 0, max: 1, step: 0.1, default: 0.7, decimals: 1 },
- { key: "steps", symbol: "n", name: "Steps", min: 1, max: 10, step: 1, default: 5, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const T = get("thought", 0.8);
- const A = get("action", 0.9);
- const O = get("observation", 0.7);
- const n = get("steps", 5);
- const score = (T * A * O) * n;
- return score > 2 ? "Task likely completed!" : "May need more steps";
- },
- insights: [
- "Agents can use external memory for multi-step tasks.",
- "Hallucinations less problematic when can verify with tools.",
- "Self-critique / reflection improves reliability."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "Quantization": {
-    visualizer: "Loss",
+
  title: "Model Quantization: Smaller, Faster Models",
  content: `
  <p><strong>Quantization</strong> reduces model precision (32-bit float -> 8-bit int). Huge savings with minimal accuracy loss!</p>
@@ -4258,33 +4258,33 @@ Recall = TP / (TP + FN)
   <li><strong>Irreversible</strong>: Can't recover original precision</li>
   </ul>
   `,
- interactiveFormulas: [
- {
- name: "Memory Savings Calculator",
- components: [
- { symbol: "savings", key: "savings", name: "Reduction", description: "How much smaller" },
- { symbol: " = (1 - new_bits / 32) * 100%", key: "formula", name: "Formula", description: "Percentage reduction" }
- ],
- variables: [
- { key: "bits", symbol: "bits", name: "Quantized To", min: 2, max: 16, step: 1, default: 8, decimals: 0 },
- { key: "model_gb", symbol: "GB", name: "Model Size (FP32)", min: 1, max: 500, step: 1, default: 70, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const bits = get("bits", 8);
- const reduction = (1 - bits / 32) * 100;
- const newSize = get("model_gb", 70) * (bits / 32);
- return `${reduction.toFixed(0)}% smaller! New size: ${newSize.toFixed(1)}GB`;
- },
- insights: [
- "INT8 = 4x smaller, ~2x faster. Usually <1% accuracy drop.",
- "GPTQ, AWQ: sophisticated quantization methods.",
- "Hardware support matters: TensorRT, llama.cpp."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "Distillation": {
-    visualizer: "NeuralNetwork",
+
  title: "Knowledge Distillation: Small Model from Big",
  content: `
  <p><strong>Distillation</strong> trains a small 'student' model to mimic a large 'teacher'. The student learns from teacher logits!</p>
@@ -4298,36 +4298,36 @@ Recall = TP / (TP + FN)
  <h4>Why It Works</h4>
  <p>Teacher provides 'dark knowledge' - relationships between classes, not just answers. Student learns richer representation!</p>
  `,
- interactiveFormulas: [
- {
- name: "Distillation Loss",
- components: [
- { symbol: "L_distill", key: "loss", name: "Distillation Loss", description: "Combined training loss" },
- { symbol: " = α * H(y,s) + (1-α) * T^2 * H(σ(q/t), σ(p/t))", key: "formula", name: "Formula", description: "Hard + soft targets" }
- ],
- variables: [
- { key: "alpha", symbol: "α", name: "Alpha", min: 0, max: 1, step: 0.1, default: 0.5, decimals: 1 },
- { key: "temp", symbol: "T", name: "Temperature", min: 1, max: 20, step: 1, default: 4, decimals: 0 },
- { key: "h_hard", symbol: "H_hard", name: "Hard Loss", min: 0, max: 5, step: 0.1, default: 0.8, decimals: 2 },
- { key: "h_soft", symbol: "H_soft", name: "Soft Loss", min: 0, max: 5, step: 0.1, default: 1.2, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const alpha = get("alpha", 0.5);
- const T = get("temp", 4);
- const H_hard = get("h_hard", 0.8);
- const H_soft = get("h_soft", 1.2);
- return (alpha * H_hard + (1 - alpha) * T * T * H_soft).toFixed(3);
- },
- insights: [
- "High T (>2) softens predictions, more info transfer.",
- "α=0.5 is a common starting point.",
- "Distilled models can approach teacher performance!"
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "MoE": {
-    visualizer: "Transformer",
+
  title: "Mixture of Experts: Scaling Efficiently",
  content: `
  <p><strong>MoE</strong> uses many 'expert' networks, only activates a few per input. Efficient scaling!</p>
@@ -4343,35 +4343,35 @@ Recall = TP / (TP + FN)
  • Mixtral 8x7B: 8 experts, 2 active = ~12B active params<br/>
  • GShard: Google's MoE transformer</p>
  `,
- interactiveFormulas: [
- {
- name: "Active Parameters Calculation",
- components: [
- { symbol: "active", key: "active", name: "Active Params", description: "Per token computation" },
- { symbol: " = total / experts * top_k", key: "formula", name: "Formula", description: "Sparsely activated" }
- ],
- variables: [
- { key: "total", symbol: "Total", name: "Total Params (B)", min: 1, max: 1000, step: 1, default: 400, decimals: 0 },
- { key: "experts", symbol: "E", name: "Experts", min: 2, max: 256, step: 1, default: 16, decimals: 0 },
- { key: "topk", symbol: "k", name: "Top-K", min: 1, max: 8, step: 1, default: 2, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const total = get("total", 400);
- const E = get("experts", 16);
- const k = get("topk", 2);
- const perExpert = total / E;
- return (perExpert * k).toFixed(1) + "B active params";
- },
- insights: [
- "MoE enables massive models without proportional compute.",
- "Load balancing: ensure all experts get used.",
- "Expert choice routing can be learned or random."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "RecentAdvances": {
-    visualizer: "Transformer",
+
  title: "Recent Advances 2024-2025",
  content: `
  <p>The ML field is evolving rapidly. Here are the latest breakthroughs shaping the future!</p>
@@ -4401,35 +4401,35 @@ Recall = TP / (TP + FN)
  • Efficient architectures<br/>
  • Real-world deployment</p>
  `,
- interactiveFormulas: [
- {
- name: "Compute Scaling Law",
- components: [
- { symbol: "perf", key: "perf", name: "Performance", description: "Relative capability" },
- { symbol: " = a * log(compute) + b", key: "formula", name: "Formula", description: "Log-linear relationship" }
- ],
- variables: [
- { key: "compute", symbol: "C", name: "Compute (GFlops)", min: 1, max: 1000000, step: 1, default: 10000, decimals: 0 },
- { key: "a", symbol: "a", name: "Scale Factor", min: 0.1, max: 1, step: 0.1, default: 0.5, decimals: 1 },
- { key: "b", symbol: "b", name: "Offset", min: 0, max: 10, step: 0.5, default: 2, decimals: 1 }
- ],
- calculate: (vals, get) => {
- const C = get("compute", 10000);
- const a = get("a", 0.5);
- const b = get("b", 2);
- const logC = Math.log10(C);
- return (a * logC + b).toFixed(2);
- },
- insights: [
- "More compute generally = better model (power law).",
- "Data quality and algorithm matter too!",
- "Diminishing returns at very large scale."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
 "LinearRegression": {
-    visualizer: "LinearRegression",
+
   title: "Linear Regression: The First ML Algorithm",
   summary: "Linear Regression is the bedrock of statistical prediction. It models the relationship between a dependent variable and one or more independent variables by fitting a linear equation to observed data. The goal is to minimize the sum of squared errors between the predicted and actual values.",
   takeaways: [
@@ -4462,58 +4462,58 @@ Recall = TP / (TP + FN)
   <li><strong>Underfits complex data</strong>: Too simple for most real-world problems</li>
   </ul>
   `,
-  visualizer: "LinearRegression",
-   interactiveFormulas: [
- {
- name: "Simple Linear Prediction",
- parts: [
- { symbol: "ŷ", key: "pred", name: "Prediction", description: "Model output" },
- { symbol: " = ", key: null },
- { symbol: "w × x + b", key: "formula", name: "Formula", description: "Slope times input plus intercept" }
- ],
- variables: [
- { key: "w", symbol: "w", name: "Weight (slope)", min: -3, max: 3, step: 0.1, default: 1.5, decimals: 1 },
- { key: "x", symbol: "x", name: "Input", min: -5, max: 5, step: 0.1, default: 2.0, decimals: 1 },
- { key: "b", symbol: "b", name: "Bias (intercept)", min: -3, max: 3, step: 0.1, default: 0.5, decimals: 1 }
- ],
- calculate: (vals, get) => {
- const w = get("w", 1.5);
- const x = get("x", 2.0);
- const b = get("b", 0.5);
- return w * x + b;
- },
- insights: [
- "With w=0, the model always predicts the bias — no learning from input.",
- "Negative weight means prediction decreases as input increases.",
- "Multiple features means multiple weights — one per input dimension."
- ]
- },
- {
- name: "R² Score",
- parts: [
- { symbol: "R²", key: "r2", name: "R-Squared", description: "Proportion of variance explained" },
- { symbol: " = 1 - ", key: null },
- { symbol: "SS_res / SS_tot", key: "formula", name: "Formula", description: "Residual vs total sum of squares" }
- ],
- variables: [
- { key: "ss_res", symbol: "SS_res", name: "Residual SS", min: 0.1, max: 50, step: 0.5, default: 5, decimals: 1 },
- { key: "ss_tot", symbol: "SS_tot", name: "Total SS", min: 1, max: 100, step: 1, default: 40, decimals: 0 }
- ],
- calculate: (vals, get) => {
- const res = get("ss_res", 5);
- const tot = get("ss_tot", 40);
- return tot > 0 ? 1 - res / tot : 0;
- },
- insights: [
- "R²=1.0 → perfect fit (all variance explained by model).",
- "R²=0.0 → model is no better than the mean baseline.",
- "R² can be negative if the model performs worse than baseline!"
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
 "LogisticRegression": {
-    visualizer: "LogisticRegression",
+
    title: "Logistic Regression: From Lines to Probabilities",
    content: `
 <p><strong>Logistic Regression</strong> takes a linear model and squeezes the output through a sigmoid, converting it to a probability between 0 and 1.</p>
@@ -4534,59 +4534,59 @@ Recall = TP / (TP + FN)
   <li><strong>Outperforms often by trees</strong>: For complex data, ensemble methods beat it</li>
   </ul>
   `,
-  visualizer: "LogisticRegression",
-   interactiveFormulas: [
- {
- name: "Sigmoid Decision",
- parts: [
- { symbol: "P(y=1)", key: "prob", name: "Probability", description: "Probability of positive class" },
- { symbol: " = σ(", key: null },
- { symbol: "w·x + b", key: "logit", name: "Logit", description: "Raw linear score" },
- { symbol: ")", key: null }
- ],
- variables: [
- { key: "w", symbol: "w", name: "Weight", min: -5, max: 5, step: 0.1, default: 2.0, decimals: 1 },
- { key: "x", symbol: "x", name: "Input", min: -5, max: 5, step: 0.1, default: 0.5, decimals: 1 },
- { key: "b", symbol: "b", name: "Bias", min: -3, max: 3, step: 0.1, default: -1.0, decimals: 1 }
- ],
- calculate: (vals, get) => {
- const w = get("w", 2.0);
- const x = get("x", 0.5);
- const b = get("b", -1.0);
- const z = w * x + b;
- return 1 / (1 + Math.exp(-z));
- },
- insights: [
- "When z=0, sigmoid outputs exactly 0.5 (the decision boundary).",
- "Large positive z → probability near 1.0 (confident positive).",
- "Large negative z → probability near 0.0 (confident negative)."
- ]
- },
- {
- name: "Threshold Tuning",
- parts: [
- { symbol: "class", key: "class", name: "Predicted Class", description: "Based on threshold" },
- { symbol: " = P ≥ τ ? 1 : 0", key: "formula", name: "Decision Rule", description: "Compare probability to threshold" }
- ],
- variables: [
- { key: "prob", symbol: "P", name: "Probability", min: 0, max: 1, step: 0.01, default: 0.65, decimals: 2 },
- { key: "threshold", symbol: "τ", name: "Threshold", min: 0.1, max: 0.9, step: 0.05, default: 0.5, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const p = get("prob", 0.65);
- const t = get("threshold", 0.5);
- return p >= t ? "Class 1 " : "Class 0 ";
- },
- insights: [
- "τ=0.5 is the default. Lower it to catch more positives (higher recall).",
- "Raise τ to reduce false positives (higher precision).",
- "Medical screening: use low τ (don't miss diseases). Spam filter: use high τ (don't block good email)."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "BayesTheorem": {
-    visualizer: "BayesTheorem",
+
  title: "Bayes' Theorem: Updating Beliefs with Evidence",
  content: `
  <p><strong>Bayes' Theorem</strong> is the foundation of probabilistic reasoning. It tells us how to update our beliefs when new evidence arrives.</p>
@@ -4605,61 +4605,61 @@ Recall = TP / (TP + FN)
  <h4>Medical Example</h4>
  <p>If a test is 95% accurate (sensitivity), but the disease only affects 1% of people (prior), a positive test result doesn't mean you're 95% likely to be sick! Bayes tells you the true probability.</p>
  `,
- interactiveFormulas: [
- {
- name: "Medical Test Calculator",
- parts: [
- { symbol: "P(disease|+test)", key: "posterior", name: "Posterior", description: "Probability of disease given positive test" },
- { symbol: " = ", key: null },
- { symbol: "P(+|disease) × P(disease) / P(+)", key: "formula", name: "Bayes", description: "Prior × Likelihood / Evidence" }
- ],
- variables: [
- { key: "prior", symbol: "P(D)", name: "Disease Prevalence", min: 0.001, max: 0.3, step: 0.001, default: 0.01, decimals: 3 },
- { key: "sensitivity", symbol: "P(+|D)", name: "Sensitivity (TPR)", min: 0.5, max: 1.0, step: 0.01, default: 0.95, decimals: 2 },
- { key: "specificity", symbol: "P(-|¬D)", name: "Specificity (TNR)", min: 0.5, max: 1.0, step: 0.01, default: 0.90, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const prior = get("prior", 0.01);
- const sens = get("sensitivity", 0.95);
- const spec = get("specificity", 0.90);
- const fp = 1 - spec;
- const pPositive = sens * prior + fp * (1 - prior);
- return pPositive > 0 ? sens * prior / pPositive : 0;
- },
- insights: [
- "With 1% prevalence and 95% sensitivity, a positive test → only ~9% chance of disease!",
- "Base rate neglect is a common cognitive bias — Bayes corrects it.",
- "Higher prevalence (prior) dramatically increases posterior probability."
- ]
- },
- {
- name: "Prior Update (General)",
- parts: [
- { symbol: "P(H|E)", key: "posterior", name: "Posterior", description: "Updated belief" },
- { symbol: " = ", key: null },
- { symbol: "P(E|H) × P(H) / P(E)", key: "formula", name: "Formula", description: "Likelihood × Prior / Evidence" }
- ],
- variables: [
- { key: "prior", symbol: "P(H)", name: "Prior Belief", min: 0.01, max: 0.99, step: 0.01, default: 0.3, decimals: 2 },
- { key: "likelihood", symbol: "P(E|H)", name: "Likelihood", min: 0.01, max: 1.0, step: 0.01, default: 0.8, decimals: 2 },
- { key: "evidence", symbol: "P(E)", name: "Evidence", min: 0.01, max: 1.0, step: 0.01, default: 0.4, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const prior = get("prior", 0.3);
- const likelihood = get("likelihood", 0.8);
- const evidence = get("evidence", 0.4);
- return evidence > 0 ? (likelihood * prior / evidence) : 0;
- },
- insights: [
- "Strong evidence (high likelihood, low P(E)) shifts posterior dramatically.",
- "With equal prior and likelihood, posterior equals prior — no update.",
- "Bayesian inference is the foundation of spam filters, medical diagnosis, and Naive Bayes classifiers."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
 "RNN": {
-    visualizer: "RNN",
+
    title: "Recurrent Neural Networks: Memory in Sequences",
    content: `
 <p><strong>RNNs</strong> process sequences by maintaining a hidden state that acts as memory, updated at each time step.</p>
@@ -4680,63 +4680,63 @@ Recall = TP / (TP + FN)
   <li><strong>Slow training</strong>: Sequential nature limits hardware utilization</li>
   </ul>
   `,
-  visualizer: "RNN",
-   interactiveFormulas: [
- {
- name: "Hidden State Update",
- parts: [
- { symbol: "h_t", key: "ht", name: "Hidden State", description: "Current memory" },
- { symbol: " = tanh(", key: null },
- { symbol: "W_h × h_{t-1} + W_x × x_t", key: "formula", name: "Recurrence", description: "Combine past and present" },
- { symbol: ")", key: null }
- ],
- variables: [
- { key: "wh", symbol: "W_h", name: "Recurrent Weight", min: -2, max: 2, step: 0.1, default: 0.8, decimals: 1 },
- { key: "h_prev", symbol: "h_{t-1}", name: "Previous Hidden", min: -1, max: 1, step: 0.1, default: 0.5, decimals: 1 },
- { key: "wx", symbol: "W_x", name: "Input Weight", min: -2, max: 2, step: 0.1, default: 1.2, decimals: 1 },
- { key: "xt", symbol: "x_t", name: "Current Input", min: -1, max: 1, step: 0.1, default: 0.3, decimals: 1 }
- ],
- calculate: (vals, get) => {
- const wh = get("wh", 0.8);
- const hPrev = get("h_prev", 0.5);
- const wx = get("wx", 1.2);
- const xt = get("xt", 0.3);
- return Math.tanh(wh * hPrev + wx * xt);
- },
- insights: [
- "tanh squashes the output to [-1, 1], keeping the hidden state bounded.",
- "W_h controls how much past information is retained at each step.",
- "The same W_h and W_x are used at EVERY time step (weight sharing)."
- ]
- },
- {
- name: "Vanishing Gradient (BPTT)",
- parts: [
- { symbol: "∂L/∂h₀", key: "grad", name: "Gradient at t=0", description: "Signal reaching earliest step" },
- { symbol: " ≈ ", key: null },
- { symbol: "(W_h)^T × ∂L/∂h_T", key: "formula", name: "Chain Rule", description: "Multiplied T times" }
- ],
- variables: [
- { key: "wh", symbol: "W_h", name: "Weight Magnitude", min: 0.1, max: 2.0, step: 0.1, default: 0.7, decimals: 1 },
- { key: "T", symbol: "T", name: "Sequence Length", min: 1, max: 50, step: 1, default: 20, decimals: 0 },
- { key: "grad_T", symbol: "∂L/∂h_T", name: "Final Gradient", min: 0.1, max: 2, step: 0.1, default: 1.0, decimals: 1 }
- ],
- calculate: (vals, get) => {
- const w = get("wh", 0.7);
- const T = get("T", 20);
- const gT = get("grad_T", 1.0);
- return (gT * Math.pow(w, T)).toExponential(3);
- },
- insights: [
- "W=0.7 after 20 steps: gradient is 0.7²⁰ ≈ 0.0008 — vanished!",
- "W=1.5 after 20 steps: gradient is 1.5²⁰ ≈ 3325 — exploded!",
- "This is why LSTMs and GRUs were invented — they solve the vanishing gradient with gates."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
 "LSTM": {
-    visualizer: "LSTM",
+
    title: "LSTM: Long Short-Term Memory",
    content: `
 <p><strong>LSTM</strong> solves the vanishing gradient problem with three gates that control information flow through a cell state.</p>
@@ -4757,63 +4757,63 @@ Recall = TP / (TP + FN)
   <li><strong>Outperformed by transformers</strong>: For most NLP, attention is better</li>
   </ul>
   `,
-  visualizer: "LSTM",
-   interactiveFormulas: [
- {
- name: "Forget Gate",
- parts: [
- { symbol: "f_t", key: "forget", name: "Forget Gate", description: "How much to keep from past" },
- { symbol: " = σ(", key: null },
- { symbol: "W_f · [h, x] + b_f", key: "formula", name: "Gate Activation", description: "Sigmoid of weighted input" },
- { symbol: ")", key: null }
- ],
- variables: [
- { key: "wf_h", symbol: "W_f·h", name: "Past Contribution", min: -3, max: 3, step: 0.1, default: 0.5, decimals: 1 },
- { key: "wf_x", symbol: "W_f·x", name: "Input Contribution", min: -3, max: 3, step: 0.1, default: 1.2, decimals: 1 },
- { key: "bf", symbol: "b_f", name: "Forget Bias", min: -3, max: 3, step: 0.1, default: 1.0, decimals: 1 }
- ],
- calculate: (vals, get) => {
- const wfh = get("wf_h", 0.5);
- const wfx = get("wf_x", 1.2);
- const bf = get("bf", 1.0);
- return 1 / (1 + Math.exp(-(wfh + wfx + bf)));
- },
- insights: [
- "Bias is typically initialized to 1.0 — start by remembering everything.",
- "Gate output near 1.0 means 'keep this memory', near 0.0 means 'forget it'.",
- "The forget gate is the most important gate — it controls long-term memory."
- ]
- },
- {
- name: "Cell State Update",
- parts: [
- { symbol: "C_t", key: "cell", name: "Cell State", description: "Updated long-term memory" },
- { symbol: " = ", key: null },
- { symbol: "f_t × C_{t-1} + i_t × C̃_t", key: "formula", name: "Formula", description: "Forget old + add new" }
- ],
- variables: [
- { key: "ft", symbol: "f_t", name: "Forget Gate", min: 0, max: 1, step: 0.05, default: 0.8, decimals: 2 },
- { key: "c_prev", symbol: "C_{t-1}", name: "Previous Cell", min: -2, max: 2, step: 0.1, default: 1.5, decimals: 1 },
- { key: "it", symbol: "i_t", name: "Input Gate", min: 0, max: 1, step: 0.05, default: 0.6, decimals: 2 },
- { key: "ct_cand", symbol: "C̃_t", name: "Candidate", min: -2, max: 2, step: 0.1, default: 0.9, decimals: 1 }
- ],
- calculate: (vals, get) => {
- const ft = get("ft", 0.8);
- const cPrev = get("c_prev", 1.5);
- const it = get("it", 0.6);
- const ctCand = get("ct_cand", 0.9);
- return ft * cPrev + it * ctCand;
- },
- insights: [
- "f_t=1, i_t=0: cell state unchanged — perfect memory.",
- "f_t=0, i_t=1: cell state completely replaced — full reset.",
- "Additive cell update (not multiplicative) is why gradients don't vanish."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "KLDivergence": {
-    visualizer: "KLDivergence",
+
  title: "KL Divergence: Measuring Distribution Mismatch",
  content: `
  <p><strong>KL Divergence</strong> measures how one probability distribution differs from another. It's central to VAEs, diffusion models, and RLHF.</p>
@@ -4849,56 +4849,56 @@ Recall = TP / (TP + FN)
   <li><strong>Scale sensitivity</strong>: Value depends on how probabilities are represented</li>
   </ul>
   `,
-  interactiveFormulas: [
- {
- name: "Gaussian KL Divergence",
- parts: [
- { symbol: "D_KL(P||Q)", key: "kl", name: "KL Mismatch", description: "Information gain" }
- ],
- variables: [
- { key: "muP", symbol: "μ_P", name: "Target Mean", min: -2, max: 2, step: 0.1, default: 0, decimals: 1 },
- { key: "sigmaP", symbol: "σ_P", name: "Target Std", min: 0.5, max: 2, step: 0.1, default: 1.0, decimals: 1 },
- { key: "muQ", symbol: "μ_Q", name: "Model Mean", min: -2, max: 2, step: 0.1, default: 1.0, decimals: 1 },
- { key: "sigmaQ", symbol: "σ_Q", name: "Model Std", min: 0.5, max: 2, step: 0.1, default: 1.2, decimals: 1 }
- ],
- calculate: (vals, get) => {
- const s0 = get("sigmaP", 1.0), s1 = get("sigmaQ", 1.2), m0 = get("muP", 0), m1 = get("muQ", 1.0);
- return (Math.log(s1/s0) + (s0*s0 + (m0-m1)**2)/(2*s1*s1) - 0.5).toFixed(3);
- },
- insights: [
- "KL is zero when both distributions match perfectly.",
- "Larger mismatch in mean or variance increases the 'penalty'.",
- "Minimizing this value forces the model to mimic the truth." 
- ]
- },
- {
- name: "ELBO (VAE Loss)",
- parts: [
- { symbol: "ELBO", key: "elbo", name: "Evidence Lower Bound", description: "VAE training objective" },
- { symbol: " = ", key: null },
- { symbol: "recon_loss + β × KL", key: "formula", name: "Formula", description: "Reconstruction + regularization" }
- ],
- variables: [
- { key: "recon", symbol: "L_recon", name: "Recon Loss", min: 0, max: 10, step: 0.1, default: 2.5, decimals: 1 },
- { key: "kl", symbol: "KL", name: "KL Term", min: 0, max: 5, step: 0.1, default: 1.2, decimals: 1 },
- { key: "beta", symbol: "β", name: "Beta Weight", min: 0, max: 5, step: 0.1, default: 1.0, decimals: 1 }
- ],
- calculate: (vals, get) => {
- const recon = get("recon", 2.5);
- const kl = get("kl", 1.2);
- const beta = get("beta", 1.0);
- return recon + beta * kl;
- },
- insights: [
- "β=1: Standard VAE. β>1: β-VAE (disentangled representations).",
- "High KL penalty → latent space is smooth but reconstructions are blurry.",
- "Low KL penalty → sharp reconstructions but latent space has holes."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
  "Interpretability": {
-    visualizer: "NeuralNetwork",
+
  title: "Model Interpretability: Why Did the Model Decide That?",
  content: `
  <p><strong>Interpretability</strong> methods explain WHY a model makes a prediction. Critical for medical, legal, and safety-critical applications.</p>
@@ -4934,52 +4934,52 @@ Recall = TP / (TP + FN)
   <li><strong>Trade-off with accuracy</strong>: Interpretable models often less accurate</li>
   </ul>
   `,
-  interactiveFormulas: [
- {
- name: "Feature Importance (Simplified SHAP)",
- parts: [
- { symbol: "φᵢ", key: "shap", name: "SHAP Value", description: "Feature i's contribution to prediction" },
- { symbol: " = ", key: null },
- { symbol: "f(with feature) - f(without)", key: "formula", name: "Marginal Contribution", description: "Impact of adding feature" }
- ],
- variables: [
- { key: "f_with", symbol: "f(+)", name: "Prediction With", min: 0, max: 1, step: 0.01, default: 0.85, decimals: 2 },
- { key: "f_without", symbol: "f(-)", name: "Prediction Without", min: 0, max: 1, step: 0.01, default: 0.60, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const fWith = get("f_with", 0.85);
- const fWithout = get("f_without", 0.60);
- return fWith - fWithout;
- },
- insights: [
- "Positive SHAP = feature pushes prediction higher (toward positive class).",
- "Negative SHAP = feature pushes prediction lower.",
- "Sum of all SHAP values = (prediction) - (base value). They always add up!"
- ]
- },
- {
- name: "Gradient Saliency",
- parts: [
- { symbol: "saliency", key: "sal", name: "Pixel Importance", description: "Gradient magnitude per pixel" },
- { symbol: " = |", key: null },
- { symbol: "∂output / ∂pixel", key: "formula", name: "Gradient", description: "How much output changes per pixel change" },
- { symbol: "|", key: null }
- ],
- variables: [
- { key: "grad", symbol: "∂y/∂x", name: "Raw Gradient", min: -5, max: 5, step: 0.1, default: 2.3, decimals: 1 },
- { key: "pixel", symbol: "x", name: "Pixel Value", min: 0, max: 1, step: 0.01, default: 0.8, decimals: 2 }
- ],
- calculate: (vals, get) => {
- const grad = get("grad", 2.3);
- return Math.abs(grad);
- },
- insights: [
- "High |gradient| = small change in this pixel greatly affects classification.",
- "Saliency maps can be noisy — SmoothGrad averages over perturbations.",
- "Grad-CAM uses gradients at conv layers for more localized explanations."
- ]
- }
- ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  },
 "MLHistory": {
   title: "A Brief History of Machine Learning",
@@ -5035,33 +5035,33 @@ Recall = TP / (TP + FN)
   • <strong>Theory meets practice:</strong> SVM theory existed in 1960s but became practical in 1990s.<br/>
   • <strong>Open weights accelerate progress:</strong> ImageNet, Llama, Stable Diffusion democratized AI.</p>
   `,
-  interactiveFormulas: [
-  {
-    name: "Training Time Comparison (AlexNet vs Modern)",
-    parts: [
-      { symbol: "speedup", key: "speed", name: "GPU Speedup", description: "Time saved by modern hardware" },
-      { symbol: " = (GPU_2012 / GPU_2024) × (opt_2024 / opt_2012)", key: "formula", name: "Formula", description: "Hardware × software gains" }
-    ],
-    variables: [
-      { key: "gpu2012", symbol: "GPU_2012", name: "AlexNet Time", min: 1, max: 14, step: 1, default: 6, decimals: 0 },
-      { key: "gpu2024", symbol: "GPU_2024", name: "Modern Time", min: 0.001, max: 0.5, step: 0.001, default: 0.02, decimals: 3 },
-      { key: "opt2012", symbol: "opt_2012", name: "Old Optimizer", min: 0.5, max: 2, step: 0.1, default: 1, decimals: 1 },
-      { key: "opt2024", symbol: "opt_2024", name: "Adam/AdamW", min: 1, max: 5, step: 0.1, default: 2, decimals: 1 }
-    ],
-    calculate: (vals, get) => {
-      const g12 = get("gpu2012", 6);
-      const g24 = get("gpu2024", 0.02);
-      const o12 = get("opt2012", 1);
-      const o24 = get("opt2024", 2);
-      return ((g12 / g24) * (o24 / o12)).toFixed(0) + "x faster";
-    },
-    insights: [
-      "Modern GPUs (A100, H100) are 300x faster than K20x used for AlexNet.",
-      "Adam converges 2-3x faster than vanilla SGD.",
-      "Combined: ~3000x speedup enables training that took weeks in days."
-    ]
-  }
-  ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   },
   "ActivationAdvanced": {
     visualizer: "Activation",
