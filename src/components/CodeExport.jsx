@@ -11,12 +11,7 @@ export function CodeExport({ structure, hyperparams }) {
 
     if (!isOpen) {
         return (
-            <button
-                className="btn-code"
-                onClick={() => setIsOpen(true)}
-                aria-expanded={isOpen}
-                aria-controls="code-export-modal"
-            >
+            <button className="btn-code" onClick={() => setIsOpen(true)}>
                 &lt;/&gt; Show Code <Tooltip word="Export" overrideText="View the code to build this model" />
             </button>
         );
@@ -74,10 +69,10 @@ export function CodeExport({ structure, hyperparams }) {
 
     return (
         <div className="code-modal-overlay">
-            <div className="code-modal" id="code-export-modal" role="dialog" aria-modal="true" aria-labelledby="code-export-title">
+            <div className="code-modal">
                 <div className="modal-header">
-                    <h3 id="code-export-title">Export Model Code</h3>
-                    <button className="close" onClick={() => setIsOpen(false)} aria-label="Close code export modal">×</button>
+                    <h3>Export Model Code</h3>
+                    <button className="close" onClick={() => setIsOpen(false)}>×</button>
                 </div>
 
                 <div className="lang-tabs">
