@@ -1,0 +1,4 @@
+## 2026-06-22 - DOMPurify Configuration for XSS Protection
+**Vulnerability:** XSS vulnerability via `dangerouslySetInnerHTML` rendering un-sanitized content from `MATH_TOPICS` in `src/components/MathModal.jsx`.
+**Learning:** When using `DOMPurify` to sanitize dynamic HTML content like lessons that include special tags (e.g., `<math>`, `<svg>`, `<iframe>`), the default configuration may aggressively strip these necessary elements. Explicitly configuring `DOMPurify.sanitize(data, { ADD_TAGS: ['math', 'svg', 'iframe', 'mrow', 'mi', 'mn', 'mo'], ADD_ATTR: ['allowfullscreen', 'allow'] })` is required to retain legitimate content while protecting against malicious scripts.
+**Prevention:** Always sanitize data passed to `dangerouslySetInnerHTML`. Configure the sanitization tool appropriately if special tags or attributes are necessary for the UI components.
