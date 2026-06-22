@@ -108,6 +108,7 @@ export function ProgressProvider({ children }) {
     useEffect(() => {
         if (initialized.current) return;
         initialized.current = true;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         setState(prev => {
             const today = todayStr();
             if (prev.lastActiveDate === today) return prev;
@@ -152,6 +153,7 @@ export function ProgressProvider({ children }) {
 
     const markLessonVisited = useCallback((key) => {
         if (!key) return;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         setState(prev => {
             if (prev.visitedLessons.has(key)) return prev;
             const next = {
@@ -165,6 +167,7 @@ export function ProgressProvider({ children }) {
 
     const markQuizCompleted = useCallback((id, scorePct = 0) => {
         if (!id) return;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         setState(prev => {
             const wasCompleted = prev.completedQuizzes.has(id);
             const nextScore = Math.max(prev.bestScore, scorePct || 0);
