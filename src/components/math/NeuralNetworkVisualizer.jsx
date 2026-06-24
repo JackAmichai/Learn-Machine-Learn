@@ -1,13 +1,3 @@
-const Cell = ({ value, highlight, color = '#00f2ff' }) => (
-        <div className="mm-cell" style={{
-            background: highlight ? `${color}22` : 'rgba(255,255,255,0.04)',
-            borderColor: highlight ? color : 'rgba(255,255,255,0.08)',
-            color: highlight ? color : 'var(--text-secondary)',
-            fontWeight: highlight ? 700 : 400,
-        }}>
-            {typeof value === 'number' ? value.toFixed(2) : value}
-        </div>
-    );
 import React, { useState, useEffect } from 'react';
 
 export default function NeuralNetworkVisualizer({ values = {} }) {
@@ -17,10 +7,10 @@ export default function NeuralNetworkVisualizer({ values = {} }) {
   // Sync with external values if they change
   useEffect(() => {
     if (values.nodes !== undefined) {
-      setLayers([layers[0], values.nodes, layers[2]]);
+      setTimeout(() => setLayers(l => [l[0], values.nodes, l[2]]), 0);
     }
     if (values.hiddenNodes !== undefined) {
-      setLayers([layers[0], values.hiddenNodes, layers[2]]);
+      setTimeout(() => setLayers(l => [l[0], values.hiddenNodes, l[2]]), 0);
     }
   }, [values.nodes, values.hiddenNodes]);
 
