@@ -17,7 +17,7 @@ import React from 'react';
  */
 
 /* ---------- 1. ENCODER → LATENT → DECODER ---------- */
-function EncoderDecoderTile() {
+function EncoderDecoderTileComp() {
     const layers = [12, 8, 4, 2, 4, 8, 12];
     const W = 360, H = 180;
     const padX = 18, padY = 14;
@@ -91,7 +91,7 @@ function EncoderDecoderTile() {
 }
 
 /* ---------- 2. SELF-ATTENTION (TOKEN MESH) ---------- */
-function AttentionTile() {
+function AttentionTileComp() {
     const W = 360, H = 180;
     const tokens = ['The', 'cat', 'sat', 'on', 'the', 'mat'];
     const padX = 22, padY = 30;
@@ -167,7 +167,7 @@ function AttentionTile() {
 }
 
 /* ---------- 3. CNN FEATURE MAP STACK ---------- */
-function CNNTile() {
+function CNNTileComp() {
     const W = 360, H = 180;
     // Three stacks of feature maps, shrinking spatially, growing in depth
     const stacks = [
@@ -231,7 +231,7 @@ function CNNTile() {
 }
 
 /* ---------- 4. DIFFUSION: NOISE → IMAGE ---------- */
-function DiffusionTile() {
+function DiffusionTileComp() {
     const W = 360, H = 180;
     const stages = 5;
     const tileW = 50, tileH = 50;
@@ -310,10 +310,10 @@ function DiffusionTile() {
 /* ---------- COMPOSITE GALLERY ---------- */
 export function LandingHeroVisuals() {
     const items = [
-        { id: 'autoencoder', title: 'Encoder → Decoder', subtitle: 'Compress information into a tiny latent — then reconstruct it.', Tile: EncoderDecoderTile },
-        { id: 'attention', title: 'Self-Attention', subtitle: 'Each token decides which other tokens matter to it.', Tile: AttentionTile },
-        { id: 'cnn', title: 'Convolutional Stacks', subtitle: 'Layer by layer, edges become shapes — shapes become objects.', Tile: CNNTile },
-        { id: 'diffusion', title: 'Diffusion', subtitle: 'Start from noise, denoise step by step until an image appears.', Tile: DiffusionTile },
+        { id: 'autoencoder', title: 'Encoder → Decoder', subtitle: 'Compress information into a tiny latent — then reconstruct it.', TileComp: EncoderDecoderTileComp },
+        { id: 'attention', title: 'Self-Attention', subtitle: 'Each token decides which other tokens matter to it.', TileComp: AttentionTileComp },
+        { id: 'cnn', title: 'Convolutional Stacks', subtitle: 'Layer by layer, edges become shapes — shapes become objects.', TileComp: CNNTileComp },
+        { id: 'diffusion', title: 'Diffusion', subtitle: 'Start from noise, denoise step by step until an image appears.', TileComp: DiffusionTileComp },
     ];
 
     return (
@@ -329,9 +329,9 @@ export function LandingHeroVisuals() {
                 </p>
 
                 <div className="hv-grid">
-                    {items.map(({ id, title, subtitle, Tile }) => (
+                    {items.map(({ id, title, subtitle, TileComp }) => (
                         <article key={id} className="hv-card">
-                            <div className="hv-tile"><Tile /></div>
+                            <div className="hv-tile"><TileCompComp /></div>
                             <div className="hv-meta">
                                 <h3>{title}</h3>
                                 <p>{subtitle}</p>
