@@ -1,0 +1,4 @@
+## 2026-06-24 - XSS via dangerouslySetInnerHTML
+**Vulnerability:** XSS vulnerability through multiple uses of `dangerouslySetInnerHTML` across components (MathModal, LookingForward).
+**Learning:** React's dangerouslySetInnerHTML takes an object with an __html key. We need to sanitize any data going into this key. `MATH_TOPICS` data structure in `src/engine/mathContent.js` contains raw HTML which gets injected directly into the DOM using `dangerouslySetInnerHTML`. If this content were user-provided or tampered with, it would lead to XSS.
+**Prevention:** Always use a sanitization library like DOMPurify when rendering raw HTML string via `dangerouslySetInnerHTML`. When using DOMPurify with math contexts, consider using the `{ ADD_TAGS: ['math', 'svg', 'iframe', 'mrow', 'mi', 'mn', 'mo'], ADD_ATTR: ['allowfullscreen', 'allow'] }` configuration to preserve legitimate elements.
