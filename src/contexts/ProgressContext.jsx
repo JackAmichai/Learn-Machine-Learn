@@ -108,7 +108,7 @@ export function ProgressProvider({ children }) {
     useEffect(() => {
         if (initialized.current) return;
         initialized.current = true;
-        setState(prev => {
+        setTimeout(() => setState(prev => {
             const today = todayStr();
             if (prev.lastActiveDate === today) return prev;
             const delta = daysBetween(prev.lastActiveDate, today);
