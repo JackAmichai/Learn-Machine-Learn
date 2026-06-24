@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import DOMPurify from 'dompurify';
 import { Footer } from '../components/Footer';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { AccessibilityPanel } from '../components/AccessibilityPanel';
@@ -616,19 +617,19 @@ export function LookingForward() {
                       <Visualizer />
                     </div>
                     
-                    <div className="lesson-content" dangerouslySetInnerHTML={{ __html: lesson.content }} />
+                    <div className="lesson-content" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(lesson.content, { ADD_TAGS: ['math', 'svg', 'iframe', 'mrow', 'mi', 'mn', 'mo'], ADD_ATTR: ['allowfullscreen', 'allow'] }) }} />
                     
                     {lesson.solved && (
                       <div className="lesson-section solved-section">
                         <h4>✅ What This Solved</h4>
-                        <div dangerouslySetInnerHTML={{ __html: lesson.solved }} />
+                        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(lesson.solved, { ADD_TAGS: ['math', 'svg', 'iframe', 'mrow', 'mi', 'mn', 'mo'], ADD_ATTR: ['allowfullscreen', 'allow'] }) }} />
                       </div>
                     )}
                     
                     {lesson.shortcomings && (
                       <div className="lesson-section shortcomings-section">
                         <h4>⚠️ Current Shortcomings</h4>
-                        <div dangerouslySetInnerHTML={{ __html: lesson.shortcomings }} />
+                        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(lesson.shortcomings, { ADD_TAGS: ['math', 'svg', 'iframe', 'mrow', 'mi', 'mn', 'mo'], ADD_ATTR: ['allowfullscreen', 'allow'] }) }} />
                       </div>
                     )}
                     
