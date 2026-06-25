@@ -1,4 +1,5 @@
 import { useState, useContext } from 'react';
+import DOMPurify from 'dompurify';
 import { MATH_TOPICS } from '../engine/mathContent';
 import { VisualizerRegistry } from './math/VisualizerRegistry';
 import { PersonalizationContext } from '../contexts/PersonalizationContext';
@@ -88,7 +89,8 @@ export function MathModal({ topic, onClose, onComplete }) {
  <SummaryView data={data} />
  ) : (
  <>
- <div className={`math-body ${!presentation.showMath ? 'visual-only' : ''}`} dangerouslySetInnerHTML={{ __html: data.content }} />
+ {/* 🛡️ Sentinel: Sanitize HTML content to prevent XSS using builtin profiles */}
+ <div className={`math-body ${!presentation.showMath ? 'visual-only' : ''}`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data.content, { USE_PROFILES: { mathMl: true, svg: true }, ADD_TAGS: ['iframe'], ADD_ATTR: ['allowfullscreen', 'allow'] }) }} />
 
   {/* Custom Visualizer Section */}
   {Visualizer && (
@@ -101,7 +103,8 @@ export function MathModal({ topic, onClose, onComplete }) {
   {data.solved && (
   <div className="lesson-section solved-section">
     <h4>✅ What This Solved</h4>
-    <div dangerouslySetInnerHTML={{ __html: data.solved }} />
+    {/* 🛡️ Sentinel: Sanitize HTML content to prevent XSS using builtin profiles */}
+    <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data.solved, { USE_PROFILES: { mathMl: true, svg: true }, ADD_TAGS: ['iframe'], ADD_ATTR: ['allowfullscreen', 'allow'] }) }} />
   </div>
   )}
 
@@ -109,7 +112,8 @@ export function MathModal({ topic, onClose, onComplete }) {
   {data.shortcomings && (
   <div className="lesson-section shortcomings-section">
     <h4>⚠️ Current Shortcomings</h4>
-    <div dangerouslySetInnerHTML={{ __html: data.shortcomings }} />
+    {/* 🛡️ Sentinel: Sanitize HTML content to prevent XSS using builtin profiles */}
+    <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data.shortcomings, { USE_PROFILES: { mathMl: true, svg: true }, ADD_TAGS: ['iframe'], ADD_ATTR: ['allowfullscreen', 'allow'] }) }} />
   </div>
   )}
 
