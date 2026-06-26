@@ -1,0 +1,218 @@
+--- src/engine/mathContent.js
++++ src/engine/mathContent.js
+@@ -32,7 +32,6 @@
+     <li><strong>Weights (<math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>W</mi><mi>i</mi></msub></math>):</strong> Act as "volume knobs." A high weight means the connection is strong and highly influential.</li>
+     <li><strong>Bias (<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>b</mi></math>):</strong> An offset that shifts the activation function, helping the model fit the data better.</li>
+   </ul>
+-  `,
+-  visualizer: "NeuralNetwork",
+   },
+   "MathIntro": {
+     visualizer: "LinearRegression",
+@@ -169,7 +168,6 @@
+     <li>Use a <strong>smaller learning rate</strong> for finer, more precise steps.</li>
+     <li>If the loss jumps around too much, your learning rate might be too high!</li>
+   </ul>
+-  `,
+-  visualizer: "GradientDescent"
+   },
+   "Epoch": {
+     title: "Epoch: One Full Cycle",
+@@ -203,7 +201,6 @@
+     <li>Too few epochs (underfitting): The model hasn’t learned enough.</li>
+     <li>Too many epochs (overfitting): The model memorizes the training data but fails on new data.</li>
+   </ul>
+-  `,
+-  visualizer: "TrainingCurve"
+   },
+   "Loss": {
+     title: "Loss: The Error Signal",
+@@ -289,8 +286,7 @@
+     <li>In <strong>Mean Squared Error (MSE)</strong>, the loss is exactly the area of the squares formed by these vertical error lines.</li>
+     <li>Our goal in training is to adjust the model to make these error squares as small as possible on average.</li>
+   </ul>
+-  `,
+-  visualizer: "LossVisualizer",
+-  interactiveFormulas: true
+   },
+   "LearningRate": {
+     title: "Learning Rate: The Step Size",
+@@ -360,7 +356,6 @@
+     <li>A learning rate of <strong>0.01</strong> is a common starting point.</li>
+     <li>Learning Rate Schedules (like "Decay") start large and slowly decrease the step size as training progresses.</li>
+   </ul>
+-  `,
+-  visualizer: "GradientDescent"
+   },
+   "ActivationFunction": {
+     title: "Activation Function: Adding Non-Linearity",
+@@ -390,7 +385,6 @@
+     <li>The result is the final output of the node.</li>
+     <li>Without this function, a neural network is just a giant linear regression model, no matter how many layers it has.</li>
+   </ul>
+-  `,
+-  visualizer: "ActivationVisualizer"
+   },
+   "ReLU": {
+     title: "ReLU: Rectified Linear Unit",
+@@ -449,7 +443,6 @@
+     <li>The gradient is simply 1 for <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>x</mi><mo>&gt;</mo><mn>0</mn></math>, making it easy for the model to update weights.</li>
+     <li>However, if a node's output drops below zero, it "dies" and stops learning (the "Dying ReLU" problem).</li>
+   </ul>
+-  `,
+-  visualizer: "ActivationVisualizer"
+   },
+   "Sigmoid": {
+     title: "Sigmoid: The Probability Curve",
+@@ -503,7 +496,6 @@
+     <li>It maps large positive numbers close to 1, and large negative numbers close to 0.</li>
+     <li>A major drawback is the <strong>Vanishing Gradient Problem</strong>: for very high or very low inputs, the curve is almost flat, meaning the gradient is near zero and learning stalls.</li>
+   </ul>
+-  `,
+-  visualizer: "ActivationVisualizer"
+   },
+   "Tanh": {
+     title: "Tanh: Hyperbolic Tangent",
+@@ -558,7 +550,6 @@
+     <li>The math is related to Sigmoid: <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>t</mi><mi>a</mi><mi>n</mi><mi>h</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><mn>2</mn><mo>·</mo><mi>σ</mi><mo>(</mo><mn>2</mn><mi>x</mi><mo>)</mo><mo>-</mo><mn>1</mn></math>.</li>
+     <li>It also suffers from the vanishing gradient problem, just like Sigmoid.</li>
+   </ul>
+-  `,
+-  visualizer: "ActivationVisualizer"
+   },
+   "HiddenLayer": {
+     title: "Hidden Layer: Finding Patterns",
+@@ -864,7 +855,6 @@
+     <li>A single hidden layer can approximate any continuous function (Universal Approximation Theorem), provided it has enough nodes.</li>
+     <li>In modern Deep Learning, we stack many hidden layers to learn complex, hierarchical patterns.</li>
+   </ul>
+-  `,
+-  visualizer: "NeuralNetworkVisualizer"
+   },
+   "OutputLayer": {
+     title: "Output Layer: The Final Decision",
+@@ -1027,7 +1017,6 @@
+     <li>For Multi-Class Classification, you usually have one node per class and use a <strong>Softmax</strong> activation to get probabilities that sum to 1.</li>
+     <li>For Regression (predicting a continuous value), you typically have a single node with a <strong>Linear</strong> (no-op) activation.</li>
+   </ul>
+-  `,
+-  visualizer: "NeuralNetworkVisualizer"
+   },
+   "MatrixMultiplication": {
+     title: "Matrix Multiplication: The Core Engine",
+@@ -1275,7 +1264,6 @@
+     <li>To multiply two matrices, their inner dimensions must match: <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>(</mo><mi>m</mi><mo>×</mo><mi>n</mi><mo>)</mo><mo>·</mo><mo>(</mo><mi>n</mi><mo>×</mo><mi>p</mi><mo>)</mo><mo>=</mo><mo>(</mo><mi>m</mi><mo>×</mo><mi>p</mi><mo>)</mo></math>.</li>
+     <li>This operation is highly parallelizable, which is why Neural Networks are trained on GPUs!</li>
+   </ul>
+-  `,
+-  visualizer: "MatMulVisualizer"
+   },
+   "Gradient": {
+     title: "Gradient: The Direction of Steepest Ascent",
+@@ -2078,7 +2066,6 @@
+     <li>If a weight's gradient is positive, increasing the weight increases the loss. Therefore, we subtract the gradient to decrease the loss.</li>
+     <li>The negative gradient <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>-</mo><mo>∇</mo><mi>L</mi></math> points to the direction of steepest <strong>descent</strong>.</li>
+   </ul>
+-  `,
+-  visualizer: "GradientVisualizer"
+   },
+   "ChainRule": {
+     title: "Chain Rule: Unlocking Backpropagation",
+@@ -2212,7 +2199,6 @@
+     <li>In Neural Networks, we want to know how a weight deep inside the network affects the final Loss: <math xmlns="http://www.w3.org/1998/Math/MathML"><mfrac><mrow><mo>∂</mo><mi>L</mi></mrow><mrow><mo>∂</mo><mi>w</mi></mrow></mfrac></math>.</li>
+     <li>Backpropagation is simply applying the Chain Rule backwards from the output layer to the input layer.</li>
+   </ul>
+-  `,
+-  visualizer: "ChainRuleVisualizer"
+   },
+   "PCA": {
+     title: "PCA: Principal Component Analysis",
+@@ -2891,7 +2877,6 @@
+     <li>Data is centered around the origin (mean subtraction).</li>
+     <li>Eigenvectors determine the new axes (Principal Components).</li>
+   </ul>
+-  `,
+-  visualizer: "PCAVisualizer"
+   },
+   "TSNE": {
+     title: "t-SNE: Visualizing High Dimensions",
+@@ -2939,7 +2924,6 @@
+     <li>t-SNE calculates probability distributions over pairs of high-dimensional objects based on their similarity.</li>
+     <li>It then defines a similar probability distribution in a low-dimensional space and minimizes the Kullback-Leibler (KL) divergence between the two distributions.</li>
+   </ul>
+-  `,
+-  visualizer: "TSNEVisualizer"
+   },
+   "WordEmbeddings": {
+     title: "Word Embeddings: Meaning in Math",
+@@ -2992,7 +2976,6 @@
+     <li>This allows models to capture semantic relationships.</li>
+     <li>Famous equation: <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>K</mi><mi>i</mi><mi>n</mi><mi>g</mi><mo>-</mo><mi>M</mi><mi>a</mi><mi>n</mi><mo>+</mo><mi>W</mi><mi>o</mi><mi>m</mi><mi>a</mi><mi>n</mi><mo>≈</mo><mi>Q</mi><mi>u</mi><mi>e</mi><mi>e</mi><mi>n</mi></math>.</li>
+   </ul>
+-  `,
+-  visualizer: "EmbeddingVisualizer"
+   },
+   "SelfAttention": {
+     title: "Self-Attention: The Core of Transformers",
+@@ -3063,7 +3046,6 @@
+     <li>The output is a weighted sum of the Values, where the weights are the attention scores.</li>
+     <li>This mechanism allows the model to capture long-range dependencies efficiently.</li>
+   </ul>
+-  `,
+-  visualizer: "AttentionVisualizer"
+   },
+   "Convolution": {
+     title: "Convolution: Sliding Filters",
+@@ -3188,7 +3170,6 @@
+     <li>Early layers learn simple features (edges, corners).</li>
+     <li>Deeper layers learn complex patterns (faces, cars).</li>
+   </ul>
+-  `,
+-  visualizer: "ConvolutionVisualizer"
+   },
+   "Q_Learning": {
+     title: "Q-Learning: Learning from Rewards",
+@@ -3324,7 +3305,6 @@
+     <li>The agent balances <strong>Exploration</strong> (trying new things) and <strong>Exploitation</strong> (using known good actions).</li>
+     <li>The Q-table converges to the optimal policy over time.</li>
+   </ul>
+-  `,
+-  visualizer: "RLVisualizer"
+   },
+   "Tensors": {
+     title: "Tensors: The Data Containers of ML",
+@@ -4462,7 +4442,6 @@
+     <li><strong>Rank 2 Tensor (Matrix):</strong> A 2D grid. (e.g., A grayscale image).</li>
+     <li><strong>Rank 3+ Tensor:</strong> Higher dimensions. (e.g., An RGB image is a Rank 3 tensor).</li>
+   </ul>
+-  `,
+-  visualizer: "TensorVisualizer"
+   },
+   "Softmax": {
+     title: "Softmax: Turning Outputs into Probabilities",
+@@ -4534,7 +4513,6 @@
+     <li>Unlike Sigmoid (which is independent per node), Softmax considers all outputs together. If one probability goes up, the others must go down.</li>
+     <li>This makes it the standard activation function for the final layer of Multi-Class Classification networks.</li>
+   </ul>
+-  `,
+-  visualizer: "SoftmaxVisualizer"
+   },
+   "Dropout": {
+     title: "Dropout: Preventing Overfitting",
+@@ -4680,7 +4658,6 @@
+     <li><strong>During Training:</strong> A random subset of neurons is "dropped" (set to 0) in each forward pass. This forces the network to distribute its learning and prevents it from relying too heavily on any single neuron.</li>
+     <li><strong>During Inference (Testing):</strong> No neurons are dropped. Instead, the weights are scaled down to account for the fact that all neurons are now active.</li>
+   </ul>
+-  `,
+-  visualizer: "DropoutVisualizer"
+   },
+   "BatchNorm": {
+     title: "Batch Normalization: Stabilizing Training",
+@@ -4757,7 +4734,6 @@
+     <li><strong>Reduces Internal Covariate Shift:</strong> It ensures that the input to each layer has a consistent distribution, which prevents gradients from vanishing or exploding as easily.</li>
+     <li><strong>Allows Higher Learning Rates:</strong> Because the network is more stable, we can train it faster.</li>
+   </ul>
+-  `,
+-  visualizer: "BatchNormVisualizer"
+   }
+ };

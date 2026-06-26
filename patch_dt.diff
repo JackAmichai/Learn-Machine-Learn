@@ -1,0 +1,10 @@
+--- src/engine/mathContent.js
++++ src/engine/mathContent.js
+@@ -280,6 +280,8 @@
+   </ul>
+   `,
++  },
++  "DecisionTree": {
++  title: "Decision Trees",
+  content: `
+  <p><strong>Decision Trees</strong> split data based on feature values to maximize 'purity' (homogeneity) in the resulting subsets — producing a flowchart of yes/no questions that ends in a prediction.</p>
