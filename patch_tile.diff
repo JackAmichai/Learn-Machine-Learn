@@ -1,0 +1,22 @@
+--- src/components/LandingHeroVisuals.jsx
++++ src/components/LandingHeroVisuals.jsx
+@@ -329,9 +329,9 @@
+                 </p>
+
+                 <div className="hv-grid">
+-                    {items.map(({ id, title, subtitle, tileComponent: Tile }) => (
++                    {items.map(({ id, title, subtitle, tileComponent }) => {
++                        const TileComponent = tileComponent;
++                        return (
+                         <article key={id} className="hv-card">
+-                            <div className="hv-tile"><Tile /></div>
++                            <div className="hv-tile"><TileComponent /></div>
+                             <div className="hv-meta">
+                                 <h3>{title}</h3>
+                                 <p>{subtitle}</p>
+                             </div>
+                         </article>
+-                    ))}
++                    )})}
+                 </div>
+             </div>

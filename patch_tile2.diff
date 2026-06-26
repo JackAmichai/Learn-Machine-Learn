@@ -1,0 +1,17 @@
+--- src/components/LandingHeroVisuals.jsx
++++ src/components/LandingHeroVisuals.jsx
+@@ -310,10 +310,10 @@
+ /* ---------- COMPOSITE GALLERY ---------- */
+ export function LandingHeroVisuals() {
+     const items = [
+-        { id: 'autoencoder', title: 'Encoder → Decoder', subtitle: 'Compress information into a tiny latent — then reconstruct it.', Tile: EncoderDecodertileComponent: Tile },
+-        { id: 'attention', title: 'Self-Attention', subtitle: 'Each token decides which other tokens matter to it.', Tile: AttentiontileComponent: Tile },
+-        { id: 'cnn', title: 'Convolutional Stacks', subtitle: 'Layer by layer, edges become shapes — shapes become objects.', Tile: CNNtileComponent: Tile },
+-        { id: 'diffusion', title: 'Diffusion', subtitle: 'Start from noise, denoise step by step until an image appears.', Tile: DiffusiontileComponent: Tile },
++        { id: 'autoencoder', title: 'Encoder → Decoder', subtitle: 'Compress information into a tiny latent — then reconstruct it.', tileComponent: EncoderDecoderTile },
++        { id: 'attention', title: 'Self-Attention', subtitle: 'Each token decides which other tokens matter to it.', tileComponent: AttentionTile },
++        { id: 'cnn', title: 'Convolutional Stacks', subtitle: 'Layer by layer, edges become shapes — shapes become objects.', tileComponent: CNNTile },
++        { id: 'diffusion', title: 'Diffusion', subtitle: 'Start from noise, denoise step by step until an image appears.', tileComponent: DiffusionTile },
+     ];
+
+     return (
