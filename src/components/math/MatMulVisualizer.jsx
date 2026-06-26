@@ -36,7 +36,7 @@ export default function MatMulVisualizer({ values = {} }) {
     const A = [[a11, a12], [a21, a22]];
     const B = [[b11, b12], [b21, b22]];
 
-    const Cell = ({ value, highlight, color = '#00f2ff' }) => (
+    const renderCell = (value, highlight, color = '#00f2ff') => (
         <div className="mm-cell" style={{
             background: highlight ? `${color}22` : 'rgba(255,255,255,0.04)',
             borderColor: highlight ? color : 'rgba(255,255,255,0.08)',
@@ -56,10 +56,10 @@ export default function MatMulVisualizer({ values = {} }) {
                 <div className="mm-block">
                     <div className="mm-label">A</div>
                     <div className="mm-grid">
-                        <Cell value={A[0][0]} highlight={focus.i === 0} color="#00f2ff" />
-                        <Cell value={A[0][1]} highlight={focus.i === 0} color="#00f2ff" />
-                        <Cell value={A[1][0]} highlight={focus.i === 1} color="#00f2ff" />
-                        <Cell value={A[1][1]} highlight={focus.i === 1} color="#00f2ff" />
+                        {renderCell(A[0][0], focus.i === 0, "#00f2ff")}
+                        {renderCell(A[0][1], focus.i === 0, "#00f2ff")}
+                        {renderCell(A[1][0], focus.i === 1, "#00f2ff")}
+                        {renderCell(A[1][1], focus.i === 1, "#00f2ff")}
                     </div>
                 </div>
 
@@ -68,10 +68,10 @@ export default function MatMulVisualizer({ values = {} }) {
                 <div className="mm-block">
                     <div className="mm-label">B</div>
                     <div className="mm-grid">
-                        <Cell value={B[0][0]} highlight={focus.j === 0} color="#ff6b8a" />
-                        <Cell value={B[0][1]} highlight={focus.j === 1} color="#ff6b8a" />
-                        <Cell value={B[1][0]} highlight={focus.j === 0} color="#ff6b8a" />
-                        <Cell value={B[1][1]} highlight={focus.j === 1} color="#ff6b8a" />
+                        {renderCell(B[0][0], focus.j === 0, "#ff6b8a")}
+                        {renderCell(B[0][1], focus.j === 1, "#ff6b8a")}
+                        {renderCell(B[1][0], focus.j === 0, "#ff6b8a")}
+                        {renderCell(B[1][1], focus.j === 1, "#ff6b8a")}
                     </div>
                 </div>
 
@@ -80,10 +80,10 @@ export default function MatMulVisualizer({ values = {} }) {
                 <div className="mm-block">
                     <div className="mm-label">C</div>
                     <div className="mm-grid">
-                        <Cell value={c[0][0]} highlight={focus.i === 0 && focus.j === 0} color="#a78bfa" />
-                        <Cell value={c[0][1]} highlight={focus.i === 0 && focus.j === 1} color="#a78bfa" />
-                        <Cell value={c[1][0]} highlight={focus.i === 1 && focus.j === 0} color="#a78bfa" />
-                        <Cell value={c[1][1]} highlight={focus.i === 1 && focus.j === 1} color="#a78bfa" />
+                        {renderCell(c[0][0], focus.i === 0 && focus.j === 0, "#a78bfa")}
+                        {renderCell(c[0][1], focus.i === 0 && focus.j === 1, "#a78bfa")}
+                        {renderCell(c[1][0], focus.i === 1 && focus.j === 0, "#a78bfa")}
+                        {renderCell(c[1][1], focus.i === 1 && focus.j === 1, "#a78bfa")}
                     </div>
                 </div>
             </div>
