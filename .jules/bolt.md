@@ -19,3 +19,6 @@
 ## 2026-06-26 - Extraneous keys and React Component extraction
 **Learning:** Extracted functional React components inside the render body will be flagged by `react-hooks/static-components`. Duplicated keys in objects (like trailing `interactiveFormulas`) will break CI.
 **Action:** Always extract inner functional components (like `Cell`) outside the main component or convert them to simple helper functions. Pay close attention to trailing object keys when refactoring config files.
+## 2026-06-26 - Proper casing for component props
+**Learning:** Capitalized properties (like `Tile`) when mapped directly in React JSX map functions (like `{items.map(({ Tile }) => <Tile />)}`) can cause unused variable lint errors if the linter doesn't recognize the dynamic component usage.
+**Action:** Use a lower-camelCase prop name (like `tileComponent`) and then assign it to a PascalCase variable inside the map function (`const TileComponent = tileComponent;`) before rendering it as `<TileComponent />` to ensure React and the linter both handle it correctly.
