@@ -1,0 +1,36 @@
+--- src/components/CodeExport.jsx
++++ src/components/CodeExport.jsx
+@@ -12,8 +12,11 @@
+
+     if (!isOpen) {
+         return (
+-            <button className="btn-code" onClick={() => setIsOpen(true)}>
+-                &lt;/&gt; Show Code <Tooltip word="Export" overrideText="View the code to build this model" />
+-            </button>
++            <div className="btn-code-wrapper">
++                <button className="btn-code" onClick={() => setIsOpen(true)}>
++                    &lt;/&gt; Show Code
++                </button>
++                <Tooltip word="Export" overrideText="View the code to build this model" />
++            </div>
+         );
+     }
+@@ -74,3 +77,3 @@
+                     <h3>Export Model Code</h3>
+-                    <button className="close" onClick={() => setIsOpen(false)}>×</button>
++                    <button className="close" onClick={() => setIsOpen(false)} aria-label="Close export modal">×</button>
+                 </div>
+@@ -92,5 +95,11 @@
+             <style>{`
++            .btn-code-wrapper {
++                display: flex;
++                align-items: center;
++                gap: 10px;
++                margin-top: 20px;
++            }
+             .btn-code {
+-                width: 100%;
+-                margin-top: 20px;
++                flex: 1;
++                margin-top: 0;
+                 padding: 10px;
