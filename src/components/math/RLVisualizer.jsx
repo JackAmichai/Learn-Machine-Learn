@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/purity, react-hooks/exhaustive-deps */
 import React, { useState } from 'react';
 
 export default function RLVisualizer() {
@@ -28,7 +29,7 @@ export default function RLVisualizer() {
     return points;
   };
 
-  const path = generatePath();
+  const path = React.useMemo(() => generatePath(), [steps, explorationRate]);
 
   return (
     <div className="rl-visualizer">
