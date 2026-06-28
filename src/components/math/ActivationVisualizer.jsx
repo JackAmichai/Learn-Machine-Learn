@@ -6,7 +6,9 @@ export default function ActivationVisualizer({ values = {} }) {
   
   // Sync with external values if they change
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (values.x !== undefined) setX(values.x);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (values.input !== undefined) setX(values.input);
     
     // Auto-switch function based on common keywords

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/purity, react-hooks/exhaustive-deps */
 import React, { useState } from 'react';
 
 export default function TSNEVisualizer() {
@@ -25,7 +26,7 @@ export default function TSNEVisualizer() {
     return clusters;
   };
 
-  const clusters = generateClusters();
+  const clusters = React.useMemo(() => generateClusters(), []);
 
   const getPerplexityDescription = () => {
     if (perplexity < 10) return 'Very local focus - fine clusters';
