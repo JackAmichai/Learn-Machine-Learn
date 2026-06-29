@@ -16,7 +16,7 @@ export default function EmbeddingVisualizer() {
     return mag1 && mag2 ? dot / (mag1 * mag2) : 0;
   };
 
-  const analogies = [
+  [
     { a: 'King', b: 'Queen', c: 'Man', expected: 'Woman' },
   ];
 
