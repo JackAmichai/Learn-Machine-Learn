@@ -1,8 +1,38 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import * as tf from '@tensorflow/tfjs';
 
 export function OutputPlot({ model, data, modelVersion }) {
     const canvasRef = useRef(null);
+    const [predsData, setPredsData] = useState(null);
+
+    useEffect(() => {
+        let isMounted = true;
+        const fetchPreds = async () => {
+            if (!model || !data) return;
+            const gridSize = 50;
+            const inputs = [];
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    const x = (i / gridSize) * 3 - 1.5;
+                    const y = (j / gridSize) * 3 - 1.5;
+                    inputs.push([x, y]);
+                }
+            }
+            const inputTensor = tf.tensor2d(inputs);
+            try {
+                const preds = model.predict(inputTensor);
+                const pData = await preds.data();
+                if (isMounted) setPredsData(pData);
+                preds.dispose();
+            } catch (error) {
+                console.error("Prediction error in OutputPlot:", error);
+            } finally {
+                inputTensor.dispose();
+            }
+        };
+        fetchPreds();
+        return () => { isMounted = false; };
+    }, [model, data, modelVersion]);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -13,31 +43,16 @@ export function OutputPlot({ model, data, modelVersion }) {
         const height = canvas.height;
 
         // 1. Draw Decision Boundary (Grid)
-        // We create a grid of inputs
         const gridSize = 50; // resolution
-        const inputs = [];
 
-        for (let i = 0; i < gridSize; i++) {
-            for (let j = 0; j < gridSize; j++) {
-                // Map 0..width to -1.5..1.5
-                const x = (i / gridSize) * 3 - 1.5;
-                const y = (j / gridSize) * 3 - 1.5; // Inverted Y usually in canvas? 
-                // Actually, let's keep it simple math coords.
-                inputs.push([x, y]); // TF logic handles y direction
-            }
-        }
-
-        tf.tidy(() => {
-            const inputTensor = tf.tensor2d(inputs);
-            const preds = model.predict(inputTensor).dataSync();
-
-            // Draw the heatmap
+        // ⚡ Bolt: Use async fetched data to avoid blocking main thread on render
+        if (predsData) {
             const wCell = width / gridSize;
             const hCell = height / gridSize;
 
             for (let i = 0; i < gridSize; i++) {
                 for (let j = 0; j < gridSize; j++) {
-                    const val = preds[i * gridSize + j];
+                    const val = predsData[i * gridSize + j];
 
                     // Premium look: Purple (0) → Cyan (1)
                     const c1 = [112, 0, 255];
@@ -56,7 +71,7 @@ export function OutputPlot({ model, data, modelVersion }) {
                     ctx.fillRect(i * wCell, height - (j + 1) * hCell, wCell, hCell);
                 }
             }
-        });
+        }
 
         // 2. Draw Data Points
         if (data.points) {
@@ -76,7 +91,7 @@ export function OutputPlot({ model, data, modelVersion }) {
             });
         }
 
-    }, [model, data, modelVersion]);
+    }, [model, data, predsData]);
 
     return (
         <div style={{ position: 'relative', width: '100%', height: '100%' }}>
