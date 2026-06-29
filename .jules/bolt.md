@@ -17,3 +17,7 @@
 ## 2024-05-22 - Async Tensor Data Extraction in React
 **Learning:** `dataSync()` in TensorFlow.js halts the UI thread to wait for GPU calculations on every render, causing janky rendering when evaluating large heatmap grids. Removing it and fetching async without `tf.tidy()` avoids this bottleneck.
 **Action:** Always prefer `await tensor.data()` inside a separate `useEffect` to manage drawing predictions in `OutputPlot.jsx`. Remove `tf.tidy()` and manually dispose of the tensors to avoid leaks because `tf.tidy()` does not support asynchronous callbacks.
+
+## 2024-05-22 - Pre-existing React Component Creation inside render in Visualizers
+**Learning:** Found pre-existing `Cannot create components during render` errors in `MatMulVisualizer` because the internal `Cell` component was created inside the render function of the parent component, causing it to lose state on every re-render and failing strict linting in CI.
+**Action:** Lift static internal components out of the render loop or convert them to helper rendering functions (e.g. `renderCell`) to prevent re-creation on every parent render.
