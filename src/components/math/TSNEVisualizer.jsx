@@ -25,7 +25,7 @@ export default function TSNEVisualizer() {
     return clusters;
   };
 
-  const clusters = generateClusters();
+  const clusters = React.useMemo(() => generateClusters(), [generateClusters]);
 
   const getPerplexityDescription = () => {
     if (perplexity < 10) return 'Very local focus - fine clusters';

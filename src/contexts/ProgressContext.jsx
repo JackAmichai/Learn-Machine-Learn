@@ -108,6 +108,7 @@ export function ProgressProvider({ children }) {
     useEffect(() => {
         if (initialized.current) return;
         initialized.current = true;
+        setTimeout(() => {
         setState(prev => {
             const today = todayStr();
             if (prev.lastActiveDate === today) return prev;
@@ -115,6 +116,7 @@ export function ProgressProvider({ children }) {
             const nextStreak = delta === 1 ? prev.streakDays + 1 : 1;
             return { ...prev, lastActiveDate: today, streakDays: nextStreak };
         });
+        }, 0);
     }, []);
 
     const evaluateAchievements = useCallback((nextState) => {
