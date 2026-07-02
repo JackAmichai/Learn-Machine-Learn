@@ -28,7 +28,7 @@ export default function RLVisualizer() {
     return points;
   };
 
-  const path = generatePath();
+  const path = React.useMemo(() => generatePath(), [explorationRate, steps, generatePath]);
 
   return (
     <div className="rl-visualizer">
