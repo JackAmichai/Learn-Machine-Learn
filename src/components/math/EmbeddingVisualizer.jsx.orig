@@ -16,6 +16,10 @@ export default function EmbeddingVisualizer() {
     return mag1 && mag2 ? dot / (mag1 * mag2) : 0;
   };
 
+  const analogies = [
+    { a: 'King', b: 'Queen', c: 'Man', expected: 'Woman' },
+  ];
+
   return (
     <div className="embedding-visualizer">
       <div className="viz-container">
@@ -23,9 +27,9 @@ export default function EmbeddingVisualizer() {
           <text x="140" y="15" fill="var(--text-primary)" fontSize="11" textAnchor="middle" fontWeight="bold">
             Word Embeddings: Semantic Relationships
           </text>
-          
+
           <rect x="20" y="30" width="240" height="100" fill="rgba(0,0,0,0.3)" rx="4" />
-          
+
           {vectors.map((v, i) => {
             const x = 40 + (i % 4) * 60;
             const y = 60 + Math.floor(i / 4) * 50;
@@ -42,7 +46,7 @@ export default function EmbeddingVisualizer() {
 
           <line x1="140" y1="140" x2="180" y2="120" stroke="var(--accent-primary)" strokeWidth="2" strokeDasharray="4,2" markerEnd="url(#arrow)" />
           <text x="160" y="135" fill="var(--accent-primary)" fontSize="8">King - Man + Woman ≈ Queen</text>
-          
+
           <rect x="20" y="140" width="240" height="35" fill="rgba(0,242,255,0.1)" rx="4" />
           <text x="140" y="155" fill="var(--text-secondary)" fontSize="9" textAnchor="middle">
             King↔Queen: {calculateCosine(vectors[0].vec, vectors[1].vec).toFixed(2)}
@@ -54,7 +58,7 @@ export default function EmbeddingVisualizer() {
       </div>
 
       <div className="controls">
-        <button 
+        <button
           className={`toggle-btn ${show3D ? 'active' : ''}`}
           onClick={() => setShow3D(!show3D)}
         >
@@ -86,10 +90,10 @@ export default function EmbeddingVisualizer() {
               {vectors.map((v2, j) => {
                 const sim = calculateCosine(v1.vec, v2.vec);
                 return (
-                  <div 
-                    key={j} 
+                  <div
+                    key={j}
                     className="matrix-cell"
-                    style={{ 
+                    style={{
                       background: `rgba(${i === j ? 0 : 100}, 255, ${i === j ? 157 : 100}, ${sim})`,
                       color: sim > 0.5 ? '#000' : '#fff'
                     }}
