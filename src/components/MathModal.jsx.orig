@@ -4,6 +4,7 @@ import { VisualizerRegistry } from './math/VisualizerRegistry';
 import { PersonalizationContext } from '../contexts/PersonalizationContext';
 import { getTopicPresentation } from '../engine/personalizationEngine';
 import { getWikiUrl } from '../data/wikipediaLinks';
+import { getNotebookLMLink } from '../data/notebookLMLinks';
 
 export function MathModal({ topic, onClose, onComplete }) {
  const data = MATH_TOPICS[topic];
@@ -48,8 +49,8 @@ export function MathModal({ topic, onClose, onComplete }) {
  const interactiveFormulas = data.interactiveFormulas || [];
 
  return (
- <div 
- className="math-modal-overlay" 
+ <div
+ className="math-modal-overlay"
  onClick={onClose}
  onKeyDown={handleKeyDown}
  role="dialog"
@@ -117,10 +118,10 @@ export function MathModal({ topic, onClose, onComplete }) {
  <div className="formula-explorer">
  <h3> Interactive Formula Explorer</h3>
  <p className="explorer-desc">Adjust the values below to see how each part affects the output:</p>
- 
+
  {interactiveFormulas.map((formula, idx) => (
- <FormulaPlayground 
- key={idx} 
+ <FormulaPlayground
+ key={idx}
  formula={formula}
  sliderValues={sliderValues}
  onSliderChange={handleSliderChange}
@@ -393,7 +394,7 @@ export function MathModal({ topic, onClose, onComplete }) {
  font-style: italic;
  text-align: center;
  }
- 
+
   /* Formula Explorer */
   .formula-explorer {
   margin-top: 30px;
@@ -413,7 +414,7 @@ export function MathModal({ topic, onClose, onComplete }) {
   color: var(--text-secondary);
   margin-bottom: 20px;
   }
-  
+
   /* Solved & Shortcomings Sections */
   .lesson-section {
   margin-top: 20px;
@@ -454,7 +455,7 @@ export function MathModal({ topic, onClose, onComplete }) {
   .shortcomings-section li {
   color: #fed7aa;
   }
-  
+
   .math-footer {
  margin-top: 30px;
  display: flex;
@@ -699,7 +700,7 @@ function FormulaPlayground({ formula, sliderValues, onSliderChange, activeFormul
  };
 
  const result = calculateResult();
- 
+
  const parts = formula.parts || formula.components || formula.points || [];
  const variables = formula.variables || [];
 
@@ -709,7 +710,7 @@ function FormulaPlayground({ formula, sliderValues, onSliderChange, activeFormul
  <span className="formula-name">{formula.name}:</span>
  <div className="formula-parts">
  {parts.map((part, idx) => (
- <span 
+ <span
  key={idx}
  className={`formula-part ${activeFormula === part.key ? 'active' : ''}`}
  onMouseEnter={() => onPartHover(part.key)}
@@ -731,7 +732,7 @@ function FormulaPlayground({ formula, sliderValues, onSliderChange, activeFormul
  <div className="formula-controls">
  {variables.map((variable, idx) => (
  <div key={idx} className="control-row">
- <label 
+ <label
  className={activeFormula === variable.key ? 'highlight' : ''}
  onMouseEnter={() => onPartHover(variable.key)}
  onMouseLeave={() => onPartHover(null)}

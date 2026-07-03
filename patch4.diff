@@ -1,0 +1,12 @@
+--- src/components/math/EmbeddingVisualizer.jsx
++++ src/components/math/EmbeddingVisualizer.jsx
+@@ -17,9 +17,5 @@
+     return mag1 && mag2 ? dot / (mag1 * mag2) : 0;
+   };
+
+-  const analogies = [
+-    { a: 'King', b: 'Queen', c: 'Man', expected: 'Woman' },
+-  ];
+-
+   return (
+     <div className="embedding-visualizer">

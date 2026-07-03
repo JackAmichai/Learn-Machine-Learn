@@ -1,0 +1,10 @@
+--- src/components/MathModal.jsx
++++ src/components/MathModal.jsx
+@@ -5,7 +5,6 @@
+ import { PersonalizationContext } from '../contexts/PersonalizationContext';
+ import { getTopicPresentation } from '../engine/personalizationEngine';
+ import { getWikiUrl } from '../data/wikipediaLinks';
+-import { getNotebookLMLink } from '../data/notebookLMLinks';
+
+ export function MathModal({ topic, onClose, onComplete }) {
+  const data = MATH_TOPICS[topic];
