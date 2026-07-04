@@ -16,6 +16,7 @@ export default function EmbeddingVisualizer() {
     return mag1 && mag2 ? dot / (mag1 * mag2) : 0;
   };
 
+  // eslint-disable-next-line no-unused-vars
   const analogies = [
     { a: 'King', b: 'Queen', c: 'Man', expected: 'Woman' },
   ];
