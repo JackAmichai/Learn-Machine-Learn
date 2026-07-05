@@ -1276,7 +1276,6 @@ export const MATH_TOPICS = {
    </ul>
    `,
    visualizer: "GradientDescent",
-  interactiveFormulas: [
  {
  name: "Gradient Magnitude",
  parts: [
@@ -1423,7 +1422,6 @@ export const MATH_TOPICS = {
  <h4>L2 (Ridge)</h4>
   <p>Penalizes large weights smoothly. Keeps signals small, similar to resistor networks limiting current.</p>
   `,
-  solved: `
   <ul>
   <li><strong>Prevents overfitting</strong>: Penalizes large weights, limiting model complexity</li>
   <li><strong>Better generalization</strong>: Models with smaller weights generalize to unseen data</li>
@@ -1431,7 +1429,6 @@ export const MATH_TOPICS = {
   <li><strong>Feature selection</strong>: L1 can identify important features by zeroing others</li>
   </ul>
   `,
-  shortcomings: `
   <ul>
   <li><strong>Hyperparameter tuning</strong>: Lambda requires cross-validation to find optimal value</li>
   <li><strong>Not a silver bullet</strong>: Can underfit if regularization is too strong</li>
@@ -1439,7 +1436,6 @@ export const MATH_TOPICS = {
   <li><strong>L1 non-differentiable</strong>: Requires special handling at zero</li>
   </ul>
   `,
-  interactiveFormulas: [
  {
  name: "L1 Penalty",
  parts: [
@@ -2062,7 +2058,6 @@ Recall = TP / (TP + FN)
    content: `
 <p>A <strong>GAN</strong> has two networks competing: a <strong>Generator</strong> that creates fake images, and a <strong>Discriminator</strong> that tries to distinguish real from fake.</p>
   `,
-  solved: `
   <ul>
   <li><strong>High-quality generation</strong>: Produces sharp, realistic images</li>
   <li><strong>No explicit density estimation</strong>: Learns to sample from distribution implicitly</li>
@@ -2070,7 +2065,6 @@ Recall = TP / (TP + FN)
   <li><strong>Versatile applications</strong>: Style transfer, image-to-image, super resolution</li>
   </ul>
   `,
-  shortcomings: `
   <ul>
   <li><strong>Mode collapse</strong>: Generator may produce limited variety</li>
   <li><strong>Training instability</strong>: GANs are notoriously hard to train</li>
@@ -2520,7 +2514,6 @@ Recall = TP / (TP + FN)
  <h4>Common Types</h4>
 <p>1x1 convolutions for channel matching. Projection when dimensions change.</p>
   `,
-  solved: `
   <ul>
   <li><strong>Enables very deep networks</strong>: Allows training 100+ layer networks (ResNet)</li>
   <li><strong>Gradient highway</strong>: Direct path for gradients to flow backward</li>
@@ -2528,14 +2521,12 @@ Recall = TP / (TP + FN)
   <li><strong>Better convergence</strong>: Deeper networks train faster with skips</li>
   </ul>
   `,
-  shortcomings: `
   <li><strong>Added parameters</strong>: Skip connection may need 1x1 conv for dimension matching</li>
   <li><strong>Memory cost</strong>: Must store skip tensor until addition</li>
   <li><strong>Not always beneficial</strong>: May not help for shallow networks</li>
   <li><strong>Can hurt representation</strong>: Adding identity may limit learned capacity</li>
   </ul>
   `,
-  interactiveFormulas: [
  {
  name: "Residual Output",
  parts: [
@@ -2976,7 +2967,6 @@ Recall = TP / (TP + FN)
    content: `
 <p><strong>DQN</strong> uses a deep neural network to approximate the Q-value function. This allows RL to scale to complex environments like Atari games.</p>
   `,
-  solved: `
   <ul>
   <li><strong>Scalable to high dimensions</strong>: Handles pixel inputs from games</li>
   <li><strong>Experience replay</strong>: Breaks correlation in training data</li>
@@ -2984,7 +2974,6 @@ Recall = TP / (TP + FN)
   <li><strong>Breakthrough results</strong>: Human-level performance on Atari</li>
   </ul>
   `,
-  shortcomings: `
   <ul>
   <li><strong>Overestimation bias</strong>: Tends to overestimate Q-values</li>
   <li><strong>Only discrete actions</strong>: Doesn't handle continuous control</li>
@@ -2992,7 +2981,6 @@ Recall = TP / (TP + FN)
   <li><strong>Not stable</strong>: Training can be volatile</li>
   </ul>
   `,
-  visualizer: "DeepQN",
    interactiveFormulas: [
  {
  name: "DQN Loss",
@@ -3431,8 +3419,6 @@ Recall = TP / (TP + FN)
  ]
  },
 "ObjectDetection": {
-  title: "Object Detection: Finding and Locating Objects",
-  visualizer: "ObjectDetection",
   content: `
  <p><strong>Object detection</strong> finds all objects in an image and draws bounding boxes around them.</p>
  
@@ -4518,7 +4504,6 @@ Recall = TP / (TP + FN)
    content: `
 <p><strong>Logistic Regression</strong> takes a linear model and squeezes the output through a sigmoid, converting it to a probability between 0 and 1.</p>
   `,
-  solved: `
   <ul>
   <li><strong>Probability output</strong>: Gives probabilities, not just class predictions</li>
   <li><strong>Interpretable coefficients</strong>: Odds ratios have clear meaning</li>
@@ -4526,7 +4511,6 @@ Recall = TP / (TP + FN)
   <li><strong>Foundation for neural networks</strong>: Same as single-neuron network</li>
   </ul>
   `,
-  shortcomings: `
   <ul>
   <li><strong>Linear boundary</strong>: Can't separate non-linearly separable data</li>
   <li><strong>Binary only (natively)</strong>: Needs one-vs-rest for multi-class</li>
@@ -4534,7 +4518,6 @@ Recall = TP / (TP + FN)
   <li><strong>Outperforms often by trees</strong>: For complex data, ensemble methods beat it</li>
   </ul>
   `,
-  visualizer: "LogisticRegression",
    interactiveFormulas: [
  {
  name: "Sigmoid Decision",
@@ -4741,7 +4724,6 @@ Recall = TP / (TP + FN)
    content: `
 <p><strong>LSTM</strong> solves the vanishing gradient problem with three gates that control information flow through a cell state.</p>
   `,
-  solved: `
   <ul>
   <li><strong>Long-term dependencies</strong>: Can remember info for thousands of steps</li>
   <li><strong>Vanishing gradient solved</strong>: Cell state provides gradient highway</li>
@@ -4749,7 +4731,6 @@ Recall = TP / (TP + FN)
   <li><strong>Proven effectiveness</strong>: Powers many NLP breakthroughs</li>
   </ul>
   `,
-  shortcomings: `
   <ul>
   <li><strong>Complex architecture</strong>: More gates = harder to interpret</li>
   <li><strong>Computationally heavy</strong>: 4x more operations than simple RNN</li>
@@ -4757,7 +4738,6 @@ Recall = TP / (TP + FN)
   <li><strong>Outperformed by transformers</strong>: For most NLP, attention is better</li>
   </ul>
   `,
-  visualizer: "LSTM",
    interactiveFormulas: [
  {
  name: "Forget Gate",
@@ -5035,7 +5015,6 @@ Recall = TP / (TP + FN)
   • <strong>Theory meets practice:</strong> SVM theory existed in 1960s but became practical in 1990s.<br/>
   • <strong>Open weights accelerate progress:</strong> ImageNet, Llama, Stable Diffusion democratized AI.</p>
   `,
-  interactiveFormulas: [
   {
     name: "Training Time Comparison (AlexNet vs Modern)",
     parts: [
