@@ -36,7 +36,7 @@ export default function MatMulVisualizer({ values = {} }) {
     const A = [[a11, a12], [a21, a22]];
     const B = [[b11, b12], [b21, b22]];
 
-    const Cell = ({ value, highlight, color = '#00f2ff' }) => (
+    const renderCell = (value, highlight, color = '#00f2ff') => (
         <div className="mm-cell" style={{
             background: highlight ? `${color}22` : 'rgba(255,255,255,0.04)',
             borderColor: highlight ? color : 'rgba(255,255,255,0.08)',
