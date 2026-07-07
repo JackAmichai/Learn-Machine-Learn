@@ -81,7 +81,7 @@ export function OutputPlot({ model, data, modelVersion }) {
             });
         }
 
-    }, [model, data, modelVersion]);
+    }, [model, data, modelVersion, inputs]);
 
     return (
         <div style={{ position: 'relative', width: '100%', height: '100%' }}>
