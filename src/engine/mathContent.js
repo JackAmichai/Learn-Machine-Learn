@@ -496,7 +496,6 @@ export const MATH_TOPICS = {
    <li><strong>Information loss</strong>: Reducing dimensions always loses some information</li>
    </ul>
    `,
-   visualizer: "PCA",
   interactiveFormulas: [
  {
  name: "Explained Variance",
@@ -551,7 +550,6 @@ export const MATH_TOPICS = {
    <li><strong>Non-robust</strong>: A few bad predictions can make the whole loss huge</li>
    </ul>
    `,
-   visualizer: "Loss",
  interactiveFormulas: [
  {
  name: "Huber Loss",
@@ -857,7 +855,6 @@ export const MATH_TOPICS = {
    <li><strong>Exploding outputs</strong>: Unbounded activations can cause numerical instability</li>
    </ul>
    `,
-   visualizer: "Activation",
    interactiveFormulas: [
  {
  name: "Sigmoid",
@@ -1020,7 +1017,6 @@ export const MATH_TOPICS = {
     <li><strong>Hyperparameters</strong>: Beta values still need tuning</li>
     </ul>
     `,
-    visualizer: "Optimizer",
    interactiveFormulas: [
  {
  name: "SGD with Momentum",
@@ -1268,7 +1264,6 @@ export const MATH_TOPICS = {
    <li><strong>Saddle points</strong>: Flat regions can fool optimizers into thinking they've converged</li>
    </ul>
    `,
-   visualizer: "GradientDescent",
   interactiveFormulas: [
  {
  name: "Gradient Magnitude",
@@ -2071,7 +2066,6 @@ Recall = TP / (TP + FN)
   <li><strong>No inference model</strong>: Can't easily estimate probability of given sample</li>
   </ul>
   `,
-  visualizer: "GAN",
    interactiveFormulas: [
  {
  name: "Generator Loss",
@@ -2205,7 +2199,6 @@ Recall = TP / (TP + FN)
   <li><strong>Replaced by strided convolutions</strong>: Modern architectures often use strided conv instead</li>
   </ul>
   `,
-  visualizer: "Pooling",
    interactiveFormulas: [
  {
  name: "Output Size Calculator",
@@ -2884,7 +2877,6 @@ Recall = TP / (TP + FN)
   <li><strong>No function approximation</strong>: Basic MDP needs explicit state tables</li>
   </ul>
   `,
-  visualizer: "MDP",
    interactiveFormulas: [
  {
  name: "Discounted Return",
@@ -2932,7 +2924,6 @@ Recall = TP / (TP + FN)
   <li><strong>Overestimation</strong>: Max can cause overestimation of Q-values</li>
   </ul>
   `,
-  visualizer: "GridWorld",
  interactiveFormulas: [
  {
  name: "Temporal Difference (TD) Update",
@@ -2985,7 +2976,6 @@ Recall = TP / (TP + FN)
   <li><strong>Not stable</strong>: Training can be volatile</li>
   </ul>
   `,
-  visualizer: "DeepQN",
    interactiveFormulas: [
  {
  name: "DQN Loss",
@@ -3056,7 +3046,6 @@ Recall = TP / (TP + FN)
   <li><strong>Performance ceiling</strong>: Sometimes outperformed by more specialized algorithms</li>
   </ul>
   `,
-  visualizer: "PPO",
  interactiveFormulas: [
  {
  name: "PPO Clipped Objective",
@@ -3181,7 +3170,6 @@ Recall = TP / (TP + FN)
   <li><strong>Expensive for long sequences</strong>: GPT-4 has token limits due to this</li>
   </ul>
   `,
-  visualizer: "Transformer",
  interactiveFormulas: [
  {
  name: "Attention Weights",
@@ -3317,7 +3305,6 @@ Recall = TP / (TP + FN)
   <li><strong>Not universal</strong>: Doesn't work equally well for all model architectures</li>
   </ul>
   `,
-  visualizer: "LoRA",
  interactiveFormulas: [
  {
  name: "LoRA Parameter Savings",
