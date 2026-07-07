@@ -32,7 +32,6 @@ export const MATH_TOPICS = {
   <li><strong>Vanishing gradients</strong>: Deep networks struggle to train as gradients can become tiny</li>
   </ul>
   `,
-  visualizer: "NeuralNetwork",
   },
   "MathIntro": {
     visualizer: "LinearRegression",
@@ -169,7 +168,6 @@ export const MATH_TOPICS = {
   <li><strong>Replaced by ViT</strong>: Vision Transformers now often outperform CNNs on large datasets</li>
   </ul>
   `,
-  visualizer: "CNN",
   },
   "ModernAIIntro": {
     visualizer: "Transformer",
@@ -203,7 +201,6 @@ export const MATH_TOPICS = {
   <li><strong>Environmental impact</strong>: Training consumes enormous energy</li>
   </ul>
   `,
-  visualizer: "Transformer",
   },
   "SVM": {
  title: "SVM: Support Vector Machines",
@@ -289,8 +286,7 @@ export const MATH_TOPICS = {
   <li><strong>Sensitive to scaling</strong>: Features must be normalized, or SVM fails</li>
   </ul>
   `,
-  visualizer: "SVM",
- interactiveFormulas: [
+  interactiveFormulas: [
  {
  name: "Margin Size",
  components: [
@@ -360,7 +356,6 @@ export const MATH_TOPICS = {
   <li><strong>Greedy algorithm</strong>: Makes locally optimal splits that may not be globally optimal</li>
   </ul>
   `,
-  visualizer: "Tree",
  interactiveFormulas: [
  {
  name: "Gini Impurity",
@@ -390,7 +385,6 @@ export const MATH_TOPICS = {
  content: `
  <p><strong>Random Forests</strong> combine multiple Decision Trees to reduce overfitting and improve accuracy. This is a technique called <strong>Bagging</strong> (Bootstrap Aggregating).</p>
  `,
- visualizer: "RandomForest",
  interactiveFormulas: [
  {
  name: "Ensemble Prediction",
@@ -449,7 +443,6 @@ export const MATH_TOPICS = {
    <li><strong>Sensitive to k</strong>: Small k = noise sensitive, large k = smooth but may miss patterns</li>
    </ul>
    `,
-   visualizer: "KNN",
  interactiveFormulas: [
  {
  name: "Euclidean Distance",
@@ -4462,7 +4455,6 @@ Recall = TP / (TP + FN)
   <li><strong>Underfits complex data</strong>: Too simple for most real-world problems</li>
   </ul>
   `,
-  visualizer: "LinearRegression",
    interactiveFormulas: [
  {
  name: "Simple Linear Prediction",
@@ -4534,7 +4526,6 @@ Recall = TP / (TP + FN)
   <li><strong>Outperforms often by trees</strong>: For complex data, ensemble methods beat it</li>
   </ul>
   `,
-  visualizer: "LogisticRegression",
    interactiveFormulas: [
  {
  name: "Sigmoid Decision",
@@ -4680,7 +4671,6 @@ Recall = TP / (TP + FN)
   <li><strong>Slow training</strong>: Sequential nature limits hardware utilization</li>
   </ul>
   `,
-  visualizer: "RNN",
    interactiveFormulas: [
  {
  name: "Hidden State Update",
@@ -4757,7 +4747,6 @@ Recall = TP / (TP + FN)
   <li><strong>Outperformed by transformers</strong>: For most NLP, attention is better</li>
   </ul>
   `,
-  visualizer: "LSTM",
    interactiveFormulas: [
  {
  name: "Forget Gate",
