@@ -1,8 +1,26 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useMemo } from 'react';
 import * as tf from '@tensorflow/tfjs';
 
 export function OutputPlot({ model, data, modelVersion }) {
     const canvasRef = useRef(null);
+
+    const gridSize = 50; // resolution
+
+    // ⚡ Bolt: Memoize the 2500-element input array to prevent massive
+    // array re-allocation and GC thrashing on every epoch render
+    const inputs = useMemo(() => {
+        const arr = [];
+        for (let i = 0; i < gridSize; i++) {
+            for (let j = 0; j < gridSize; j++) {
+                // Map 0..width to -1.5..1.5
+                const x = (i / gridSize) * 3 - 1.5;
+                const y = (j / gridSize) * 3 - 1.5; // Inverted Y usually in canvas? 
+                // Actually, let's keep it simple math coords.
+                arr.push([x, y]); // TF logic handles y direction
+            }
+        }
+        return arr;
+    }, []);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -13,19 +31,6 @@ export function OutputPlot({ model, data, modelVersion }) {
         const height = canvas.height;
 
         // 1. Draw Decision Boundary (Grid)
-        // We create a grid of inputs
-        const gridSize = 50; // resolution
-        const inputs = [];
-
-        for (let i = 0; i < gridSize; i++) {
-            for (let j = 0; j < gridSize; j++) {
-                // Map 0..width to -1.5..1.5
-                const x = (i / gridSize) * 3 - 1.5;
-                const y = (j / gridSize) * 3 - 1.5; // Inverted Y usually in canvas? 
-                // Actually, let's keep it simple math coords.
-                inputs.push([x, y]); // TF logic handles y direction
-            }
-        }
 
         tf.tidy(() => {
             const inputTensor = tf.tensor2d(inputs);

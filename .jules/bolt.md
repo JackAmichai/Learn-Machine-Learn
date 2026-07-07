@@ -13,3 +13,6 @@
 ## 2024-05-22 - Synchronous TF.js Operations in Render
 **Learning:** TensorFlow.js `dataSync()` is a synchronous blocking operation. Using it directly inside a React component's render body (e.g., in `NetworkGraph`) causes significant performance degradation on every re-render.
 **Action:** Always wrap weight extraction logic or any TF.js `dataSync()` calls in `useMemo` to ensure they only run when the model or structure actually changes.
+## 2024-07-07 - Memoize static tensors
+**Learning:** Frequent React re-renders in training loops (like `OutputPlot` drawing decision boundaries every epoch) cause severe GC pauses if we re-instantiate large arrays and `tf.tensor` inputs on every frame.
+**Action:** Always memoize static canvas iteration arrays/tensors across epochs using `useMemo` when working with TF.js + React.
