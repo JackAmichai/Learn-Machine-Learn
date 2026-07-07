@@ -5,6 +5,18 @@ import { ALLOWED_ACTIVATIONS, ALLOWED_OPTIMIZERS } from '../engine/NeuralNetwork
 export function CodeExport({ structure, hyperparams }) {
     const [isOpen, setIsOpen] = useState(false);
     const [lang, setLang] = useState('python'); // 'python' or 'js'
+    const [copied, setCopied] = useState(false);
+
+    const handleCopy = async () => {
+        const code = lang === 'python' ? generatePython() : generateJS();
+        try {
+            await navigator.clipboard.writeText(code);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        } catch (err) {
+            console.error('Failed to copy', err);
+        }
+    };
 
     const safeActivation = ALLOWED_ACTIVATIONS.includes(hyperparams.activation) ? hyperparams.activation : 'relu';
     const safeOptimizer = ALLOWED_OPTIMIZERS.includes(hyperparams.optimizer) ? hyperparams.optimizer : 'adam';
@@ -72,7 +84,7 @@ export function CodeExport({ structure, hyperparams }) {
             <div className="code-modal">
                 <div className="modal-header">
                     <h3>Export Model Code</h3>
-                    <button className="close" onClick={() => setIsOpen(false)}>×</button>
+                    <button className="close" onClick={() => setIsOpen(false)} aria-label="Close export modal">×</button>
                 </div>
 
                 <div className="lang-tabs">
@@ -85,6 +97,14 @@ export function CodeExport({ structure, hyperparams }) {
                         {lang === 'python' ? generatePython() : generateJS()}
                     </pre>
                 </div>
+
+                <button
+                    className="btn-code"
+                    onClick={handleCopy}
+                    aria-label="Copy code to clipboard"
+                >
+                    {copied ? 'Copied to Clipboard!' : 'Copy to Clipboard'}
+                </button>
 
                 <p className="tip">Copy this code to run your model in a real environment!</p>
             </div>
