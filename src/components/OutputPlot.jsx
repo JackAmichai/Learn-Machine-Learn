@@ -31,31 +31,37 @@ export function OutputPlot({ model, data, modelVersion }) {
             const inputTensor = tf.tensor2d(inputs);
             const preds = model.predict(inputTensor).dataSync();
 
-            // Draw the heatmap
-            const wCell = width / gridSize;
-            const hCell = height / gridSize;
+            // ⚡ Bolt: Optimize rendering by using an offscreen canvas and ImageData
+            // to avoid 2500 string allocations and ctx.fillRect calls per render.
+            const offCanvas = document.createElement('canvas');
+            offCanvas.width = gridSize;
+            offCanvas.height = gridSize;
+            const offCtx = offCanvas.getContext('2d');
+            const imgData = offCtx.createImageData(gridSize, gridSize);
+            const data = imgData.data;
 
             for (let i = 0; i < gridSize; i++) {
                 for (let j = 0; j < gridSize; j++) {
                     const val = preds[i * gridSize + j];
+                    const rComp = 112 + (-112) * val; // c1[0] + (c2[0] - c1[0]) * val
+                    const gComp = 0 + 242 * val;      // c1[1] + (c2[1] - c1[1]) * val
+                    const bComp = 255;                // c1[2] + (c2[2] - c1[2]) * val
 
-                    // Premium look: Purple (0) → Cyan (1)
-                    const c1 = [112, 0, 255];
-                    const c2 = [0, 242, 255];
+                    // Map math coordinates (j=0 at bottom) to image coordinates (y=0 at top)
+                    const y = gridSize - 1 - j;
+                    const idx = (y * gridSize + i) * 4;
 
-                    const rComp = c1[0] + (c2[0] - c1[0]) * val;
-                    const gComp = c1[1] + (c2[1] - c1[1]) * val;
-                    const bComp = c1[2] + (c2[2] - c1[2]) * val;
-
-                    ctx.fillStyle = `rgba(${rComp}, ${gComp}, ${bComp}, 0.3)`;
-                    // Correction for canvas Y axis (0 is top)
-                    // Math y=-1.5 is bottom. Canvas y=height is bottom.
-                    // x is i, y is j.
-
-                    // Draw rect
-                    ctx.fillRect(i * wCell, height - (j + 1) * hCell, wCell, hCell);
+                    data[idx] = rComp;
+                    data[idx + 1] = gComp;
+                    data[idx + 2] = bComp;
+                    data[idx + 3] = 76; // 0.3 * 255 (alpha)
                 }
             }
+            offCtx.putImageData(imgData, 0, 0);
+
+            // Draw scaled up to main canvas
+            ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(offCanvas, 0, 0, width, height);
         });
 
         // 2. Draw Data Points
