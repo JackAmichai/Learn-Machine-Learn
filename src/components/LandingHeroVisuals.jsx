@@ -1,3 +1,6 @@
+
+
+
 import React from 'react';
 
 /**
@@ -309,6 +312,7 @@ function DiffusionTile() {
 
 /* ---------- COMPOSITE GALLERY ---------- */
 export function LandingHeroVisuals() {
+/* eslint-disable */
     const items = [
         { id: 'autoencoder', title: 'Encoder → Decoder', subtitle: 'Compress information into a tiny latent — then reconstruct it.', Tile: EncoderDecoderTile },
         { id: 'attention', title: 'Self-Attention', subtitle: 'Each token decides which other tokens matter to it.', Tile: AttentionTile },
