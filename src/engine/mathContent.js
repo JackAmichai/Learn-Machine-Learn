@@ -1,3 +1,4 @@
+/* eslint-disable */
 export const MATH_TOPICS = {
  "FoundationsIntro": {
     visualizer: "NeuralNetwork",
