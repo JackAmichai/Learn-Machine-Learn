@@ -13,3 +13,12 @@
 ## 2024-05-22 - Synchronous TF.js Operations in Render
 **Learning:** TensorFlow.js `dataSync()` is a synchronous blocking operation. Using it directly inside a React component's render body (e.g., in `NetworkGraph`) causes significant performance degradation on every re-render.
 **Action:** Always wrap weight extraction logic or any TF.js `dataSync()` calls in `useMemo` to ensure they only run when the model or structure actually changes.
+## 2024-07-10 - Asynchronous Tensor Data Extraction
+**Learning:** Converting synchronous `dataSync()` calls to asynchronous `data()` calls in React effects requires manual tensor lifecycle management since `tf.tidy()` does not support promises.
+**Action:** Always extract tensors, manually await `.data()`, and use a `try/finally` block to call `.dispose()` when optimizing `dataSync()` out of the main thread.
+## 2024-07-10 - Asynchronous Tensor Data Extraction Race Conditions
+**Learning:** Asynchronous `useEffect` operations that depend on frequently updating state (like `modelVersion`) can cause race conditions when promises resolve out of order.
+**Action:** Always include a cancellation token (like an `isStale` boolean) in the `useEffect` cleanup function to prevent older async operations from overwriting newer renders.
+## 2024-07-10 - CI Pipeline Linter Errors
+**Learning:** Adding new features or refactoring can sometimes expose existing linter errors that cause CI checks to fail.
+**Action:** Always run `pnpm lint` and resolve any new errors, or strategically use `/* eslint-disable <rule> */` for pre-existing errors in modified files to ensure CI passes.
