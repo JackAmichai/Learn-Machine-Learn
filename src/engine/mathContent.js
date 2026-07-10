@@ -1,7 +1,6 @@
 /* eslint-disable no-dupe-keys */
 export const MATH_TOPICS = {
  "FoundationsIntro": {
-    visualizer: "NeuralNetwork",
  title: "Foundations: The Building Blocks",
  content: `
  <p>Welcome to the core of Neural Networks! In this section, we'll explore the fundamental components that make "learning" possible. Understanding these is crucial before diving into more complex architectures.</p>
@@ -131,7 +130,6 @@ export const MATH_TOPICS = {
   `,
   },
   "VisionIntro": {
-    visualizer: "CNN",
  title: "Computer Vision: Teaching Machines to See",
  content: `
  <p>How does a computer see a cat in a grid of numbers? <strong>Convolutional Neural Networks (CNNs)</strong> are the answer. They use spatial patterns to recognize shapes, edges, and objects.</p>
@@ -164,7 +162,6 @@ export const MATH_TOPICS = {
   visualizer: "CNN",
   },
   "ModernAIIntro": {
-    visualizer: "Transformer",
   title: "Modern AI: Transformers & Beyond",
   content: `
   <p>We are currently in the era of <strong>Generative AI</strong>. This section covers the architectures powering ChatGPT, Midjourney, and more.</p>
@@ -292,7 +289,6 @@ export const MATH_TOPICS = {
  ]
  },
  "DecisionTree": {
-    visualizer: "Tree",
  title: "Decision Trees: If-Then Reasoning",
  content: `
  <p><strong>Decision Trees</strong> split data based on feature values to maximize 'purity' (homogeneity) in the resulting subsets — producing a flowchart of yes/no questions that ends in a prediction.</p>
@@ -361,7 +357,6 @@ export const MATH_TOPICS = {
  ]
  },
  "RandomForest": {
-    visualizer: "RandomForest",
  title: "Random Forests: Ensemble Learning",
  content: `
  <p><strong>Random Forests</strong> combine multiple Decision Trees to reduce overfitting and improve accuracy. This is a technique called <strong>Bagging</strong> (Bootstrap Aggregating).</p>
@@ -404,7 +399,6 @@ export const MATH_TOPICS = {
   `,
   },
    "KNN": {
-    visualizer: "KNN",
    title: "KNN: K-Nearest Neighbors",
    content: `
    <p><strong>KNN</strong> classifies a point based on the majority class of its 'k' closest neighbors. It's a 'lazy learner' (no training phase).</p>
@@ -447,7 +441,6 @@ export const MATH_TOPICS = {
  ]
  },
   "PCA": {
-    visualizer: "PCA",
    title: "PCA: Principal Component Analysis",
    summary: "Principal Component Analysis (PCA) is a dimensionality reduction technique that transforms a large set of variables into a smaller one that still contains most of the original information. It finds the axes (Principal Components) along which the data varies the most, allowing for visualization and noise reduction.",
    takeaways: [
@@ -507,7 +500,6 @@ export const MATH_TOPICS = {
  ]
  },
 "Loss": {
-    visualizer: "Loss",
   title: "Loss Functions: Measuring Error",
   content: `
   <p>The <strong>Loss Function</strong> converts model mistakes into a single number we can minimize. Lower loss means better predictions.</p>
@@ -819,7 +811,6 @@ export const MATH_TOPICS = {
   ]
   },
   "Activation": {
-    visualizer: "Activation",
    title: "Activation Functions = Signal Shapers",
     content: `
     <p>Activations transform summed inputs before passing them onward. They introduce non-linearity so the network can learn complex patterns and logic gates.</p>
@@ -982,7 +973,6 @@ export const MATH_TOPICS = {
  ]
  },
   "Optimizer": {
-    visualizer: "Optimizer",
     title: "Optimizers: Strategies for Weight Updates",
     content: `
     <p>Optimizers decide how gradients adjust weights. Different strategies balance speed, stability, and memory.</p>
@@ -1229,7 +1219,6 @@ export const MATH_TOPICS = {
  ]
  },
 "Gradient": {
-    visualizer: "GradientDescent",
    title: "Gradients: Directions for Learning",
    content: `
    <p>A <strong>Gradient</strong> is a vector of partial derivatives telling us which way the loss increases. The negative gradient points downhill.</p>
@@ -2029,7 +2018,6 @@ Recall = TP / (TP + FN)
  ]
  },
 "GAN": {
-    visualizer: "GAN",
    title: "Generative Adversarial Networks",
    content: `
 <p>A <strong>GAN</strong> has two networks competing: a <strong>Generator</strong> that creates fake images, and a <strong>Discriminator</strong> that tries to distinguish real from fake.</p>
@@ -2163,7 +2151,6 @@ Recall = TP / (TP + FN)
  ]
  },
 "Pooling": {
-    visualizer: "Pooling",
    title: "Pooling: Spatial Downsampling",
    content: `
 <p><strong>Pooling</strong> reduces spatial dimensions while retaining important information. Essential for vision networks.</p>
@@ -2841,7 +2828,6 @@ Recall = TP / (TP + FN)
  ]
  },
 "MDP": {
-    visualizer: "MDP",
    title: "MDP: Markov Decision Processes",
    content: `
 <p><strong>MDPs</strong> provide a mathematical framework for modeling decision making in situations where outcomes are partly random and partly under the control of a decision maker.</p>
@@ -2888,7 +2874,6 @@ Recall = TP / (TP + FN)
  ]
  },
  "QLearning": {
-    visualizer: "GridWorld",
  title: "Q-Learning: Learning from Trial and Error",
  content: `
 <p><strong>Q-Learning</strong> is a model-free RL algorithm. It learns the quality (Q-value) of an action in a given state.</p>
@@ -2942,7 +2927,6 @@ Recall = TP / (TP + FN)
  ]
  },
 "DeepQN": {
-    visualizer: "DeepQN",
    title: "Deep Q-Networks (DQN): Scaling RL",
    content: `
 <p><strong>DQN</strong> uses a deep neural network to approximate the Q-value function. This allows RL to scale to complex environments like Atari games.</p>
@@ -3013,7 +2997,6 @@ Recall = TP / (TP + FN)
  ]
  },
 "PPO": {
-    visualizer: "PPO",
   title: "PPO: Proximal Policy Optimization",
   content: `
   <p><strong>PPO</strong> is a state-of-the-art RL algorithm that stabilizes training by clipping policy updates.</p>
@@ -3124,7 +3107,6 @@ Recall = TP / (TP + FN)
  ]
  },
  "Transformer": {
-    visualizer: "Transformer",
  title: "Transformers: Attention Is All You Need",
  content: `
  <p><strong>Transformers</strong> use self-attention to process sequences. No recurrence, no convolution - just attention!</p>
@@ -3272,7 +3254,6 @@ Recall = TP / (TP + FN)
  ]
  },
  "LoRA": {
-    visualizer: "LoRA",
  title: "LoRA: Low-Rank Adaptation",
  content: `
  <p><strong>LoRA</strong> fine-tunes large models by only training small, low-rank matrices. This allows fine-tuning an LLM on consumer hardware.</p>
@@ -4400,7 +4381,6 @@ Recall = TP / (TP + FN)
  ]
  },
 "LinearRegression": {
-    visualizer: "LinearRegression",
   title: "Linear Regression: The First ML Algorithm",
   summary: "Linear Regression is the bedrock of statistical prediction. It models the relationship between a dependent variable and one or more independent variables by fitting a linear equation to observed data. The goal is to minimize the sum of squared errors between the predicted and actual values.",
   takeaways: [
@@ -4483,7 +4463,6 @@ Recall = TP / (TP + FN)
  ]
  },
 "LogisticRegression": {
-    visualizer: "LogisticRegression",
    title: "Logistic Regression: From Lines to Probabilities",
    content: `
 <p><strong>Logistic Regression</strong> takes a linear model and squeezes the output through a sigmoid, converting it to a probability between 0 and 1.</p>
@@ -4629,7 +4608,6 @@ Recall = TP / (TP + FN)
  ]
  },
 "RNN": {
-    visualizer: "RNN",
    title: "Recurrent Neural Networks: Memory in Sequences",
    content: `
 <p><strong>RNNs</strong> process sequences by maintaining a hidden state that acts as memory, updated at each time step.</p>
@@ -4706,7 +4684,6 @@ Recall = TP / (TP + FN)
  ]
  },
 "LSTM": {
-    visualizer: "LSTM",
    title: "LSTM: Long Short-Term Memory",
    content: `
 <p><strong>LSTM</strong> solves the vanishing gradient problem with three gates that control information flow through a cell state.</p>
