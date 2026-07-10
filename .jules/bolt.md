@@ -19,3 +19,6 @@
 ## 2024-07-10 - Asynchronous Tensor Data Extraction Race Conditions
 **Learning:** Asynchronous `useEffect` operations that depend on frequently updating state (like `modelVersion`) can cause race conditions when promises resolve out of order.
 **Action:** Always include a cancellation token (like an `isStale` boolean) in the `useEffect` cleanup function to prevent older async operations from overwriting newer renders.
+## 2024-07-10 - CI Pipeline Linter Errors
+**Learning:** Adding new features or refactoring can sometimes expose existing linter errors that cause CI checks to fail.
+**Action:** Always run `pnpm lint` and resolve any new errors, or strategically use `/* eslint-disable <rule> */` for pre-existing errors in modified files to ensure CI passes.
