@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import DOMPurify from 'dompurify';
 import { Link } from 'react-router-dom';
 import { Footer } from '../components/Footer';
 import { ThemeToggle } from '../components/ThemeToggle';
@@ -616,19 +617,22 @@ export function LookingForward() {
                       <Visualizer />
                     </div>
                     
-                    <div className="lesson-content" dangerouslySetInnerHTML={{ __html: lesson.content }} />
+                    {/* Security: Sanitize HTML to prevent XSS */}
+                    <div className="lesson-content" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(lesson.content, { USE_PROFILES: { html: true, mathMl: true, svg: true } }) }} />
                     
                     {lesson.solved && (
                       <div className="lesson-section solved-section">
                         <h4>✅ What This Solved</h4>
-                        <div dangerouslySetInnerHTML={{ __html: lesson.solved }} />
+                        {/* Security: Sanitize HTML to prevent XSS */}
+                        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(lesson.solved, { USE_PROFILES: { html: true, mathMl: true, svg: true } }) }} />
                       </div>
                     )}
                     
                     {lesson.shortcomings && (
                       <div className="lesson-section shortcomings-section">
                         <h4>⚠️ Current Shortcomings</h4>
-                        <div dangerouslySetInnerHTML={{ __html: lesson.shortcomings }} />
+                        {/* Security: Sanitize HTML to prevent XSS */}
+                        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(lesson.shortcomings, { USE_PROFILES: { html: true, mathMl: true, svg: true } }) }} />
                       </div>
                     )}
                     
