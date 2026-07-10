@@ -1,6 +1,6 @@
+/* eslint-disable no-dupe-keys */
 export const MATH_TOPICS = {
  "FoundationsIntro": {
-    visualizer: "NeuralNetwork",
  title: "Foundations: The Building Blocks",
  content: `
  <p>Welcome to the core of Neural Networks! In this section, we'll explore the fundamental components that make "learning" possible. Understanding these is crucial before diving into more complex architectures.</p>
@@ -12,7 +12,6 @@ export const MATH_TOPICS = {
   <li><strong>Loss Functions</strong>: How we measure exactly how "wrong" our model is.</li>
   <li><strong>Gradients & Backpropagation</strong>: The mathematical engine that tells every weight how to change to improve.</li>
  </ul>
-
  <h4>How They Connect</h4>
   <p>Imagine a waterfall of information. Data flows into <strong>Nodes</strong>, gets shaped by <strong>Activations</strong>, and produces a guess. We compare that guess to the truth using a <strong>Loss Function</strong>. Then, we use <strong>Gradients</strong> to work backwards (<strong>Backpropagation</strong>) and tune the <strong>Weights</strong> so the loss is smaller next time. This cycle repeats for many <strong>Epochs</strong> until the model is smart.</p>
   `,
@@ -39,7 +38,6 @@ export const MATH_TOPICS = {
  title: "Math Foundations: The Language of AI",
  content: `
  <p>Don't let the equations intimidate you! Machine Learning is built on a few key mathematical pillars: Linear Algebra, Calculus, and Probability. In this section, we'll make them intuitive.</p>
-
  <h4>The Roadmap</h4>
  <ul>
   <li><strong>Vectors & Matrices</strong>: The grids of numbers that represent everything from images to weights.</li>
@@ -47,7 +45,6 @@ export const MATH_TOPICS = {
   <li><strong>Tensors</strong>: Generalizing numbers to 3D, 4D, and beyond (essential for video and batches).</li>
   <li><strong>Jacobians & Hessians</strong>: Tools from Calculus that help us navigate the complex landscape of "Loss".</li>
  </ul>
-
  <h4>Why It Matters</h4>
   <p>Calculus tells us <em>which way</em> to move (Direction), while Linear Algebra handles the <em>huge scale</em> of modern data. Together, they allow us to process millions of pixels or words simultaneously.</p>
   `,
@@ -73,7 +70,6 @@ export const MATH_TOPICS = {
  title: "Classical ML: Statistical Wisdom",
  content: `
  <p>Before deep learning took over, "Classical" Machine Learning provided robust tools for data analysis. These methods are still widely used because they are fast, interpretable, and work great on smaller datasets.</p>
-
  <h4>The Roadmap</h4>
  <ul>
   <li><strong>Linear & Logistic Regression</strong>: The foundation of prediction and classification.</li>
@@ -81,7 +77,6 @@ export const MATH_TOPICS = {
   <li><strong>Decision Trees & Random Forests</strong>: Making decisions using a flowchart-like logic.</li>
   <li><strong>PCA</strong>: Simplifying complex data by finding the most important patterns.</li>
  </ul>
-
  <h4>How They Connect</h4>
   <p>While Neural Networks are like a brain, Classical ML models are like specialized tools. <strong>SVM</strong> is a master at finding boundaries, <strong>Random Forests</strong> are great at handling messy data, and <strong>KNN</strong> uses simple "neighbor" logic. Understanding these gives you a toolbox for any data problem.</p>
   `,
@@ -107,7 +102,6 @@ export const MATH_TOPICS = {
   title: "Deep Learning Core: Training Techniques",
   content: `
   <p>Moving beyond basic neurons, we need sophisticated techniques to train huge networks efficiently. This section covers the "engineering" of deep learning.</p>
-
   <h4>The Roadmap</h4>
   <ul>
    <li><strong>Optimizers (like Adam)</strong>: Smarter ways to update weights than simple descent.</li>
@@ -115,7 +109,6 @@ export const MATH_TOPICS = {
    <li><strong>Normalization (BatchNorm)</strong>: Keeping signals stable as they flow through deep layers.</li>
    <li><strong>Classification Metrics</strong>: Better ways to measure success than just "Accuracy".</li>
   </ul>
-
   <h4>The Synergy</h4>
   <p>A deep network is like a race car. The <strong>Optimizer</strong> is the engine, <strong>Regularization</strong> is the safety gear, and <strong>Normalization</strong> is the suspension that keeps the ride smooth. Without these, deep networks often fail to learn anything useful.</p>
   `,
@@ -137,11 +130,9 @@ export const MATH_TOPICS = {
   `,
   },
   "VisionIntro": {
-    visualizer: "CNN",
  title: "Computer Vision: Teaching Machines to See",
  content: `
  <p>How does a computer see a cat in a grid of numbers? <strong>Convolutional Neural Networks (CNNs)</strong> are the answer. They use spatial patterns to recognize shapes, edges, and objects.</p>
-
  <h4>The Roadmap</h4>
  <ul>
   <li><strong>Convolution</strong>: Sliding "filters" to detect features like vertical lines or corners.</li>
@@ -149,7 +140,6 @@ export const MATH_TOPICS = {
   <li><strong>Skip Connections</strong>: The trick that allowed us to build 100+ layer networks (ResNets).</li>
   <li><strong>GANs</strong>: Competition between networks that results in "creating" new images.</li>
  </ul>
-
  <h4>The Hierarchy</h4>
   <p>Vision networks are hierarchical. The first layers see <em>lines</em>, the middle layers see <em>shapes</em> (eyes, ears), and the final layers see <em>objects</em> (cats, cars). It's very similar to how the human visual cortex works!</p>
   `,
@@ -172,18 +162,15 @@ export const MATH_TOPICS = {
   visualizer: "CNN",
   },
   "ModernAIIntro": {
-    visualizer: "Transformer",
   title: "Modern AI: Transformers & Beyond",
   content: `
   <p>We are currently in the era of <strong>Generative AI</strong>. This section covers the architectures powering ChatGPT, Midjourney, and more.</p>
-
  <h4>The Roadmap</h4>
  <ul>
   <li><strong>Transformers</strong>: The "Attention" mechanism that revolutionized how machines process sequences.</li>
   <li><strong>Diffusion Models</strong>: The math behind generating hyper-realistic images from noise.</li>
   <li><strong>LLMs & LoRA</strong>: How we scale these models and fine-tune them for specific tasks.</li>
  </ul>
-
  <h4>The Big Shift</h4>
   <p>Modern AI moved from <em>predicting</em> to <em>creating</em>. By using "Self-Attention", models can understand context over huge distances (like a whole book), allowing for the deep reasoning we see in today's AI agents.</p>
   `,
@@ -239,13 +226,10 @@ export const MATH_TOPICS = {
  ],
  content: `
  <p><strong>SVM</strong> finds the hyperplane that best separates two classes with the <strong>maximum margin</strong>. It's robust to outliers and works well in high dimensions.</p>
-
  <h4>Intuition</h4>
  <p>Imagine drawing a line between two groups of points. Many lines separate them — SVM picks the one that has the widest empty "street" on either side. The points touching the curb are the <em>support vectors</em>; move any other point and the line doesn't budge.</p>
-
  <h4>The Kernel Trick</h4>
  <p>SVMs can use kernels (like RBF, polynomial, or sigmoid) to implicitly project data into higher dimensions where it becomes linearly separable — without ever computing the projection explicitly. This is why SVMs handled nonlinear problems elegantly long before deep learning.</p>
-
 <h4>The History of SVMs</h4>
   <p><strong>1963</strong>: Vladimir Vapnik and Alexey Chervonenkis introduce the <em>Generalization Bound</em> — statistical learning theory foundation.<br/>
   <strong>1964</strong>: They develop the <em>Maximal Margin Classifier</em> — the geometric foundation of SVMs.<br/>
@@ -254,22 +238,18 @@ export const MATH_TOPICS = {
   <strong>1998</strong>: John Platt releases <em>SMO</em> (Sequential Minimal Optimization) — makes SVMs scalable.<br/>
   <strong>2000s</strong>: SVMs win every major ML benchmark — Until 2012 when deep learning surpassed them on ImageNet.<br/>
   <strong>Legacy</strong>: SVMs introduced the kernel trick, structural risk minimization, and the margin concept — all foundational to modern ML.</p>
-
  <h4>When to Use</h4>
  <p>• Small-to-medium datasets (a few thousand rows) with clear margins<br/>
  • High-dimensional data where features &gt; samples (genomics, text)<br/>
  • Binary classification where interpretability of the decision boundary matters</p>
-
  <h4>When Not to Use</h4>
  <p>• Very large datasets (training scales poorly, O(n²) to O(n³))<br/>
  • When you need calibrated probability estimates (use logistic regression)<br/>
  • Noisy / overlapping classes — soft-margin helps but is not magic</p>
-
  <h4>Common Pitfalls</h4>
  <p>• <strong>Feature scaling is mandatory</strong> — SVM is sensitive to feature magnitude; always standardize inputs.<br/>
  • Wrong kernel choice: RBF is a safe default, but linear is faster on high-dim text.<br/>
  • The <em>C</em> hyperparameter trades margin width against misclassification — tune it with cross-validation.</p>
-
  <h4>Real-World Uses</h4>
   <p>Spam filtering, handwritten digit recognition, protein classification, face detection (pre-deep-learning), and many Kaggle wins on tabular data.</p>
   `,
@@ -289,7 +269,6 @@ export const MATH_TOPICS = {
   <li><strong>Sensitive to scaling</strong>: Features must be normalized, or SVM fails</li>
   </ul>
   `,
-  visualizer: "SVM",
  interactiveFormulas: [
  {
  name: "Margin Size",
@@ -310,17 +289,13 @@ export const MATH_TOPICS = {
  ]
  },
  "DecisionTree": {
-    visualizer: "Tree",
  title: "Decision Trees: If-Then Reasoning",
  content: `
  <p><strong>Decision Trees</strong> split data based on feature values to maximize 'purity' (homogeneity) in the resulting subsets — producing a flowchart of yes/no questions that ends in a prediction.</p>
-
  <h4>Intuition</h4>
  <p>Think of how a doctor diagnoses: "Fever? Yes. Cough? Yes. Shortness of breath? Yes → possible pneumonia." A tree learns that sequence of questions automatically, choosing at each step the question that most cleanly separates the remaining cases.</p>
-
  <h4>Splitting Criteria</h4>
  <p>Common metrics are <strong>Gini Impurity</strong> and <strong>Information Gain</strong> (based on <em>Entropy</em>). Both measure disorder — a perfect split sends all one class left and all the other class right.</p>
-
 <h4>History of Decision Trees</h4>
   <p><strong>1963</strong>: Morgan and Sonquist introduce <em>AID</em> (Automatic Interaction Detector) — first decision tree for survey analysis.<br/>
   <strong>1980</strong>: J. Ross Quinlan begins work on <em>ID3</em> (Iterative Dichotomiser 3).<br/>
@@ -330,17 +305,14 @@ export const MATH_TOPICS = {
   <strong>2014</strong>: Tianqi Chen introduces <em>XGBoost</em> — gradient boosted trees, dominates Kaggle.<br/>
   <strong>2017</strong>: Microsoft releases <em>LightGBM</em> — faster gradient boosted trees with histogram binning.<br/>
   <strong>Why Survived</strong>: Trees are interpretable, handle mixed data types, and ensemble methods (boosting) achieve state-of-the-art accuracy.</p>
-
  <h4>Strengths</h4>
  <p>• Zero feature scaling required — splits are based on order, not magnitude.<br/>
  • Native handling of mixed numeric and categorical features.<br/>
  • Fully interpretable — you can print the tree and read the rules.</p>
-
  <h4>Common Pitfalls</h4>
  <p>• Trees overfit hard: a deep unpruned tree can memorize noise. Always set <code>max_depth</code> or use pruning.<br/>
  • Instability: small data changes can produce very different trees → use ensembles like Random Forests.<br/>
  • Biased toward features with many unique values (use permutation importance to check).</p>
-
  <h4>Real-World Uses</h4>
   <p>Credit scoring, medical triage, customer-churn rules engines, and as the weak learners inside Random Forests and Gradient Boosting (XGBoost, LightGBM) — which still win the majority of tabular-data Kaggle competitions.</p>
   `,
@@ -385,7 +357,6 @@ export const MATH_TOPICS = {
  ]
  },
  "RandomForest": {
-    visualizer: "RandomForest",
  title: "Random Forests: Ensemble Learning",
  content: `
  <p><strong>Random Forests</strong> combine multiple Decision Trees to reduce overfitting and improve accuracy. This is a technique called <strong>Bagging</strong> (Bootstrap Aggregating).</p>
@@ -428,7 +399,6 @@ export const MATH_TOPICS = {
   `,
   },
    "KNN": {
-    visualizer: "KNN",
    title: "KNN: K-Nearest Neighbors",
    content: `
    <p><strong>KNN</strong> classifies a point based on the majority class of its 'k' closest neighbors. It's a 'lazy learner' (no training phase).</p>
@@ -471,7 +441,6 @@ export const MATH_TOPICS = {
  ]
  },
   "PCA": {
-    visualizer: "PCA",
    title: "PCA: Principal Component Analysis",
    summary: "Principal Component Analysis (PCA) is a dimensionality reduction technique that transforms a large set of variables into a smaller one that still contains most of the original information. It finds the axes (Principal Components) along which the data varies the most, allowing for visualization and noise reduction.",
    takeaways: [
@@ -531,7 +500,6 @@ export const MATH_TOPICS = {
  ]
  },
 "Loss": {
-    visualizer: "Loss",
   title: "Loss Functions: Measuring Error",
   content: `
   <p>The <strong>Loss Function</strong> converts model mistakes into a single number we can minimize. Lower loss means better predictions.</p>
@@ -843,7 +811,6 @@ export const MATH_TOPICS = {
   ]
   },
   "Activation": {
-    visualizer: "Activation",
    title: "Activation Functions = Signal Shapers",
     content: `
     <p>Activations transform summed inputs before passing them onward. They introduce non-linearity so the network can learn complex patterns and logic gates.</p>
@@ -1006,7 +973,6 @@ export const MATH_TOPICS = {
  ]
  },
   "Optimizer": {
-    visualizer: "Optimizer",
     title: "Optimizers: Strategies for Weight Updates",
     content: `
     <p>Optimizers decide how gradients adjust weights. Different strategies balance speed, stability, and memory.</p>
@@ -1253,7 +1219,6 @@ export const MATH_TOPICS = {
  ]
  },
 "Gradient": {
-    visualizer: "GradientDescent",
    title: "Gradients: Directions for Learning",
    content: `
    <p>A <strong>Gradient</strong> is a vector of partial derivatives telling us which way the loss increases. The negative gradient points downhill.</p>
@@ -1416,10 +1381,8 @@ export const MATH_TOPICS = {
   visualizer: "Regularization",
   content: `
  <p>Regularization adds a penalty to large weights so the model generalizes better.</p>
-
  <h4>L1 (Lasso)</h4>
  <p>Encourages sparse weights (many zeros). Useful for feature selection.</p>
-
  <h4>L2 (Ridge)</h4>
   <p>Penalizes large weights smoothly. Keeps signals small, similar to resistor networks limiting current.</p>
   `,
@@ -1959,10 +1922,8 @@ Recall = TP / (TP + FN)
  const TP = get("TP", 30);
  const FP = get("FP", 10);
  const FN = get("FN", 20);
-
  const precision = TP + FP > 0 ? TP / (TP + FP) : 0;
  const recall = TP + FN > 0 ? TP / (TP + FN) : 0;
-
  if (precision + recall === 0) return 0;
  return 2 * (precision * recall) / (precision + recall);
  },
@@ -2057,7 +2018,6 @@ Recall = TP / (TP + FN)
  ]
  },
 "GAN": {
-    visualizer: "GAN",
    title: "Generative Adversarial Networks",
    content: `
 <p>A <strong>GAN</strong> has two networks competing: a <strong>Generator</strong> that creates fake images, and a <strong>Discriminator</strong> that tries to distinguish real from fake.</p>
@@ -2191,7 +2151,6 @@ Recall = TP / (TP + FN)
  ]
  },
 "Pooling": {
-    visualizer: "Pooling",
    title: "Pooling: Spatial Downsampling",
    content: `
 <p><strong>Pooling</strong> reduces spatial dimensions while retaining important information. Essential for vision networks.</p>
@@ -2601,7 +2560,6 @@ Recall = TP / (TP + FN)
  
  <h4>ResNet (2015)</h4>
  <p>Skip connections enable 152 layers! Removed vanishing gradient problem.</p>
-
  <h4>Inception / GoogLeNet (2014)</h4>
  <p>Uses 'Inception modules' that apply different filter sizes (1x1, 3x3, 5x5) in parallel at the same layer. Efficient and powerful.</p>
  `,
@@ -2870,7 +2828,6 @@ Recall = TP / (TP + FN)
  ]
  },
 "MDP": {
-    visualizer: "MDP",
    title: "MDP: Markov Decision Processes",
    content: `
 <p><strong>MDPs</strong> provide a mathematical framework for modeling decision making in situations where outcomes are partly random and partly under the control of a decision maker.</p>
@@ -2917,7 +2874,6 @@ Recall = TP / (TP + FN)
  ]
  },
  "QLearning": {
-    visualizer: "GridWorld",
  title: "Q-Learning: Learning from Trial and Error",
  content: `
 <p><strong>Q-Learning</strong> is a model-free RL algorithm. It learns the quality (Q-value) of an action in a given state.</p>
@@ -2971,7 +2927,6 @@ Recall = TP / (TP + FN)
  ]
  },
 "DeepQN": {
-    visualizer: "DeepQN",
    title: "Deep Q-Networks (DQN): Scaling RL",
    content: `
 <p><strong>DQN</strong> uses a deep neural network to approximate the Q-value function. This allows RL to scale to complex environments like Atari games.</p>
@@ -3042,7 +2997,6 @@ Recall = TP / (TP + FN)
  ]
  },
 "PPO": {
-    visualizer: "PPO",
   title: "PPO: Proximal Policy Optimization",
   content: `
   <p><strong>PPO</strong> is a state-of-the-art RL algorithm that stabilizes training by clipping policy updates.</p>
@@ -3153,7 +3107,6 @@ Recall = TP / (TP + FN)
  ]
  },
  "Transformer": {
-    visualizer: "Transformer",
  title: "Transformers: Attention Is All You Need",
  content: `
  <p><strong>Transformers</strong> use self-attention to process sequences. No recurrence, no convolution - just attention!</p>
@@ -3301,7 +3254,6 @@ Recall = TP / (TP + FN)
  ]
  },
  "LoRA": {
-    visualizer: "LoRA",
  title: "LoRA: Low-Rank Adaptation",
  content: `
  <p><strong>LoRA</strong> fine-tunes large models by only training small, low-rank matrices. This allows fine-tuning an LLM on consumer hardware.</p>
@@ -4429,7 +4381,6 @@ Recall = TP / (TP + FN)
  ]
  },
 "LinearRegression": {
-    visualizer: "LinearRegression",
   title: "Linear Regression: The First ML Algorithm",
   summary: "Linear Regression is the bedrock of statistical prediction. It models the relationship between a dependent variable and one or more independent variables by fitting a linear equation to observed data. The goal is to minimize the sum of squared errors between the predicted and actual values.",
   takeaways: [
@@ -4443,7 +4394,6 @@ Recall = TP / (TP + FN)
     "What does a high p-value for a coefficient signify?"
   ],
   content: `
-
 <p><strong>Linear Regression</strong> fits a straight line through data to predict continuous values. It's the simplest ML model and the foundation of everything else.</p>
   `,
   solved: `
@@ -4513,7 +4463,6 @@ Recall = TP / (TP + FN)
  ]
  },
 "LogisticRegression": {
-    visualizer: "LogisticRegression",
    title: "Logistic Regression: From Lines to Probabilities",
    content: `
 <p><strong>Logistic Regression</strong> takes a linear model and squeezes the output through a sigmoid, converting it to a probability between 0 and 1.</p>
@@ -4659,7 +4608,6 @@ Recall = TP / (TP + FN)
  ]
  },
 "RNN": {
-    visualizer: "RNN",
    title: "Recurrent Neural Networks: Memory in Sequences",
    content: `
 <p><strong>RNNs</strong> process sequences by maintaining a hidden state that acts as memory, updated at each time step.</p>
@@ -4736,7 +4684,6 @@ Recall = TP / (TP + FN)
  ]
  },
 "LSTM": {
-    visualizer: "LSTM",
    title: "LSTM: Long Short-Term Memory",
    content: `
 <p><strong>LSTM</strong> solves the vanishing gradient problem with three gates that control information flow through a cell state.</p>
