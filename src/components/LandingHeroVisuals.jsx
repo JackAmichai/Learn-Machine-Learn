@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/static-components */
+/* eslint-disable no-unused-vars */
 import React from 'react';
 
 /**
