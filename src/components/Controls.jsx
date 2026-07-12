@@ -464,8 +464,8 @@ export function Controls(props) {
                                             {isHidden && (
                                                 <div className="layer-advanced">
                                                     <div className="pill-group">
-                                                        <button className={`pill-toggle ${featureConfig.batchNorm ? 'active' : ''}`} onClick={() => updateLayerFeatures(idx, { batchNorm: !featureConfig.batchNorm })}>BatchNorm</button>
-                                                        <button className={`pill-toggle ${featureConfig.dropout ? 'active' : ''}`} onClick={() => updateLayerFeatures(idx, { dropout: !featureConfig.dropout })}>Dropout</button>
+                                                        <button className={`pill-toggle ${featureConfig.batchNorm ? 'active' : ''}`} onClick={() => updateLayerFeatures(idx, { batchNorm: !featureConfig.batchNorm })} aria-pressed={!!featureConfig.batchNorm}>BatchNorm</button>
+                                                        <button className={`pill-toggle ${featureConfig.dropout ? 'active' : ''}`} onClick={() => updateLayerFeatures(idx, { dropout: !featureConfig.dropout })} aria-pressed={!!featureConfig.dropout}>Dropout</button>
                                                     </div>
                                                 </div>
                                             )}
