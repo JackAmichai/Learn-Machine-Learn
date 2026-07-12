@@ -8,28 +8,50 @@ export function OutputPlot({ model, data, modelVersion }) {
         const canvas = canvasRef.current;
         if (!canvas || !model || !data) return;
 
-        const ctx = canvas.getContext('2d');
-        const width = canvas.width;
-        const height = canvas.height;
+        // ⚡ Bolt Performance Optimization:
+        // Use an isStale flag to cancel rendering if the effect re-runs before the async operation completes,
+        // preventing race conditions and out-of-order execution from rapidly firing effects.
+        let isStale = false;
 
-        // 1. Draw Decision Boundary (Grid)
-        // We create a grid of inputs
-        const gridSize = 50; // resolution
-        const inputs = [];
+        async function renderPlot() {
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
 
-        for (let i = 0; i < gridSize; i++) {
-            for (let j = 0; j < gridSize; j++) {
-                // Map 0..width to -1.5..1.5
-                const x = (i / gridSize) * 3 - 1.5;
-                const y = (j / gridSize) * 3 - 1.5; // Inverted Y usually in canvas? 
-                // Actually, let's keep it simple math coords.
-                inputs.push([x, y]); // TF logic handles y direction
+            // 1. Draw Decision Boundary (Grid)
+            // We create a grid of inputs
+            const gridSize = 50; // resolution
+            const inputs = [];
+
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    // Map 0..width to -1.5..1.5
+                    const x = (i / gridSize) * 3 - 1.5;
+                    const y = (j / gridSize) * 3 - 1.5; // Inverted Y usually in canvas?
+                    // Actually, let's keep it simple math coords.
+                    inputs.push([x, y]); // TF logic handles y direction
+                }
             }
-        }
 
-        tf.tidy(() => {
-            const inputTensor = tf.tensor2d(inputs);
-            const preds = model.predict(inputTensor).dataSync();
+            let inputTensor, predsTensor;
+            let preds;
+
+            try {
+                inputTensor = tf.tensor2d(inputs);
+                predsTensor = model.predict(inputTensor);
+                // ⚡ Bolt Performance Optimization:
+                // Replaced synchronous dataSync() with asynchronous data() to avoid blocking the main UI thread.
+                // Removed tf.tidy() because it does not support promises, and manually managed memory
+                // with dispose() in a finally block to ensure no memory leaks.
+                preds = await predsTensor.data();
+            } finally {
+                if (inputTensor) inputTensor.dispose();
+                if (predsTensor) predsTensor.dispose();
+            }
+
+            // ⚡ Bolt Performance Optimization:
+            // Abort canvas updates if the component unmounted or effect re-ran
+            if (isStale) return;
 
             // Draw the heatmap
             const wCell = width / gridSize;
@@ -56,26 +78,31 @@ export function OutputPlot({ model, data, modelVersion }) {
                     ctx.fillRect(i * wCell, height - (j + 1) * hCell, wCell, hCell);
                 }
             }
-        });
 
-        // 2. Draw Data Points
-        if (data.points) {
-            data.points.forEach((pt, idx) => {
-                const x = (pt[0] + 1.5) / 3 * width;
-                const y = height - (pt[1] + 1.5) / 3 * height;
+            // 2. Draw Data Points
+            if (data.points) {
+                data.points.forEach((pt, idx) => {
+                    const x = (pt[0] + 1.5) / 3 * width;
+                    const y = height - (pt[1] + 1.5) / 3 * height;
 
-                const label = data.labels[idx];
+                    const label = data.labels[idx];
 
-                ctx.beginPath();
-                ctx.arc(x, y, 4, 0, 2 * Math.PI);
-                ctx.fillStyle = label === 1 ? '#00f2ff' : '#7000ff';
-                ctx.strokeStyle = '#fff';
-                ctx.lineWidth = 1.5;
-                ctx.fill();
-                ctx.stroke();
-            });
+                    ctx.beginPath();
+                    ctx.arc(x, y, 4, 0, 2 * Math.PI);
+                    ctx.fillStyle = label === 1 ? '#00f2ff' : '#7000ff';
+                    ctx.strokeStyle = '#fff';
+                    ctx.lineWidth = 1.5;
+                    ctx.fill();
+                    ctx.stroke();
+                });
+            }
         }
 
+        renderPlot();
+
+        return () => {
+            isStale = true;
+        };
     }, [model, data, modelVersion]);
 
     return (
