@@ -1,22 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 export default function LossVisualizer({ values = {} }) {
-  const [predicted, setPredicted] = useState(3);
-  const [actual, setActual] = useState(5);
-  
-  // Sync with external values if they change
-  useEffect(() => {
-    // If we have 'err' (y - yhat), we can adjust predicted to be actual - err
-    if (values.err !== undefined) {
-      setPredicted(actual - values.err);
-    } else {
-      if (values.predicted !== undefined) setPredicted(values.predicted);
-      if (values.yhat !== undefined) setPredicted(values.yhat);
-    }
-    
-    if (values.actual !== undefined) setActual(values.actual);
-    if (values.y !== undefined) setActual(values.y);
-  }, [values, actual]);
+  const [localPredicted, setLocalPredicted] = useState(3);
+  const [localActual, setLocalActual] = useState(5);
+
+  const actual = values.actual !== undefined ? values.actual : (values.y !== undefined ? values.y : localActual);
+  const predicted = values.err !== undefined
+    ? (actual - values.err)
+    : (values.predicted !== undefined ? values.predicted : (values.yhat !== undefined ? values.yhat : localPredicted));
 
   const mse = Math.pow(predicted - actual, 2);
   
@@ -63,11 +54,11 @@ export default function LossVisualizer({ values = {} }) {
         <div className="controls">
           <div className="slider-group">
             <label>Predicted: {predicted.toFixed(1)}</label>
-            <input type="range" min="0" max="10" step="0.1" value={predicted} onChange={(e) => setPredicted(Number(e.target.value))} />
+            <input type="range" min="0" max="10" step="0.1" value={predicted} onChange={(e) => setLocalPredicted(Number(e.target.value))} />
           </div>
           <div className="slider-group">
             <label>Actual: {actual}</label>
-            <input type="range" min="0" max="10" value={actual} onChange={(e) => setActual(Number(e.target.value))} />
+            <input type="range" min="0" max="10" value={actual} onChange={(e) => setLocalActual(Number(e.target.value))} />
           </div>
         </div>
       )}

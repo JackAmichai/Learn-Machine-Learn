@@ -108,13 +108,13 @@ export function ProgressProvider({ children }) {
     useEffect(() => {
         if (initialized.current) return;
         initialized.current = true;
-        setState(prev => {
+        setTimeout(() => setState(prev => {
             const today = todayStr();
             if (prev.lastActiveDate === today) return prev;
             const delta = daysBetween(prev.lastActiveDate, today);
             const nextStreak = delta === 1 ? prev.streakDays + 1 : 1;
             return { ...prev, lastActiveDate: today, streakDays: nextStreak };
-        });
+        }), 0);
     }, []);
 
     const evaluateAchievements = useCallback((nextState) => {
@@ -152,7 +152,7 @@ export function ProgressProvider({ children }) {
 
     const markLessonVisited = useCallback((key) => {
         if (!key) return;
-        setState(prev => {
+        setTimeout(() => setState(prev => {
             if (prev.visitedLessons.has(key)) return prev;
             const next = {
                 ...prev,
@@ -160,12 +160,12 @@ export function ProgressProvider({ children }) {
                 totalXP: prev.totalXP + 5,
             };
             return evaluateAchievements(next);
-        });
+        }), 0);
     }, [evaluateAchievements]);
 
     const markQuizCompleted = useCallback((id, scorePct = 0) => {
         if (!id) return;
-        setState(prev => {
+        setTimeout(() => setState(prev => {
             const wasCompleted = prev.completedQuizzes.has(id);
             const nextScore = Math.max(prev.bestScore, scorePct || 0);
             const xpGain = wasCompleted
@@ -178,7 +178,7 @@ export function ProgressProvider({ children }) {
                 totalXP: prev.totalXP + xpGain,
             };
             return evaluateAchievements(next);
-        });
+        }), 0);
     }, [evaluateAchievements]);
 
     const resetProgress = useCallback(() => {
