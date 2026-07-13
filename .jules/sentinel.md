@@ -1,0 +1,4 @@
+## 2024-07-13 - XSS Vulnerability in MathModal
+**Vulnerability:** XSS vulnerability through unsanitized input `data.content`, `data.solved`, `data.shortcomings` passed directly to `dangerouslySetInnerHTML`.
+**Learning:** In a rich text rendering component, relying solely on data source safety without explicit sanitization creates a significant risk if the source data is ever modified, dynamically loaded, or user-supplied, allowing XSS attacks. The aggressive stripping by default DOMPurify configuration when rendering MathML/SVG required explicit profile usage to maintain functionality alongside security.
+**Prevention:** Always sanitize dynamically rendered HTML via `dangerouslySetInnerHTML` using tools like `DOMPurify`, and appropriately configure profiles (e.g., `mathMl: true`) to retain required non-standard formatting securely.
