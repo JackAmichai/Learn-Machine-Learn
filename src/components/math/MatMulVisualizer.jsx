@@ -8,7 +8,7 @@ import React, { useState, useEffect } from 'react';
  */
 const Cell = ({ value, highlight, color = '#00f2ff' }) => (
     <div className="mm-cell" style={{
-        background: highlight ? \`\${color}22\` : 'rgba(255,255,255,0.04)',
+        background: highlight ? color + '22' : 'rgba(255,255,255,0.04)',
         borderColor: highlight ? color : 'rgba(255,255,255,0.08)',
         color: highlight ? color : 'var(--text-secondary)',
         fontWeight: highlight ? 700 : 400,
