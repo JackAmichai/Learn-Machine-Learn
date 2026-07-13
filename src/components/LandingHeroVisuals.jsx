@@ -1,3 +1,14 @@
+const Cell = ({ value, highlight, color = '#00f2ff' }) => (
+    <div className="mm-cell" style={{
+        background: highlight ? `${color}22` : 'rgba(255,255,255,0.04)',
+        borderColor: highlight ? color : 'rgba(255,255,255,0.08)',
+        color: highlight ? color : 'var(--text-secondary)',
+        fontWeight: highlight ? 700 : 400,
+    }}>
+        {typeof value === 'number' ? value.toFixed(2) : value}
+    </div>
+);
+
 import React from 'react';
 
 /**
@@ -329,9 +340,10 @@ export function LandingHeroVisuals() {
                 </p>
 
                 <div className="hv-grid">
-                    {items.map(({ id, title, subtitle, Tile }) => (
+                    {/* eslint-disable-next-line no-unused-vars */
+                    items.map(({ id, title, subtitle, Tile: MyTile }) => (
                         <article key={id} className="hv-card">
-                            <div className="hv-tile"><Tile /></div>
+                            <div className="hv-tile"><MyTile /></div>
                             <div className="hv-meta">
                                 <h3>{title}</h3>
                                 <p>{subtitle}</p>

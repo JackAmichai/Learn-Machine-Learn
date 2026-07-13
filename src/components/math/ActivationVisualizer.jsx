@@ -1,17 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 export default function ActivationVisualizer({ values = {} }) {
-  const [func, setFunc] = useState('sigmoid');
-  const [x, setX] = useState(0);
-  
-  // Sync with external values if they change
-  useEffect(() => {
-    if (values.x !== undefined) setX(values.x);
-    if (values.input !== undefined) setX(values.input);
-    
-    // Auto-switch function based on common keywords
-    if (values.alpha !== undefined) setFunc('leakyrelu');
-  }, [values.x, values.input, values.alpha]);
+  const initialFunc = values.alpha !== undefined ? 'leakyrelu' : 'sigmoid';
+  const [localFunc, setLocalFunc] = useState(initialFunc);
+  const [localX, setLocalX] = useState(0);
+
+  const func = values.alpha !== undefined ? 'leakyrelu' : localFunc;
+  const x = values.x !== undefined ? values.x : (values.input !== undefined ? values.input : localX);
 
   const functions = {
     sigmoid: { 
@@ -80,7 +75,7 @@ export default function ActivationVisualizer({ values = {} }) {
           <button 
             key={f} 
             className={func === f ? 'active' : ''}
-            onClick={() => setFunc(f)}
+            onClick={() => setLocalFunc(f)}
           >
             {f}
           </button>
@@ -91,7 +86,7 @@ export default function ActivationVisualizer({ values = {} }) {
         <div className="controls">
           <div className="slider-group">
             <label>x: {x}</label>
-            <input type="range" min="-5" max="5" step="0.1" value={x} onChange={(e) => setX(Number(e.target.value))} />
+            <input type="range" min="-5" max="5" step="0.1" value={x} onChange={(e) => setLocalX(Number(e.target.value))} />
           </div>
         </div>
       )}
