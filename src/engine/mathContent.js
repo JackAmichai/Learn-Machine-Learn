@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars, no-dupe-keys */
 export const MATH_TOPICS = {
  "FoundationsIntro": {
     visualizer: "NeuralNetwork",
