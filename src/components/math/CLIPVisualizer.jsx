@@ -98,6 +98,7 @@ export default function CLIPVisualizer() {
             step="0.01" 
             value={temperature} 
             onChange={(e) => setTemperature(parseFloat(e.target.value))}
+            aria-label="Temperature"
           />
         </div>
       </div>
@@ -119,6 +120,7 @@ export default function CLIPVisualizer() {
                   n[i] = parseFloat(e.target.value);
                   setImgSim(n);
                 }}
+                aria-label={`Image similarity for ${img}`}
               />
               <span className="val">{imgSim[i].toFixed(1)}</span>
             </div>
@@ -140,6 +142,7 @@ export default function CLIPVisualizer() {
                   n[i] = parseFloat(e.target.value);
                   setTxtSim(n);
                 }}
+                aria-label={`Text similarity for ${txt}`}
               />
               <span className="val">{txtSim[i].toFixed(1)}</span>
             </div>
