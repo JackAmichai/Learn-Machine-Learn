@@ -13,3 +13,6 @@
 ## 2024-05-22 - Synchronous TF.js Operations in Render
 **Learning:** TensorFlow.js `dataSync()` is a synchronous blocking operation. Using it directly inside a React component's render body (e.g., in `NetworkGraph`) causes significant performance degradation on every re-render.
 **Action:** Always wrap weight extraction logic or any TF.js `dataSync()` calls in `useMemo` to ensure they only run when the model or structure actually changes.
+## 2025-07-21 - Asynchronous TensorFlow Tensor Rendering
+**Learning:** In React components like OutputPlot, synchronous TensorFlow operations like `dataSync()` download data from the GPU to the CPU synchronously and block the main UI thread. `tf.tidy()` does not support promises so it can't be used with async `data()`.
+**Action:** When migrating `dataSync()` to `await data()`, always remove `tf.tidy()`, explicitly call `.dispose()` on tensors in a `try/finally` block, and use a cancellation token (like an `isStale` boolean flag) in the React `useEffect` cleanup function to prevent race conditions during rapid re-renders.
