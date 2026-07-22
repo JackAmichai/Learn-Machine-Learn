@@ -4,6 +4,7 @@ import { VisualizerRegistry } from './math/VisualizerRegistry';
 import { PersonalizationContext } from '../contexts/PersonalizationContext';
 import { getTopicPresentation } from '../engine/personalizationEngine';
 import { getWikiUrl } from '../data/wikipediaLinks';
+/* eslint-disable-next-line no-unused-vars */
 import { getNotebookLMLink } from '../data/notebookLMLinks';
 import DOMPurify from 'dompurify';
 
