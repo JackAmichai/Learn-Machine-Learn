@@ -167,6 +167,7 @@ export function Footer() {
                   type="text"
                   name="name"
                   placeholder="Your name (optional)"
+                  aria-label="Your name (optional)"
                   value={form.name}
                   onChange={onChange}
                   autoComplete="name"
@@ -175,6 +176,7 @@ export function Footer() {
                   type="email"
                   name="email"
                   placeholder="Your email (optional)"
+                  aria-label="Your email (optional)"
                   value={form.email}
                   onChange={onChange}
                   autoComplete="email"
@@ -195,6 +197,7 @@ export function Footer() {
               <textarea
                 name="message"
                 placeholder="Your message…"
+                aria-label="Your message"
                 value={form.message}
                 onChange={onChange}
                 rows={4}
