@@ -5,6 +5,7 @@ import { PersonalizationContext } from '../contexts/PersonalizationContext';
 import { getTopicPresentation } from '../engine/personalizationEngine';
 import { getWikiUrl } from '../data/wikipediaLinks';
 import { getNotebookLMLink } from '../data/notebookLMLinks';
+import DOMPurify from 'dompurify';
 
 export function MathModal({ topic, onClose, onComplete }) {
  const data = MATH_TOPICS[topic];
@@ -88,7 +89,8 @@ export function MathModal({ topic, onClose, onComplete }) {
  <SummaryView data={data} />
  ) : (
  <>
- <div className={`math-body ${!presentation.showMath ? 'visual-only' : ''}`} dangerouslySetInnerHTML={{ __html: data.content }} />
+ {/* Security: Sanitize HTML to prevent XSS */}
+ <div className={`math-body ${!presentation.showMath ? 'visual-only' : ''}`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data.content) }} />
 
   {/* Custom Visualizer Section */}
   {Visualizer && (
@@ -101,7 +103,8 @@ export function MathModal({ topic, onClose, onComplete }) {
   {data.solved && (
   <div className="lesson-section solved-section">
     <h4>✅ What This Solved</h4>
-    <div dangerouslySetInnerHTML={{ __html: data.solved }} />
+    {/* Security: Sanitize HTML to prevent XSS */}
+    <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data.solved) }} />
   </div>
   )}
 
@@ -109,7 +112,8 @@ export function MathModal({ topic, onClose, onComplete }) {
   {data.shortcomings && (
   <div className="lesson-section shortcomings-section">
     <h4>⚠️ Current Shortcomings</h4>
-    <div dangerouslySetInnerHTML={{ __html: data.shortcomings }} />
+    {/* Security: Sanitize HTML to prevent XSS */}
+    <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data.shortcomings) }} />
   </div>
   )}
 
