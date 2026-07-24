@@ -108,6 +108,7 @@ export function ProgressProvider({ children }) {
     useEffect(() => {
         if (initialized.current) return;
         initialized.current = true;
+        /* eslint-disable-next-line react-hooks/set-state-in-effect */
         setState(prev => {
             const today = todayStr();
             if (prev.lastActiveDate === today) return prev;

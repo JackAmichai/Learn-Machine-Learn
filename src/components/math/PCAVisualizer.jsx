@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 export default function PCAVisualizer({ values = {} }) {
   const [component1, setComponent1] = useState(70);
@@ -6,11 +6,10 @@ export default function PCAVisualizer({ values = {} }) {
   const [component3, setComponent3] = useState(10);
   
   // Sync with external values if they change
-  useEffect(() => {
-    if (values.lambda1 !== undefined) setComponent1(values.lambda1);
-    if (values.lambda2 !== undefined) setComponent2(values.lambda2);
-    if (values.lambda3 !== undefined) setComponent3(values.lambda3);
-  }, [values.lambda1, values.lambda2, values.lambda3]);
+  // Used for syncing
+  if (values.lambda1 !== undefined && component1 !== values.lambda1) setComponent1(values.lambda1);
+  if (values.lambda2 !== undefined && component2 !== values.lambda2) setComponent2(values.lambda2);
+  if (values.lambda3 !== undefined && component3 !== values.lambda3) setComponent3(values.lambda3);
 
   const total = component1 + component2 + component3;
   const p1 = (component1 / total * 100).toFixed(1);
