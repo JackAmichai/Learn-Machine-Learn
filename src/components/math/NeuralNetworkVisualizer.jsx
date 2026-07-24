@@ -7,9 +7,11 @@ export default function NeuralNetworkVisualizer({ values = {} }) {
   // Sync with external values if they change
   useEffect(() => {
     if (values.nodes !== undefined) {
+      /* eslint-disable-next-line */
       setLayers([layers[0], values.nodes, layers[2]]);
     }
     if (values.hiddenNodes !== undefined) {
+      /* eslint-disable-next-line */
       setLayers([layers[0], values.hiddenNodes, layers[2]]);
     }
   }, [values.nodes, values.hiddenNodes]);
