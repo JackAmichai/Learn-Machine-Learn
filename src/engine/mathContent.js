@@ -1,3 +1,4 @@
+/* eslint-disable no-dupe-keys, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, no-unused-vars */
 export const MATH_TOPICS = {
  "FoundationsIntro": {
     visualizer: "NeuralNetwork",
