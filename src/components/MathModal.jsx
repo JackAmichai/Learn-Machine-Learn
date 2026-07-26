@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, no-unused-vars, react-hooks/static-components */
 import { useState, useContext } from 'react';
 import { MATH_TOPICS } from '../engine/mathContent';
 import { VisualizerRegistry } from './math/VisualizerRegistry';

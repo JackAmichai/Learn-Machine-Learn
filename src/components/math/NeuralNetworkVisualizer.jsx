@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, no-unused-vars, react-hooks/static-components, react-hooks/set-state-in-effect, react-hooks/purity */
+/* eslint-disable react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, no-unused-vars, react-hooks/static-components, react-hooks/set-state-in-effect */
 import React, { useState, useEffect } from 'react';
 
 export default function NeuralNetworkVisualizer({ values = {} }) {

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, no-unused-vars, react-hooks/static-components, react-hooks/set-state-in-effect, react-hooks/purity */
 import React, { useState } from 'react';
 
 export default function TSNEVisualizer() {

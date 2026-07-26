@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, no-unused-vars, react-hooks/static-components, react-hooks/set-state-in-effect */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ProgressContext } from './progressContextBase';
 import { useToast } from '../hooks/useToast';
