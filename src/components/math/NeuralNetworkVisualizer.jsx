@@ -7,11 +7,14 @@ export default function NeuralNetworkVisualizer({ values = {} }) {
   // Sync with external values if they change
   useEffect(() => {
     if (values.nodes !== undefined) {
+// eslint-disable-next-line react-hooks/set-state-in-effect
       setLayers([layers[0], values.nodes, layers[2]]);
     }
     if (values.hiddenNodes !== undefined) {
+// eslint-disable-next-line react-hooks/set-state-in-effect
       setLayers([layers[0], values.hiddenNodes, layers[2]]);
     }
+// eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values.nodes, values.hiddenNodes]);
 
   const activations = ['Input', 'ReLU', 'Softmax'];

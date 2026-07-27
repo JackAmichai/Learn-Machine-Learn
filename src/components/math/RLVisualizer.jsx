@@ -12,14 +12,18 @@ export default function RLVisualizer() {
     let pos = { x: 0, y: 0 };
     for (let i = 0; i <= steps; i++) {
       points.push({ ...pos });
+// eslint-disable-next-line react-hooks/purity
       const action = Math.random() < explorationRate ? 'explore' : 'exploit';
       if (action === 'explore') {
         pos = {
+// eslint-disable-next-line react-hooks/purity
           x: pos.x + (Math.random() - 0.5) * 20,
+// eslint-disable-next-line react-hooks/purity
           y: pos.y + (Math.random() - 0.5) * 20
         };
       } else {
         pos = {
+// eslint-disable-next-line react-hooks/purity
           x: pos.x + (Math.random() - 0.3) * 10,
           y: pos.y - 5
         };

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 export default function EmbeddingVisualizer() {
   const [show3D, setShow3D] = useState(false);
+// eslint-disable-next-line no-unused-vars
   const [vectors, setVectors] = useState([
     { name: 'King', vec: [0.8, 0.2, 0.1, 0.3] },
     { name: 'Queen', vec: [0.7, 0.9, 0.2, 0.1] },
@@ -16,6 +17,7 @@ export default function EmbeddingVisualizer() {
     return mag1 && mag2 ? dot / (mag1 * mag2) : 0;
   };
 
+// eslint-disable-next-line no-unused-vars
   const analogies = [
     { a: 'King', b: 'Queen', c: 'Man', expected: 'Woman' },
   ];

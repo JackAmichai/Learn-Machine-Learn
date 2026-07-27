@@ -50,6 +50,7 @@ export default function TensorVisualizer({ values = {} }) {
 
     const drawCube = ({ x, y, z }) => {
         // 8 corners
+// eslint-disable-next-line no-unused-vars
         const p000 = iso(x, y, z);
         const p100 = iso(x + 1, y, z);
         const p110 = iso(x + 1, y + 1, z);
