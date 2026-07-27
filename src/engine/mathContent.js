@@ -32,7 +32,6 @@ export const MATH_TOPICS = {
   <li><strong>Vanishing gradients</strong>: Deep networks struggle to train as gradients can become tiny</li>
   </ul>
   `,
-  visualizer: "NeuralNetwork",
   },
   "MathIntro": {
     visualizer: "LinearRegression",
@@ -169,7 +168,6 @@ export const MATH_TOPICS = {
   <li><strong>Replaced by ViT</strong>: Vision Transformers now often outperform CNNs on large datasets</li>
   </ul>
   `,
-  visualizer: "CNN",
   },
   "ModernAIIntro": {
     visualizer: "Transformer",
@@ -203,7 +201,6 @@ export const MATH_TOPICS = {
   <li><strong>Environmental impact</strong>: Training consumes enormous energy</li>
   </ul>
   `,
-  visualizer: "Transformer",
   },
   "SVM": {
  title: "SVM: Support Vector Machines",
@@ -289,25 +286,6 @@ export const MATH_TOPICS = {
   <li><strong>Sensitive to scaling</strong>: Features must be normalized, or SVM fails</li>
   </ul>
   `,
-  visualizer: "SVM",
- interactiveFormulas: [
- {
- name: "Margin Size",
- components: [
- { symbol: "Margin", key: "margin", name: "Margin Width", description: "Distance between support vectors" },
- { symbol: " = 2 / ||w||", key: "formula", name: "Formula", description: "Inversely proportional to weight norm" }
- ],
- variables: [
- { key: "wnorm", symbol: "||w||", name: "Weight Norm", min: 0.1, max: 10, step: 0.1, default: 2, decimals: 1 }
- ],
- calculate: (vals, get) => 2 / get("wnorm", 2),
- insights: [
- "Smaller weights = larger margins = better generalization.",
- "Support vectors are the points 'supporting' the margin.",
- "Hinge loss penalizes points inside the margin."
- ]
- }
- ]
  },
  "DecisionTree": {
     visualizer: "Tree",
@@ -360,7 +338,6 @@ export const MATH_TOPICS = {
   <li><strong>Greedy algorithm</strong>: Makes locally optimal splits that may not be globally optimal</li>
   </ul>
   `,
-  visualizer: "Tree",
  interactiveFormulas: [
  {
  name: "Gini Impurity",
@@ -390,7 +367,6 @@ export const MATH_TOPICS = {
  content: `
  <p><strong>Random Forests</strong> combine multiple Decision Trees to reduce overfitting and improve accuracy. This is a technique called <strong>Bagging</strong> (Bootstrap Aggregating).</p>
  `,
- visualizer: "RandomForest",
  interactiveFormulas: [
  {
  name: "Ensemble Prediction",
@@ -449,7 +425,6 @@ export const MATH_TOPICS = {
    <li><strong>Sensitive to k</strong>: Small k = noise sensitive, large k = smooth but may miss patterns</li>
    </ul>
    `,
-   visualizer: "KNN",
  interactiveFormulas: [
  {
  name: "Euclidean Distance",
@@ -503,7 +478,6 @@ export const MATH_TOPICS = {
    <li><strong>Information loss</strong>: Reducing dimensions always loses some information</li>
    </ul>
    `,
-   visualizer: "PCA",
   interactiveFormulas: [
  {
  name: "Explained Variance",
@@ -558,7 +532,6 @@ export const MATH_TOPICS = {
    <li><strong>Non-robust</strong>: A few bad predictions can make the whole loss huge</li>
    </ul>
    `,
-   visualizer: "Loss",
  interactiveFormulas: [
  {
  name: "Huber Loss",
@@ -811,7 +784,7 @@ export const MATH_TOPICS = {
  insights: [
  "Sign of gradient decides direction of movement.",
  "Doubling lr doubles update magnitude.",
- "In control systems, lr acts like a proportional gain." 
+ "In control systems, lr acts like a proportional gain."
  ]
  },
  {
@@ -837,7 +810,7 @@ export const MATH_TOPICS = {
  insights: [
  "Popular in deep learning: fast learning early, stable later.",
  "Analogous to annealing temperature in metallurgy.",
- "Helps networks converge without oscillation." 
+ "Helps networks converge without oscillation."
  ]
  }
   ]
@@ -864,7 +837,6 @@ export const MATH_TOPICS = {
    <li><strong>Exploding outputs</strong>: Unbounded activations can cause numerical instability</li>
    </ul>
    `,
-   visualizer: "Activation",
    interactiveFormulas: [
  {
  name: "Sigmoid",
@@ -968,7 +940,7 @@ export const MATH_TOPICS = {
  insights: [
  "Positive weights amplify inputs, negative weights invert them.",
  "Bias shifts the activation threshold (like DC offset).",
- "Hidden layers learn features automatically from data." 
+ "Hidden layers learn features automatically from data."
  ]
  },
  {
@@ -1000,7 +972,7 @@ export const MATH_TOPICS = {
  insights: [
  "Adds expressive power for multi-sensor fusion.",
  "Common in robotics: combine accelerometer, gyro, magnetometer.",
- "Hidden layers learn to weight each channel appropriately." 
+ "Hidden layers learn to weight each channel appropriately."
  ]
  }
  ]
@@ -1027,7 +999,6 @@ export const MATH_TOPICS = {
     <li><strong>Hyperparameters</strong>: Beta values still need tuning</li>
     </ul>
     `,
-    visualizer: "Optimizer",
    interactiveFormulas: [
  {
  name: "SGD with Momentum",
@@ -1275,7 +1246,6 @@ export const MATH_TOPICS = {
    <li><strong>Saddle points</strong>: Flat regions can fool optimizers into thinking they've converged</li>
    </ul>
    `,
-   visualizer: "GradientDescent",
   interactiveFormulas: [
  {
  name: "Gradient Magnitude",
@@ -1574,70 +1544,17 @@ export const MATH_TOPICS = {
  insights: [
  "Higher SNR means clearer signal (less noise).",
  "In ML, data augmentation often improves effective SNR.",
- "Helps compare sensor quality for embedded systems." 
+ "Helps compare sensor quality for embedded systems."
  ]
  }
  ]
  },
  "Vectors & Matrices": {
-    visualizer: "LinearAlgebra",
  title: "Vectors & Matrices: Lego Bricks of Vision Models",
  content: `
  <p><strong>Vectors</strong> line up numbers in a single column. In vision mode the 10×10 canvas becomes a 100×1 vector before entering the dense layers.</p>
  <p><strong>Matrices</strong> arrange those vectors into 2D grids so filters can slide over rows and columns. Understanding their norms and determinants explains why scaling or rotating images affects activations.</p>
  `,
- interactiveFormulas: [
- {
- name: "Vector Magnitude (3D)",
- parts: [
- { symbol: "|v|", key: "mag", name: "Magnitude", description: "Length of the vector" },
- { symbol: " = ", key: null },
- { symbol: "sqrt(x^2 + y^2 + z^2)", key: "formula", name: "Euclidean Norm", description: "Distance from origin" }
- ],
- variables: [
- { key: "vx", symbol: "x", name: "x", min: -5, max: 5, step: 0.1, default: 1.2, decimals: 1 },
- { key: "vy", symbol: "y", name: "y", min: -5, max: 5, step: 0.1, default: -0.4, decimals: 1 },
- { key: "vz", symbol: "z", name: "z", min: -5, max: 5, step: 0.1, default: 2.3, decimals: 1 }
- ],
- calculate: (vals, get) => {
- const x = get("vx", 1.2);
- const y = get("vy", -0.4);
- const z = get("vz", 2.3);
- return Math.sqrt(x * x + y * y + z * z);
- },
- insights: [
- "Magnitude shows how strong a pixel gradient or feature vector is.",
- "Normalizing vectors (dividing by |v|) stabilizes training.",
- "Longer vectors mean brighter strokes on the vision canvas." 
- ]
- },
- {
- name: "2x2 Determinant",
- parts: [
- { symbol: "det(A)", key: "det", name: "Determinant", description: "Area scale factor" },
- { symbol: " = ", key: null },
- { symbol: "a11*a22 - a12*a21", key: "formula", name: "Formula", description: "Signed area" }
- ],
- variables: [
- { key: "a11", symbol: "a11", name: "a11", min: -3, max: 3, step: 0.1, default: 1, decimals: 1 },
- { key: "a12", symbol: "a12", name: "a12", min: -3, max: 3, step: 0.1, default: 0.5, decimals: 1 },
- { key: "a21", symbol: "a21", name: "a21", min: -3, max: 3, step: 0.1, default: -0.3, decimals: 1 },
- { key: "a22", symbol: "a22", name: "a22", min: -3, max: 3, step: 0.1, default: 2, decimals: 1 }
- ],
- calculate: (vals, get) => {
- const a11 = get("a11", 1);
- const a12 = get("a12", 0.5);
- const a21 = get("a21", -0.3);
- const a22 = get("a22", 2);
- return a11 * a22 - a12 * a21;
- },
- insights: [
- "det(A)=0 means the matrix squashes space—information is lost.",
- "Positive determinant preserves orientation; negative flips it.",
- "Useful for reasoning about data augmentation transforms." 
- ]
- }
- ]
  },
  "Dot Product": {
     visualizer: "DotProduct",
@@ -1674,7 +1591,7 @@ export const MATH_TOPICS = {
  insights: [
  "Positive values mean vectors look in the same direction.",
  "Zero indicates orthogonal features (independent information).",
- "Used everywhere: attention layers, cosine similarity, projections." 
+ "Used everywhere: attention layers, cosine similarity, projections."
  ]
  },
  {
@@ -1697,7 +1614,7 @@ export const MATH_TOPICS = {
  insights: [
  "θ=0° ⇒ cosθ=1 ⇒ maximum reinforcement between vectors.",
  "θ=90° ⇒ dot product = 0 ⇒ no influence.",
- "θ>90° ⇒ negative dot ⇒ inhibitory effect (important for filters)." 
+ "θ>90° ⇒ negative dot ⇒ inhibitory effect (important for filters)."
  ]
  }
  ]
@@ -1739,7 +1656,7 @@ export const MATH_TOPICS = {
  insights: [
  "Row of A interacts with column of B—match inner dimensions.",
  "Each output element is a dot product (MAC operation).",
- "Visualize dense layer weights as filters applied to full vectors." 
+ "Visualize dense layer weights as filters applied to full vectors."
  ]
  },
  {
@@ -1762,7 +1679,7 @@ export const MATH_TOPICS = {
  insights: [
  "MACs correlate with latency and power on embedded hardware.",
  "Reducing shared dimension (inputs) cuts cost dramatically.",
- "Depthwise separable convolutions lower MACs by splitting dims." 
+ "Depthwise separable convolutions lower MACs by splitting dims."
  ]
  }
  ]
@@ -2078,7 +1995,6 @@ Recall = TP / (TP + FN)
   <li><strong>No inference model</strong>: Can't easily estimate probability of given sample</li>
   </ul>
   `,
-  visualizer: "GAN",
    interactiveFormulas: [
  {
  name: "Generator Loss",
@@ -2212,7 +2128,6 @@ Recall = TP / (TP + FN)
   <li><strong>Replaced by strided convolutions</strong>: Modern architectures often use strided conv instead</li>
   </ul>
   `,
-  visualizer: "Pooling",
    interactiveFormulas: [
  {
  name: "Output Size Calculator",
@@ -2891,7 +2806,6 @@ Recall = TP / (TP + FN)
   <li><strong>No function approximation</strong>: Basic MDP needs explicit state tables</li>
   </ul>
   `,
-  visualizer: "MDP",
    interactiveFormulas: [
  {
  name: "Discounted Return",
@@ -2939,7 +2853,6 @@ Recall = TP / (TP + FN)
   <li><strong>Overestimation</strong>: Max can cause overestimation of Q-values</li>
   </ul>
   `,
-  visualizer: "GridWorld",
  interactiveFormulas: [
  {
  name: "Temporal Difference (TD) Update",
@@ -2992,7 +2905,6 @@ Recall = TP / (TP + FN)
   <li><strong>Not stable</strong>: Training can be volatile</li>
   </ul>
   `,
-  visualizer: "DeepQN",
    interactiveFormulas: [
  {
  name: "DQN Loss",
@@ -3063,7 +2975,6 @@ Recall = TP / (TP + FN)
   <li><strong>Performance ceiling</strong>: Sometimes outperformed by more specialized algorithms</li>
   </ul>
   `,
-  visualizer: "PPO",
  interactiveFormulas: [
  {
  name: "PPO Clipped Objective",
@@ -3188,7 +3099,6 @@ Recall = TP / (TP + FN)
   <li><strong>Expensive for long sequences</strong>: GPT-4 has token limits due to this</li>
   </ul>
   `,
-  visualizer: "Transformer",
  interactiveFormulas: [
  {
  name: "Attention Weights",
@@ -3324,7 +3234,6 @@ Recall = TP / (TP + FN)
   <li><strong>Not universal</strong>: Doesn't work equally well for all model architectures</li>
   </ul>
   `,
-  visualizer: "LoRA",
  interactiveFormulas: [
  {
  name: "LoRA Parameter Savings",
@@ -4462,7 +4371,6 @@ Recall = TP / (TP + FN)
   <li><strong>Underfits complex data</strong>: Too simple for most real-world problems</li>
   </ul>
   `,
-  visualizer: "LinearRegression",
    interactiveFormulas: [
  {
  name: "Simple Linear Prediction",
@@ -4534,7 +4442,6 @@ Recall = TP / (TP + FN)
   <li><strong>Outperforms often by trees</strong>: For complex data, ensemble methods beat it</li>
   </ul>
   `,
-  visualizer: "LogisticRegression",
    interactiveFormulas: [
  {
  name: "Sigmoid Decision",
@@ -4680,7 +4587,6 @@ Recall = TP / (TP + FN)
   <li><strong>Slow training</strong>: Sequential nature limits hardware utilization</li>
   </ul>
   `,
-  visualizer: "RNN",
    interactiveFormulas: [
  {
  name: "Hidden State Update",
@@ -4757,7 +4663,6 @@ Recall = TP / (TP + FN)
   <li><strong>Outperformed by transformers</strong>: For most NLP, attention is better</li>
   </ul>
   `,
-  visualizer: "LSTM",
    interactiveFormulas: [
  {
  name: "Forget Gate",
