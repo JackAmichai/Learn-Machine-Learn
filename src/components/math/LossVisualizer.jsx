@@ -8,9 +8,12 @@ export default function LossVisualizer({ values = {} }) {
   useEffect(() => {
     // If we have 'err' (y - yhat), we can adjust predicted to be actual - err
     if (values.err !== undefined) {
+// eslint-disable-next-line react-hooks/set-state-in-effect
       setPredicted(actual - values.err);
     } else {
+// eslint-disable-next-line react-hooks/set-state-in-effect
       if (values.predicted !== undefined) setPredicted(values.predicted);
+// eslint-disable-next-line react-hooks/set-state-in-effect
       if (values.yhat !== undefined) setPredicted(values.yhat);
     }
     

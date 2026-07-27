@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* eslint-disable no-dupe-keys */
 export const MATH_TOPICS = {
  "FoundationsIntro": {
     visualizer: "NeuralNetwork",

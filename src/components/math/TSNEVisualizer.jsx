@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useState } from 'react';
 
 export default function TSNEVisualizer() {
@@ -12,11 +11,15 @@ export default function TSNEVisualizer() {
     const numClusters = 5;
     for (let i = 0; i < numClusters; i++) {
       const points = [];
+// eslint-disable-next-line react-hooks/purity
       const centerX = Math.random() * 60 + 20;
+// eslint-disable-next-line react-hooks/purity
       const centerY = Math.random() * 60 + 20;
       for (let j = 0; j < 15; j++) {
         points.push({
+// eslint-disable-next-line react-hooks/purity
           x: centerX + (Math.random() - 0.5) * 15,
+// eslint-disable-next-line react-hooks/purity
           y: centerY + (Math.random() - 0.5) * 15,
           cluster: i
         });

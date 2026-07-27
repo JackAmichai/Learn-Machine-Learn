@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ProgressContext } from './progressContextBase';
 import { useToast } from '../hooks/useToast';
@@ -109,6 +108,7 @@ export function ProgressProvider({ children }) {
     useEffect(() => {
         if (initialized.current) return;
         initialized.current = true;
+// eslint-disable-next-line react-hooks/set-state-in-effect
         setState(prev => {
             const today = todayStr();
             if (prev.lastActiveDate === today) return prev;
