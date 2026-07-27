@@ -12,7 +12,7 @@ export default function NeuralNetworkVisualizer({ values = {} }) {
     if (values.hiddenNodes !== undefined) {
       setLayers([layers[0], values.hiddenNodes, layers[2]]);
     }
-  }, [values.nodes, values.hiddenNodes]);
+  }, [values.nodes, values.hiddenNodes, layers]);
 
   const activations = ['Input', 'ReLU', 'Softmax'];
   const colors = ['#ff5555', '#ffaa00', '#55ff55', '#55aaff'];

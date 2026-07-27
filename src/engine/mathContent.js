@@ -733,6 +733,7 @@ export const MATH_TOPICS = {
  ]
  },
   "Learning Rate": {
+    visualizer: "GradientDescent",
   title: "Learning Rate and Schedules",
   content: `
   <p>The <strong>Learning Rate</strong> controls the size of weight updates. Too high and the system oscillates, too low and training crawls.</p>
@@ -757,6 +758,62 @@ export const MATH_TOPICS = {
   <li><strong>Differs per architecture</strong>: What works for CNNs may fail for RNNs</li>
   </ul>
   `,
+ interactiveFormulas: [
+ {
+ name: "Instant Weight Update",
+ parts: [
+ { symbol: "w_new", key: "w_new", name: "New Weight", description: "Weight after this update" },
+ { symbol: " = ", key: null },
+ { symbol: "w_old", key: "w_old", name: "Current Weight", description: "Weight before update" },
+ { symbol: " - ", key: null },
+ { symbol: "lr", key: "lr", name: "Learning Rate", description: "Step size" },
+ { symbol: " * ", key: null },
+ { symbol: "grad", key: "grad", name: "Gradient", description: "Slope telling which way to move" }
+ ],
+ variables: [
+ { key: "w_old", symbol: "w", name: "Current Weight", min: -3, max: 3, step: 0.1, default: 1.2, decimals: 2 },
+ { key: "lr", symbol: "lr", name: "Learning Rate", min: 0.0001, max: 1, step: 0.0001, default: 0.05, decimals: 4 },
+ { key: "grad", symbol: "grad", name: "Gradient", min: -5, max: 5, step: 0.1, default: -1.4, decimals: 2 }
+ ],
+ calculate: (vals, get) => {
+ const w = get("w_old", 1.2);
+ const lr = get("lr", 0.05);
+ const g = get("grad", -1.4);
+ return w - lr * g;
+ },
+ insights: [
+ "Sign of gradient decides direction of movement.",
+ "Doubling lr doubles update magnitude.",
+ "In control systems, lr acts like a proportional gain."
+ ]
+ },
+ {
+ name: "Exponential Decay Schedule",
+ parts: [
+ { symbol: "lr_k", key: "lr_k", name: "Current LR", description: "Learning rate at step k" },
+ { symbol: " = ", key: null },
+ { symbol: "lr_0", key: "lr0", name: "Initial LR", description: "Learning rate at start of training" },
+ { symbol: " * ", key: null },
+ { symbol: "decay^k", key: "decay", name: "Decay Factor", description: "Fraction applied per step" }
+ ],
+ variables: [
+ { key: "lr0", symbol: "lr_0", name: "Initial LR", min: 0.0001, max: 1, step: 0.0001, default: 0.1, decimals: 4 },
+ { key: "decay", symbol: "decay", name: "Decay", min: 0.5, max: 0.999, step: 0.001, default: 0.95, decimals: 3 },
+ { key: "step", symbol: "k", name: "Step", min: 0, max: 200, step: 1, default: 20, decimals: 0 }
+ ],
+ calculate: (vals, get) => {
+ const lr0 = get("lr0", 0.1);
+ const decay = get("decay", 0.95);
+ const step = get("step", 20);
+ return lr0 * Math.pow(decay, step);
+ },
+ insights: [
+ "Popular in deep learning: fast learning early, stable later.",
+ "Analogous to annealing temperature in metallurgy.",
+ "Helps networks converge without oscillation."
+ ]
+ }
+  ]
   },
   "Activation": {
     visualizer: "Activation",
@@ -846,6 +903,7 @@ export const MATH_TOPICS = {
  ]
  },
  "Hidden Layer": {
+    visualizer: "NeuralNetwork",
  title: "Hidden Layers = Feature Extractors",
  content: `
  <p>A hidden layer applies weights and biases to inputs, then an activation. Stacking layers lets the network learn hierarchical features (edges -> shapes -> concepts).</p>
@@ -853,6 +911,71 @@ export const MATH_TOPICS = {
  z = W * x + b, a = activation(z)
  </div>
  `,
+ interactiveFormulas: [
+ {
+ name: "Neuron (2 inputs)",
+ parts: [
+ { symbol: "z", key: "z", name: "Pre-Activation", description: "Weighted sum before activation" },
+ { symbol: " = ", key: null },
+ { symbol: "w1*x1", key: "term1", name: "Contribution 1", description: "Input 1 scaled by weight 1" },
+ { symbol: " + ", key: null },
+ { symbol: "w2*x2", key: "term2", name: "Contribution 2", description: "Input 2 scaled by weight 2" },
+ { symbol: " + b", key: "bias", name: "Bias", description: "Baseline signal" }
+ ],
+ variables: [
+ { key: "x1", symbol: "x1", name: "Input 1", min: -2, max: 2, step: 0.1, default: 0.8, decimals: 2 },
+ { key: "x2", symbol: "x2", name: "Input 2", min: -2, max: 2, step: 0.1, default: -0.4, decimals: 2 },
+ { key: "w1", symbol: "w1", name: "Weight 1", min: -2, max: 2, step: 0.1, default: 1.1, decimals: 2 },
+ { key: "w2", symbol: "w2", name: "Weight 2", min: -2, max: 2, step: 0.1, default: 0.7, decimals: 2 },
+ { key: "b", symbol: "b", name: "Bias", min: -2, max: 2, step: 0.1, default: 0.2, decimals: 2 }
+ ],
+ calculate: (vals, get) => {
+ const x1 = get("x1", 0.8);
+ const x2 = get("x2", -0.4);
+ const w1 = get("w1", 1.1);
+ const w2 = get("w2", 0.7);
+ const b = get("b", 0.2);
+ return w1 * x1 + w2 * x2 + b;
+ },
+ insights: [
+ "Positive weights amplify inputs, negative weights invert them.",
+ "Bias shifts the activation threshold (like DC offset).",
+ "Hidden layers learn features automatically from data."
+ ]
+ },
+ {
+ name: "Neuron (3 inputs)",
+ parts: [
+ { symbol: "z", key: "z3", name: "Pre-Activation", description: "Sum of three weighted inputs" },
+ { symbol: " = ", key: null },
+ { symbol: "w1*x1 + w2*x2 + w3*x3 + b", key: "sum", name: "Weighted Sum", description: "Classic affine transform" }
+ ],
+ variables: [
+ { key: "x1", symbol: "x1", name: "Input 1", min: -2, max: 2, step: 0.1, default: 0.2, decimals: 2 },
+ { key: "x2", symbol: "x2", name: "Input 2", min: -2, max: 2, step: 0.1, default: 1.2, decimals: 2 },
+ { key: "x3", symbol: "x3", name: "Input 3", min: -2, max: 2, step: 0.1, default: -0.6, decimals: 2 },
+ { key: "w1", symbol: "w1", name: "Weight 1", min: -2, max: 2, step: 0.1, default: 0.5, decimals: 2 },
+ { key: "w2", symbol: "w2", name: "Weight 2", min: -2, max: 2, step: 0.1, default: -1.4, decimals: 2 },
+ { key: "w3", symbol: "w3", name: "Weight 3", min: -2, max: 2, step: 0.1, default: 0.9, decimals: 2 },
+ { key: "b", symbol: "b", name: "Bias", min: -2, max: 2, step: 0.1, default: 0.05, decimals: 2 }
+ ],
+ calculate: (vals, get) => {
+ const x1 = get("x1", 0.2);
+ const x2 = get("x2", 1.2);
+ const x3 = get("x3", -0.6);
+ const w1 = get("w1", 0.5);
+ const w2 = get("w2", -1.4);
+ const w3 = get("w3", 0.9);
+ const b = get("b", 0.05);
+ return w1 * x1 + w2 * x2 + w3 * x3 + b;
+ },
+ insights: [
+ "Adds expressive power for multi-sensor fusion.",
+ "Common in robotics: combine accelerometer, gyro, magnetometer.",
+ "Hidden layers learn to weight each channel appropriately."
+ ]
+ }
+ ]
  },
   "Optimizer": {
     visualizer: "Optimizer",
@@ -1394,6 +1517,7 @@ export const MATH_TOPICS = {
  ]
  },
  "Signal Processing": {
+    visualizer: "CNN",
  title: "Signals and Frequency",
  content: `
  <p>Neural networks can process signals too. Concepts like signal energy and frequency response connect EE fundamentals with machine learning.</p>
@@ -1401,6 +1525,29 @@ export const MATH_TOPICS = {
  Energy = sum x(t)^2, SNR = 10 * log10(signal / noise)
  </div>
  `,
+ interactiveFormulas: [
+ {
+ name: "Signal-to-Noise Ratio",
+ parts: [
+ { symbol: "SNR", key: "snr", name: "Signal to Noise", description: "Ratio in decibels" },
+ { symbol: " = 10 * log10(signal / noise)", key: "formula", name: "Formula", description: "Power ratio in dB" }
+ ],
+ variables: [
+ { key: "signal", symbol: "signal", name: "Signal Power", min: 0.01, max: 10, step: 0.01, default: 1, decimals: 2 },
+ { key: "noise", symbol: "noise", name: "Noise Power", min: 0.001, max: 5, step: 0.001, default: 0.1, decimals: 3 }
+ ],
+ calculate: (vals, get) => {
+ const signal = get("signal", 1);
+ const noise = Math.max(0.0001, get("noise", 0.1));
+ return 10 * Math.log10(signal / noise);
+ },
+ insights: [
+ "Higher SNR means clearer signal (less noise).",
+ "In ML, data augmentation often improves effective SNR.",
+ "Helps compare sensor quality for embedded systems."
+ ]
+ }
+ ]
  },
  "Vectors & Matrices": {
  title: "Vectors & Matrices: Lego Bricks of Vision Models",
@@ -1410,18 +1557,132 @@ export const MATH_TOPICS = {
  `,
  },
  "Dot Product": {
+    visualizer: "DotProduct",
  title: "Dot Product: Similarity Meter",
  content: `
  <p>The dot product measures how aligned two vectors are. In the vision model it compares your drawn strokes with learned weight vectors.</p>
  <p>Geometry version: a · b = |a||b|cosθ. Component version: sum of element-wise products. Both explain why brighter pixels boost certain neurons.</p>
  `,
+ interactiveFormulas: [
+ {
+ name: "Component Form",
+ parts: [
+ { symbol: "a · b", key: "dot", name: "Dot Product", description: "Similarity score" },
+ { symbol: " = ", key: null },
+ { symbol: "ax*bx + ay*by + az*bz", key: "formula", name: "Sum of products", description: "Multiply, then add" }
+ ],
+ variables: [
+ { key: "ax", symbol: "ax", name: "a_x", min: -3, max: 3, step: 0.1, default: 0.8, decimals: 1 },
+ { key: "ay", symbol: "ay", name: "a_y", min: -3, max: 3, step: 0.1, default: 0.4, decimals: 1 },
+ { key: "az", symbol: "az", name: "a_z", min: -3, max: 3, step: 0.1, default: 0, decimals: 1 },
+ { key: "bx", symbol: "bx", name: "b_x", min: -3, max: 3, step: 0.1, default: 1.1, decimals: 1 },
+ { key: "by", symbol: "by", name: "b_y", min: -3, max: 3, step: 0.1, default: -0.6, decimals: 1 },
+ { key: "bz", symbol: "bz", name: "b_z", min: -3, max: 3, step: 0.1, default: 0.2, decimals: 1 }
+ ],
+ calculate: (vals, get) => {
+ const ax = get("ax", 0.8);
+ const ay = get("ay", 0.4);
+ const az = get("az", 0);
+ const bx = get("bx", 1.1);
+ const by = get("by", -0.6);
+ const bz = get("bz", 0.2);
+ return ax * bx + ay * by + az * bz;
+ },
+ insights: [
+ "Positive values mean vectors look in the same direction.",
+ "Zero indicates orthogonal features (independent information).",
+ "Used everywhere: attention layers, cosine similarity, projections."
+ ]
+ },
+ {
+ name: "Angle Form",
+ parts: [
+ { symbol: "a · b", key: "dot", name: "Dot Product", description: "Projection of a onto b" },
+ { symbol: " = |a||b|cos(θ)", key: "angle", name: "Angle", description: "Controls sign and magnitude" }
+ ],
+ variables: [
+ { key: "magA", symbol: "|a|", name: "|a|", min: 0, max: 5, step: 0.1, default: 2, decimals: 1 },
+ { key: "magB", symbol: "|b|", name: "|b|", min: 0, max: 5, step: 0.1, default: 1.5, decimals: 1 },
+ { key: "theta", symbol: "θ", name: "Angle (deg)", min: 0, max: 180, step: 1, default: 35, decimals: 0 }
+ ],
+ calculate: (vals, get) => {
+ const a = get("magA", 2);
+ const b = get("magB", 1.5);
+ const theta = get("theta", 35) * Math.PI / 180;
+ return a * b * Math.cos(theta);
+ },
+ insights: [
+ "θ=0° ⇒ cosθ=1 ⇒ maximum reinforcement between vectors.",
+ "θ=90° ⇒ dot product = 0 ⇒ no influence.",
+ "θ>90° ⇒ negative dot ⇒ inhibitory effect (important for filters)."
+ ]
+ }
+ ]
  },
  "Matrix Multiplication": {
+    visualizer: "MatMul",
  title: "Matrix Multiplication: Layer Engine",
  content: `
  <p>Dense layers are nothing but matrix multiplications. A weight matrix multiplies the input vector to produce activations for the next layer.</p>
  <p>Vision models flatten 2D patches into vectors, multiply by weights, then reshape again. Tracking dimensions keeps tensor shapes valid.</p>
  `,
+ interactiveFormulas: [
+ {
+ name: "2x2 × 2x2",
+ parts: [
+ { symbol: "C = A·B", key: "product", name: "Product", description: "Resulting matrix" }
+ ],
+ variables: [
+ { key: "a11", symbol: "a11", name: "A11", min: -3, max: 3, step: 0.1, default: 1, decimals: 1 },
+ { key: "a12", symbol: "a12", name: "A12", min: -3, max: 3, step: 0.1, default: 0.5, decimals: 1 },
+ { key: "a21", symbol: "a21", name: "A21", min: -3, max: 3, step: 0.1, default: -0.8, decimals: 1 },
+ { key: "a22", symbol: "a22", name: "A22", min: -3, max: 3, step: 0.1, default: 2.2, decimals: 1 },
+ { key: "b11", symbol: "b11", name: "B11", min: -3, max: 3, step: 0.1, default: 0.7, decimals: 1 },
+ { key: "b12", symbol: "b12", name: "B12", min: -3, max: 3, step: 0.1, default: -1, decimals: 1 },
+ { key: "b21", symbol: "b21", name: "B21", min: -3, max: 3, step: 0.1, default: 0.3, decimals: 1 },
+ { key: "b22", symbol: "b22", name: "B22", min: -3, max: 3, step: 0.1, default: 1.4, decimals: 1 }
+ ],
+ calculate: (vals, get) => {
+ const a11 = get("a11", 1); const a12 = get("a12", 0.5);
+ const a21 = get("a21", -0.8); const a22 = get("a22", 2.2);
+ const b11 = get("b11", 0.7); const b12 = get("b12", -1);
+ const b21 = get("b21", 0.3); const b22 = get("b22", 1.4);
+ const c11 = a11 * b11 + a12 * b21;
+ const c12 = a11 * b12 + a12 * b22;
+ const c21 = a21 * b11 + a22 * b21;
+ const c22 = a21 * b12 + a22 * b22;
+ return `[[${c11.toFixed(2)}, ${c12.toFixed(2)}], [${c21.toFixed(2)}, ${c22.toFixed(2)}]]`;
+ },
+ insights: [
+ "Row of A interacts with column of B—match inner dimensions.",
+ "Each output element is a dot product (MAC operation).",
+ "Visualize dense layer weights as filters applied to full vectors."
+ ]
+ },
+ {
+ name: "MAC Counter",
+ parts: [
+ { symbol: "MACs", key: "macs", name: "Multiply-Accumulates", description: "Work required" },
+ { symbol: " = rows * cols * shared", key: "formula", name: "Cost", description: "Operation count" }
+ ],
+ variables: [
+ { key: "rows", symbol: "rows", name: "Rows", min: 1, max: 512, step: 1, default: 64, decimals: 0 },
+ { key: "cols", symbol: "cols", name: "Cols", min: 1, max: 512, step: 1, default: 32, decimals: 0 },
+ { key: "shared", symbol: "shared", name: "Shared Dim", min: 1, max: 1024, step: 1, default: 100, decimals: 0 }
+ ],
+ calculate: (vals, get) => {
+ const rows = get("rows", 64);
+ const cols = get("cols", 32);
+ const shared = get("shared", 100);
+ return rows * cols * shared;
+ },
+ insights: [
+ "MACs correlate with latency and power on embedded hardware.",
+ "Reducing shared dimension (inputs) cuts cost dramatically.",
+ "Depthwise separable convolutions lower MACs by splitting dims."
+ ]
+ }
+ ]
  },
  "Tensors": {
     visualizer: "Tensor",
@@ -1541,6 +1802,7 @@ export const MATH_TOPICS = {
  ]
  },
 "Classification Metrics": {
+     visualizer: "Metric",
   title: "Classification Metrics: Measuring Success",
  content: `
  <p><strong>Accuracy</strong> is just the start. To truly understand a classifier's performance, especially on imbalanced data, we need <strong>Precision</strong>, <strong>Recall</strong>, and the <strong>F1 Score</strong>.</p>
@@ -1570,6 +1832,64 @@ Recall = TP / (TP + FN)
   <li><strong>Can be gamed</strong>: May not reflect real-world performance</li>
   </ul>
   `,
+ interactiveFormulas: [
+ {
+ name: "Accuracy Calculator",
+ parts: [
+ { symbol: "Acc", key: "acc", name: "Accuracy", description: "Overall correct predictions" },
+ { symbol: " = ", key: null },
+ { symbol: "(TP + TN) / Total", key: "formula", name: "Formula", description: "Ratio of correct guesses" }
+ ],
+ variables: [
+ { key: "TP", symbol: "TP", name: "True Positives", min: 0, max: 100, step: 1, default: 45, decimals: 0 },
+ { key: "TN", symbol: "TN", name: "True Negatives", min: 0, max: 100, step: 1, default: 40, decimals: 0 },
+ { key: "FP", symbol: "FP", name: "False Positives", min: 0, max: 100, step: 1, default: 10, decimals: 0 },
+ { key: "FN", symbol: "FN", name: "False Negatives", min: 0, max: 100, step: 1, default: 5, decimals: 0 }
+ ],
+ calculate: (vals, get) => {
+ const TP = get("TP", 45);
+ const TN = get("TN", 40);
+ const FP = get("FP", 10);
+ const FN = get("FN", 5);
+ const total = TP + TN + FP + FN;
+ return total > 0 ? (TP + TN) / total : 0;
+ },
+ insights: [
+ "High accuracy can be misleading if classes are imbalanced.",
+ "Example: 99% accuracy is easy if 99% of samples are negative.",
+ "Always look at confusion matrix for the full picture."
+ ]
+ },
+ {
+ name: "F1 Score",
+ parts: [
+ { symbol: "F1", key: "f1", name: "F1 Score", description: "Harmonic mean of Precision and Recall" },
+ { symbol: " = ", key: null },
+ { symbol: "2 * (P * R) / (P + R)", key: "formula", name: "Formula", description: "Balances false positives and false negatives" }
+ ],
+ variables: [
+ { key: "TP", symbol: "TP", name: "True Positives", min: 0, max: 100, step: 1, default: 30, decimals: 0 },
+ { key: "FP", symbol: "FP", name: "False Positives", min: 0, max: 100, step: 1, default: 10, decimals: 0 },
+ { key: "FN", symbol: "FN", name: "False Negatives", min: 0, max: 100, step: 1, default: 20, decimals: 0 }
+ ],
+ calculate: (vals, get) => {
+ const TP = get("TP", 30);
+ const FP = get("FP", 10);
+ const FN = get("FN", 20);
+
+ const precision = TP + FP > 0 ? TP / (TP + FP) : 0;
+ const recall = TP + FN > 0 ? TP / (TP + FN) : 0;
+
+ if (precision + recall === 0) return 0;
+ return 2 * (precision * recall) / (precision + recall);
+ },
+ insights: [
+ "F1 is lower than accuracy if P or R is low.",
+ "Perfect F1 (1.0) requires perfect Precision AND Recall.",
+ "Crucial metric for medical diagnosis or fraud detection."
+ ]
+ }
+ ]
  },
  "Pip2Pip": {
     visualizer: "GAN",
