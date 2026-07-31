@@ -1,0 +1,3 @@
+## 2024-07-31 - Code Export Modal Accessibility
+**Learning:** React modals (like the custom one used in CodeExport) often omit standard dialog accessibility attributes unless explicitly defined. Screen readers require `role="dialog"`, `aria-modal="true"`, and a clear connection to the modal's title (e.g., via `aria-labelledby` referencing an `id` on the heading) to properly context switch and announce the overlay.
+**Action:** Always verify custom modal implementations in this codebase to ensure they include the proper ARIA dialog attributes and label associations. Do not assume custom popup containers are inherently accessible to assistive technologies.
