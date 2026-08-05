@@ -9,18 +9,23 @@ import { Tooltip } from './Tooltip';
  * @param {number} modelVersion - Version trigger for recompute
  * @returns {Object} Metrics object with confusion matrix, accuracy, precision, recall, F1
  */
-function computeMetrics(model, data, modelVersion) {
+async function computeMetrics(model, data, modelVersion) {
     if (!model?.model || !data?.xs || !data?.labels) {
         return null;
     }
 
     try {
-        const predictions = tf.tidy(() => {
-            const preds = model.predict(data.xs);
-            // For binary classification with single output node
-            const predData = preds.dataSync();
-            return Array.from(predData).map(p => (p >= 0.5 ? 1 : 0));
-        });
+        let preds;
+        let predData;
+        try {
+            preds = model.predict(data.xs);
+            // ⚡ Bolt: Convert blocking dataSync() to async data() to prevent UI jank
+            predData = await preds.data();
+        } finally {
+            if (preds) preds.dispose();
+        }
+
+        const predictions = Array.from(predData).map(p => (p >= 0.5 ? 1 : 0));
 
         const actual = data.labels;
         const n = Math.min(predictions.length, actual.length);
@@ -73,17 +78,21 @@ export function StatsPanel({ model, data, modelVersion, epoch, loss }) {
     const [expanded, setExpanded] = useState(true);
 
     useEffect(() => {
+        let isStale = false;
         // Debounce metric computation to avoid blocking UI
-        const timer = setTimeout(() => {
+        const timer = setTimeout(async () => {
             if (!model || !data) {
-                setMetrics(null);
+                if (!isStale) setMetrics(null);
                 return;
             }
-            const computed = computeMetrics(model, data, modelVersion);
-            setMetrics(computed);
+            const computed = await computeMetrics(model, data, modelVersion);
+            if (!isStale) setMetrics(computed);
         }, 100);
 
-        return () => clearTimeout(timer);
+        return () => {
+            isStale = true;
+            clearTimeout(timer);
+        };
     }, [model, data, modelVersion]);
 
     const formatPct = (value) => `${(value * 100).toFixed(1)}%`;
