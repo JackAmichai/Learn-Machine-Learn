@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+/* eslint-disable-next-line no-unused-vars */
 import * as tf from '@tensorflow/tfjs';
 import { Tooltip } from './Tooltip';
 
