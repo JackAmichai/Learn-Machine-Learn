@@ -160,8 +160,9 @@ export function Chatbot() {
 
             if (!res.ok) {
                 const bodyText = await res.text().catch(() => '');
+                console.error(`[ML Mentor] Request failed (${res.status}):`, bodyText);
                 throw new Error(
-                    `Request failed (${res.status}). ${bodyText.slice(0, 200)}`
+                    `Request failed (${res.status}). An error occurred while communicating with the server.`
                 );
             }
 
