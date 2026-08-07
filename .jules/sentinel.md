@@ -1,0 +1,4 @@
+## 2025-02-28 - Information Leakage in Error Messages
+**Vulnerability:** The Chatbot component was including the raw response body in the error message when an API request failed. This could potentially leak sensitive information about the backend infrastructure or internal state of the Hugging Face Inference API.
+**Learning:** Including raw API response bodies in client-facing error messages is a common anti-pattern that can lead to information disclosure. Even if the response body is truncated, it might still contain sensitive data like stack traces, internal paths, or configuration details.
+**Prevention:** Always use generic, user-friendly error messages on the client side. If debugging information is needed, log the raw response securely on the server-side, but do not expose it to the user.

@@ -159,9 +159,8 @@ export function Chatbot() {
             });
 
             if (!res.ok) {
-                const bodyText = await res.text().catch(() => '');
                 throw new Error(
-                    `Request failed (${res.status}). ${bodyText.slice(0, 200)}`
+                    `Request failed (${res.status}).`
                 );
             }
 
