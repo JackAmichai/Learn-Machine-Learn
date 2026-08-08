@@ -93,7 +93,7 @@ export function OutputPlot({ model, data, modelVersion }) {
             }
         }
 
-        draw();
+        draw().catch(console.error);
 
         return () => {
             isStale = true;
