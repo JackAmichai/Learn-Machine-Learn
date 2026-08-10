@@ -360,6 +360,8 @@ export function Chatbot() {
                             onKeyDown={handleKeyDown}
                             rows={1}
                             disabled={loading}
+                            maxLength={2000}
+                            // 🛡️ Sentinel: Prevent DoS by limiting input size
                         />
                         <button
                             className="chatbot-send"
