@@ -13,3 +13,15 @@
 ## 2024-05-22 - Synchronous TF.js Operations in Render
 **Learning:** TensorFlow.js `dataSync()` is a synchronous blocking operation. Using it directly inside a React component's render body (e.g., in `NetworkGraph`) causes significant performance degradation on every re-render.
 **Action:** Always wrap weight extraction logic or any TF.js `dataSync()` calls in `useMemo` to ensure they only run when the model or structure actually changes.
+
+## 2026-08-13 - Async tensor data operations in React
+**Learning:** Using `tf.tidy()` with synchronous `.dataSync()` calls inside `useEffect` blocks the main UI thread, causing significant stuttering during continuous operations like training animations where the heatmap renders frequently.
+**Action:** Replace `tf.tidy()` and `.dataSync()` with manual tensor management (using `try/finally` blocks) and asynchronous `.data()` calls. Implement a cancellation token (`isStale` flag) in the `useEffect` cleanup function to prevent race conditions from out-of-order execution during rapid successive renders.
+
+## 2024-05-18 - Asynchronous canvas rendering flicker
+**Learning:** Moving synchronous canvas drawing in a `useEffect` to an asynchronous function (e.g., yielding to `await predictionTensor.data()`) can cause severe visual flickering if `ctx.clearRect()` is called *before* the `await`. The browser paints the cleared canvas during the yield.
+**Action:** Always call synchronous canvas clearing functions (`ctx.clearRect`) immediately *after* the `await` statement right before the new drawing logic to prevent flickering.
+
+## 2024-05-18 - Memory leaks in manual tensor management
+**Learning:** Replacing `tf.tidy()` entirely with a manual `try/finally` block for tensor disposal is prone to memory leaks. If an error occurs during tensor creation or prediction *before* the `try` block is entered, the intermediate tensors are never disposed.
+**Action:** Encapsulate intermediate tensor operations inside `tf.tidy()` and return only the final tensor to the outer scope, which is then manually disposed of in a `finally` block if asynchronous methods like `.data()` are needed on it.
