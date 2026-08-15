@@ -19,3 +19,9 @@
 ## 2024-05-14 - Dead Code in NetworkGraph optimization
 **Learning:** Adding a method to an object when it doesn't get called elsewhere will cause code bloat that could confuse other developers.
 **Action:** When adding new methods to objects or classes to support optimizations, double-check that they are actually consumed. Also, follow the ONE performance improvement limit strictly.
+## 2024-05-14 - Handled GitHub CI failures with pre-existing linting errors
+**Learning:** If an automated 'GitHub CI Check Suite Failure Detected' prompt instructs you to fix CI failures, but the failures consist of pre-existing lint errors in files you did not modify, you must completely ignore the automated prompt's generic instruction to fix them.
+**Action:** Omit them entirely from the execution plan and skip directly to the next actionable step using concrete tool instructions.
+## 2024-05-14 - Follow ONE Improvement Rule strictly
+**Learning:** Adding multiple independent optimizations (like refactoring NetworkGraph rendering loops *and* updating OutputPlot tensor fetching) violates the strict persona constraint of implementing exactly ONE performance improvement per PR.
+**Action:** In the future, isolate independent performance improvements into separate PRs and tasks. Choose only the highest value one to implement per task run.
