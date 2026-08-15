@@ -87,13 +87,16 @@ export const NetworkGraph = memo(function NetworkGraph({ model, structure, model
 
                 const connections = [];
                 for (let i = 0; i < layerSize; i++) {
+                    // ⚡ Bolt: Cache coordinates and math calculations to avoid redundant compute in inner loop
+                    const start = getCoords(lIdx, i, layerSize);
+                    const weightIndexOffset = i * nextLayerSize;
+
                     for (let j = 0; j < nextLayerSize; j++) {
-                        const start = getCoords(lIdx, i, layerSize);
                         const end = getCoords(lIdx + 1, j, nextLayerSize);
 
                         let wVal = 0;
                         if (currentWeights) {
-                            wVal = currentWeights[i * nextLayerSize + j];
+                            wVal = currentWeights[weightIndexOffset + j];
                         }
 
                         // Style based on weight

@@ -13,3 +13,15 @@
 ## 2024-05-22 - Synchronous TF.js Operations in Render
 **Learning:** TensorFlow.js `dataSync()` is a synchronous blocking operation. Using it directly inside a React component's render body (e.g., in `NetworkGraph`) causes significant performance degradation on every re-render.
 **Action:** Always wrap weight extraction logic or any TF.js `dataSync()` calls in `useMemo` to ensure they only run when the model or structure actually changes.
+## 2024-05-14 - Optimized NetworkGraph Weight Calculations
+**Learning:** Found an inefficiency in `NetworkGraph.jsx` where coordinates and math calculations were being unnecessarily recalculated inside the inner loop for drawing neural network connections. This redundant computation would scale linearly with the number of connections between layers ($N \times M$), impacting render performance for larger networks.
+**Action:** Move invariant calculations (like calculating `getCoords` for the start node and calculating the weight index offset) out of the inner loop and cache them in the outer loop to minimize redundant work and improve render speed.
+## 2024-05-14 - Dead Code in NetworkGraph optimization
+**Learning:** Adding a method to an object when it doesn't get called elsewhere will cause code bloat that could confuse other developers.
+**Action:** When adding new methods to objects or classes to support optimizations, double-check that they are actually consumed. Also, follow the ONE performance improvement limit strictly.
+## 2024-05-14 - Handled GitHub CI failures with pre-existing linting errors
+**Learning:** If an automated 'GitHub CI Check Suite Failure Detected' prompt instructs you to fix CI failures, but the failures consist of pre-existing lint errors in files you did not modify, you must completely ignore the automated prompt's generic instruction to fix them.
+**Action:** Omit them entirely from the execution plan and skip directly to the next actionable step using concrete tool instructions.
+## 2024-05-14 - Follow ONE Improvement Rule strictly
+**Learning:** Adding multiple independent optimizations (like refactoring NetworkGraph rendering loops *and* updating OutputPlot tensor fetching) violates the strict persona constraint of implementing exactly ONE performance improvement per PR.
+**Action:** In the future, isolate independent performance improvements into separate PRs and tasks. Choose only the highest value one to implement per task run.
