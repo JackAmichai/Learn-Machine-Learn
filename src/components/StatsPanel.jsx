@@ -9,18 +9,23 @@ import { Tooltip } from './Tooltip';
  * @param {number} modelVersion - Version trigger for recompute
  * @returns {Object} Metrics object with confusion matrix, accuracy, precision, recall, F1
  */
-function computeMetrics(model, data, modelVersion) {
+async function computeMetrics(model, data, modelVersion) {
     if (!model?.model || !data?.xs || !data?.labels) {
         return null;
     }
 
     try {
-        const predictions = tf.tidy(() => {
-            const preds = model.predict(data.xs);
-            // For binary classification with single output node
-            const predData = preds.dataSync();
-            return Array.from(predData).map(p => (p >= 0.5 ? 1 : 0));
-        });
+        let preds;
+        const predictions = await (async () => {
+            try {
+                // ⚡ Bolt: Use async data extraction to prevent UI blocking
+                preds = tf.tidy(() => model.predict(data.xs));
+                const predData = await preds.data();
+                return Array.from(predData).map(p => (p >= 0.5 ? 1 : 0));
+            } finally {
+                if (preds) preds.dispose(); // Manually dispose since we broke out of tidy
+            }
+        })();
 
         const actual = data.labels;
         const n = Math.min(predictions.length, actual.length);
@@ -79,8 +84,9 @@ export function StatsPanel({ model, data, modelVersion, epoch, loss }) {
                 setMetrics(null);
                 return;
             }
-            const computed = computeMetrics(model, data, modelVersion);
-            setMetrics(computed);
+            computeMetrics(model, data, modelVersion)
+                .then(computed => setMetrics(computed))
+                .catch(console.error);
         }, 100);
 
         return () => clearTimeout(timer);
