@@ -1,0 +1,4 @@
+## 2024-08-17 - Client-side Exposure of API Tokens in Vite Applications
+**Vulnerability:** The Hugging Face API token is being accessed via `import.meta.env.VITE_HF_TOKEN` directly in the client-side code (`src/components/Chatbot.jsx`).
+**Learning:** In a Vite application, environment variables prefixed with `VITE_` are statically injected into the client-side JavaScript bundle at build time. This means the developer's API key is exposed in plaintext to anyone who views the site's source code, leading to unauthorized use and potential billing abuse. The current implementation tries to use it as a fallback (`resolveToken()`), but this exposes the key to the public internet.
+**Prevention:** Remove sensitive tokens (like `VITE_HF_TOKEN`) from the frontend code entirely. Implement a Bring-Your-Own-Key (BYOK) approach where users must provide their own token via the UI (`localStorage`), or proxy the requests through a backend server that securely holds the API key.
