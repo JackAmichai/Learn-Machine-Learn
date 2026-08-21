@@ -1,0 +1,9 @@
+I need to remove the use of VITE_HF_TOKEN in the frontend codebase because it exposes the HuggingFace token in the client bundle, which is a security risk.
+
+The memory says:
+> In a Vite application, environment variables prefixed with `VITE_` (e.g., `VITE_HF_TOKEN`) are statically injected into the client-side JavaScript bundle at build time. To prevent developer API keys/tokens from being exposed, remove them from `import.meta.env` and enforce a Bring-Your-Own-Key (BYOK) approach using only `localStorage`.
+
+I will:
+1. Update `src/components/Chatbot.jsx` to remove references to `import.meta.env.VITE_HF_TOKEN`.
+2. Ensure the chatbot relies solely on the user providing their token via the UI (`localStorage`).
+3. Update `.env.example` to remove `VITE_HF_TOKEN`.
