@@ -13,3 +13,11 @@
 ## 2024-05-22 - Synchronous TF.js Operations in Render
 **Learning:** TensorFlow.js `dataSync()` is a synchronous blocking operation. Using it directly inside a React component's render body (e.g., in `NetworkGraph`) causes significant performance degradation on every re-render.
 **Action:** Always wrap weight extraction logic or any TF.js `dataSync()` calls in `useMemo` to ensure they only run when the model or structure actually changes.
+
+## 2024-03-24 - Network Graph Performance Bottleneck
+**Learning:** `dataSync()` blocks the main UI thread during tensor data retrieval, which can cause frame drops and UI stuttering during the continuous updates of the network graph (called from `NetworkGraph.jsx`). The `NetworkGraph.jsx` component expects `model.getConnectionWeightsAsync` to exist to avoid this, but it was never implemented in `NeuralNetwork.js`.
+**Action:** Implement `getConnectionWeightsAsync(layerIndex)` in `NeuralNetwork.js` using `tensor.data()` to perform the extraction asynchronously, preventing UI lockups and significantly improving visualization framerates.
+
+## 2024-03-24 - WeightHeatmap Performance Optimization Opportunity
+**Learning:** While `NetworkGraph.jsx` was successfully offloaded to async weight extraction using `getConnectionWeightsAsync`, `WeightHeatmap.jsx` still relies on the synchronous `model.getConnectionWeights(0)` inside a `useMemo` block. Even though it's memoized, the synchronous call still executes during the React render cycle when `modelVersion` changes (which is frequent during training), blocking the main thread.
+**Action:** Future performance optimization should convert `WeightHeatmap.jsx` to fetch weights asynchronously inside a `useEffect` and store them in local state, similar to `NetworkGraph.jsx`.
