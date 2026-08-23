@@ -16,6 +16,7 @@ export const NetworkGraph = memo(function NetworkGraph({ model, structure, model
             try {
                 const layersToFetch = structure.length - 1;
                 // Optimization: Use async data extraction to avoid blocking UI thread
+                // The `getConnectionWeightsAsync` method is now implemented in NeuralNetwork.js
                 if (typeof model.getConnectionWeightsAsync === 'function') {
                     const promises = [];
                     for (let i = 0; i < layersToFetch; i++) {
