@@ -1,0 +1,4 @@
+## 2025-02-27 - [Hardcoded Developer API Key Leakage via Client Bundle]
+**Vulnerability:** The application is statically injecting `VITE_HF_TOKEN` from `.env` directly into the client-side JavaScript bundle via `import.meta.env.VITE_HF_TOKEN` in `src/components/Chatbot.jsx`.
+**Learning:** In Vite applications, environment variables prefixed with `VITE_` are exposed and bundled directly into the static assets at build time. Using this for developer API keys (like a Hugging Face inference token) effectively exposes the developer's private key to any user who inspects the client-side code, allowing malicious actors to steal the token and abuse the API quota.
+**Prevention:** Remove developer secrets from client-side bundles by avoiding `import.meta.env.VITE_*` for sensitive keys. Enforce a Bring-Your-Own-Key (BYOK) architecture for client-side API calls, or route calls through a secure, authenticated backend proxy.
