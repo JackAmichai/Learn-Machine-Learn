@@ -1,0 +1,4 @@
+## 2024-05-18 - Exposed API Token via Vite Environment Variables
+**Vulnerability:** The application was exposing the Hugging Face API token (`VITE_HF_TOKEN`) directly in the client-side JavaScript bundle. Vite automatically bundles any environment variable prefixed with `VITE_` into the static assets, meaning anyone inspecting the network or source code could extract and misuse the token.
+**Learning:** Using build-time environment variables for secrets in client-side applications (like Vite or Create React App) is fundamentally insecure. They are intended for public configuration (e.g., API URLs), not secrets.
+**Prevention:** For client-side-only applications interacting with external APIs that require authentication, enforce a Bring-Your-Own-Key (BYOK) pattern where users provide their own token via the UI, which is then securely stored only in the browser's `localStorage` or `sessionStorage`.
