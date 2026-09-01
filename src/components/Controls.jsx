@@ -411,9 +411,9 @@ export function Controls(props) {
                             <button className={`btn-primary ${isPlaying ? 'stop' : ''}`} onClick={() => setIsPlaying(!isPlaying)}>
                                 {isPlaying ? 'Pause' : 'Train'}
                             </button>
-                            <div className="train-mode-toggle" role="group">
+                            <div className="train-mode-toggle" role="group" aria-label="Training mode">
                                 {[{ key: 'continuous', label: 'Continuous' }, { key: 'slow', label: 'Slow-Mo' }, { key: 'step', label: 'Step' }].map(option => (
-                                    <button key={option.key} className={trainingMode === option.key ? 'active' : ''} onClick={() => setTrainingMode(option.key)}>
+                                    <button key={option.key} className={trainingMode === option.key ? 'active' : ''} onClick={() => setTrainingMode(option.key)} aria-pressed={trainingMode === option.key}>
                                         {option.label}
                                     </button>
                                 ))}
@@ -463,9 +463,9 @@ export function Controls(props) {
                                             {isHidden && <button className="btn-del" onClick={() => removeLayer(idx)} aria-label={`Remove layer ${idx}`}>×</button>}
                                             {isHidden && (
                                                 <div className="layer-advanced">
-                                                    <div className="pill-group">
-                                                        <button className={`pill-toggle ${featureConfig.batchNorm ? 'active' : ''}`} onClick={() => updateLayerFeatures(idx, { batchNorm: !featureConfig.batchNorm })}>BatchNorm</button>
-                                                        <button className={`pill-toggle ${featureConfig.dropout ? 'active' : ''}`} onClick={() => updateLayerFeatures(idx, { dropout: !featureConfig.dropout })}>Dropout</button>
+                                                    <div className="pill-group" role="group" aria-label="Layer advanced features">
+                                                        <button className={`pill-toggle ${featureConfig.batchNorm ? 'active' : ''}`} onClick={() => updateLayerFeatures(idx, { batchNorm: !featureConfig.batchNorm })} aria-pressed={featureConfig.batchNorm}>BatchNorm</button>
+                                                        <button className={`pill-toggle ${featureConfig.dropout ? 'active' : ''}`} onClick={() => updateLayerFeatures(idx, { dropout: !featureConfig.dropout })} aria-pressed={featureConfig.dropout}>Dropout</button>
                                                     </div>
                                                 </div>
                                             )}
