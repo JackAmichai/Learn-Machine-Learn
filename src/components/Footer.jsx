@@ -166,6 +166,7 @@ export function Footer() {
                 <input
                   type="text"
                   name="name"
+                  aria-label="Your name (optional)"
                   placeholder="Your name (optional)"
                   value={form.name}
                   onChange={onChange}
@@ -174,6 +175,7 @@ export function Footer() {
                 <input
                   type="email"
                   name="email"
+                  aria-label="Your email (optional)"
                   placeholder="Your email (optional)"
                   value={form.email}
                   onChange={onChange}
@@ -194,6 +196,7 @@ export function Footer() {
               </select>
               <textarea
                 name="message"
+                aria-label="Your message"
                 placeholder="Your message…"
                 value={form.message}
                 onChange={onChange}
