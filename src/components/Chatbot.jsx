@@ -3,9 +3,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 /**
  * ML Mentor — a floating chatbot powered by Hugging Face Inference Providers.
  *
- * Token resolution order:
- *   1. import.meta.env.VITE_HF_TOKEN  (set via .env or build env)
- *   2. localStorage['lml_hf_token']   (user pastes via the in-UI settings)
+ * Token resolution:
+ *   localStorage['lml_hf_token'] (user pastes via the in-UI settings)
  *
  * Uses the OpenAI-compatible router endpoint:
  *   https://router.huggingface.co/v1/chat/completions
@@ -57,8 +56,6 @@ function getStoredModel() {
 }
 
 function resolveToken() {
-    const envToken = import.meta.env?.VITE_HF_TOKEN;
-    if (envToken) return envToken;
     return getStoredToken();
 }
 
@@ -80,7 +77,6 @@ export function Chatbot() {
     const listRef = useRef(null);
     const inputRef = useRef(null);
 
-    const hasEnvToken = Boolean(import.meta.env?.VITE_HF_TOKEN);
     const activeToken = resolveToken();
     const activeModel = getStoredModel();
 
@@ -278,7 +274,6 @@ export function Chatbot() {
                         <div className="chatbot-settings">
                             <label>
                                 Hugging Face Token
-                                {hasEnvToken && <span className="settings-hint"> (env token active — leave blank to use it)</span>}
                                 <input
                                     type="password"
                                     placeholder="hf_..."
