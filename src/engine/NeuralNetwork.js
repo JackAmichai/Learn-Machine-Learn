@@ -412,6 +412,53 @@ export class NeuralNetwork {
   }
 
   /**
+   * Scans the network for dead neurons asynchronously.
+   * @param {tf.Tensor2D} xs - Input batch
+   * @returns {Promise<Object>} Map of layerIndex -> Array of dead neuron indices
+   */
+  async scanForDeadNeuronsAsync(xs) {
+    if (!this.model) return {};
+
+    const isDeadTensors = [];
+    const denseLayerIndices = [];
+
+    tf.tidy(() => {
+      let current = xs;
+      let denseLayerIndex = 1;
+
+      for (const layer of this.model.layers) {
+        current = layer.apply(current);
+
+        if (layer.getClassName() === 'Dense') {
+          const maxActivations = current.max(0);
+          const isDead = maxActivations.lessEqual(1e-5);
+          isDeadTensors.push(tf.keep(isDead));
+          denseLayerIndices.push(denseLayerIndex);
+          denseLayerIndex++;
+        }
+      }
+    });
+
+    const deadMap = {};
+    try {
+      for (let i = 0; i < isDeadTensors.length; i++) {
+        const deadData = await isDeadTensors[i].data();
+        const deadIndices = [];
+        for (let j = 0; j < deadData.length; j++) {
+          if (deadData[j]) deadIndices.push(j);
+        }
+        if (deadIndices.length > 0) {
+          deadMap[denseLayerIndices[i]] = deadIndices;
+        }
+      }
+    } finally {
+      isDeadTensors.forEach(t => t.dispose());
+    }
+
+    return deadMap;
+  }
+
+  /**
    * Disposes the model and releases GPU/memory resources.
    * Should be called when the network is no longer needed.
    */
