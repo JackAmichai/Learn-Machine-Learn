@@ -11,9 +11,12 @@ export function CodeExport({ structure, hyperparams }) {
 
     if (!isOpen) {
         return (
-            <button className="btn-code" onClick={() => setIsOpen(true)}>
-                &lt;/&gt; Show Code <Tooltip word="Export" overrideText="View the code to build this model" />
-            </button>
+            <div className="code-export-trigger" style={{ display: 'flex', gap: '8px', alignItems: 'center', width: '100%' }}>
+                <button className="btn-code" onClick={() => setIsOpen(true)} style={{ flex: 1 }}>
+                    &lt;/&gt; Show Code
+                </button>
+                <Tooltip word="Export" overrideText="View the code to build this model" />
+            </div>
         );
     }
 
