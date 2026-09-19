@@ -1,0 +1,4 @@
+## 2024-05-18 - XSS via dangerouslySetInnerHTML
+**Vulnerability:** Found multiple instances of `dangerouslySetInnerHTML` taking `data.content`, `data.solved`, `data.shortcomings`, `lesson.content` and other inputs directly, without any sanitization in components `MathModal.jsx` and `LookingForward.jsx`.
+**Learning:** These inputs seem to come from static configurations/content files, but they are technically user-modifiable or can be compromised if the configuration content is injected or modified externally. React application needs sanitization around dangerouslySetInnerHTML.
+**Prevention:** Always sanitize dynamically injected HTML content using a library like `dompurify` (e.g., `DOMPurify.sanitize(content)`) before passing it to `dangerouslySetInnerHTML`, even if the content currently originates from internal configurations.
