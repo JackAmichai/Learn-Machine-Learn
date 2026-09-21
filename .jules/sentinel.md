@@ -1,0 +1,4 @@
+## 2024-05-18 - XSS via improperly sanitized dangerouslySetInnerHTML
+**Vulnerability:** Found multiple usages of `dangerouslySetInnerHTML` injecting unsanitized HTML data (from configuration objects like `MATH_TOPICS` and `FUTURE_LESSONS`) directly into the DOM in `MathModal.jsx` and `LookingForward.jsx`.
+**Learning:** Even though the currently injected content originates from static internal configuration files, not sanitizing it introduces an XSS risk. If the source of these configurations changes (e.g., loaded from a CMS or an external API), malicious actors could inject malicious scripts.
+**Prevention:** Always sanitize any dynamic HTML content using a library like `dompurify` (e.g., `DOMPurify.sanitize(content)`) before passing it to `dangerouslySetInnerHTML`, regardless of its current source.
