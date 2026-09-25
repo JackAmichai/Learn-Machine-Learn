@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Tooltip } from './Tooltip';
 import { ALLOWED_ACTIVATIONS, ALLOWED_OPTIMIZERS } from '../engine/NeuralNetwork';
 
 export function CodeExport({ structure, hyperparams }) {
     const [isOpen, setIsOpen] = useState(false);
     const [lang, setLang] = useState('python'); // 'python' or 'js'
+    const [copied, setCopied] = useState(false);
+    const copyTimeoutRef = useRef(null);
 
     const safeActivation = ALLOWED_ACTIVATIONS.includes(hyperparams.activation) ? hyperparams.activation : 'relu';
     const safeOptimizer = ALLOWED_OPTIMIZERS.includes(hyperparams.optimizer) ? hyperparams.optimizer : 'adam';
@@ -67,12 +69,27 @@ export function CodeExport({ structure, hyperparams }) {
         return code;
     };
 
+    const handleCopy = () => {
+        const code = lang === 'python' ? generatePython() : generateJS();
+        navigator.clipboard.writeText(code);
+        setCopied(true);
+
+        if (copyTimeoutRef.current) {
+            clearTimeout(copyTimeoutRef.current);
+        }
+
+        copyTimeoutRef.current = setTimeout(() => {
+            setCopied(false);
+            copyTimeoutRef.current = null;
+        }, 2000);
+    };
+
     return (
         <div className="code-modal-overlay">
             <div className="code-modal">
                 <div className="modal-header">
                     <h3>Export Model Code</h3>
-                    <button className="close" onClick={() => setIsOpen(false)}>×</button>
+                    <button className="close" onClick={() => setIsOpen(false)} aria-label="Close modal">×</button>
                 </div>
 
                 <div className="lang-tabs">
@@ -81,6 +98,9 @@ export function CodeExport({ structure, hyperparams }) {
                 </div>
 
                 <div className="code-block">
+                    <button className="btn-copy" onClick={handleCopy} aria-label="Copy code to clipboard">
+                        {copied ? 'Copied!' : 'Copy'}
+                    </button>
                     <pre>
                         {lang === 'python' ? generatePython() : generateJS()}
                     </pre>
@@ -165,6 +185,23 @@ export function CodeExport({ structure, hyperparams }) {
                 border-radius: 0 8px 8px 8px;
                 overflow-x: auto;
                 border: 1px solid var(--glass-border);
+                position: relative;
+            }
+            .btn-copy {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: rgba(255,255,255,0.1);
+                color: #d4d4d4;
+                border: 1px solid rgba(255,255,255,0.2);
+                border-radius: 4px;
+                padding: 4px 10px;
+                font-size: 11px;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+            .btn-copy:hover {
+                background: rgba(255,255,255,0.2);
             }
             .code-block pre {
                 margin: 0;
