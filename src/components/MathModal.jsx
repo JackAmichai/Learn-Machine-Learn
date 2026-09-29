@@ -89,7 +89,7 @@ export function MathModal({ topic, onClose, onComplete }) {
  <SummaryView data={data} />
  ) : (
  <>
- <div className={`math-body ${!presentation.showMath ? 'visual-only' : ''}`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data.content) }} />
+ <div className={`math-body ${!presentation.showMath ? 'visual-only' : ''}`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data.content, { USE_PROFILES: { html: true, mathMl: true, svg: true } }) }} />
 
   {/* Custom Visualizer Section */}
   {Visualizer && (
@@ -102,7 +102,7 @@ export function MathModal({ topic, onClose, onComplete }) {
   {data.solved && (
   <div className="lesson-section solved-section">
     <h4>✅ What This Solved</h4>
-    <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data.solved) }} />
+    <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data.solved, { USE_PROFILES: { html: true, mathMl: true, svg: true } }) }} />
   </div>
   )}
 
@@ -110,7 +110,7 @@ export function MathModal({ topic, onClose, onComplete }) {
   {data.shortcomings && (
   <div className="lesson-section shortcomings-section">
     <h4>⚠️ Current Shortcomings</h4>
-    <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data.shortcomings) }} />
+    <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data.shortcomings, { USE_PROFILES: { html: true, mathMl: true, svg: true } }) }} />
   </div>
   )}
 
