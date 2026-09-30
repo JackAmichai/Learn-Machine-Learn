@@ -27,9 +27,15 @@ export function OutputPlot({ model, data, modelVersion }) {
             }
         }
 
-        tf.tidy(() => {
-            const inputTensor = tf.tensor2d(inputs);
-            const preds = model.predict(inputTensor).dataSync();
+        async function draw() {
+            // ⚡ Bolt: Use async data extraction to prevent blocking the main thread during training updates.
+            // Expected performance impact: Eliminates UI jank and unblocks the render loop by awaiting the GPU.
+            const predsTensor = tf.tidy(() => {
+                const inputTensor = tf.tensor2d(inputs);
+                return model.predict(inputTensor);
+            });
+            const preds = await predsTensor.data();
+            predsTensor.dispose();
 
             // Draw the heatmap
             const wCell = width / gridSize;
@@ -56,25 +62,29 @@ export function OutputPlot({ model, data, modelVersion }) {
                     ctx.fillRect(i * wCell, height - (j + 1) * hCell, wCell, hCell);
                 }
             }
-        });
 
-        // 2. Draw Data Points
-        if (data.points) {
-            data.points.forEach((pt, idx) => {
-                const x = (pt[0] + 1.5) / 3 * width;
-                const y = height - (pt[1] + 1.5) / 3 * height;
+            // 2. Draw Data Points
+            // ⚡ Bolt: Moved dependent drawing operations inside the async block
+            // to ensure they are rendered correctly on top of the heatmap
+            if (data.points) {
+                data.points.forEach((pt, idx) => {
+                    const x = (pt[0] + 1.5) / 3 * width;
+                    const y = height - (pt[1] + 1.5) / 3 * height;
 
-                const label = data.labels[idx];
+                    const label = data.labels[idx];
 
-                ctx.beginPath();
-                ctx.arc(x, y, 4, 0, 2 * Math.PI);
-                ctx.fillStyle = label === 1 ? '#00f2ff' : '#7000ff';
-                ctx.strokeStyle = '#fff';
-                ctx.lineWidth = 1.5;
-                ctx.fill();
-                ctx.stroke();
-            });
+                    ctx.beginPath();
+                    ctx.arc(x, y, 4, 0, 2 * Math.PI);
+                    ctx.fillStyle = label === 1 ? '#00f2ff' : '#7000ff';
+                    ctx.strokeStyle = '#fff';
+                    ctx.lineWidth = 1.5;
+                    ctx.fill();
+                    ctx.stroke();
+                });
+            }
         }
+
+        draw();
 
     }, [model, data, modelVersion]);
 
