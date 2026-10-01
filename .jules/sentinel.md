@@ -1,0 +1,4 @@
+## 2024-10-01 - Prevent XSS in React with DOMPurify
+**Vulnerability:** Found `dangerouslySetInnerHTML` being used directly with dynamic configuration objects (`data.content`, `lesson.content`, etc.) in `MathModal.jsx` and `LookingForward.jsx`, introducing Cross-Site Scripting (XSS) risks.
+**Learning:** Even internal configuration objects can become sources of XSS if the data structure evolves or pulls from external sources in the future. In this specific app, MathML and SVG nodes are required, so standard DOMPurify profiles strip them unless explicitly allowed.
+**Prevention:** Always sanitize any dynamic HTML passed to `dangerouslySetInnerHTML` using `DOMPurify.sanitize(content, { USE_PROFILES: { html: true, mathMl: true, svg: true } })` to maintain application security without breaking math equation rendering or visual SVGs.
