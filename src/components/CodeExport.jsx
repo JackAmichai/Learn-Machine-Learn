@@ -1,10 +1,20 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Tooltip } from './Tooltip';
 import { ALLOWED_ACTIVATIONS, ALLOWED_OPTIMIZERS } from '../engine/NeuralNetwork';
 
 export function CodeExport({ structure, hyperparams }) {
     const [isOpen, setIsOpen] = useState(false);
     const [lang, setLang] = useState('python'); // 'python' or 'js'
+
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape' && isOpen) {
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [isOpen]);
 
     const safeActivation = ALLOWED_ACTIVATIONS.includes(hyperparams.activation) ? hyperparams.activation : 'relu';
     const safeOptimizer = ALLOWED_OPTIMIZERS.includes(hyperparams.optimizer) ? hyperparams.optimizer : 'adam';
@@ -68,11 +78,20 @@ export function CodeExport({ structure, hyperparams }) {
     };
 
     return (
-        <div className="code-modal-overlay">
-            <div className="code-modal">
+        <div
+            className="code-modal-overlay"
+            onClick={() => setIsOpen(false)}
+        >
+            <div
+                className="code-modal"
+                onClick={(e) => e.stopPropagation()}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="code-modal-title"
+            >
                 <div className="modal-header">
-                    <h3>Export Model Code</h3>
-                    <button className="close" onClick={() => setIsOpen(false)}>×</button>
+                    <h3 id="code-modal-title">Export Model Code</h3>
+                    <button className="close" onClick={() => setIsOpen(false)} aria-label="Close modal">×</button>
                 </div>
 
                 <div className="lang-tabs">
