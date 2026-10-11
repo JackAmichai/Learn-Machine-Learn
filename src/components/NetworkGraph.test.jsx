@@ -3,9 +3,9 @@ import { render } from '@testing-library/react';
 import { NetworkGraph } from './NetworkGraph.jsx';
 
 describe('NetworkGraph', () => {
-    it('renders without crashing with mock model', () => {
+    it('renders without crashing with mock model', async () => {
         const mockModel = {
-            getConnectionWeights: vi.fn().mockImplementation(() => new Float32Array([0.1, 0.2, 0.3, 0.4]))
+            getConnectionWeightsAsync: vi.fn().mockImplementation(async () => new Float32Array([0.1, 0.2, 0.3, 0.4]))
         };
         const structure = [2, 2];
         const { container } = render(
@@ -21,10 +21,10 @@ describe('NetworkGraph', () => {
         expect(container.querySelectorAll('line').length).toBeGreaterThan(0);
     });
 
-    it('should render without crashing', () => {
+    it('should render without crashing', async () => {
         const structure = [2, 3, 1];
         const mockModel = {
-            getConnectionWeights: vi.fn().mockImplementation((layerIdx) => {
+            getConnectionWeightsAsync: vi.fn().mockImplementation(async (layerIdx) => {
                 // Return dummy weights
                 // Layer 0: 2 inputs -> 3 outputs = 6 weights
                 // Layer 1: 3 inputs -> 1 output = 3 weights
@@ -45,8 +45,11 @@ describe('NetworkGraph', () => {
             />
         );
 
+        // Wait for next tick so effect runs
+        await new Promise(r => setTimeout(r, 0));
+
         expect(container.querySelector('svg')).toBeInTheDocument();
-        expect(mockModel.getConnectionWeights).toHaveBeenCalledTimes(2); // Called for layer 0 and 1
+        expect(mockModel.getConnectionWeightsAsync).toHaveBeenCalledTimes(2); // Called for layer 0 and 1
     });
 
     it('handles missing model gracefully', () => {
@@ -64,10 +67,10 @@ describe('NetworkGraph', () => {
         expect(container.querySelectorAll('circle').length).toBeGreaterThan(0);
     });
 
-    it('should not re-compute weights if props are stable', () => {
+    it('should not re-compute weights if props are stable', async () => {
         const structure = [2, 3, 1];
         const mockModel = {
-            getConnectionWeights: vi.fn().mockImplementation((layerIdx) => {
+            getConnectionWeightsAsync: vi.fn().mockImplementation(async (layerIdx) => {
                 const layerSize = structure[layerIdx];
                 const nextLayerSize = structure[layerIdx + 1];
                 const count = layerSize * nextLayerSize;
@@ -85,7 +88,8 @@ describe('NetworkGraph', () => {
             />
         );
 
-        expect(mockModel.getConnectionWeights).toHaveBeenCalledTimes(2);
+        await new Promise(r => setTimeout(r, 0));
+        expect(mockModel.getConnectionWeightsAsync).toHaveBeenCalledTimes(2);
 
         // Rerender with same props
         rerender(
@@ -97,8 +101,9 @@ describe('NetworkGraph', () => {
             />
         );
 
-        // Should NOT have called getConnectionWeights again
-        expect(mockModel.getConnectionWeights).toHaveBeenCalledTimes(2);
+        await new Promise(r => setTimeout(r, 0));
+        // Should NOT have called getConnectionWeightsAsync again
+        expect(mockModel.getConnectionWeightsAsync).toHaveBeenCalledTimes(2);
 
         // Rerender with new modelVersion
         rerender(
@@ -110,7 +115,8 @@ describe('NetworkGraph', () => {
             />
         );
 
+        await new Promise(r => setTimeout(r, 0));
         // Should have called again
-        expect(mockModel.getConnectionWeights).toHaveBeenCalledTimes(4);
+        expect(mockModel.getConnectionWeightsAsync).toHaveBeenCalledTimes(4);
     });
 });

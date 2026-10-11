@@ -16,31 +16,12 @@ export const NetworkGraph = memo(function NetworkGraph({ model, structure, model
             try {
                 const layersToFetch = structure.length - 1;
                 // Optimization: Use async data extraction to avoid blocking UI thread
-                if (typeof model.getConnectionWeightsAsync === 'function') {
-                    const promises = [];
-                    for (let i = 0; i < layersToFetch; i++) {
-                        promises.push(model.getConnectionWeightsAsync(i));
-                    }
-                    const results = await Promise.all(promises);
-                    if (isMounted) setConnectionWeights(results);
+                const promises = [];
+                for (let i = 0; i < layersToFetch; i++) {
+                    promises.push(model.getConnectionWeightsAsync(i));
                 }
-                // Fallback for sync
-                else if (typeof model.getConnectionWeights === 'function') {
-                    const results = structure.slice(0, -1).map((_, idx) => model.getConnectionWeights(idx));
-                    if (isMounted) setConnectionWeights(results);
-                }
-                // Legacy fallback
-                else if (model.model && model.model.layers) {
-                    const results = model.model.layers.map(layer => {
-                        const weights = layer.getWeights();
-                        if (!weights.length) return null;
-                        const kernel = weights[0];
-                        return kernel ? kernel.dataSync() : null;
-                    });
-                    if (isMounted) setConnectionWeights(results);
-                } else {
-                    if (isMounted) setConnectionWeights([]);
-                }
+                const results = await Promise.all(promises);
+                if (isMounted) setConnectionWeights(results);
             } catch (error) {
                 console.error('Error fetching weights:', error);
                 if (isMounted) setConnectionWeights([]);
