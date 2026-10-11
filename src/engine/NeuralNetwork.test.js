@@ -219,6 +219,24 @@ describe('NeuralNetwork', () => {
         });
     });
 
+    describe('getConnectionWeightsAsync', () => {
+        it('should return weights for valid layer index', async () => {
+            nn.createModel([2, 4, 1]);
+
+            const weights = await nn.getConnectionWeightsAsync(0);
+            expect(weights).not.toBeNull();
+            // Layer 0 connects 2 inputs to 4 hidden = 8 weights
+            expect(weights.length).toBe(8);
+        });
+
+        it('should return null for invalid layer index', async () => {
+            nn.createModel([2, 4, 1]);
+
+            const weights = await nn.getConnectionWeightsAsync(99);
+            expect(weights).toBeNull();
+        });
+    });
+
     describe('getConnectionWeights', () => {
         it('should return weights for valid layer index', () => {
             nn.createModel([2, 4, 1]);
