@@ -1,0 +1,1 @@
+## 2024-05-24 - Modal Close Buttons Lack ARIA Labels\n**Learning:** In this codebase, interactive standard buttons (such as '×' for close) used within custom modal components often lack `aria-label`s.\n**Action:** When modifying or creating modals, explicitly ensure that icon-only buttons include an accessible name (e.g., `aria-label="Close modal"`).
