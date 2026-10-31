@@ -17,7 +17,7 @@ import React from 'react';
  */
 
 /* ---------- 1. ENCODER → LATENT → DECODER ---------- */
-function EncoderDecoderTile() {
+function EncoderDecoder() {
     const layers = [12, 8, 4, 2, 4, 8, 12];
     const W = 360, H = 180;
     const padX = 18, padY = 14;
