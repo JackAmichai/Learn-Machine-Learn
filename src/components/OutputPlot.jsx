@@ -93,7 +93,7 @@ export function OutputPlot({ model, data, modelVersion }) {
             }
         }
 
-        drawPlot();
+        drawPlot().catch(err => console.error("Error drawing plot:", err));
 
         return () => {
             isMounted = false;
