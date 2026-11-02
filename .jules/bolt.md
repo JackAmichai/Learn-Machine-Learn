@@ -13,3 +13,7 @@
 ## 2024-05-22 - Synchronous TF.js Operations in Render
 **Learning:** TensorFlow.js `dataSync()` is a synchronous blocking operation. Using it directly inside a React component's render body (e.g., in `NetworkGraph`) causes significant performance degradation on every re-render.
 **Action:** Always wrap weight extraction logic or any TF.js `dataSync()` calls in `useMemo` to ensure they only run when the model or structure actually changes.
+
+## 2024-11-03 - Canvas Flickering with Async TF.js Operations
+**Learning:** When refactoring synchronous `dataSync()` to async `await data()` for canvas rendering, the UI can flicker or go blank if `ctx.clearRect` is called before the promise resolves.
+**Action:** Always execute canvas clearing (`ctx.clearRect`) after the `await data()` resolves but before the dependent drawing operations begin.
