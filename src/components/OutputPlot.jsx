@@ -27,9 +27,32 @@ export function OutputPlot({ model, data, modelVersion }) {
             }
         }
 
-        tf.tidy(() => {
-            const inputTensor = tf.tensor2d(inputs);
-            const preds = model.predict(inputTensor).dataSync();
+        let isMounted = true;
+
+        const drawPlot = async () => {
+            let preds;
+            let inputTensor;
+            let outputTensor;
+
+            try {
+                // ⚡ BOLT OPTIMIZATION:
+                // Expected impact: Eliminates UI jank and main thread blocking during prediction visualization by moving GPU-CPU transfer to an async operation.
+                // Replaced synchronous dataSync() inside tf.tidy() with async await data(). Manually managing tensor lifecycle to prevent memory leaks since tf.tidy() doesn't support async operations.
+                inputTensor = tf.tensor2d(inputs);
+                outputTensor = model.predict(inputTensor);
+                preds = await outputTensor.data();
+            } catch (error) {
+                console.error("Prediction failed:", error);
+                return;
+            } finally {
+                if (inputTensor) inputTensor.dispose();
+                if (outputTensor) outputTensor.dispose();
+            }
+
+            if (!isMounted) return;
+
+            // Clear canvas only after predictions are ready to prevent flickering
+            ctx.clearRect(0, 0, width, height);
 
             // Draw the heatmap
             const wCell = width / gridSize;
@@ -56,26 +79,31 @@ export function OutputPlot({ model, data, modelVersion }) {
                     ctx.fillRect(i * wCell, height - (j + 1) * hCell, wCell, hCell);
                 }
             }
-        });
 
-        // 2. Draw Data Points
-        if (data.points) {
-            data.points.forEach((pt, idx) => {
-                const x = (pt[0] + 1.5) / 3 * width;
-                const y = height - (pt[1] + 1.5) / 3 * height;
+            // 2. Draw Data Points
+            if (data.points) {
+                data.points.forEach((pt, idx) => {
+                    const x = (pt[0] + 1.5) / 3 * width;
+                    const y = height - (pt[1] + 1.5) / 3 * height;
 
-                const label = data.labels[idx];
+                    const label = data.labels[idx];
 
-                ctx.beginPath();
-                ctx.arc(x, y, 4, 0, 2 * Math.PI);
-                ctx.fillStyle = label === 1 ? '#00f2ff' : '#7000ff';
-                ctx.strokeStyle = '#fff';
-                ctx.lineWidth = 1.5;
-                ctx.fill();
-                ctx.stroke();
-            });
-        }
+                    ctx.beginPath();
+                    ctx.arc(x, y, 4, 0, 2 * Math.PI);
+                    ctx.fillStyle = label === 1 ? '#00f2ff' : '#7000ff';
+                    ctx.strokeStyle = '#fff';
+                    ctx.lineWidth = 1.5;
+                    ctx.fill();
+                    ctx.stroke();
+                });
+            }
+        };
 
+        drawPlot().catch(console.error);
+
+        return () => {
+            isMounted = false;
+        };
     }, [model, data, modelVersion]);
 
     return (
